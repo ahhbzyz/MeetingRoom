@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MeetingRoom</string>
+    <string name="title_activity_room_status">RoomStatusActivity</string>
+</resources>

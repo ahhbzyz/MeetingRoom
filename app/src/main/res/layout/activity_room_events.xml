@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.badoo.meetingroom.presentation.view.activity.RoomStatusActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout_status_bar"
+        android:layout_height="32dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/img_badoo_logo"
+            app:srcCompat="@drawable/ic_badoo_logo"
+            android:adjustViewBounds="true"
+            android:layout_marginStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:text="Wednesday, 11, July"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/tv_curr_date_time"
+            android:textColor="@android:color/black"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout_room_info"
+        android:layout_below="@+id/layout_status_bar"
+        android:layout_marginTop="16dp"
+        android:layout_height="32dp">
+
+        <TextView
+            android:text="Bahamas"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/tv_room_name"
+            android:textSize="24sp"
+            android:layout_marginStart="32dp"
+            android:typeface="serif"
+            android:textStyle="normal|bold"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="@android:color/black" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_calendar"
+            android:id="@+id/img_calendar"
+            android:adjustViewBounds="true"
+            android:layout_alignParentEnd="false"
+            android:layout_toStartOf="@+id/tv_ava_rooms"
+            android:layout_marginEnd="16dp" />
+
+        <TextView
+            android:text="2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/tv_ava_rooms"
+            android:layout_toStartOf="@+id/img_room"
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/ic_room"
+            android:id="@+id/img_room"
+            android:adjustViewBounds="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="32dp" />
+    </RelativeLayout>
+
+    <com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView
+        android:layout_height="wrap_content"
+        android:id="@+id/ctv_status"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/layout_room_info"
+        android:layout_marginTop="32dp"/>
+
+
+    <com.badoo.meetingroom.presentation.view.component.horizontaltimelineview.HorizontalTimelineView
+        android:id="@+id/htv_room_events"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+
+
+    <RelativeLayout
+        android:id="@+id/layout_btns"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ctv_status"
+        android:layout_above="@+id/htv_room_events">
+
+        <TextView
+            android:text="Fast booking"
+            android:layout_width="wrap_content"
+            android:id="@+id/tv_fast_book"
+            android:textSize="24sp"
+            android:typeface="serif"
+            android:textColor="@android:color/black"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/ttb10"
+            android:layout_marginBottom="24dp" />
+
+        <com.badoo.meetingroom.presentation.view.component.custombutton.TwoLineTextButton
+            android:id="@+id/ttb5"
+            app:topText="5"
+            app:bottomText="min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toStartOf="@+id/ttb10" />
+
+        <com.badoo.meetingroom.presentation.view.component.custombutton.TwoLineTextButton
+            android:id="@+id/ttb15"
+            app:topText="15"
+            app:bottomText="min"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/ttb10"
+            android:layout_centerInParent="true" />
+
+        <com.badoo.meetingroom.presentation.view.component.custombutton.LongPressButton
+            android:id="@+id/ttb10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ttb15"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
+
+    </RelativeLayout>
+</RelativeLayout>

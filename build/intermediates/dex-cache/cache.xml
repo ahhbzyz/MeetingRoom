@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="297d4bcf6ed4e747a1bf7d0d094a2d911a8d3a8e">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-25.0.1_2c2c62564f8ce7fb51021a5bc08710b146a4e2fe/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.dagger/dagger/2.8/55a1aa1cdcfd06b9950ca856e2bc2790e105146a/dagger-2.8.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="55a1aa1cdcfd06b9950ca856e2bc2790e105146a">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/dagger-2.8_b5cf4bb0cef77efacada018f83b66507d13ef628/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.jakewharton/butterknife/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="a07818a1ecabdb149998823429cce555af4b9cba">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.jakewharton-butterknife-8.4.0_025c23a91d9b3203a4628d3f1a211914f19700af/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/io.reactivex/rxjava/1.2.4/522cfb00b6c015b72c64ee60054b4f6338880858/rxjava-1.2.4.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="522cfb00b6c015b72c64ee60054b4f6338880858">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/rxjava-1.2.4_6920f0771a593290c5892fc7c402c8f6803950a0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="00d4c8eebf2b681073c72a26bd0849549e51c7cb">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-utils-25.0.1_f77608b7615731ee42f5af238386dae35bbf9234/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="5a2386ad9bfff580b206a7fe305cdccd00798159">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/io.reactivex-rxandroid-1.2.1_3ab3a81c6f2119c7851592867c1c867c8378d5db/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.api-client/google-api-client-android/1.22.0/7a0fe12b7d8189a821934d6f9d6586d00180e461/google-api-client-android-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="7a0fe12b7d8189a821934d6f9d6586d00180e461">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-api-client-android-1.22.0_85292bd0146f87ad64688a492b42d3782ac8d5e2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="6a1479afe9f1b3645e1cd9a87318976893472818">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-media-compat-25.0.1_f8b2a27ffc7a8d09f16c16f25feffffd7f675f7b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_99e741f3079a6e731c34ccad9f2cbc7c53b1039a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="6975da39a7040257bd51d21a231b76c915872d38">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/javax.inject-1_204d853406a51acdc3462360ac7696399546ba0e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="3af8cc51ef7088e56f132780da8c0bd858b6a6ad">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_da3cfcf1a815783d9e385bc7ab39b560b7f66041/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-android/1.22.0/6d1e1a76a16a244ab2f41775791be1dd0ec2878a/google-http-client-android-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="6d1e1a76a16a244ab2f41775791be1dd0ec2878a">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-http-client-android-1.22.0_d5d2dc22bd88f54d555241ac046d1cb6451a95f5/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.api-client/google-api-client/1.22.0/244350c0c845c583717ade13f5666a452fd0cfa/google-api-client-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="0244350c0c845c583717ade13f5666a452fd0cfa">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-api-client-1.22.0_655928ad2f5c9f0cb220ad2b5894d24c4523d34c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="51eba4a4dd73044f90a9d58dd7ca34adbebfcf4e">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-25.0.1_07a096f24bd1bfd74fdf351e965905f0f160fa51/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth-base/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="e96c6974cf924e7ee3b230e6847d5731423388c9">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-base-10.0.1_83ba8cf63d16fec8e5f41c3605353622a1af8e1e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="f7ac4b327fdb9e2ee386f5adc46164927658de4b">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-25.0.1_79773f97de5ca2fcadf77d96416aefe485302bdb/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="26c6eef571592c91f29e56fda0bac73321de0c92">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-fragment-25.0.1_d17004e043ff25373041c5c7fe9b0d46c068b512/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="c5b7145fb34779b6639147b8f2f8dd77c0db771b">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_f5fd21d5f6ff4e4ca68aaa2c4b64e0485aef6169/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="e2185aff89caeb337b1ffc36d5e525d8318e7cfe">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-10.0.1_ba64bac960ed75a0669ee0c530e634cf8eb9ee55/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/pub.devrel/easypermissions/0.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="c62423966e97071131e9c16d89ffaa003fe6a5d1">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/pub.devrel-easypermissions-0.2.1_5c55230b3ecda47754775d1d812a180446d4b5b3/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-calendar/v3-rev225-1.22.0/ffca998a5d0a9b3bd9836a372720f87516751b21/google-api-services-calendar-v3-rev225-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="ffca998a5d0a9b3bd9836a372720f87516751b21">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-api-services-calendar-v3-rev225-1.22.0_0739d7d8b75b70436d392138e8d7613a8a7a8a6e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="756f6297eef79784f5e356dcd4f39865028b2bd0">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-10.0.1_e6de77584b4743c8909c2cd13e708cafd93ed571/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="6addaba208e21c6da776d0ca75b6b23a6ccd5499">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-10.0.1_4223aeffe0edbe94dcf4c55491b5d0f5fc3053c7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client/1.22.0/1d63f369ac78e4838a3197147012026e791008cb/google-oauth-client-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="1d63f369ac78e4838a3197147012026e791008cb">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-oauth-client-1.22.0_fa827a559ef19da0363b47cfb9bb200cd5ffa4ea/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-jackson2/1.22.0/cc014d64ae11117e159d334c99d9c246d9b36f44/google-http-client-jackson2-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="cc014d64ae11117e159d334c99d9c246d9b36f44">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-http-client-jackson2-1.22.0_6a9a9b99581120e2a968e7600ff3974fbf05f8ef/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="bc7e99e8d0fc279a05aa91378530f467ad62d443">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-ui-25.0.1_75dd39f1738268ed8c67a659b310b1a20bedbb4d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.guava/guava-jdk5/17.0/463f8378feba44df7ba7cd9272d01837dad62b36/guava-jdk5-17.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="463f8378feba44df7ba7cd9272d01837dad62b36">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/guava-jdk5-17.0_7a85076941826cb9b523a05454758bbc325bf4d2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/1.3.9/40719ea6961c0cb6afaeb6a921eaa1f6afd4cfdf/jsr305-1.3.9.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="40719ea6961c0cb6afaeb6a921eaa1f6afd4cfdf">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/jsr305-1.3.9_3ea475e364208157b30753a4becef6467c5032a2/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="25438f55fc6d906a0e72f30b21487541430ede43">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-10.0.1_a5486c8a4af9f45c32c0e1e05d3c7cc286e3c503/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="17ddc0eb1130b57518e6d997b9c59592a3930189">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_0881d83b64fb670d70535660fcd74de3e8d45e10/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="772bed2d992b67b9d0327f766cc95cd63031dcd3">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-25.0.1_f8cb8272f55ed1e7ad95736c544b8d0222ccbe03/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-25.0.1_e90a5622a56018abd16e6542776bb83777f003ed/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="c0bd6ffb002a85b5e7cad29f8558d1cc59539679">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_08ae5da681534872e185620858b223555171f332/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="b24e1c688744078e1fa833ffadf696794761bbe5">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-25.0.1_c692595a05eb75a0c3e5a4c95a99a81809545b67/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.0.1/support-annotations-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="a09194311f8f89c3e6db09d79f50897a889d615e">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-25.0.1_951cf13d9fd9ba1b46117421fd738366261958e9/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.1.3/f6c3aed1cdfa21b5c1737c915186ea93a95a58bd/jackson-core-2.1.3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="f6c3aed1cdfa21b5c1737c915186ea93a95a58bd">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-core-2.1.3_3f80023c789f027b39eb26c2058759daff91e942/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife-annotations/8.4.0/ea392375cf9ff59234a82e7928a204215ccc98cd/butterknife-annotations-8.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="ea392375cf9ff59234a82e7928a204215ccc98cd">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-annotations-8.4.0_2bc3639ac51d5737d20a8c212c672b20aec82847/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="032d9d9b19841c98abe5d9a711bbbc3d450789ee">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_0e5c1013f27912130201818f98794f47f12ab7be/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client/1.22.0/d441fc58329c4a4c067acec04ac361627f66ecc8/google-http-client-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="d441fc58329c4a4c067acec04ac361627f66ecc8">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-http-client-1.22.0_30903d20836cccf9a21fc062157f566731451481/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="f83b00041ecfba705603fec40363416c7de69719">
+        <dex dex="/Users/zhangyaozhong/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-25.0.1_e738ee2c7a6b9bf5c278572844dac93af17344b1/classes.dex" />
+    </item>
+
+</items>

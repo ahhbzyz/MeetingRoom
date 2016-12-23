@@ -1,0 +1,56 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    // Sdk and tools
+    compileSdkVersion = 25
+    buildToolsVersion = '25.0.1'
+
+    applcationId = "com.badoo.meetingroom"
+    minSdkVersion = 19
+    targetSdkVersion = 25
+
+    // Presentation dependencies
+    appcompatVersion = '25.0.1'
+    recyclerViewVersion = '25.0.1'
+    butterKnifeVersion = '8.4.0'
+
+    // Data dependencies
+    rxJavaVersion = '1.2.4'
+    rxAndroidVersion = '1.2.1'
+
+    daggerVersion = '2.8'
+    daggerCompilerVersion = '2.8'
+
+    playServicesAuthVersion = '10.0.1'
+
+    easypermissionsVersion = '0.2.1'
+
+    googleApiClientAndroidVersion = '1.22.0'
+    googleApiServicesCalendarVersion = 'v3-rev225-1.22.0'
+
+
+    // Test dependencies
+    junitVersion = '4.12'
+}

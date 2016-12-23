@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="currTimeTextSize" format="float"/>
+    <attr name="currTimeTextColor" format="color"/>
+
+    <attr name="timelineMarkColor" format="color"/>
+    <attr name="timelineMarkWidth" format="float"/>
+
+    <attr name="pastTimeSlotColor" format="color"/>
+
+    <attr name="timelineStrokeWidth" format="float"/>
+
+    <declare-styleable name="CircleTimerView">
+
+        <attr name="bgCircleRadius" format="float"/>
+        <attr name="bgCircleStrokeWidth" format="float"/>
+
+        <attr name="bgCircleColor" format="color"/>
+        <attr name="bgArcColor" format="color"/>
+
+        <attr name="tailIcon" format="reference"/>
+
+        <attr name="timerInfoText" format="string"/>
+        <attr name="timerInfoTextColor" format="color"/>
+        <attr name="timerInfoTextSize" format="float"/>
+
+        <attr name="timerTimeText" format="string"/>
+        <attr name="timerTimeTextColor" format="color"/>
+        <attr name="timerTimeTextSize" format="float"/>
+
+        <attr name="circleBtnColor" format="color"/>
+        <attr name="circleBtnRadius" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="HorizontalTimelineView">
+
+        <attr name="timelineStrokeWidth"/>
+        <attr name="timelineHeight" format="float"/>
+
+        <attr name="currTimeTextColor" />
+        <attr name="currTimeTextSize" />
+
+        <attr name="slotTimeTextColor" format="color"/>
+        <attr name="slotTimeTextSize" format="float"/>
+
+        <attr name="timelineMarkCx" format="float"/>
+        <attr name="timelineMarkColor" />
+        <attr name="timelineMarkWidth" />
+
+        <attr name="movedTimelineMarkColor" format="color"/>
+
+        <attr name="pastTimeSlotColor"/>
+
+        <attr name="gapTimeSlotColor" format="color"/>
+        <attr name="gapTimeSlotWidth" format="float"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="TwoLineTextButton">
+
+        <attr name="topTextSize" format="float"/>
+        <attr name="topTextColor" format="color"/>
+        <attr name="topText" format="string"/>
+
+        <attr name="bottomTextColor" format="color"/>
+        <attr name="bottomTextSize" format="float"/>
+        <attr name="bottomText" format="string"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="DayView">
+        <attr name="timeTextSize" format="float"/>
+        <attr name="timeTextColor" format="color"/>
+
+        <attr name="currTimeTextSize" />
+        <attr name="currTimeTextColor"/>
+
+        <attr name="timelineMarkColor"/>
+        <attr name="timelineMarkWidth"/>
+
+        <attr name="pastTimeSlotColor"/>
+
+        <attr name="timelineStrokeWidth"/>
+
+        <attr name="busyBgColor" format="color"/>
+    </declare-styleable>
+</resources>
