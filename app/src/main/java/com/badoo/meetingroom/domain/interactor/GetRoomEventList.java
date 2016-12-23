@@ -17,7 +17,7 @@ import rx.Observable;
  * Created by zhangyaozhong on 20/12/2016.
  */
 
-public class GetRoomEventList extends UseCase<List<RoomEvent>>{
+public class GetRoomEventList extends UseCase2<List<RoomEvent>, EventsParams> {
 
     public static final String NAME = "getRoomEventList";
 

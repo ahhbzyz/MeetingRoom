@@ -30,8 +30,6 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private final String PREF_ACCOUNT_NAME = "accountName";
-
     @Inject
     GetCredentialPresenterImpl mGetCredentialPresenter;
 
@@ -45,29 +43,6 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
         this.getApplicationComponent().inject(this);
         mGetCredentialPresenter.setView(this);
         mGetCredentialPresenter.init();
-    }
-
-    @Override
-    public boolean isGooglePlayServicesAvailable() {
-        GoogleApiAvailability apiAvailability =
-            GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-            apiAvailability.isGooglePlayServicesAvailable(this);
-        return connectionStatusCode == ConnectionResult.SUCCESS;
-    }
-
-    @Override
-    public int getGooglePlayServicesStatusCode() {
-        GoogleApiAvailability apiAvailability =
-            GoogleApiAvailability.getInstance();
-        return apiAvailability.isGooglePlayServicesAvailable(this);
-    }
-
-    @Override
-    public boolean checkGooglePlayServicesAvailability(int connectionStatusCode) {
-        GoogleApiAvailability apiAvailability =
-            GoogleApiAvailability.getInstance();
-        return !apiAvailability.isUserResolvableError(connectionStatusCode);
     }
 
     @Override
@@ -87,25 +62,15 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
     }
 
     @Override
-    public boolean hasPermissionToAccessContacts() {
-        return EasyPermissions.hasPermissions(
-            this, Manifest.permission.GET_ACCOUNTS);
+    public void showAccountNameOnSnackBar(String accountName) {
+
     }
 
     @Override
-    public String getAccountNameFromLocal() {
-        return getPreferences(Context.MODE_PRIVATE)
-            .getString(PREF_ACCOUNT_NAME, null);
+    public void showNoGooglePlayServicesOnSnackBar() {
+
     }
 
-    @Override
-    public void storeGoogleAccountName(String accountName) {
-        SharedPreferences settings =
-            getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(PREF_ACCOUNT_NAME, accountName);
-        editor.apply();
-    }
 
     @Override
     public void showChooseAccountDialog() {
@@ -147,6 +112,7 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
+                    System.out.println("d");
                     mGetCredentialPresenter.init();
                 }
                 break;
@@ -156,6 +122,8 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(
+            requestCode, permissions, grantResults, this);
     }
 
     @Override
@@ -166,5 +134,25 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
 
+    }
+
+    @Override
+    public void showLoadingData(boolean visibility) {
+
+    }
+
+    @Override
+    public void showRetryLoading(boolean visibility) {
+
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public Context context() {
+        return null;
     }
 }

@@ -2,7 +2,9 @@ package com.badoo.meetingroom.di.modules;
 
 import android.content.Context;
 
+import com.badoo.meetingroom.data.repository.GoogleAccountDataRepository;
 import com.badoo.meetingroom.data.repository.RoomEventDataRepository;
+import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
 import com.badoo.meetingroom.domain.repository.RoomEventRepository;
 import com.badoo.meetingroom.di.AndroidApplication;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -40,6 +42,12 @@ public class ApplicationModule {
         return GoogleAccountCredential.usingOAuth2(
             application.getApplicationContext(), Arrays.asList(SCOPES))
             .setBackOff(new ExponentialBackOff());
+    }
+
+    @Provides
+    @Singleton
+    GoogleAccountRepository provideGoogleAccountRepository(GoogleAccountDataRepository googleAccountDataRepository) {
+        return googleAccountDataRepository;
     }
 
     @Provides

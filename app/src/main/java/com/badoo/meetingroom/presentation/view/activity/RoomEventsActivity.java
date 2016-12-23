@@ -43,23 +43,14 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     }
 
+
     @Override
-    public void showLoadingData() {
+    public void showLoadingData(boolean visibility) {
 
     }
 
     @Override
-    public void hideLoadingData() {
-
-    }
-
-    @Override
-    public void showRetryLoading() {
-
-    }
-
-    @Override
-    public void hideRetryLoading() {
+    public void showRetryLoading(boolean visibility) {
 
     }
 

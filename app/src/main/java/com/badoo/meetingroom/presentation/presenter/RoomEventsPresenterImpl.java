@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.badoo.meetingroom.domain.entity.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
-import com.badoo.meetingroom.presentation.mapper.RoomEventModelDataMapper;
+import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.view.RoomEventsView;
 
@@ -26,12 +26,12 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private final GetRoomEventList getRoomEventListUseCase;
 
-    private final RoomEventModelDataMapper roomEventModelDataMapper;
+    private final RoomEventModelMapper mMapper;
 
     @Inject
-    public RoomEventsPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase, RoomEventModelDataMapper roomEventModelDataMapper) {
+    public RoomEventsPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase, RoomEventModelMapper mapper) {
         this.getRoomEventListUseCase = getRoomEventListUseCase;
-        this.roomEventModelDataMapper = roomEventModelDataMapper;
+        this.mMapper = mapper;
     }
 
     @Override
@@ -60,30 +60,25 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     }
 
     private void loadRoomEventList() {
-        this.hideViewRetry();
-        this.showViewLoading();
+        this.showViewRetry(false);
+        this.showViewLoading(true);
         this.getRoomEventList();
     }
 
-    private void showViewLoading() {
-        this.mRoomEventsView.showLoadingData();
+    private void showViewLoading(boolean visibility) {
+        this.mRoomEventsView.showLoadingData(visibility);
     }
 
-    private void hideViewLoading() {
-        this.mRoomEventsView.hideLoadingData();
+
+    private void showViewRetry(boolean visibility) {
+        this.mRoomEventsView.showRetryLoading(visibility);
     }
 
-    private void showViewRetry() {
-        this.mRoomEventsView.showRetryLoading();
-    }
 
-    private void hideViewRetry() {
-        this.mRoomEventsView.hideRetryLoading();
-    }
 
     private void showRoomEventsInView(List<RoomEvent> roomEventList) {
         final Collection<RoomEventModel> roomEventModelList =
-            this.roomEventModelDataMapper.transform(roomEventList);
+            this.mMapper.map(roomEventList);
 
         LinkedList<RoomEventModel> roomEventModelQueue = new LinkedList<>();
         roomEventModelQueue.addAll(roomEventModelList);
@@ -107,15 +102,15 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            hideViewLoading();
+            showViewLoading(false);
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            hideViewLoading();
+            showViewLoading(false);
             //show error message;
-            showViewRetry();
+            showViewRetry(true);
         }
     }
 }

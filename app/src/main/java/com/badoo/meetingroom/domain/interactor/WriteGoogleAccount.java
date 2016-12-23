@@ -1,47 +1,49 @@
 package com.badoo.meetingroom.domain.interactor;
 
+import android.support.annotation.NonNull;
+
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
 
+import javax.inject.Inject;
+
 import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
 
 /**
  * Created by zhangyaozhong on 21/12/2016.
  */
 
-public class WriteGoogleAccount extends UseCase<Void> {
+public class WriteGoogleAccount extends UseCase2<Void, String> {
+
+    public static final String NAME = "writeGoogleAccount";
 
     private final GoogleAccountRepository googleAccountRepository;
-    private final String accountName;
-    private Subscription subscription = Subscriptions.empty();
+    private String accountName;
 
-    public WriteGoogleAccount(GoogleAccountRepository googleAccountRepository, String accountName) {
+    @Inject
+    public WriteGoogleAccount(GoogleAccountRepository googleAccountRepository) {
         this.googleAccountRepository = googleAccountRepository;
+    }
+
+    public WriteGoogleAccount init(@NonNull String accountName) {
         this.accountName = accountName;
+        return this;
     }
 
     @Override
     public Observable<Void> buildUseCaseObservable() {
-        return googleAccountRepository.writeAccountName(accountName);
-    }
-
-    @Override
-    public void execute(Subscriber<Void> useCaseSubscriber) {
-        this.subscription = this.buildUseCaseObservable()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(useCaseSubscriber);
-    }
-
-    @Override
-    public void unSubscribe() {
-        if (!subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
+        if (this.accountName == null) {
+            throw new IllegalArgumentException("init(accountName) not called, or called with null argument");
         }
+        return Observable.concat(validate(), googleAccountRepository.writeAccountName(accountName));
     }
 
+    private Observable<Void> validate() {
+        return Observable.create(subscriber -> {
+            if (WriteGoogleAccount.this.accountName.isEmpty()) {
+
+            } else {
+                subscriber.onCompleted();
+            }
+        });
+    }
 }

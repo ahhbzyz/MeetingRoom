@@ -1,6 +1,11 @@
 package com.badoo.meetingroom.di.modules;
 
+import com.badoo.meetingroom.data.EventsParams;
+import com.badoo.meetingroom.domain.entity.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
+import com.badoo.meetingroom.domain.interactor.UseCase;
+
+import java.util.List;
 
 import javax.inject.Named;
 

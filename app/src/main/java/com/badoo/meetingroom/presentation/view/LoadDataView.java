@@ -8,13 +8,9 @@ import android.content.Context;
 
 public interface LoadDataView {
 
-    void showLoadingData();
+    void showLoadingData(boolean visibility);
 
-    void hideLoadingData();
-
-    void showRetryLoading();
-
-    void hideRetryLoading();
+    void showRetryLoading(boolean visibility);
 
     void showError(String message);
 

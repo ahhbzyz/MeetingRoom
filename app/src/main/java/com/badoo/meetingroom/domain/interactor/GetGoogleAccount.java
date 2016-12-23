@@ -17,7 +17,9 @@ import rx.subscriptions.Subscriptions;
  * Created by zhangyaozhong on 21/12/2016.
  */
 
-public class GetGoogleAccount extends UseCase<GoogleAccount>{
+public class GetGoogleAccount extends UseCase1<GoogleAccount> {
+
+    public static final String NAME = "getGoogleAccount";
 
     private final GoogleAccountRepository googleAccountRepository;
     private Subscription subscription = Subscriptions.empty();
@@ -30,14 +32,6 @@ public class GetGoogleAccount extends UseCase<GoogleAccount>{
     @Override
     public Observable <GoogleAccount> buildUseCaseObservable() {
         return googleAccountRepository.getAccountName();
-    }
-
-    @Override
-    public void execute(Subscriber <GoogleAccount> useCaseSubscriber) {
-        this.subscription = this.buildUseCaseObservable()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(useCaseSubscriber);
     }
 
     @Override
