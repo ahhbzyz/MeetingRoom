@@ -1,7 +1,12 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.widget.ProgressBar;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
@@ -9,8 +14,11 @@ import com.badoo.meetingroom.presentation.presenter.impl.RoomEventsPresenterImpl
 import com.badoo.meetingroom.presentation.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView;
 import com.badoo.meetingroom.presentation.view.component.horizontaltimelineview.HorizontalTimelineView;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 import javax.inject.Inject;
 
@@ -29,6 +37,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @BindView(R.id.ctv_status) CircleTimerView mCtv;
     @BindView(R.id.htv_room_events) HorizontalTimelineView mHtv;
 
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +45,26 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         setContentView(R.layout.activity_room_events);
         ButterKnife.bind(this);
 
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setMessage("Loading Data...");
+
         this.getApplicationComponent().inject(this);
         mRoomEventsPresenter.setView(this);
         mRoomEventsPresenter.init();
 
 
+
+        registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
 
     @Override
     public void showLoadingData(boolean visibility) {
-
+        if (visibility) {
+            mProgressDialog.show();
+        } else {
+            mProgressDialog.dismiss();
+        }
     }
 
     @Override
@@ -63,19 +82,48 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         return this.getApplicationContext();
     }
 
+
+
     @Override
-    public void renderRoomEvents(LinkedList<RoomEventModel> roomEventQueue) {
+    public void setCircleTimeViewTime(long millis) {
+        mCtv.setTimerTimeText(millis);
+    }
+
+    @Override
+    public void setUpCircleTimeView() {
         mCtv.setTailIconDrawable(R.drawable.ic_arrow_left);
         mCtv.setCircleBtnIconDrawable(R.drawable.ic_add_black);
         mCtv.setAlertIconDrawable(R.drawable.ic_alert_white);
         mCtv.setOnCountDownListener(mOnCountDownListener);
     }
 
+    @Override
+    public void renderNextRoomEvent(RoomEventModel nextEvent) {
+        mCtv.startCountDownTimer(nextEvent);
+    }
+
+    @Override
+    public void setUpHorizontalTimelineView() {
+
+    }
+
+    @Override
+    public void renderRoomEvents(LinkedList<RoomEventModel> mEventModelList) {
+        mHtv.setEventList(mEventModelList);
+    }
+
+    @Override
+    public void setCurrentTime(String currentTime){
+        if (currentTime != null) {
+            mHtv.setCurrTimeText(currentTime);
+        }
+    }
+
     private CircleTimerView.OnCountDownListener mOnCountDownListener =
         new CircleTimerView.OnCountDownListener() {
             @Override
             public void onCountDownTicking(long millisUntilFinished) {
-                mRoomEventsPresenter.onCountDownTicking();
+                mRoomEventsPresenter.onCountDownTicking(millisUntilFinished);
             }
 
             @Override
@@ -83,4 +131,20 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
                 mRoomEventsPresenter.onCountDownFinished();
             }
         };
+
+
+    private BroadcastReceiver mTimeRefreshReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
+                mRoomEventsPresenter.updateCurrentTimeForHtv();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mTimeRefreshReceiver);
+    }
 }

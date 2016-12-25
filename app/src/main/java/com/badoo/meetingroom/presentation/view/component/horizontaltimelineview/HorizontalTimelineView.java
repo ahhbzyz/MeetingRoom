@@ -16,8 +16,8 @@ import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 /**
  * Created by Yaozhong on 09/12/2016.
@@ -107,8 +107,8 @@ public class HorizontalTimelineView extends View {
     /**
      * Time slot list
      */
-    private List<RoomEventModel> mEvents;
-
+    private LinkedList<RoomEventModel> mEvents;
+    private ListIterator<RoomEventModel> mListIterator;
 
     /**
      * Interval slot
@@ -172,7 +172,7 @@ public class HorizontalTimelineView extends View {
 
     private void init() {
 
-        mEvents = new ArrayList<>();
+        mEvents = new LinkedList<>();
 
         mHtvTouchHandler = new HtvTouchHandler(this);
         mScroller = mHtvTouchHandler.getScroller();
@@ -216,8 +216,6 @@ public class HorizontalTimelineView extends View {
         mGapTimeSlotPaint.setColor(mGapTimeSlotColor);
         mGapTimeSlotPaint.setStyle(Paint.Style.STROKE);
         mGapTimeSlotPaint.setStrokeWidth(mTimelineStrokeWidth);
-
-        setCurrTimeText();
     }
 
     @Override
@@ -233,9 +231,10 @@ public class HorizontalTimelineView extends View {
         mCurrTimeTextWidth = mCurrTimeTextBounds.width();
 
         // Draw rest slots
-        for (int i = 0; i < mEvents.size(); i++) {
-            // Draw slot
-            drawSlot(canvas, mEvents.get(i));
+
+        mListIterator = mEvents.listIterator();
+        while (mListIterator.hasNext()) {
+            drawSlot(canvas, mListIterator.next());
             if (mAccumTimeSlotWidth > canvas.getWidth()) {
                 //break;
             }
@@ -335,8 +334,8 @@ public class HorizontalTimelineView extends View {
         return mTimelineCy + getTimelineOffset();
     }
 
-    public void setCurrTimeText() {
-        mCurrTimeText = TimeUtils.formatTime(TimeUtils.getCurrentTimeInMillis());
+    public void setCurrTimeText(String time) {
+        mCurrTimeText = time;
         invalidate();
     }
 
@@ -344,22 +343,15 @@ public class HorizontalTimelineView extends View {
         return mCurrTimeTextWidth;
     }
 
-    public void setEventList(List<RoomEventModel> mEvents) {
+    public void setEventList(LinkedList<RoomEventModel> mEvents) {
         this.mEvents = mEvents;
         invalidate();
     }
 
-    public List<RoomEventModel> getEventList() {
+    public LinkedList<RoomEventModel> getEventList() {
         return this.mEvents;
     }
 
-
-    public void removeFirstEventFromList() {
-        if (mEvents != null && mEvents.size() > 0) {
-            mEvents.remove(0);
-            invalidate();
-        }
-    }
 
     private float getTimelineOffset() {
         return mCurrTimeTextBounds == null ? 0 : (mCurrTimeTextBounds.height() + mTimelineOffset) / 2f;

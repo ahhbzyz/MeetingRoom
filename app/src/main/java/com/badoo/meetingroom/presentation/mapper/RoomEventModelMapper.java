@@ -6,6 +6,7 @@ import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,7 +17,7 @@ import javax.inject.Inject;
 public class RoomEventModelMapper {
 
     @Inject
-    public RoomEventModelMapper() {}
+    RoomEventModelMapper() {}
 
     private RoomEventModel map(RoomEvent roomEvent) {
         if (roomEvent == null) {
@@ -31,20 +32,20 @@ public class RoomEventModelMapper {
         return roomEventModel;
     }
 
-    public Collection<RoomEventModel> map(Collection<RoomEvent> roomEventCollection) {
-        Collection<RoomEventModel> roomEventModelCollection;
+    public List<RoomEventModel> map(Collection<RoomEvent> roomEventCollection) {
+        List<RoomEventModel> roomEventModelList;
 
         if (roomEventCollection != null && !roomEventCollection.isEmpty()) {
 
-            roomEventModelCollection = new ArrayList<>();
+            roomEventModelList = new ArrayList<>();
 
             for(RoomEvent roomEvent : roomEventCollection) {
-                roomEventModelCollection.add(map(roomEvent));
+                roomEventModelList.add(map(roomEvent));
             }
         } else {
-            roomEventModelCollection = Collections.emptyList();
+            roomEventModelList = Collections.emptyList();
         }
 
-        return roomEventModelCollection;
+        return roomEventModelList;
     }
 }

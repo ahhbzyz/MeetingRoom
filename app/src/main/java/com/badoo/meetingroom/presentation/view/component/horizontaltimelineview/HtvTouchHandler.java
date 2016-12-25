@@ -9,6 +9,7 @@ import android.widget.OverScroller;
 
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public class HtvTouchHandler implements GestureDetector.OnGestureListener {
                 touchX = event.getX();
                 touchY = event.getY();
 
-                List<RoomEventModel> mEvents = view.getEventList();
+                LinkedList<RoomEventModel> mEvents = view.getEventList();
                 float startX = view.getMovedTimelineMarkCx();
                 for (RoomEventModel e : mEvents) {
                     RectF slotBounds = new RectF();

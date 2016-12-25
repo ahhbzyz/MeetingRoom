@@ -9,7 +9,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
-
+import android.widget.ImageView;
 
 
 /**
@@ -77,13 +77,13 @@ public class LongPressButton extends ImageButton {
         mArcPaint.setColor(Color.parseColor("#F5584F"));
         mArcOval = new RectF();
 
+        this.setBackground(null);
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-
 
         canvas.drawCircle(mCircleCx, mCircleCy, mCircleRadius, mCirclePaint);
 
@@ -96,8 +96,10 @@ public class LongPressButton extends ImageButton {
         mArcOval.set(mCircleCx - countDownCircleRadius, mCircleCy - countDownCircleRadius, mCircleCx + countDownCircleRadius, mCircleCy + countDownCircleRadius);
         canvas.drawArc(mArcOval, startDegree, rotateDegree, false, mArcPaint);
 
-        getBackground().setBounds((int)(mCircleCx - mCircleRadius / 2f), (int)(mCircleCy - mCircleRadius / 2f), (int)(mCircleCx + mCircleRadius / 2f), (int)(mCircleCy + mCircleRadius / 2f));
-        getBackground().draw(canvas);
+        if (getDrawable() != null) {
+            getDrawable().setBounds((int) (mCircleCx - mCircleRadius / 2f), (int) (mCircleCy - mCircleRadius / 2f), (int) (mCircleCx + mCircleRadius / 2f), (int) (mCircleCy + mCircleRadius / 2f));
+            getDrawable().draw(canvas);
+        }
     }
 
     @Override
@@ -163,7 +165,9 @@ public class LongPressButton extends ImageButton {
                 public void onAnimationEnd(Animator animator) {
 
                     if (rotateDegree == 0) {
-                        mCountDownListener.onCountDownFinished();
+                        if (mCountDownListener != null) {
+                            mCountDownListener.onCountDownFinished();
+                        }
                     }
 
                 }

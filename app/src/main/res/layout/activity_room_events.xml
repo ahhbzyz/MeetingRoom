@@ -100,13 +100,12 @@
         android:layout_alignParentBottom="true" />
 
 
-
     <RelativeLayout
         android:id="@+id/layout_btns"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/ctv_status"
-        android:layout_above="@+id/htv_room_events">
+        android:layout_alignParentStart="true">
 
         <TextView
             android:text="Fast booking"
@@ -146,7 +145,8 @@
             android:layout_alignTop="@+id/ttb15"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_clear_white" />
 
     </RelativeLayout>
 </RelativeLayout>

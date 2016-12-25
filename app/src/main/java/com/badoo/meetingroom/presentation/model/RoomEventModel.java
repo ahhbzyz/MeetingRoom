@@ -2,6 +2,7 @@ package com.badoo.meetingroom.presentation.model;
 
 import android.graphics.Color;
 
+import com.badoo.meetingroom.domain.entity.RoomEvent;
 import com.badoo.meetingroom.domain.entity.RoomEventImpl;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
 
@@ -90,12 +91,23 @@ public class RoomEventModel {
 
     public int getEventColor() {
         switch (status) {
-            case RoomEventImpl.AVAILABLE:
-                return UserEventColor.AVAILABLE_COLOR;
-            case RoomEventImpl.BUSY:
-                return isOnHold ? UserEventColor.ON_HOLD_COLOR : UserEventColor.BUSY_COLOR;
+            case RoomEventModel.AVAILABLE:
+                return RoomEventColor.AVAILABLE_COLOR;
+            case RoomEventModel.BUSY:
+                return isOnHold ? RoomEventColor.ON_HOLD_COLOR : RoomEventColor.BUSY_COLOR;
             default:
-                return UserEventColor.EXPIRED_COLOR;
+                return RoomEventColor.EXPIRED_COLOR;
+        }
+    }
+
+    public int getEventBgColor() {
+        switch (status) {
+            case RoomEventModel.AVAILABLE:
+                return RoomEventColor.AVAILABLE_COLOR;
+            case RoomEventModel.BUSY:
+                return isOnHold ? RoomEventColor.ON_HOLD_BG_COLOR : RoomEventColor.BUSY_BG_COLOR;
+            default:
+                return RoomEventColor.EXPIRED_COLOR;
         }
     }
 
@@ -115,11 +127,17 @@ public class RoomEventModel {
         return TimeUtils.formatTime(startTime) + " - " + TimeUtils.formatTime(endTime);
     }
 
-    private static class UserEventColor {
+    private static class RoomEventColor {
 
         private static final int AVAILABLE_COLOR = Color.parseColor("#69E27E");
+        private static final int AVAILABLE_BG_COLOR = Color.parseColor("#69E27E");
+
         private static final int BUSY_COLOR = Color.parseColor("#F5584F");
+        private static final int BUSY_BG_COLOR = Color.parseColor("#FFE8E8");
+
         private static final int ON_HOLD_COLOR = Color.parseColor("#FFB000");
+        private static final int ON_HOLD_BG_COLOR = Color.parseColor("#FFF2DB");
+
         private static final int EXPIRED_COLOR = Color.parseColor("#D4D4D4");
 
         //public static final int EXPIRED_COLOR_OPACITIY_30 = Color.parseColor("#4DD4D4D4");

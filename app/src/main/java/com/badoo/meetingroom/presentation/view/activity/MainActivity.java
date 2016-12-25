@@ -75,8 +75,9 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
 
     @Override
     public void showAccountNameOnSnackBar(String accountName) {
+        mCredential.setSelectedAccountName(accountName);
         Snackbar.make(mGoogleServicesInfoLayout,
-            "You logged as " + accountName,
+            "You logged as " + mCredential.getSelectedAccountName(),
             Snackbar.LENGTH_LONG)
             .show();
     }
@@ -121,7 +122,6 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
                         mGetCredentialPresenter.storeGoogleAccountName(accountName);
-                        mCredential.setSelectedAccountName(accountName);
                         mGetCredentialPresenter.init();
                     }
                 }

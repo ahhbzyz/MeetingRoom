@@ -17,6 +17,9 @@ import com.google.api.client.util.DateTime;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Queue;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,6 +36,9 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private final RoomEventModelMapper mMapper;
 
+    private LinkedList<RoomEventModel> mEventModelQueue;
+
+
     @Inject
     GoogleAccountCredential mCredential;
 
@@ -47,19 +53,29 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         this.mRoomEventsView = roomEventsView;
     }
 
-    @Override
-    public void onCountDownTicking() {
 
+    @Override
+    public void onCountDownTicking(long millisUntilFinished) {
+        mRoomEventsView.setCircleTimeViewTime(millisUntilFinished);
     }
 
     @Override
     public void onCountDownFinished() {
-
+        if (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
+            // Remove last one
+            mEventModelQueue.remove();
+            if (!mEventModelQueue.isEmpty()) {
+                this.mRoomEventsView.renderNextRoomEvent(mEventModelQueue.peek());
+            }
+        }
     }
 
     @Override
     public void init() {
         loadRoomEventList();
+        setUpCircleTimeView();
+        setUpHorizontalTimelineView();
+        updateCurrentTimeForHtv();
     }
 
     @Override
@@ -93,15 +109,30 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     }
 
 
+    private void setUpCircleTimeView() {
+        mRoomEventsView.setUpCircleTimeView();
+    }
 
-    private void showRoomEventsInView(List<RoomEvent> roomEventList) {
-        final Collection<RoomEventModel> roomEventModelList =
-            this.mMapper.map(roomEventList);
+    private void showFirstEventOnCircleTimeView() {
+        if (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
+            this.mRoomEventsView.renderNextRoomEvent(mEventModelQueue.peek());
+        }
+    }
 
-        LinkedList<RoomEventModel> roomEventModelQueue = new LinkedList<>();
-        roomEventModelQueue.addAll(roomEventModelList);
+    private void setUpHorizontalTimelineView() {
+        mRoomEventsView.setUpHorizontalTimelineView();
+    }
 
-        this.mRoomEventsView.renderRoomEvents(roomEventModelQueue);
+    private void showEventsOnHorizontalTimelineView() {
+        if(mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
+            mRoomEventsView.renderRoomEvents(mEventModelQueue);
+        }
+    }
+
+    @Override
+    public void updateCurrentTimeForHtv() {
+        String currentTime = TimeUtils.formatTime(TimeUtils.getCurrentTimeInMillis());
+        mRoomEventsView.setCurrentTime(currentTime);
     }
 
     private void getRoomEventList() {
@@ -120,7 +151,11 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
         @Override
         public void onNext(List<RoomEvent> roomEvents) {
-            showRoomEventsInView(roomEvents);
+            Collection<RoomEventModel> mEventModelList = mMapper.map(roomEvents);
+            mEventModelQueue = new LinkedList<>();
+            mEventModelQueue.addAll(mEventModelList);
+            showFirstEventOnCircleTimeView();
+            showEventsOnHorizontalTimelineView();
         }
 
         @Override

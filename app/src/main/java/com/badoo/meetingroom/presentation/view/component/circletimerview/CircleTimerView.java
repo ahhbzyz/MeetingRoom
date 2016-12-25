@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.Status;
+import com.badoo.meetingroom.domain.entity.RoomEvent;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
 
@@ -121,7 +121,7 @@ public class CircleTimerView extends View {
     /**
      * Circle Timer status
      */
-    private int mCurrStatus;
+    private RoomEventModel mCurrRoomEvent;
 
     /**
      * Circle attributes
@@ -204,7 +204,7 @@ public class CircleTimerView extends View {
     /**
      * Tail Icon padding
      */
-    private float mTailIconPadding = 3f;
+    private float mTailIconPadding = 0f;
 
     /**
      * Show tail Icon or not
@@ -386,7 +386,7 @@ public class CircleTimerView extends View {
             float halfTimeHeight = mTimerTimeTextBounds.height() / 2f;
 
             // Draw timer info
-            if (Status.CURRENT_STATUS != Status.DONT_DISTURB) {
+            if (mCurrRoomEvent!= null && !mCurrRoomEvent.isDoNotDisturb()) {
                 canvas.drawText(mTimerInfoText, mBgCircleCx, mBgCircleCy - (mTimerInfoTextPadding + halfTimeHeight), mTimerInfoTextPaint);
             } else {
                 canvas.drawText("DO NOT", mBgCircleCx, mBgCircleCy + (mBgCircleRadius / 4f), mTimerInfoTextPaint);
@@ -521,7 +521,7 @@ public class CircleTimerView extends View {
 
         bundle.putBoolean(INSTANCE_IS_TIMER_RUNNING, isTimerRunning);
 
-        bundle.putInt(INSTANCE_CURR_STATUS, mCurrStatus);
+       /// bundle.putInt(INSTANCE_CURR_STATUS, mCurrStatus);
 
         return bundle;
     }
@@ -571,9 +571,6 @@ public class CircleTimerView extends View {
                 // Alert button
                 mAlertIconDrawableId = bundle.getInt(INSTANCE_ALERT_ICON_DRAWABLE_ID);
                 mAlertIconVisibility = bundle.getBoolean(INSTANCE_ALERT_ICON_VISIBILITY);
-
-                mCurrStatus = bundle.getInt(INSTANCE_CURR_STATUS);
-
 
                 // Circle
                 setBgCircleColor(mBgCircleColor);
@@ -626,45 +623,51 @@ public class CircleTimerView extends View {
      *
      * @param
      */
-    private void updateCurrentStatus(int status) {
+    private void updateCurrentStatus(RoomEventModel eventModel) {
 
-        mCurrStatus = status;
+        if (eventModel == null) {
+            return;
+        }
 
-        mAlertIconVisibility = mCurrStatus == Status.DONT_DISTURB;
-        mTimerTimeVisibility = mCurrStatus != Status.DONT_DISTURB;
-        mCircleBtnVisibility = mCurrStatus == Status.AVAILABLE || mCurrStatus == Status.BUSY;
-        mTailIconVisibility = mCurrStatus == Status.ON_HOLD || mCurrStatus == Status.BUSY;
+        mAlertIconVisibility = eventModel.isDoNotDisturb();
+        mTimerTimeVisibility = !eventModel.isDoNotDisturb();
+        mCircleBtnVisibility = !eventModel.isDoNotDisturb() || !eventModel.isOnHold();
+        mTailIconVisibility = eventModel.getStatus() == RoomEventModel.BUSY;
 
-        switch (mCurrStatus) {
-            case Status.AVAILABLE:
+        switch (eventModel.getStatus()) {
+            case RoomEventModel.AVAILABLE:
                 setTimerInfoText("AVAILABLE FOR");
                 setTimerInfoTextColor(DEFAULT_TIMER_INFO_TEXT_BLACK_COLOR);
-                setBgCircleColor(ContextCompat.getColor(getContext(), R.color.room_status_available));
-                setArcColor(ContextCompat.getColor(getContext(), R.color.room_status_available));
+                setBgCircleColor(eventModel.getEventBgColor());
+                setArcColor(eventModel.getEventColor());
                 setBgCirclePaintStyle(Paint.Style.STROKE);
                 break;
-            case Status.ON_HOLD:
-                setTimerInfoText("ON HOLD FOR");
-                setTimerInfoTextColor(DEFAULT_TIMER_INFO_TEXT_BLACK_COLOR);
-                setBgCircleColor(ContextCompat.getColor(getContext(), R.color.room_status_onhold_bg));
-                setArcColor(ContextCompat.getColor(getContext(), R.color.room_status_onhold));
-                setBgCirclePaintStyle(Paint.Style.STROKE);
+            case RoomEventModel.BUSY:
+                if (eventModel.isOnHold()) {
 
-                break;
-            case Status.BUSY:
-                setTimerInfoText("BUSY UNTIL");
-                setTimerInfoTextColor(DEFAULT_TIMER_INFO_TEXT_BLACK_COLOR);
-                setBgCircleColor(ContextCompat.getColor(getContext(), R.color.room_status_busy_bg));
-                setArcColor(ContextCompat.getColor(getContext(), R.color.room_status_busy));
-                setBgCirclePaintStyle(Paint.Style.STROKE);
+                    setTimerInfoText("ON HOLD FOR");
+                    setTimerInfoTextColor(DEFAULT_TIMER_INFO_TEXT_BLACK_COLOR);
+                    setBgCircleColor(eventModel.getEventBgColor());
+                    setArcColor(eventModel.getEventColor());
+                    setBgCirclePaintStyle(Paint.Style.STROKE);
 
-                break;
-            case Status.DONT_DISTURB:
-                setTimerInfoText("DO NOT DISTURB");
-                setTimerInfoTextColor(DEFAULT_TIMER_INFO_TEXT_WHITE_COLOR);
-                setBgCircleColor(ContextCompat.getColor(getContext(), R.color.room_status_busy));
-                setArcColor(ContextCompat.getColor(getContext(), R.color.room_status_busy));
-                setBgCirclePaintStyle(Paint.Style.FILL_AND_STROKE);
+                } else if (eventModel.isDoNotDisturb()) {
+
+                    setTimerInfoText("DO NOT DISTURB");
+                    setTimerInfoTextColor(DEFAULT_TIMER_INFO_TEXT_WHITE_COLOR);
+                    setBgCircleColor(eventModel.getEventBgColor());
+                    setArcColor(eventModel.getEventColor());
+                    setBgCirclePaintStyle(Paint.Style.FILL_AND_STROKE);
+
+                } else {
+                    
+                    setTimerInfoText("BUSY UNTIL");
+                    setTimerInfoTextColor(DEFAULT_TIMER_INFO_TEXT_BLACK_COLOR);
+                    setBgCircleColor(eventModel.getEventBgColor());
+                    setArcColor(eventModel.getEventColor());
+                    setBgCirclePaintStyle(Paint.Style.STROKE);
+
+                }
                 break;
             default:
                 break;
@@ -681,21 +684,18 @@ public class CircleTimerView extends View {
             mCountDownListener.onCountDownFinished();
             return;
         }
+        mCurrRoomEvent = event;
 
-
-        float currentProgress = (TimeUtils.getCurrentTimeInMillis() - event.getStartTime()) / (float)event.getDuration();
-        updateCurrentStatus(event.getStatus());
+        float currentProgress = (TimeUtils.getCurrentTimeInMillis() - mCurrRoomEvent.getStartTime()) / (float)mCurrRoomEvent.getDuration();
+        updateCurrentStatus(mCurrRoomEvent);
 
         mAnimator = ValueAnimator.ofFloat(currentProgress * 100, getMaxProgress());
-        mAnimator.setDuration(event.getRemainingTime());
+        mAnimator.setDuration(mCurrRoomEvent.getRemainingTime());
         mAnimator.setInterpolator(new LinearInterpolator());
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                setProgress((float) valueAnimator.getAnimatedValue());
-                setLeftCountDownTime(valueAnimator.getDuration() - valueAnimator.getCurrentPlayTime());
-                mCountDownListener.onCountDownTicking(valueAnimator.getDuration() - valueAnimator.getCurrentPlayTime());
-            }
+        mAnimator.addUpdateListener(valueAnimator -> {
+            setProgress((float) valueAnimator.getAnimatedValue());
+            setLeftCountDownTime(valueAnimator.getDuration() - valueAnimator.getCurrentPlayTime());
+            mCountDownListener.onCountDownTicking(valueAnimator.getDuration() - valueAnimator.getCurrentPlayTime());
         });
 
         mAnimator.addListener(new Animator.AnimatorListener() {
@@ -1034,7 +1034,9 @@ public class CircleTimerView extends View {
                 RectF circleBtnBounds = new RectF();
                 circleBtnBounds.set(mCircleBtnCx - mCircleBtnRadius, mCircleBtnCy - mCircleBtnRadius,
                                     mCircleBtnCx + mCircleBtnRadius, mCircleBtnCy + mCircleBtnRadius);
-                if (mCircleBtnVisibility && circleBtnBounds.contains(touchX, touchY)) {
+                if (mCircleBtnVisibility
+                    && circleBtnBounds.contains(touchX, touchY)
+                    && mCircleBtnClickListener != null) {
                     mCircleBtnClickListener.onClick(this);
                 }
                 break;

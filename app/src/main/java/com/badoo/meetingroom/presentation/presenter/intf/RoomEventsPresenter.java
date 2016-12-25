@@ -10,6 +10,7 @@ import com.badoo.meetingroom.presentation.view.RoomEventsView;
 
 public interface RoomEventsPresenter extends Presenter {
     void setView(@NonNull RoomEventsView roomEventsView);
-    void onCountDownTicking();
+    void onCountDownTicking(long millisUntilFinished);
     void onCountDownFinished();
+    void updateCurrentTimeForHtv();
 }

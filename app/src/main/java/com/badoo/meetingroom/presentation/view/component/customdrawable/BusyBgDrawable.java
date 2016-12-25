@@ -7,8 +7,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
-import com.badoo.meetingroom.Status;
-
 /**
  * Created by zhangyaozhong on 19/12/2016.
  */

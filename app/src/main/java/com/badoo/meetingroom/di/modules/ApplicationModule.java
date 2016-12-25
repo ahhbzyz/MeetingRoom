@@ -26,8 +26,13 @@ public class ApplicationModule {
 
     private final AndroidApplication application;
     private final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+    private GoogleAccountCredential mCredential;
+
     public ApplicationModule(AndroidApplication application) {
         this.application = application;
+        this.mCredential = GoogleAccountCredential.usingOAuth2(
+            application.getApplicationContext(), Arrays.asList(SCOPES))
+            .setBackOff(new ExponentialBackOff());
     }
 
     @Provides
@@ -39,9 +44,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     GoogleAccountCredential provideGoogleAccountCredential() {
-        return GoogleAccountCredential.usingOAuth2(
-            application.getApplicationContext(), Arrays.asList(SCOPES))
-            .setBackOff(new ExponentialBackOff());
+        return mCredential;
     }
 
     @Provides
