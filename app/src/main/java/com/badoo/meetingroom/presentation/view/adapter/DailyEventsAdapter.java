@@ -16,7 +16,7 @@
 //import com.badoo.meetingroom.Status;
 //import com.badoo.meetingroom.presentation.view.component.customdrawable.BusyBgDrawable;
 //import com.badoo.meetingroom.presentation.view.component.customdrawable.TimelineBarDrawable;
-//import com.badoo.meetingroom.utils.Utils;
+//import com.badoo.meetingroom.presentation.view.timeutils.Utils;
 //
 //import java.util.List;
 //

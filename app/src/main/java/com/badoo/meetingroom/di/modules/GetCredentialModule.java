@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.di.modules;
 
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
-import com.badoo.meetingroom.domain.interactor.WriteGoogleAccount;
+import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
 
 import javax.inject.Named;
 
@@ -23,8 +23,8 @@ public class GetCredentialModule {
     }
 
     @Provides
-    @Named("writeGoogleAccount")
-    WriteGoogleAccount provideWriteGoogleAccountUseCase(WriteGoogleAccount writeGoogleAccount) {
-        return writeGoogleAccount;
+    @Named("putGoogleAccount")
+    PutGoogleAccount providePutGoogleAccountUseCase(PutGoogleAccount putGoogleAccount) {
+        return putGoogleAccount;
     }
 }

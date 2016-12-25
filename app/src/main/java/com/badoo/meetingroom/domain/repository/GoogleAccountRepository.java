@@ -10,5 +10,5 @@ import rx.Observable;
 
 public interface GoogleAccountRepository {
     Observable<GoogleAccount> getAccountName();
-    Observable<Void> writeAccountName(String accountName);
+    Observable<Void> putAccountName(String accountName);
 }

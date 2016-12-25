@@ -5,15 +5,16 @@ import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.presenter.GetCredentialPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.impl.GetCredentialPresenterImpl;
 import com.badoo.meetingroom.presentation.view.GetCredentialView;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
@@ -21,6 +22,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends BaseActivity implements GetCredentialView, EasyPermissions.PermissionCallbacks {
@@ -36,20 +39,29 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
     @Inject
     GoogleAccountCredential mCredential;
 
+    @BindView(R.id.layout_google_services_info) CoordinatorLayout mGoogleServicesInfoLayout;
+    @BindView(R.id.pb_loading_data) ProgressBar mLoadingDataBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         this.getApplicationComponent().inject(this);
         mGetCredentialPresenter.setView(this);
         mGetCredentialPresenter.init();
-    }
 
-    @Override
-    public void showNoGooglePlayServicesToast() {
-        Toast.makeText(getApplicationContext(), "This app requires Google Play Services.", Toast.LENGTH_SHORT).show();
-    }
+        findViewById(R.id.btn_status).setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, RoomEventsActivity.class);
+            startActivity(intent);
+        });
 
+        findViewById(R.id.btn_cal).setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, RoomEventsActivity.class);
+            startActivity(intent);
+        });
+    }
 
     @Override
     public void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
@@ -63,12 +75,17 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
 
     @Override
     public void showAccountNameOnSnackBar(String accountName) {
-
+        Snackbar.make(mGoogleServicesInfoLayout,
+            "You logged as " + accountName,
+            Snackbar.LENGTH_LONG)
+            .show();
     }
 
     @Override
     public void showNoGooglePlayServicesOnSnackBar() {
-
+        Snackbar.make(mGoogleServicesInfoLayout,
+            "No Google Play Services on your device",
+            Snackbar.LENGTH_SHORT).show();
     }
 
 
@@ -105,19 +122,18 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
                     if (accountName != null) {
                         mGetCredentialPresenter.storeGoogleAccountName(accountName);
                         mCredential.setSelectedAccountName(accountName);
-
                         mGetCredentialPresenter.init();
                     }
                 }
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
-                    System.out.println("d");
                     mGetCredentialPresenter.init();
                 }
                 break;
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -128,17 +144,21 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-
+        mGetCredentialPresenter.init();
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-
+        //mGetCredentialPresenter.init();
     }
 
     @Override
     public void showLoadingData(boolean visibility) {
-
+        if (visibility) {
+            this.mLoadingDataBar.setVisibility(View.VISIBLE);
+        } else {
+            this.mLoadingDataBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -153,6 +173,6 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
 
     @Override
     public Context context() {
-        return null;
+        return this.getApplicationContext();
     }
 }

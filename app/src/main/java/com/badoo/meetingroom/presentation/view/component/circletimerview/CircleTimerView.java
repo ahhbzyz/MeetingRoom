@@ -23,7 +23,7 @@ import android.view.animation.LinearInterpolator;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.Status;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
-import com.badoo.meetingroom.utils.Utils;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -184,7 +184,7 @@ public class CircleTimerView extends View {
     /**
      * Timer information padding
      */
-    private float mTimerInfoTextPadding = 20f;
+    private float mTimerInfoTextPadding = 30f;
 
     /**
      * Timer time text bounds for centering
@@ -219,7 +219,7 @@ public class CircleTimerView extends View {
     private boolean mAlertIconVisibility;
 
 
-    private OnCircleBtnClickListener mCircleBtnClickListener;
+    private OnBtnClickListener mCircleBtnClickListener;
 
     /**
      * Count down listener
@@ -683,7 +683,7 @@ public class CircleTimerView extends View {
         }
 
 
-        float currentProgress = (Utils.getCurrentTimeInMillis() - event.getStartTime()) / (float)event.getDuration();
+        float currentProgress = (TimeUtils.getCurrentTimeInMillis() - event.getStartTime()) / (float)event.getDuration();
         updateCurrentStatus(event.getStatus());
 
         mAnimator = ValueAnimator.ofFloat(currentProgress * 100, getMaxProgress());
@@ -852,7 +852,7 @@ public class CircleTimerView extends View {
             return;
         }
 
-        mTimerTimeText = Utils.formatMillisInMinsAndSecs(millis);
+        mTimerTimeText = TimeUtils.formatMillisInMinsAndSecs(millis);
         invalidate();
     }
 
@@ -1014,7 +1014,7 @@ public class CircleTimerView extends View {
      * Set circle button click listener
      * @param listener
      */
-    public void setOnCircleBtnClickListener(OnCircleBtnClickListener listener)  {
+    public void setOnCircleBtnClickListener(OnBtnClickListener listener)  {
         this.mCircleBtnClickListener = listener;
     }
 
@@ -1040,5 +1040,22 @@ public class CircleTimerView extends View {
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    /**
+     * Created by zhangyaozhong on 14/12/2016.
+     */
+
+    public interface OnBtnClickListener {
+        void onClick(View view);
+    }
+
+    /**
+     * Created by zhangyaozhong on 08/12/2016.
+     */
+
+    public interface OnCountDownListener {
+        void onCountDownTicking(long millisUntilFinished);
+        void onCountDownFinished();
     }
 }

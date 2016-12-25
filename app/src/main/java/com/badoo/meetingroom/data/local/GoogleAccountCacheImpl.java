@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.badoo.meetingroom.data.exception.GooglePlayServicesAvailabilityException;
 import com.badoo.meetingroom.data.exception.NoAccountNameFoundInCacheException;
-import com.badoo.meetingroom.data.exception.NoPermissionToAccessContacts;
+import com.badoo.meetingroom.data.exception.NoPermissionToAccessContactsException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,14 +20,17 @@ public class GoogleAccountCacheImpl implements GoogleAccountCache {
 
     private final Context mContext;
     private final FileManager mFileManager;
-    private final GoogleServiceConnector mConnector;
+    private final GoogleServicesConnector mConnector;
 
-    private String PREF_FILE_NAME = "GoogleAccount";
-    private String PREF_ACCOUNT_NAME = "accountName";
+    private final String PREF_FILE_NAME = "GoogleAccount";
+    private final String PREF_ACCOUNT_NAME = "accountName";
 
 
     @Inject
-    public GoogleAccountCacheImpl(Context context, FileManager fileManager, GoogleServiceConnector googleServiceConnector) {
+    public GoogleAccountCacheImpl(Context context,
+                                  FileManager fileManager,
+                                  GoogleServicesConnector googleServiceConnector) {
+
         if (context == null || fileManager == null || googleServiceConnector == null) {
             throw new IllegalArgumentException("Invalid null parameter");
         }
@@ -40,14 +43,18 @@ public class GoogleAccountCacheImpl implements GoogleAccountCache {
     public Observable<String> get() {
         return Observable.create(subscriber -> {
             if (!mConnector.isGooglePlayServicesAvailable()) {
-                if (!mConnector.acquireGooglePlayServices()) {
+                if (mConnector.isUserResolvableError()) {
                     subscriber.onError(new GooglePlayServicesAvailabilityException(mConnector.getGooglePlayServicesResult()));
                 } else {
-                    get();
+                    // Todo Error userNotResolvable/
                 }
             } else {
                 if (mConnector.hasPermissionToAccessContacts()) {
-                    String accountName = mFileManager.getAccountNameFromPreferences(mContext, PREF_FILE_NAME, PREF_ACCOUNT_NAME);
+                    String accountName = mFileManager.getAccountNameFromPreferences(
+                        mContext,
+                        PREF_FILE_NAME,
+                        PREF_ACCOUNT_NAME);
+
                     if (accountName == null) {
                         subscriber.onError(new NoAccountNameFoundInCacheException());
                     } else {
@@ -55,17 +62,21 @@ public class GoogleAccountCacheImpl implements GoogleAccountCache {
                         subscriber.onCompleted();
                     }
                 } else {
-                    subscriber.onError(new NoPermissionToAccessContacts());
+                    subscriber.onError(new NoPermissionToAccessContactsException());
                 }
             }
         });
     }
 
     @Override
-    public Observable<Void> write(String accountName) {
+    public Observable<Void> put(String accountName) {
         return Observable.create(subscriber -> {
             if(accountName != null) {
-                mFileManager.writeAccountNameToPreferences(mContext, PREF_FILE_NAME, PREF_ACCOUNT_NAME, accountName);
+                mFileManager.putAccountNameToPreferences(
+                    mContext,
+                    PREF_FILE_NAME,
+                    PREF_ACCOUNT_NAME,
+                    accountName);
                 subscriber.onCompleted();
             }
         });

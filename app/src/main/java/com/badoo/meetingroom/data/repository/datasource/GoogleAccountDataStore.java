@@ -9,6 +9,5 @@ import rx.Observable;
 public interface GoogleAccountDataStore {
 
     Observable<String> getAccountName();
-
-    Observable<Void> writeAccountName(String accountName);
+    Observable<Void> putAccountName(String accountName);
 }

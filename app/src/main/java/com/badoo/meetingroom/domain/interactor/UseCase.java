@@ -12,20 +12,21 @@ import rx.subscriptions.Subscriptions;
  */
 
 public abstract class UseCase<T> {
-    protected Subscription mSubscription = Subscriptions.empty();
+
+    private Subscription mSubscription = Subscriptions.empty();
 
     protected abstract Observable<T> buildUseCaseObservable();
-
-    public void unSubscribe() {
-        if (!mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
-        }
-    }
 
     public void execute(Subscriber<T> useCaseSubscriber) {
         this.mSubscription = this.buildUseCaseObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
+    }
+
+    public void unSubscribe() {
+        if (!mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
     }
 }

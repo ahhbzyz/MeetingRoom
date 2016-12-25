@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
-import com.badoo.meetingroom.presentation.presenter.RoomEventsPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.impl.RoomEventsPresenterImpl;
 import com.badoo.meetingroom.presentation.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView;
 import com.badoo.meetingroom.presentation.view.component.horizontaltimelineview.HorizontalTimelineView;
@@ -23,8 +23,6 @@ import butterknife.ButterKnife;
 
 public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
-    //private RoomEventComponent roomEventComponent;
-
     @Inject
     RoomEventsPresenterImpl mRoomEventsPresenter;
 
@@ -40,9 +38,10 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
         this.getApplicationComponent().inject(this);
         mRoomEventsPresenter.setView(this);
+        mRoomEventsPresenter.init();
+
 
     }
-
 
     @Override
     public void showLoadingData(boolean visibility) {
@@ -66,6 +65,22 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     @Override
     public void renderRoomEvents(LinkedList<RoomEventModel> roomEventQueue) {
-
+        mCtv.setTailIconDrawable(R.drawable.ic_arrow_left);
+        mCtv.setCircleBtnIconDrawable(R.drawable.ic_add_black);
+        mCtv.setAlertIconDrawable(R.drawable.ic_alert_white);
+        mCtv.setOnCountDownListener(mOnCountDownListener);
     }
+
+    private CircleTimerView.OnCountDownListener mOnCountDownListener =
+        new CircleTimerView.OnCountDownListener() {
+            @Override
+            public void onCountDownTicking(long millisUntilFinished) {
+                mRoomEventsPresenter.onCountDownTicking();
+            }
+
+            @Override
+            public void onCountDownFinished() {
+                mRoomEventsPresenter.onCountDownFinished();
+            }
+        };
 }

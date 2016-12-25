@@ -3,8 +3,8 @@ package com.badoo.meetingroom.data.repository.datasource;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.badoo.meetingroom.data.remote.GoogleApi;
-import com.badoo.meetingroom.data.remote.GoogleApiImpl;
+import com.badoo.meetingroom.data.remote.GoogleCalendarApi;
+import com.badoo.meetingroom.data.remote.GoogleCalendarApiImpl;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,7 +23,7 @@ public class RoomEventDataStoreFactory {
     }
 
     public RoomEventDataStore createRemoteDataStore() {
-        GoogleApi googleApi = new GoogleApiImpl(this.mContext);
+        GoogleCalendarApi googleApi = new GoogleCalendarApiImpl(this.mContext);
         return new RemoteRoomEventDataStore(googleApi);
     }
 }

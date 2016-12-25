@@ -7,7 +7,6 @@ import rx.Observable;
  */
 
 public interface GoogleAccountCache {
-
     Observable<String> get();
-    Observable<Void> write(String accountName);
+    Observable<Void> put(String accountName);
 }

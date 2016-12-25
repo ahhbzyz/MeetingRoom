@@ -5,12 +5,9 @@ package com.badoo.meetingroom.presentation.view;
  */
 
 public interface GetCredentialView extends LoadDataView {
-
-    void showNoGooglePlayServicesToast();
     void showChooseAccountDialog();
     void showRequestPermissionsDialog();
     void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode);
     void showAccountNameOnSnackBar(String accountName);
-
     void showNoGooglePlayServicesOnSnackBar();
 }

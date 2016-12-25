@@ -12,7 +12,7 @@ public class LocalGoogleAccountDataStore implements GoogleAccountDataStore {
 
     private final GoogleAccountCache googleAccountCache;
 
-    public LocalGoogleAccountDataStore(GoogleAccountCache googleAccountCache) {
+    LocalGoogleAccountDataStore(GoogleAccountCache googleAccountCache) {
         this.googleAccountCache = googleAccountCache;
     }
 
@@ -23,7 +23,7 @@ public class LocalGoogleAccountDataStore implements GoogleAccountDataStore {
     }
 
     @Override
-    public Observable<Void> writeAccountName(String accountName) {
-        return googleAccountCache.write(accountName);
+    public Observable<Void> putAccountName(String accountName) {
+        return googleAccountCache.put(accountName);
     }
 }

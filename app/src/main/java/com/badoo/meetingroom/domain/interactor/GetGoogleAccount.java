@@ -7,17 +7,14 @@ import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 
 /**
  * Created by zhangyaozhong on 21/12/2016.
  */
 
-public class GetGoogleAccount extends UseCase1<GoogleAccount> {
+public class GetGoogleAccount extends UseCase<GoogleAccount> {
 
     public static final String NAME = "getGoogleAccount";
 
@@ -25,7 +22,7 @@ public class GetGoogleAccount extends UseCase1<GoogleAccount> {
     private Subscription subscription = Subscriptions.empty();
 
     @Inject
-    public GetGoogleAccount(GoogleAccountRepository googleAccountRepository) {
+    GetGoogleAccount(GoogleAccountRepository googleAccountRepository) {
         this.googleAccountRepository = googleAccountRepository;
     }
 

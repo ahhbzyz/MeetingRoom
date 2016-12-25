@@ -14,7 +14,7 @@ import android.widget.OverScroller;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
-import com.badoo.meetingroom.utils.Utils;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -264,7 +264,7 @@ public class HorizontalTimelineView extends View {
         float initSlotWidth = event.getDuration() * mWidthTimeRatio;
 
         // Draw slot time text
-        String startTimeText = Utils.formatTime(event.getStartTime());
+        String startTimeText = TimeUtils.formatTime(event.getStartTime());
         canvas.drawText(startTimeText, mAccumTimeSlotWidth - (initSlotWidth - currSlotWidth), mTimelineCy + getTimelineOffset() - mTimelineStrokeWidth / 2f - mSlotTimeOffset, mSlotTimeTextPaint);
 
 
@@ -336,7 +336,7 @@ public class HorizontalTimelineView extends View {
     }
 
     public void setCurrTimeText() {
-        mCurrTimeText = Utils.formatTime(Utils.getCurrentTimeInMillis());
+        mCurrTimeText = TimeUtils.formatTime(TimeUtils.getCurrentTimeInMillis());
         invalidate();
     }
 
@@ -375,8 +375,8 @@ public class HorizontalTimelineView extends View {
     }
 
     private float getTodayLeftTimeWidth() {
-        float nextDayMidNight = Utils.getNextDaysMidNight(1);
-        return (nextDayMidNight - Utils.getCurrentTimeInMillis()) * mWidthTimeRatio;
+        float nextDayMidNight = TimeUtils.getMidNightTimeOfDay(1);
+        return (nextDayMidNight - TimeUtils.getCurrentTimeInMillis()) * mWidthTimeRatio;
     }
 
     public void updateTimelineMarkCx(float i) {

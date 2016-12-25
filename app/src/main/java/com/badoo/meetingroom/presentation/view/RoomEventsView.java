@@ -13,4 +13,5 @@ import java.util.LinkedList;
 
 public interface RoomEventsView extends LoadDataView {
     void renderRoomEvents(LinkedList<RoomEventModel> roomEventQueue);
+    void setCircleTimeViewTime(long millis);
 }

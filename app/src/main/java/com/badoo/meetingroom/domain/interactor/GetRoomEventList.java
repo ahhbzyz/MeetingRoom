@@ -17,7 +17,7 @@ import rx.Observable;
  * Created by zhangyaozhong on 20/12/2016.
  */
 
-public class GetRoomEventList extends UseCase2<List<RoomEvent>, EventsParams> {
+public class GetRoomEventList extends UseCaseWithParams<List<RoomEvent>, EventsParams> {
 
     public static final String NAME = "getRoomEventList";
 
@@ -25,7 +25,7 @@ public class GetRoomEventList extends UseCase2<List<RoomEvent>, EventsParams> {
     private EventsParams mParams;
 
     @Inject
-    public GetRoomEventList(RoomEventRepository roomEventRepository) {
+    GetRoomEventList(RoomEventRepository roomEventRepository) {
         super();
         this.mRoomEventRepository = roomEventRepository;
 
@@ -43,6 +43,7 @@ public class GetRoomEventList extends UseCase2<List<RoomEvent>, EventsParams> {
         }
         return Observable.concat(validate(), mRoomEventRepository.getRoomEventList(mParams));
     }
+
 
     private Observable<List<RoomEvent>> validate() {
         return Observable.create(subscriber -> {

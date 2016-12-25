@@ -3,7 +3,7 @@ package com.badoo.meetingroom.data.repository;
 import com.badoo.meetingroom.data.repository.datasource.GoogleAccountDataStore;
 import com.badoo.meetingroom.data.repository.datasource.GoogleAccountDataStoreFactory;
 import com.badoo.meetingroom.domain.entity.GoogleAccount;
-import com.badoo.meetingroom.domain.mapper.GoogleAccountMapper;
+import com.badoo.meetingroom.domain.mapper.GoogleAccountDataMapper;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
 
 import javax.inject.Inject;
@@ -18,24 +18,24 @@ import rx.Observable;
 @Singleton
 public class GoogleAccountDataRepository implements GoogleAccountRepository {
 
-    private GoogleAccountMapper mGoogleAccountMapper;
+    private GoogleAccountDataMapper mGoogleAccountDataMapper;
     private final GoogleAccountDataStore googleAccountDataStore;
 
     @Inject
     public GoogleAccountDataRepository(GoogleAccountDataStoreFactory googleAccountDataStoreFactory,
-                                       GoogleAccountMapper googleAccountMapper) {
-        this.mGoogleAccountMapper = googleAccountMapper;
+                                       GoogleAccountDataMapper googleAccountDataMapper) {
+        this.mGoogleAccountDataMapper = googleAccountDataMapper;
         this.googleAccountDataStore = googleAccountDataStoreFactory.createLocalGoogleAccountNameStore();
     }
 
 
     @Override
     public Observable<GoogleAccount> getAccountName() {
-        return googleAccountDataStore.getAccountName().map(this.mGoogleAccountMapper::transform);
+        return googleAccountDataStore.getAccountName().map(this.mGoogleAccountDataMapper::transform);
     }
 
     @Override
-    public Observable<Void> writeAccountName(String accountName) {
-        return googleAccountDataStore.writeAccountName(accountName);
+    public Observable<Void> putAccountName(String accountName) {
+        return googleAccountDataStore.putAccountName(accountName);
     }
 }

@@ -2,9 +2,8 @@ package com.badoo.meetingroom.presentation.model;
 
 import android.graphics.Color;
 
-import com.badoo.meetingroom.Status;
 import com.badoo.meetingroom.domain.entity.RoomEventImpl;
-import com.badoo.meetingroom.utils.Utils;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
 
 /**
  * Created by zhangyaozhong on 17/12/2016.
@@ -70,7 +69,7 @@ public class RoomEventModel {
         if (isExpired()) {
             return 0;
         }
-        return startTime > Utils.getCurrentTimeInMillis() ? getDuration() : endTime - Utils.getCurrentTimeInMillis();
+        return startTime > TimeUtils.getCurrentTimeInMillis() ? getDuration() : endTime - TimeUtils.getCurrentTimeInMillis();
     }
 
     public boolean isOnHold() {
@@ -101,19 +100,19 @@ public class RoomEventModel {
     }
 
     public boolean isExpired(){
-        return endTime < Utils.getCurrentTimeInMillis();
+        return endTime < TimeUtils.getCurrentTimeInMillis();
     }
 
     public boolean isProcessing() {
-        return startTime <= Utils.getCurrentTimeInMillis() && endTime >= Utils.getCurrentTimeInMillis();
+        return startTime <= TimeUtils.getCurrentTimeInMillis() && endTime >= TimeUtils.getCurrentTimeInMillis();
     }
 
     public boolean isComing() {
-        return startTime > Utils.getCurrentTimeInMillis();
+        return startTime > TimeUtils.getCurrentTimeInMillis();
     }
 
     public String getPeriod() {
-        return Utils.formatTime(startTime) + " - " + Utils.formatTime(endTime);
+        return TimeUtils.formatTime(startTime) + " - " + TimeUtils.formatTime(endTime);
     }
 
     private static class UserEventColor {

@@ -2,7 +2,7 @@ package com.badoo.meetingroom.data.repository.datasource;
 
 import com.badoo.meetingroom.data.EventParams;
 import com.badoo.meetingroom.data.EventsParams;
-import com.badoo.meetingroom.data.remote.GoogleApi;
+import com.badoo.meetingroom.data.remote.GoogleCalendarApi;
 import com.google.api.services.calendar.model.Event;
 
 import java.util.List;
@@ -14,9 +14,9 @@ import rx.Observable;
  */
 public class RemoteRoomEventDataStore implements RoomEventDataStore {
 
-    private final GoogleApi mGoogleApi;
+    private final GoogleCalendarApi mGoogleApi;
 
-    public RemoteRoomEventDataStore(GoogleApi googleApi) {
+    RemoteRoomEventDataStore(GoogleCalendarApi googleApi) {
         this.mGoogleApi = googleApi;
     }
 
