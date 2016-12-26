@@ -65,7 +65,9 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
             // Remove last one
             mEventModelQueue.remove();
             if (!mEventModelQueue.isEmpty()) {
-                this.mRoomEventsView.renderNextRoomEvent(mEventModelQueue.peek());
+                RoomEventModel eventModel = mEventModelQueue.peek();
+                mRoomEventsView.renderNextRoomEvent(eventModel);
+                showButtonsForEvent(mEventModelQueue.peek());
             }
         }
     }
@@ -103,6 +105,23 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         this.mRoomEventsView.showLoadingData(visibility);
     }
 
+    private void showButtonsForEvent(RoomEventModel eventModel){
+        mRoomEventsView.clearAllButtonsInLayout();
+        switch (eventModel.getStatus()) {
+            case RoomEventModel.AVAILABLE:
+                mRoomEventsView.showButtonsInAvailableStatus();
+                break;
+            case RoomEventModel.BUSY:
+                if (eventModel.isOnHold()) {
+                    mRoomEventsView.showButtonsInOnHoldStatus();
+                } else if (eventModel.isDoNotDisturb()) {
+                    mRoomEventsView.showButtonsInDoNotDisturbStatus();
+                } else {
+                    mRoomEventsView.showButtonsInBusyStatus();
+                }
+                break;
+        }
+    }
 
     private void showViewRetry(boolean visibility) {
         this.mRoomEventsView.showRetryLoading(visibility);
@@ -116,6 +135,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     private void showFirstEventOnCircleTimeView() {
         if (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
             this.mRoomEventsView.renderNextRoomEvent(mEventModelQueue.peek());
+            showButtonsForEvent(mEventModelQueue.peek());
         }
     }
 

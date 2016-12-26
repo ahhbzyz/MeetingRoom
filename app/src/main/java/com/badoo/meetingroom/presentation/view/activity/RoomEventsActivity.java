@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.badoo.meetingroom.R;
@@ -13,6 +14,7 @@ import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomEventsPresenterImpl;
 import com.badoo.meetingroom.presentation.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView;
+import com.badoo.meetingroom.presentation.view.component.custombutton.TwoLineTextButton;
 import com.badoo.meetingroom.presentation.view.component.horizontaltimelineview.HorizontalTimelineView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
 
@@ -36,6 +38,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     @BindView(R.id.ctv_status) CircleTimerView mCtv;
     @BindView(R.id.htv_room_events) HorizontalTimelineView mHtv;
+    @BindView(R.id.layout_btns) LinearLayout mButtonsLayout;
 
     private ProgressDialog mProgressDialog;
 
@@ -117,6 +120,44 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         if (currentTime != null) {
             mHtv.setCurrTimeText(currentTime);
         }
+    }
+
+    @Override
+    public void clearAllButtonsInLayout() {
+        if (mButtonsLayout != null) {
+            mButtonsLayout.removeAllViews();
+        }
+    }
+
+    @Override
+    public void showButtonsInAvailableStatus() {
+        TwoLineTextButton[] buttons = new TwoLineTextButton[3];
+        final int min = 5;
+        for (int i = 0; i < 3; i++) {
+            buttons[i] = new TwoLineTextButton(this, null);
+            buttons[i].setTopText(min * (i+1) + "");
+            buttons[i].setBottomText("min");
+            mButtonsLayout.addView(buttons[i]);
+        }
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(16, 0, 16, 0);
+        buttons[1].setLayoutParams(params);
+    }
+
+    @Override
+    public void showButtonsInOnHoldStatus() {
+
+    }
+
+    @Override
+    public void showButtonsInBusyStatus() {
+
+    }
+
+    @Override
+    public void showButtonsInDoNotDisturbStatus() {
+
     }
 
     private CircleTimerView.OnCountDownListener mOnCountDownListener =

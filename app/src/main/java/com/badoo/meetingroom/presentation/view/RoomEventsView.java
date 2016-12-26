@@ -18,4 +18,10 @@ public interface RoomEventsView extends LoadDataView {
     void setUpHorizontalTimelineView();
     void renderRoomEvents(LinkedList<RoomEventModel> mEventModelList);
     void setCurrentTime(String currentTime);
+
+    void clearAllButtonsInLayout();
+    void showButtonsInAvailableStatus();
+    void showButtonsInOnHoldStatus();
+    void showButtonsInBusyStatus();
+    void showButtonsInDoNotDisturbStatus();
 }

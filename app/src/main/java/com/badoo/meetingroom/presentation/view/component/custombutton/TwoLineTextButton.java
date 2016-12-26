@@ -46,6 +46,11 @@ public class TwoLineTextButton extends ImageButton {
     private float mCircleCx;
     private float mCircleCy;
 
+    public TwoLineTextButton(Context context) {
+        super(context);
+        init();
+    }
+
     public TwoLineTextButton(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -149,11 +154,19 @@ public class TwoLineTextButton extends ImageButton {
         setMeasuredDimension(width, height);
     }
 
-    public void setTopText(String mTopText) {
-        this.mTopText = mTopText;
+    public void setTopText(String topText) {
+        if (topText == null) {
+            return;
+        }
+        this.mTopText = topText;
+        invalidate();
     }
 
-    public void setBottomText(String mBottomText) {
-        this.mBottomText = mBottomText;
+    public void setBottomText(String bottomText) {
+        if (bottomText == null) {
+            return;
+        }
+        this.mBottomText = bottomText;
+        invalidate();
     }
 }
