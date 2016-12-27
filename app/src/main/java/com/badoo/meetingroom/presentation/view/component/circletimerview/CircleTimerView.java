@@ -21,9 +21,8 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.domain.entity.RoomEvent;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
-import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.concurrent.TimeUnit;
 
@@ -686,7 +685,7 @@ public class CircleTimerView extends View {
         }
         mCurrRoomEvent = event;
 
-        float currentProgress = (TimeUtils.getCurrentTimeInMillis() - mCurrRoomEvent.getStartTime()) / (float)mCurrRoomEvent.getDuration();
+        float currentProgress = (TimeHelper.getCurrentTimeInMillis() - mCurrRoomEvent.getStartTime()) / (float)mCurrRoomEvent.getDuration();
         updateCurrentStatus(mCurrRoomEvent);
 
         mAnimator = ValueAnimator.ofFloat(currentProgress * 100, getMaxProgress());
@@ -840,23 +839,6 @@ public class CircleTimerView extends View {
     }
 
     /**
-     * Set timer time with milliseconds
-     *
-     * @param millis
-     */
-    public void setTimerTimeText(long millis) {
-        long hours = TimeUnit.MILLISECONDS.toHours(millis);
-        if (hours >= 2) {
-            mTimerTimeText = MAX_TIME_SHOWN;
-            invalidate();
-            return;
-        }
-
-        mTimerTimeText = TimeUtils.formatMillisInMinsAndSecs(millis);
-        invalidate();
-    }
-
-    /**
      * Set timer time with text
      *
      * @param time
@@ -865,6 +847,7 @@ public class CircleTimerView extends View {
         if (time != null) {
             mTimerTimeText = time;
         }
+        invalidate();
     }
 
     public void setTimerTimeVisibility(boolean visibility) {

@@ -83,7 +83,10 @@ public class LongPressButton extends ImageButton {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        int diameter = Math.min(getWidth(), getHeight());
+        mCircleCx = diameter / 2f;
+        mCircleCy = diameter / 2f;
+        mCircleRadius = diameter / 2f - 2 * mCountDownCircleWidth;
 
         canvas.drawCircle(mCircleCx, mCircleCy, mCircleRadius, mCirclePaint);
 
@@ -96,51 +99,8 @@ public class LongPressButton extends ImageButton {
         mArcOval.set(mCircleCx - countDownCircleRadius, mCircleCy - countDownCircleRadius, mCircleCx + countDownCircleRadius, mCircleCy + countDownCircleRadius);
         canvas.drawArc(mArcOval, startDegree, rotateDegree, false, mArcPaint);
 
-        if (getDrawable() != null) {
-            getDrawable().setBounds((int) (mCircleCx - mCircleRadius / 2f), (int) (mCircleCy - mCircleRadius / 2f), (int) (mCircleCx + mCircleRadius / 2f), (int) (mCircleCy + mCircleRadius / 2f));
-            getDrawable().draw(canvas);
-        }
+        super.onDraw(canvas);
     }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-
-        int desiredWidth = (int)(2 * (mCircleRadius + 2 * mCountDownCircleWidth));
-        int desiredHeight = (int)(2 *  (mCircleRadius + 2 * mCountDownCircleWidth));
-
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int width, height;
-
-        //Measure Width
-        if (widthMode == MeasureSpec.EXACTLY) {
-            width = widthSize;
-        } else if (widthMode == MeasureSpec.AT_MOST) {
-            width = Math.min(desiredWidth, widthSize);
-        } else {
-            width = desiredWidth;
-        }
-
-        //Measure Height
-        if (heightMode == MeasureSpec.EXACTLY) {
-            height = heightSize;
-        } else if (heightMode == MeasureSpec.AT_MOST) {
-            height = Math.min(desiredHeight, heightSize);
-        } else {
-            height = desiredHeight;
-        }
-
-        this.mCircleCx = width / 2f;
-        this.mCircleCy = height / 2f;
-
-        setMeasuredDimension(width, height);
-    }
-
 
     @Override
     public void setPressed(boolean pressed) {
@@ -148,12 +108,7 @@ public class LongPressButton extends ImageButton {
         if (pressed) {
             mAnimator = ValueAnimator.ofFloat(360f, 0f);
             mAnimator.setDuration(1000);
-            mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    updateRotateDegree((Float) valueAnimator.getAnimatedValue());
-                }
-            });
+            mAnimator.addUpdateListener(valueAnimator -> updateRotateDegree((Float) valueAnimator.getAnimatedValue()));
 
             mAnimator.addListener(new Animator.AnimatorListener() {
                 @Override

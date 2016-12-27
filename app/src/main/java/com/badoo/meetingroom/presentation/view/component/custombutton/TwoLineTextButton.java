@@ -102,7 +102,11 @@ public class TwoLineTextButton extends ImageButton {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+
+        int diameter = Math.min(getWidth(), getHeight());
+        mCircleCx = diameter / 2f;
+        mCircleCy = diameter / 2f;
+        mCircleRadius = diameter / 2f -  mCircleStrokeWidth;
 
         canvas.drawCircle(mCircleCx, mCircleCy, mCircleRadius, mCirclePaint);
 
@@ -111,47 +115,8 @@ public class TwoLineTextButton extends ImageButton {
             canvas.drawText(mTopText, mCircleCx, mCircleCy, mTopTextPaint);
             canvas.drawText(mBottomText, mCircleCx, mCircleCy + mCircleRadius / 2f, mBottomTextPaint);
         }
-    }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        int desiredWidth = (int) (2 * (mCircleRadius + mCircleStrokeWidth));
-        int desiredHeight = (int) (2 * (mCircleRadius + mCircleStrokeWidth));
-
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int width, height;
-
-        //Measure Width
-        if (widthMode == MeasureSpec.EXACTLY) {
-            width = widthSize;
-        }
-        else if (widthMode == MeasureSpec.AT_MOST) {
-            width = Math.min(desiredWidth, widthSize);
-        }
-        else {
-            width = desiredWidth;
-        }
-
-        //Measure Height
-        if (heightMode == MeasureSpec.EXACTLY) {
-            height = heightSize;
-        }
-        else if (heightMode == MeasureSpec.AT_MOST) {
-            height = Math.min(desiredHeight, heightSize);
-        }
-        else {
-            height = desiredHeight;
-        }
-
-        this.mCircleCx = width / 2f;
-        this.mCircleCy = height / 2f;
-
-        setMeasuredDimension(width, height);
+        super.onDraw(canvas);
     }
 
     public void setTopText(String topText) {

@@ -13,15 +13,16 @@ import java.util.List;
 
 public interface RoomEventsView extends LoadDataView {
     void setUpCircleTimeView();
-    void setCircleTimeViewTime(long millis);
+    void setCircleTimeViewTime(String millis);
     void renderNextRoomEvent(RoomEventModel nextEvent);
     void setUpHorizontalTimelineView();
     void renderRoomEvents(LinkedList<RoomEventModel> mEventModelList);
-    void setCurrentTime(String currentTime);
+    void setCurrentTimeText(String currentTime);
 
     void clearAllButtonsInLayout();
     void showButtonsInAvailableStatus();
     void showButtonsInOnHoldStatus();
     void showButtonsInBusyStatus();
     void showButtonsInDoNotDisturbStatus();
+    void setEventEndText(String endTime);
 }

@@ -47,7 +47,7 @@ public class HtvTouchHandler implements GestureDetector.OnGestureListener {
                     if (slotBounds.contains(touchX, touchY)) {
                         mSelectedEvent = e;
                         break;
-                        //Toast.makeText(view.getContext(), TimeUtils.formatMillisInHrsAndMins(mSelectedEvent.getStartTime()), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(view.getContext(), TimeHelper.formatMillisInHrsAndMins(mSelectedEvent.getStartTime()), Toast.LENGTH_LONG).show();
                     }
                 }
 

@@ -20,7 +20,7 @@
 //import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
 //import com.badoo.meetingroom.domain.RoomEvent;
 //import com.badoo.meetingroom.R;
-//import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
+//import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 //import com.google.api.client.util.DateTime;
 //
 //import java.util.ArrayList;
@@ -50,13 +50,13 @@
 //        RoomEventRepository roomEventRepository = new RoomEventDataRepository(us, roomEventDataMapper);
 //        //GetRoomEventList getUserEvents = new GetRoomEventList(roomEventRepository);
 //
-//        DateTime now = new DateTime(TimeUtils.getMidNightTimeOfDay(0));
-//        DateTime end = new DateTime(TimeUtils.getMidNightTimeOfDay(1));
+//        DateTime now = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
+//        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
 //
 //        //getUserEvents.excute(new UserEventListSubscriber(), MainActivity.mCredential, now, end);
 //
 //        tv = (TextView)findViewById(R.id.tv_curr_time);
-//        tv.setText(TimeUtils.formatTime(TimeUtils.getCurrentTimeInMillis()));
+//        tv.setText(TimeHelper.formatTime(TimeHelper.getCurrentTimeInMillis()));
 //
 //        mRecyclerView = (RecyclerView) findViewById(R.id.rv_daily_events);
 //
@@ -75,7 +75,7 @@
 //        mTimelineMarkLayout = (LinearLayout)findViewById(R.id.layout_timeline_mark);
 //
 //
-//        float currTimeHeight = (TimeUtils.getCurrentTimeSinceMidNight()) *  300f / (60 * 60 * 1000);
+//        float currTimeHeight = (TimeHelper.getCurrentTimeSinceMidNight()) *  300f / (60 * 60 * 1000);
 //        mTimelineMarkLayout.measure(0, 0);
 //        mTimelineMarkLayout.setY(currTimeHeight-mTimelineMarkLayout.getMeasuredHeight() / 2f);
 //
@@ -120,7 +120,7 @@
 //                float incremental = 60f * 1000 * (300f / (60 * 60 * 1000));
 //                mTimelineMarkLayout.setY(startY + incremental);
 //                mAdapter.notifyDataSetChanged();
-//                tv.setText(TimeUtils.formatTime(TimeUtils.getCurrentTimeInMillis()));
+//                tv.setText(TimeHelper.formatTime(TimeHelper.getCurrentTimeInMillis()));
 //            }
 //        }
 //    };

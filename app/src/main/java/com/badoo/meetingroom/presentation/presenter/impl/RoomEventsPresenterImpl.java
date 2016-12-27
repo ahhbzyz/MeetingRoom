@@ -10,15 +10,13 @@ import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomEventsPresenter;
 import com.badoo.meetingroom.presentation.view.RoomEventsView;
-import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.DateTime;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -38,6 +36,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private LinkedList<RoomEventModel> mEventModelQueue;
 
+    private RoomEventModel mCurrentEvent;
 
     @Inject
     GoogleAccountCredential mCredential;
@@ -56,7 +55,17 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     @Override
     public void onCountDownTicking(long millisUntilFinished) {
-        mRoomEventsView.setCircleTimeViewTime(millisUntilFinished);
+        if (mCurrentEvent.isBusy()) {
+            mRoomEventsView.setCircleTimeViewTime(mCurrentEvent.getEndTimeInText());
+        } else {
+            long hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished);
+            if (hours >= 2) {
+                mRoomEventsView.setCircleTimeViewTime("2H+");
+            } else {
+                mRoomEventsView.setCircleTimeViewTime(TimeHelper.formatMillisInMinsAndSecs(millisUntilFinished));
+            }
+        }
+
     }
 
     @Override
@@ -65,9 +74,9 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
             // Remove last one
             mEventModelQueue.remove();
             if (!mEventModelQueue.isEmpty()) {
-                RoomEventModel eventModel = mEventModelQueue.peek();
-                mRoomEventsView.renderNextRoomEvent(eventModel);
-                showButtonsForEvent(mEventModelQueue.peek());
+                mCurrentEvent = mEventModelQueue.peek();
+                mRoomEventsView.renderNextRoomEvent(mCurrentEvent);
+                showButtonsForEvent(mCurrentEvent);
             }
         }
     }
@@ -109,7 +118,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         mRoomEventsView.clearAllButtonsInLayout();
         switch (eventModel.getStatus()) {
             case RoomEventModel.AVAILABLE:
-                mRoomEventsView.showButtonsInAvailableStatus();
+                mRoomEventsView.showButtonsInBusyStatus();
                 break;
             case RoomEventModel.BUSY:
                 if (eventModel.isOnHold()) {
@@ -134,8 +143,9 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private void showFirstEventOnCircleTimeView() {
         if (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
-            this.mRoomEventsView.renderNextRoomEvent(mEventModelQueue.peek());
-            showButtonsForEvent(mEventModelQueue.peek());
+            mCurrentEvent = mEventModelQueue.peek();
+            this.mRoomEventsView.renderNextRoomEvent(mCurrentEvent);
+            showButtonsForEvent(mCurrentEvent);
         }
     }
 
@@ -151,19 +161,29 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     @Override
     public void updateCurrentTimeForHtv() {
-        String currentTime = TimeUtils.formatTime(TimeUtils.getCurrentTimeInMillis());
-        mRoomEventsView.setCurrentTime(currentTime);
+        String currentTime = TimeHelper.formatTime(TimeHelper.getCurrentTimeInMillis());
+        mRoomEventsView.setCurrentTimeText(currentTime);
     }
 
     private void getRoomEventList() {
-        DateTime start = new DateTime(TimeUtils.getMidNightTimeOfDay(0));
-        DateTime end = new DateTime(TimeUtils.getMidNightTimeOfDay(2));
+        DateTime start = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
+        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(2));
         EventsParams params = new EventsParams.EventsParamsBuilder(mCredential)
             .startTime(start)
             .endTime(end)
             .build();
 
         this.getRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
+    }
+
+    @Override
+    public RoomEventModel getCurrentEvent() {
+        return mCurrentEvent;
+    }
+
+    @Override
+    public void updateCurrentTimeInDNDStatus() {
+        mRoomEventsView.setEventEndText(mCurrentEvent.getEndTimeInText());
     }
 
 

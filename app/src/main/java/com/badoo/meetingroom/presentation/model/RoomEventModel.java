@@ -2,9 +2,7 @@ package com.badoo.meetingroom.presentation.model;
 
 import android.graphics.Color;
 
-import com.badoo.meetingroom.domain.entity.RoomEvent;
-import com.badoo.meetingroom.domain.entity.RoomEventImpl;
-import com.badoo.meetingroom.presentation.view.timeutils.TimeUtils;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 /**
  * Created by zhangyaozhong on 17/12/2016.
@@ -21,6 +19,7 @@ public class RoomEventModel {
     private long startTime;
     private long endTime;
 
+    private boolean isBusy;
     private boolean isOnHold;
     private boolean doNotDisturb;
 
@@ -70,7 +69,15 @@ public class RoomEventModel {
         if (isExpired()) {
             return 0;
         }
-        return startTime > TimeUtils.getCurrentTimeInMillis() ? getDuration() : endTime - TimeUtils.getCurrentTimeInMillis();
+        return startTime > TimeHelper.getCurrentTimeInMillis() ? getDuration() : endTime - TimeHelper.getCurrentTimeInMillis();
+    }
+
+    public boolean isBusy (){
+        return status != AVAILABLE && !isDoNotDisturb() && !isOnHold();
+    }
+
+    public boolean isAvailable() {
+        return status == AVAILABLE;
     }
 
     public boolean isOnHold() {
@@ -112,19 +119,27 @@ public class RoomEventModel {
     }
 
     public boolean isExpired(){
-        return endTime < TimeUtils.getCurrentTimeInMillis();
+        return endTime < TimeHelper.getCurrentTimeInMillis();
     }
 
     public boolean isProcessing() {
-        return startTime <= TimeUtils.getCurrentTimeInMillis() && endTime >= TimeUtils.getCurrentTimeInMillis();
+        return startTime <= TimeHelper.getCurrentTimeInMillis() && endTime >= TimeHelper.getCurrentTimeInMillis();
     }
 
     public boolean isComing() {
-        return startTime > TimeUtils.getCurrentTimeInMillis();
+        return startTime > TimeHelper.getCurrentTimeInMillis();
     }
 
     public String getPeriod() {
-        return TimeUtils.formatTime(startTime) + " - " + TimeUtils.formatTime(endTime);
+        return TimeHelper.formatTime(startTime) + " - " + TimeHelper.formatTime(endTime);
+    }
+
+    public String getStartTimeInText() {
+        return TimeHelper.formatTime(getStartTime());
+    }
+
+    public String getEndTimeInText() {
+        return TimeHelper.formatTime(getEndTime());
     }
 
     private static class RoomEventColor {
@@ -139,9 +154,6 @@ public class RoomEventModel {
         private static final int ON_HOLD_BG_COLOR = Color.parseColor("#FFF2DB");
 
         private static final int EXPIRED_COLOR = Color.parseColor("#D4D4D4");
-
-        //public static final int EXPIRED_COLOR_OPACITIY_30 = Color.parseColor("#4DD4D4D4");
-        //public static final int BUSY_BG_COLOR = Color.parseColor("#FFE8E8");
 
     }
 }
