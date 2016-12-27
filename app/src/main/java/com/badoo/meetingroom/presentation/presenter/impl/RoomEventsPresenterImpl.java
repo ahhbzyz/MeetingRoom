@@ -118,7 +118,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         mRoomEventsView.clearAllButtonsInLayout();
         switch (eventModel.getStatus()) {
             case RoomEventModel.AVAILABLE:
-                mRoomEventsView.showButtonsInBusyStatus();
+                mRoomEventsView.showButtonsInAvailableStatus();
                 break;
             case RoomEventModel.BUSY:
                 if (eventModel.isOnHold()) {

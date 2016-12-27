@@ -48,7 +48,7 @@ public class CircleTimerView extends View {
      * Default attributes
      */
     // Circle attributes
-    private final float DEFAULT_BG_CIRCLE_RADIUS = dp2px(100);
+    private final float DEFAULT_BG_CIRCLE_RADIUS = dp2px(110);
     private final float DEFAULT_BG_CIRCLE_STROKE_WIDTH = dp2px(32);
     private final int DEFAULT_BG_CIRCLE_COLOR = Color.parseColor("#69E27E");
     private final int DEFAULT_ARC_COLOR = Color.parseColor("#69E27E");
@@ -63,7 +63,6 @@ public class CircleTimerView extends View {
 
     private final String DEFAULT_TIMER_TIME_TEXT = "00:00";
     private final String DEFAULT_TIMER_INFO_TEXT = "Circle Timer";
-    private final String MAX_TIME_SHOWN = "2H+";
 
     // Circle button
     private final int DEFAULT_CIRCLE_BTN_COLOR = Color.parseColor("#F1F1F1");
@@ -244,7 +243,7 @@ public class CircleTimerView extends View {
     private Paint mCircleBtnPaint;
 
     private int mCircleBtnColor;
-    private boolean mCircleBtnVisibility = true;
+    private boolean mCircleBtnVisibility;
     private Drawable mCircleBtnIconDrawable;
     private int mCircleBtnIconDrawableId;
 
@@ -255,6 +254,7 @@ public class CircleTimerView extends View {
     private float touchY = 0;
 
     private ValueAnimator mAnimator;
+    private boolean mDNDVisibility;
 
     public CircleTimerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -384,12 +384,11 @@ public class CircleTimerView extends View {
             mTimerTimeTextPaint.getTextBounds(mTimerTimeText, 0, mTimerTimeText.length(), mTimerTimeTextBounds);
             float halfTimeHeight = mTimerTimeTextBounds.height() / 2f;
 
-            // Draw timer info
-            if (mCurrRoomEvent!= null && !mCurrRoomEvent.isDoNotDisturb()) {
-                canvas.drawText(mTimerInfoText, mBgCircleCx, mBgCircleCy - (mTimerInfoTextPadding + halfTimeHeight), mTimerInfoTextPaint);
-            } else {
+            if (mDNDVisibility && mTimerTimeText != null) {
                 canvas.drawText("DO NOT", mBgCircleCx, mBgCircleCy + (mBgCircleRadius / 4f), mTimerInfoTextPaint);
                 canvas.drawText("DISTURB", mBgCircleCx, mBgCircleCy + (mBgCircleRadius / 2f), mTimerInfoTextPaint);
+            } else {
+                canvas.drawText(mTimerInfoText, mBgCircleCx, mBgCircleCy - (mTimerInfoTextPadding + halfTimeHeight), mTimerInfoTextPaint);
             }
         }
         // Center timer time
@@ -629,6 +628,7 @@ public class CircleTimerView extends View {
         }
 
         mAlertIconVisibility = eventModel.isDoNotDisturb();
+        mDNDVisibility = eventModel.isDoNotDisturb();
         mTimerTimeVisibility = !eventModel.isDoNotDisturb();
         mCircleBtnVisibility = !eventModel.isDoNotDisturb() || !eventModel.isOnHold();
         mTailIconVisibility = eventModel.getStatus() == RoomEventModel.BUSY;

@@ -45,6 +45,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @BindView(R.id.ctv_status) CircleTimerView mCtv;
     @BindView(R.id.htv_room_events) HorizontalTimelineView mHtv;
     @BindView(R.id.layout_btns) LinearLayout mButtonsLayout;
+    @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.tv_fast_book) TextView mFastBookTv;
 
     private ProgressDialog mProgressDialog;
@@ -66,11 +67,13 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mRoomEventsPresenter.setView(this);
         mRoomEventsPresenter.init();
 
-        Typeface mTypeface = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
-        mFastBookTv.setTypeface(mTypeface);
+        Typeface stolzlRegular = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
+        mFastBookTv.setTypeface(stolzlRegular);
+        Typeface stolzlMedium = Typeface.createFromAsset(getAssets(),"fonts/stolzl_medium.otf");
+        mRoomNameTv.setTypeface(stolzlMedium);
+        mRoomNameTv.setTextSize(32);
 
         mEventEndTimeTv = new TextView(this);
-
         registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
 
@@ -149,15 +152,17 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         final int min = 5;
         for (int i = 0; i < 3; i++) {
             buttons[i] = new TwoLineTextButton(this, null);
-            buttons[i].setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(250, 250);
+            buttons[i].setLayoutParams(params);
+            if (i == 1) {
+                params.setMargins(64, 0, 64, 0);
+                buttons[1].setLayoutParams(params);
+            }
             buttons[i].setTopText(min * (i+1) + "");
             buttons[i].setBottomText("min");
+            buttons[i].setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle));
             mButtonsLayout.addView(buttons[i]);
         }
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(48, 0, 48, 0);
-        buttons[1].setLayoutParams(params);
     }
 
     @Override

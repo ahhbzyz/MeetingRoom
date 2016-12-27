@@ -28,7 +28,7 @@ ext {
     buildToolsVersion = '25.0.1'
 
     applcationId = "com.badoo.meetingroom"
-    minSdkVersion = 19
+    minSdkVersion = 21
     targetSdkVersion = 25
 
     // Presentation dependencies

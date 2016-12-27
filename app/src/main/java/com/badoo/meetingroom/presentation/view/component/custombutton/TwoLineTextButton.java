@@ -18,7 +18,7 @@ import com.badoo.meetingroom.R;
 public class TwoLineTextButton extends ImageButton {
 
 
-    private static final float DEFAULT_TOP_TEXT_SIZE = 64f;
+    private static final float DEFAULT_TOP_TEXT_SIZE = 72f;
     private static final int DEFAULT_TOP_TEXT_COLOR = Color.BLACK;
 
     private static final float DEFAULT_BOTTOM_TEXT_SIZE = 32f;
@@ -108,7 +108,7 @@ public class TwoLineTextButton extends ImageButton {
         mCircleCy = diameter / 2f;
         mCircleRadius = diameter / 2f -  mCircleStrokeWidth;
 
-        canvas.drawCircle(mCircleCx, mCircleCy, mCircleRadius, mCirclePaint);
+        //canvas.drawCircle(mCircleCx, mCircleCy, mCircleRadius, mCirclePaint);
 
         if (mTopText != null && mBottomText != null) {
 
