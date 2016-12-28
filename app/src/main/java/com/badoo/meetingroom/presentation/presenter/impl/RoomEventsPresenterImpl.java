@@ -83,10 +83,15 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     @Override
     public void init() {
+        setUpToolbar();
         loadRoomEventList();
         setUpCircleTimeView();
         setUpHorizontalTimelineView();
         updateCurrentTimeForHtv();
+    }
+
+    private void setUpToolbar() {
+        mRoomEventsView.setUpToolbar();
     }
 
     @Override

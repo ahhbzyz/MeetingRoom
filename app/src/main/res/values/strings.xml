@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">MeetingRoom</string>
     <string name="title_activity_room_status">RoomStatusActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

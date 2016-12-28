@@ -37,16 +37,18 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:id="@+id/layout_room_info"
-        android:layout_marginTop="16dp"
-        android:layout_height="64dp">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/toolbar">
 
         <TextView
             android:text="Bahamas"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/tv_room_name"
             android:textSize="48sp"
             android:layout_marginStart="32dp"
@@ -54,35 +56,38 @@
             android:textColor="@android:color/black" />
 
         <ImageView
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_calendar"
-            android:id="@+id/img_calendar"
-            android:layout_alignParentEnd="false"
-            android:layout_toStartOf="@+id/tv_ava_rooms"
-            android:layout_marginEnd="16dp"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_room"
+            android:id="@+id/img_room"
             android:adjustViewBounds="true"
-            android:layout_width="36dp" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="32dp"
+            android:layout_gravity="end"/>
 
         <TextView
             android:text="2"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/tv_ava_rooms"
             android:layout_toStartOf="@+id/img_room"
             android:gravity="center_vertical|center_horizontal"
             android:textSize="24sp"
             android:textColor="@android:color/black"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="end"/>
 
         <ImageView
-            android:layout_width="36dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_room"
-            android:id="@+id/img_room"
+            android:src="@drawable/ic_calendar"
+            android:id="@+id/img_calendar"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
             android:adjustViewBounds="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="32dp" />
-    </RelativeLayout>
+            android:layout_width="36dp" />
+
+
+    </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:orientation="vertical"

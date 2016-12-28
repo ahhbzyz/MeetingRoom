@@ -26,4 +26,5 @@ public interface RoomEventsView extends LoadDataView {
     void showButtonsInDoNotDisturbStatus(String endTimeInText);
 
     void updateEventStatus();
+    void setUpToolbar();
 }

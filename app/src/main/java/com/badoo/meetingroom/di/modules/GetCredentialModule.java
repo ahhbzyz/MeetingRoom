@@ -1,9 +1,12 @@
 package com.badoo.meetingroom.di.modules;
 
+import com.badoo.meetingroom.data.repository.GoogleAccountDataRepository;
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
+import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -26,5 +29,11 @@ public class GetCredentialModule {
     @Named("putGoogleAccount")
     PutGoogleAccount providePutGoogleAccountUseCase(PutGoogleAccount putGoogleAccount) {
         return putGoogleAccount;
+    }
+
+    @Provides
+    @Singleton
+    GoogleAccountRepository provideGoogleAccountRepository(GoogleAccountDataRepository googleAccountDataRepository) {
+        return googleAccountDataRepository;
     }
 }

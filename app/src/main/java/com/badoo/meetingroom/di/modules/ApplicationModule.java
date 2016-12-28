@@ -46,16 +46,4 @@ public class ApplicationModule {
     GoogleAccountCredential provideGoogleAccountCredential() {
         return mCredential;
     }
-
-    @Provides
-    @Singleton
-    GoogleAccountRepository provideGoogleAccountRepository(GoogleAccountDataRepository googleAccountDataRepository) {
-        return googleAccountDataRepository;
-    }
-
-    @Provides
-    @Singleton
-    RoomEventRepository provideRoomEventRepository(RoomEventDataRepository roomEventDataRepository) {
-        return roomEventDataRepository;
-    }
 }

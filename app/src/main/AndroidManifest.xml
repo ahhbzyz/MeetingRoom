@@ -22,11 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".presentation.view.activity.RoomEventsActivity">
-
-        </activity>
-
+        <activity android:name=".presentation.view.activity.RoomEventsActivity"></activity>
+        <activity android:name=".presentation.view.activity.EventsCalendarActivity"></activity>
     </application>
 
 </manifest>

@@ -24,6 +24,8 @@ public class TimeHelper {
         return DateUtils.formatDateTime(context, getCurrentTimeInMillis(), DateUtils.FORMAT_ABBREV_MONTH| DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY);
     }
 
+
+
     public static long getCurrentTimeInMillis() {
         return Calendar.getInstance().getTimeInMillis();
     }
@@ -67,24 +69,4 @@ public class TimeHelper {
 
         return date.getTimeInMillis();
     }
-
-//    public static LinearLayout addTextUnderBtn(Context context, View btnView, String text, float size, int color, int gap) {
-//        LinearLayout linearLayout = new LinearLayout(context);
-//        linearLayout.setOrientation(LinearLayout.VERTICAL);
-//        linearLayout.addView(btnView);
-//        LayoutParams params = new LayoutParams(
-//            LayoutParams.MATCH_PARENT,
-//            LayoutParams.WRAP_CONTENT
-//        );
-//
-//        params.setMargins(0, gap, 0, 0);
-//        TextView tv = new TextView(context);
-//        tv.setGravity(Gravity.CENTER);
-//        tv.setText(text);
-//        tv.setTextSize(size);
-//        tv.setTextColor(color);
-//        tv.setLayoutParams(params);
-//        linearLayout.addView(tv);
-//        return linearLayout;
-//    }
 }

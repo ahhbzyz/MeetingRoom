@@ -58,7 +58,7 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
         });
 
         findViewById(R.id.btn_cal).setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, RoomEventsActivity.class);
+            Intent intent = new Intent(MainActivity.this, EventsCalendarActivity.class);
             startActivity(intent);
         });
     }
