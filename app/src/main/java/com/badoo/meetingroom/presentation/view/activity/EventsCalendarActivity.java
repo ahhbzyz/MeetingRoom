@@ -3,16 +3,19 @@ package com.badoo.meetingroom.presentation.view.activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.EventsCalendarPresenterImpl;
 import com.badoo.meetingroom.presentation.view.EventsCalendarView;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsFragmentPagerAdapter;
+import com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.TabLayout;
 import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
 
 import javax.inject.Inject;
@@ -61,7 +64,6 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     @Override
     public void setUpViewPager() {
         mViewPager.setAdapter(new DailyEventsFragmentPagerAdapter(getSupportFragmentManager(), this));
-
         mTabLayout.setupWithViewPager(mViewPager);
     }
 

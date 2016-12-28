@@ -42,7 +42,8 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     GoogleAccountCredential mCredential;
 
     @Inject
-    RoomEventsPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase, RoomEventModelMapper mapper) {
+    RoomEventsPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
+                            RoomEventModelMapper mapper) {
         this.getRoomEventListUseCase = getRoomEventListUseCase;
         this.mMapper = mapper;
     }
@@ -94,20 +95,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         mRoomEventsView.setUpToolbar();
     }
 
-    @Override
-    public void Resume() {
 
-    }
-
-    @Override
-    public void Pause() {
-
-    }
-
-    @Override
-    public void destroy() {
-        getRoomEventListUseCase.unSubscribe();
-    }
 
     private void loadRoomEventList() {
         this.showViewRetry(false);
@@ -172,7 +160,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private void getRoomEventList() {
         DateTime start = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
-        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(2));
+        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
         EventsParams params = new EventsParams.EventsParamsBuilder(mCredential)
             .startTime(start)
             .endTime(end)
@@ -231,5 +219,20 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
             //show error message;
             showViewRetry(true);
         }
+    }
+
+    @Override
+    public void Resume() {
+
+    }
+
+    @Override
+    public void Pause() {
+
+    }
+
+    @Override
+    public void destroy() {
+        getRoomEventListUseCase.unSubscribe();
     }
 }

@@ -4,10 +4,8 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.text.format.DateUtils;
 
 import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
-import com.google.api.client.util.DateTime;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import javax.inject.Inject;
 public class DailyEventsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private Context mContext;
-    private final int numOfDays = 5;
+    private final int numOfDays = 10;
     private List<String>tabTitles = new ArrayList<>(numOfDays);
 
     @Inject
@@ -34,14 +32,13 @@ public class DailyEventsFragmentPagerAdapter extends FragmentPagerAdapter {
         this.mContext = context;
         tabTitles.add("Today");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
         Date date = new Date();
         Calendar c = Calendar.getInstance();
         for (int i = 1; i < numOfDays; i ++) {
             c.setTime(date);
             c.add(Calendar.DATE, 1);
             date = c.getTime();
-            System.out.println("x");
             tabTitles.add(sdf.format(date));
         }
     }

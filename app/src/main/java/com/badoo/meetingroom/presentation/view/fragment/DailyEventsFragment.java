@@ -9,21 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.view.DailyEventsView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DailyEventsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DailyEventsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class DailyEventsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+public class DailyEventsFragment extends Fragment implements DailyEventsView{
+
     private static final String ARG_PAGE = "page";
-
-    // TODO: Rename and change types of parameters
     private int mPage;
 
     private OnFragmentInteractionListener mListener;
@@ -83,16 +74,36 @@ public class DailyEventsFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void setUpRecyclerView() {
+
+    }
+
+    @Override
+    public int getCurrentPage() {
+        return this.mPage;
+    }
+
+    @Override
+    public void showLoadingData(boolean visibility) {
+
+    }
+
+    @Override
+    public void showRetryLoading(boolean visibility) {
+
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public Context context() {
+        return null;
+    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

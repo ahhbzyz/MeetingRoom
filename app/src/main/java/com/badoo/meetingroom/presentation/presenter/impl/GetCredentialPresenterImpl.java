@@ -88,7 +88,8 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
 
     @Override
     public void destroy() {
-
+        mGetGoogleAccountUseCase.unSubscribe();
+        mPutGoogleAccountUseCase.unSubscribe();
     }
 
     @Override

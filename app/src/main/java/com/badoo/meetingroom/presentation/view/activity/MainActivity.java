@@ -39,7 +39,8 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
     @Inject
     GoogleAccountCredential mCredential;
 
-    @BindView(R.id.layout_google_services_info) CoordinatorLayout mGoogleServicesInfoLayout;
+    @BindView(R.id.layout_google_services_info)
+    CoordinatorLayout mGoogleServicesInfoLayout;
     @BindView(R.id.pb_loading_data) ProgressBar mLoadingDataBar;
 
     @Override
