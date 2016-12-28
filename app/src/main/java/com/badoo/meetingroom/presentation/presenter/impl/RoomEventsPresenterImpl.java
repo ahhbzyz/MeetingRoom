@@ -76,7 +76,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
             if (!mEventModelQueue.isEmpty()) {
                 mCurrentEvent = mEventModelQueue.peek();
                 mRoomEventsView.renderNextRoomEvent(mCurrentEvent);
-                showButtonsForEvent(mCurrentEvent);
+                showButtonsForEvent();
             }
         }
     }
@@ -114,17 +114,17 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         this.mRoomEventsView.showLoadingData(visibility);
     }
 
-    private void showButtonsForEvent(RoomEventModel eventModel){
+    private void showButtonsForEvent(){
         mRoomEventsView.clearAllButtonsInLayout();
-        switch (eventModel.getStatus()) {
+        switch (mCurrentEvent.getStatus()) {
             case RoomEventModel.AVAILABLE:
                 mRoomEventsView.showButtonsInAvailableStatus();
                 break;
             case RoomEventModel.BUSY:
-                if (eventModel.isOnHold()) {
+                if (mCurrentEvent.isOnHold()) {
                     mRoomEventsView.showButtonsInOnHoldStatus();
-                } else if (eventModel.isDoNotDisturb()) {
-                    mRoomEventsView.showButtonsInDoNotDisturbStatus();
+                } else if (mCurrentEvent.isDoNotDisturb()) {
+                    mRoomEventsView.showButtonsInDoNotDisturbStatus(mCurrentEvent.getEndTimeInText());
                 } else {
                     mRoomEventsView.showButtonsInBusyStatus();
                 }
@@ -145,7 +145,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         if (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
             mCurrentEvent = mEventModelQueue.peek();
             this.mRoomEventsView.renderNextRoomEvent(mCurrentEvent);
-            showButtonsForEvent(mCurrentEvent);
+            showButtonsForEvent();
         }
     }
 
@@ -181,9 +181,24 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         return mCurrentEvent;
     }
 
+
     @Override
-    public void updateCurrentTimeInDNDStatus() {
-        mRoomEventsView.setEventEndText(mCurrentEvent.getEndTimeInText());
+    public void confirmEvent() {
+        mCurrentEvent.setOnHold(false);
+        mRoomEventsView.updateEventStatus();
+        showButtonsForEvent();
+    }
+
+    @Override
+    public void dismissEvent() {
+        //TODO
+    }
+
+    @Override
+    public void setDoNotDisturb() {
+        mCurrentEvent.setDoNotDisturb(true);
+        mRoomEventsView.updateEventStatus();
+        showButtonsForEvent();
     }
 
 

@@ -105,6 +105,9 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         @Override
         public void onNext(GoogleAccount googleAccount) {
             super.onNext(googleAccount);
+            if (googleAccount.getAccountName() == null) {
+                //TODO
+            }
             showAccountNameOnSnackBar(googleAccount);
         }
 

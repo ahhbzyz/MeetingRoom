@@ -17,5 +17,7 @@ public interface RoomEventsPresenter extends Presenter {
     void updateCurrentTimeForHtv();
 
     RoomEventModel getCurrentEvent();
-    void updateCurrentTimeInDNDStatus();
+    void confirmEvent();
+    void dismissEvent();
+    void setDoNotDisturb();
 }

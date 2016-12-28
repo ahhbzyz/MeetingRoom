@@ -23,6 +23,7 @@ public interface RoomEventsView extends LoadDataView {
     void showButtonsInAvailableStatus();
     void showButtonsInOnHoldStatus();
     void showButtonsInBusyStatus();
-    void showButtonsInDoNotDisturbStatus();
-    void setEventEndText(String endTime);
+    void showButtonsInDoNotDisturbStatus(String endTimeInText);
+
+    void updateEventStatus();
 }

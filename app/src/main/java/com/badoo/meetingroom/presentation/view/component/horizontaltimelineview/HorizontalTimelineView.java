@@ -432,4 +432,8 @@ public class HorizontalTimelineView extends View {
         super.onTouchEvent(event);
         return mHtvTouchHandler.onTouchEvent(event);
     }
+
+    public void updateCurrentStatus() {
+        invalidate();
+    }
 }

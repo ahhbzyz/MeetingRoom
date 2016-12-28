@@ -10,7 +10,9 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,8 +52,8 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     private ProgressDialog mProgressDialog;
 
-
-    private TextView mEventEndTimeTv;
+    private final int buttonDiameter = 200;
+    private final int buttonMargin = 64;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +73,8 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mFastBookTv.setTypeface(stolzlRegular);
         Typeface stolzlMedium = Typeface.createFromAsset(getAssets(),"fonts/stolzl_medium.otf");
         mRoomNameTv.setTypeface(stolzlMedium);
-        mRoomNameTv.setTextSize(32);
 
-        mEventEndTimeTv = new TextView(this);
+
         registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
 
@@ -110,7 +111,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     @Override
     public void setUpCircleTimeView() {
-        mCtv.setTailIconDrawable(R.drawable.ic_arrow_left);
+        mCtv.setTailIconDrawable(R.drawable.ic_arrow_left_white);
         mCtv.setCircleBtnIconDrawable(R.drawable.ic_add_black);
         mCtv.setAlertIconDrawable(R.drawable.ic_alert_white);
         mCtv.setOnCountDownListener(mOnCountDownListener);
@@ -147,31 +148,35 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     @Override
     public void showButtonsInAvailableStatus() {
+        mFastBookTv.setVisibility(View.VISIBLE);
         mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        mButtonsLayout.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+
         TwoLineTextButton[] buttons = new TwoLineTextButton[3];
         final int min = 5;
         for (int i = 0; i < 3; i++) {
             buttons[i] = new TwoLineTextButton(this, null);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(250, 250);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter);
             buttons[i].setLayoutParams(params);
             if (i == 1) {
-                params.setMargins(64, 0, 64, 0);
+                params.setMargins(buttonMargin, 0, buttonMargin, 0);
                 buttons[1].setLayoutParams(params);
             }
             buttons[i].setTopText(min * (i+1) + "");
             buttons[i].setBottomText("min");
-            buttons[i].setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle));
+            buttons[i].setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_time));
             mButtonsLayout.addView(buttons[i]);
         }
     }
 
     @Override
     public void showButtonsInOnHoldStatus() {
+        mFastBookTv.setVisibility(View.GONE);
         mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         // Confirm button
         ImageButton mConfirmBtn = new ImageButton(this);
-        mConfirmBtn.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+        mConfirmBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
         mConfirmBtn.setScaleType(ImageView.ScaleType.CENTER);
         mConfirmBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_oval_confirm));
 
@@ -179,14 +184,15 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mConfirmBtn.setImageDrawable(confirmBtnDrawable);
         LinearLayout mConfirmBtnWithText = ViewHelper.addTextUnderBtn(this, mConfirmBtn, "Confirm");
         mButtonsLayout.addView(mConfirmBtnWithText);
+        mConfirmBtn.setOnClickListener(v -> mRoomEventsPresenter.confirmEvent());
 
         // Fake button
         ImageButton mFakeBtn = new ImageButton(this);
-        mFakeBtn.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+        mFakeBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
         LinearLayout mFakeBtnWithText = ViewHelper.addTextUnderBtn(this, mFakeBtn, "fake");
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(16, 0, 16, 0);
+        params.setMargins(buttonMargin, 0, buttonMargin, 0);
         mFakeBtnWithText.setLayoutParams(params);
         mFakeBtnWithText.setVisibility(View.INVISIBLE);
         mButtonsLayout.addView(mFakeBtnWithText);
@@ -194,46 +200,50 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
         // Dismiss button
         ImageButton mDismissBtn  = new ImageButton(this);
-        mDismissBtn.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+        mDismissBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
         mDismissBtn.setScaleType(ImageView.ScaleType.CENTER);
-        mDismissBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle));
+        mDismissBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_dismiss));
 
         Drawable dismissBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_clear_black, 50 ,50);
         mDismissBtn.setImageDrawable(dismissBtnDrawable);
         LinearLayout mDismissBtnWithText = ViewHelper.addTextUnderBtn(this, mDismissBtn, "Dismiss");
         mButtonsLayout.addView(mDismissBtnWithText);
+        mDismissBtn.setOnClickListener(v -> mRoomEventsPresenter.dismissEvent());
     }
 
     @Override
     public void showButtonsInBusyStatus() {
+        mFastBookTv.setVisibility(View.GONE);
         mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
 
+        // Hold to end btn
         LongPressButton mEndBnt = new LongPressButton(this, null);
-        mEndBnt.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+        mEndBnt.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
         mEndBnt.setScaleType(ImageView.ScaleType.CENTER);
         Drawable endBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_clear_white, 50 ,50);
         mEndBnt.setImageDrawable(endBtnDrawable);
         LinearLayout mEndBtnWithText = ViewHelper.addTextUnderBtn(this, mEndBnt, "Hold to end");
         mButtonsLayout.addView(mEndBtnWithText);
 
+        // Do not disturb btn
         ImageButton mDNDBtn  = new ImageButton(this);
-        mDNDBtn.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+        mDNDBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
         mDNDBtn.setScaleType(ImageView.ScaleType.CENTER);
-        mDNDBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle));
-
+        mDNDBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_busy));
         Drawable DNDBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_donotdisturb_black, 50 ,70);
         mDNDBtn.setImageDrawable(DNDBtnDrawable);
         LinearLayout mDNDBtnWithText = ViewHelper.addTextUnderBtn(this, mDNDBtn, "Do not disturb");
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(64, 0, 64, 0);
+        params.setMargins(buttonMargin, 0, buttonMargin, 0);
         mDNDBtnWithText.setLayoutParams(params);
         mButtonsLayout.addView(mDNDBtnWithText);
+        mDNDBtn.setOnClickListener(v -> mRoomEventsPresenter.setDoNotDisturb());
 
         ImageButton mExtentBtn  = new ImageButton(this);
-        mExtentBtn.setLayoutParams(new LinearLayout.LayoutParams(250, 250));
+        mExtentBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
         mExtentBtn.setScaleType(ImageView.ScaleType.CENTER);
-        mExtentBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle));
+        mExtentBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_busy));
 
         Drawable extentBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_add_black, 50 ,50);
         mExtentBtn.setImageDrawable(extentBtnDrawable);
@@ -242,31 +252,35 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     }
 
     @Override
-    public void showButtonsInDoNotDisturbStatus() {
+    public void showButtonsInDoNotDisturbStatus(String eventEndTime) {
+        mFastBookTv.setVisibility(View.GONE);
         mButtonsLayout.setOrientation(LinearLayout.VERTICAL);
 
         TextView busyUntilTv = new TextView(this);
+        busyUntilTv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         busyUntilTv.setText("BUSY UNTIL");
-        busyUntilTv.setTextSize(26);
+        busyUntilTv.setTextSize(30);
         busyUntilTv.setTextColor(Color.BLACK);
         Typeface stolzlRegular = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
         busyUntilTv.setTypeface(stolzlRegular);
+        busyUntilTv.setIncludeFontPadding(false);
         mButtonsLayout.addView(busyUntilTv);
 
-        mEventEndTimeTv.setTextSize(26);
+        TextView mEventEndTimeTv = new TextView(this);
+        mEventEndTimeTv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mEventEndTimeTv.setText(eventEndTime);
         mEventEndTimeTv.setTextColor(Color.BLACK);
-        Typeface stolzlMedium = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
+        mEventEndTimeTv.setTextSize(72);
+        mEventEndTimeTv.setIncludeFontPadding(false);
+        Typeface stolzlMedium = Typeface.createFromAsset(getAssets(),"fonts/stolzl_medium.otf");
         mEventEndTimeTv.setTypeface(stolzlMedium);
         mButtonsLayout.addView(mEventEndTimeTv);
-
-        mRoomEventsPresenter.updateCurrentTimeInDNDStatus();
     }
 
     @Override
-    public void setEventEndText(String endTime) {
-        if (endTime != null) {
-            mEventEndTimeTv.setText(endTime);
-        }
+    public void updateEventStatus() {
+        mCtv.updateCurrentStatus();
+        mHtv.updateCurrentStatus();
     }
 
     private CircleTimerView.OnCountDownListener mOnCountDownListener =
