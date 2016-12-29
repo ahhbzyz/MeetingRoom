@@ -27,7 +27,7 @@ public class BusyBgDrawable extends Drawable {
     private Paint mDividerPaint;
     private final float gap = 20f;
 
-    public BusyBgDrawable(int bgColor) {
+    public BusyBgDrawable(int bgColor, int dividerColor) {
 
         this.bgColor = bgColor;
         mBgPaint = new Paint();
@@ -35,20 +35,20 @@ public class BusyBgDrawable extends Drawable {
         this.remainingProgress = 1f;
 
         mDividerPaint = new Paint();
-        mDividerPaint.setColor(Color.WHITE);
+        mDividerPaint.setColor(dividerColor);
         mDividerPaint.setStrokeWidth(3);
     }
 
-    public BusyBgDrawable(int bgColor, float leftProgress) {
+    public BusyBgDrawable(int bgColor, int dividerColor, float remainingProgress) {
 
         this.bgColor = bgColor;
 
         mBgPaint = new Paint();
 
-        this.remainingProgress = leftProgress;
+        this.remainingProgress = remainingProgress;
 
         mDividerPaint = new Paint();
-        mDividerPaint.setColor(Color.WHITE);
+        mDividerPaint.setColor(dividerColor);
         mDividerPaint.setStrokeWidth(3);
     }
 
@@ -57,8 +57,8 @@ public class BusyBgDrawable extends Drawable {
     public void draw(@NonNull Canvas canvas) {
         Rect bounds = getBounds();
 
-        int width = bounds.right - bounds.left;
-        int height = bounds.bottom - bounds.top;
+        float width = bounds.right - bounds.left;
+        float height = bounds.bottom - bounds.top;
 
         float bottomRectHeight = remainingProgress * height;
         float topRectHeight = height - bottomRectHeight;

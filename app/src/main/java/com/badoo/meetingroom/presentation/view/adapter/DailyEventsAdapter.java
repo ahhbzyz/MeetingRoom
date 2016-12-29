@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,31 +31,34 @@ import javax.inject.Inject;
  */
 
 public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.ViewHolder> {
+
     private float mWidthTimeRatio;
     private List<RoomEventModel> mEvents;
     private Context mContext;
-    private RelativeLayout.LayoutParams params;
+    private OnItemClickListener mOnItemClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mTvStartTime, mTvEventTime, mTvStatus;
+        private TextView mStartTimeTv, mEventPeriodTv, mEventInfoTv;
         private ImageView mTimelineBar;
-        private LinearLayout mLayoutEventContent;
+        private LinearLayout mEventContentLayout;
+        private FrameLayout mEventContentParentLayout;
         private ViewHolder(View view) {
             super(view);
-            mTvStartTime = (TextView)view.findViewById(R.id.tv_start_time);
-            mTvEventTime = (TextView)view.findViewById(R.id.tv_event_time);
-            mTvStatus = (TextView)view.findViewById(R.id.tv_status);
+            mStartTimeTv = (TextView)view.findViewById(R.id.tv_start_time);
+            mEventPeriodTv = (TextView)view.findViewById(R.id.tv_event_period);
+            mEventInfoTv = (TextView)view.findViewById(R.id.tv_event_info);
             mTimelineBar = (ImageView)view.findViewById(R.id.img_timeline_bar);
-            mLayoutEventContent = (LinearLayout)view.findViewById(R.id.layout_event_content);
+            mEventContentLayout = (LinearLayout)view.findViewById(R.id.layout_event_content);
+            mEventContentParentLayout  = (FrameLayout)view.findViewById(R.id.layout_event_content_parent);
         }
     }
 
     @Inject
-    DailyEventsAdapter(Context context) {
+    public DailyEventsAdapter(Context context, float widthTimeRatio) {
         mContext = context;
         mEvents = new ArrayList<>();
-        mWidthTimeRatio = 300f / (60 * 60 * 1000);
+        mWidthTimeRatio = widthTimeRatio;
     }
 
     public void setDailyEventList(List<RoomEventModel> roomEventModelList) {
@@ -76,23 +80,29 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         RoomEventModel event = mEvents.get(position);
+        int viewHeight =  (int) (event.getDuration() * mWidthTimeRatio);
+        float progress = event.getRemainingTime() / (float)event.getDuration();
+        int bottomHeight = (int) (viewHeight * progress);
+        int topHeight = (int) (viewHeight * (1 - progress));
 
 
-
-        params = new
-            RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-            (int)(event.getDuration() * mWidthTimeRatio));
-
-
+        RelativeLayout.LayoutParams params = new
+            RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, viewHeight);
         holder.itemView.setLayoutParams(params);
 
-        holder.mTvStartTime.setTextColor(ContextCompat.getColor(mContext, R.color.text_gray));
-        holder.mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.text_gray));
-        holder.mLayoutEventContent.setBackground(null);
-        holder.mTimelineBar.setBackground(null);
 
-        holder.mTvStartTime.setText(event.getStartTimeInText());
-        holder.mTvEventTime.setText(event.getPeriod());
+        holder.mStartTimeTv.setTextColor(ContextCompat.getColor(mContext, R.color.text_gray));
+        holder.mStartTimeTv.setText(event.getStartTimeInText());
+
+        LinearLayout.LayoutParams offsetParams
+            = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        offsetParams.setMargins(0, 0, 0, 0);
+        holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.text_gray));
+        holder.mEventPeriodTv.setText(event.getPeriod());
+        holder.mEventPeriodTv.setLayoutParams(offsetParams);
+
+        holder.mEventContentLayout.setBackground(null);
+        holder.mTimelineBar.setBackground(null);
 
         // Event Expired
         if (event.isExpired()) {
@@ -100,34 +110,57 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mTimelineBar.setBackgroundColor(event.getEventExpiredColor());
 
             if (event.isAvailable()) {
-                holder.mTvStatus.setText("");
+                holder.mEventInfoTv.setText("");
             } else {
-                holder.mTvStatus.setText(event.getOrganizer());
+                holder.mEventInfoTv.setText(event.getOrganizer());
             }
         }
 
         // Event in processing
         if (event.isProcessing()) {
-            float progress = event.getRemainingTime() / (float)event.getDuration();
-
+            holder.mStartTimeTv.measure(0, 0);
+            if (topHeight < (holder.mStartTimeTv.getMeasuredHeight())) {
+                holder.mStartTimeTv.setVisibility(View.INVISIBLE);
+            } else {
+                holder.mStartTimeTv.setVisibility(View.VISIBLE);
+            }
 
             if (event.isBusy()) {
                 TimelineBarDrawable barDrawable
                     = new TimelineBarDrawable(event.getEventExpiredColor(), event.getBusyColor(), progress);
                 holder.mTimelineBar.setBackground(barDrawable);
-                holder.mTvStatus.setText(event.getOrganizer());
-                holder.mLayoutEventContent.setBackground(null);
-                BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), progress);
-                holder.mLayoutEventContent.setBackground(bg);
+                holder.mEventInfoTv.setText(event.getOrganizer());
+                BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE, progress);
+                holder.mEventContentLayout.setBackground(bg);
+
             } else {
+                // Text
+                holder.mEventPeriodTv.measure(0, 0);
+                if (bottomHeight < holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight()) {
+                    holder.mEventPeriodTv.setVisibility(View.INVISIBLE);
+                    holder.mEventInfoTv.setVisibility(View.INVISIBLE);
+                } else {
+                    holder.mEventPeriodTv.setVisibility(View.VISIBLE);
+                    holder.mEventInfoTv.setVisibility(View.VISIBLE);
+                    offsetParams.setMargins(0, topHeight, 0, 0);
+                    holder.mEventPeriodTv.setLayoutParams(offsetParams);
+                }
+
                 TimelineBarDrawable barDrawable
                     = new TimelineBarDrawable(event.getEventExpiredColor(), event.getAvailableColor(), progress);
+
                 holder.mTimelineBar.setBackground(barDrawable);
-                holder.mTvStatus.setText("");
-                holder.mLayoutEventContent.setBackground(null);
+                holder.mEventInfoTv.setText("Available");
+                holder.mEventInfoTv.setTextColor(event.getAvailableColor());
+                BusyBgDrawable bg = new BusyBgDrawable(Color.TRANSPARENT, Color.TRANSPARENT, progress);
+                holder.mEventContentLayout.setBackground(bg);
             }
 
-
+            holder.mEventContentParentLayout.setOnClickListener(v -> {
+                if (this.mOnItemClickListener != null) {
+                    this.mOnItemClickListener.onEventItemClicked(position);
+                }
+            });
         }
 
         // Event is coming
@@ -135,15 +168,15 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
             if (event.isAvailable()) {
                 holder.mTimelineBar.setBackgroundColor(event.getAvailableColor());
-                holder.mTvStatus.setText("Available");
-                holder.mTvStatus.setTextColor(event.getAvailableColor());
-                holder.mLayoutEventContent.setBackground(null);
+                holder.mEventInfoTv.setText("Available");
+                holder.mEventInfoTv.setTextColor(event.getAvailableColor());
+                holder.mEventContentLayout.setBackground(null);
             } else {
                 holder.mTimelineBar.setBackgroundColor(event.getBusyColor());
-                holder.mTvStatus.setText(event.getOrganizer());
-                holder.mTvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.text_gray));
-                BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor());
-                holder.mLayoutEventContent.setBackground(bg);
+                holder.mEventInfoTv.setText(event.getOrganizer());
+                holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.text_gray));
+                BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE);
+                holder.mEventContentLayout.setBackground(bg);
             }
         }
     }
@@ -151,5 +184,14 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     @Override
     public int getItemCount() {
         return mEvents.size();
+    }
+
+
+    public void setOnItemClickListener (OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onEventItemClicked(int position);
     }
 }

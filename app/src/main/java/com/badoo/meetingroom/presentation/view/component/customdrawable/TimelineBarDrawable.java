@@ -31,8 +31,8 @@ public class TimelineBarDrawable extends Drawable {
         // get drawable dimensions
         Rect bounds = getBounds();
 
-        int width = bounds.right - bounds.left;
-        int height = bounds.bottom - bounds.top;
+        float width = bounds.right - bounds.left;
+        float height = bounds.bottom - bounds.top;
 
         // draw background gradient
 

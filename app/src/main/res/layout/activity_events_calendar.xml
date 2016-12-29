@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.badoo.meetingroom.presentation.view.activity.EventsCalendarActivity"
     android:orientation="vertical"
-    android:background="@android:color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
@@ -39,7 +38,6 @@
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
         android:theme="?attr/actionBarTheme"
         android:minHeight="?attr/actionBarSize"
         android:id="@+id/toolbar">
@@ -80,26 +78,18 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:orientation="horizontal"
+
+    <com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.TabLayout
+        android:clipChildren="false"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"/>
-
-        <com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.TabLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/MyCustomTabLayout"
-            app:tabMode="scrollable"
-            app:tabGravity="fill"
-            android:id="@+id/tab_layout"
-            android:layout_weight="1"
-            android:paddingBottom="8dp" />
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        style="@style/MyCustomTabLayout"
+        app:tabMode="scrollable"
+        app:tabMaxWidth="@dimen/tab_max_width"
+        android:id="@+id/tab_layout"
+        android:paddingBottom="8dp"
+        app:tabPaddingStart="14dp"
+        android:clipToPadding="false"/>
 
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"

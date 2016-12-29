@@ -18,14 +18,13 @@ tools:context="com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragm
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:id="@+id/layout_timeline_mark"
-    android:visibility="gone">
+    android:id="@+id/layout_current_time_mark">
 
     <TextView
         android:text="17:30"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_curr_time"
+        android:id="@+id/tv_current_time"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:textColor="@android:color/black"
@@ -35,7 +34,7 @@ tools:context="com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragm
         android:layout_width="match_parent"
         android:background="@android:color/black"
         android:id="@+id/view_item_divider"
-        android:layout_height="0.5dp" />
+        android:layout_height="1.5dp" />
 </LinearLayout>
 
 </RelativeLayout>

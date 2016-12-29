@@ -11,4 +11,10 @@ import java.util.List;
 public interface DailyEventsView extends LoadDataView{
     void renderDailyEvents(List<RoomEventModel> roomEventModelList);
     int getCurrentPage();
+    void updateCurrentTimeText(String time);
+    void updateCurrentTimeMarkPosition(long currentTimeInMillis);
+    void updateCurrentTimeMarkPosition(int dy);
+    void updateDailyEventList();
+    void showCurrentTimeMark(boolean visibility, long currentTime, String time);
+    void bookMeeting(long startTime, long endTime);
 }

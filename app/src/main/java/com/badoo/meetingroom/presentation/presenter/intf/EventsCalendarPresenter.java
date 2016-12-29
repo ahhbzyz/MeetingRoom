@@ -10,4 +10,5 @@ import com.badoo.meetingroom.presentation.view.EventsCalendarView;
 
 public interface EventsCalendarPresenter extends Presenter {
     void setView(@NonNull EventsCalendarView eventsCalendarView);
+    void updateFragmentCurrTimeMark();
 }

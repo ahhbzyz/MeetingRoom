@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+    android:layout_height="match_parent">
 
     <TextView
         android:text="08:00"
@@ -30,27 +29,35 @@
             android:id="@+id/view_item_divider"
             android:layout_height="0.5dp" />
 
-        <LinearLayout
-            android:id="@+id/layout_event_content"
-            android:orientation="vertical"
+        <FrameLayout
+            android:id="@+id/layout_event_content_parent"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingStart="8dp">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:text="08:45 - 10:15"
+            <LinearLayout
+                android:id="@+id/layout_event_content"
+
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_event_time" />
+                android:layout_height="match_parent"
+                android:paddingStart="8dp"
+                android:paddingEnd="0dp">
 
-            <TextView
-                android:text="a.shevelev@corp.badoo.com"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_status" />
+                <TextView
+                    android:text="08:45 - 10:15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_event_period" />
 
-        </LinearLayout>
+                <TextView
+                    android:text="a.shevelev@corp.badoo.com"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_event_info" />
 
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>

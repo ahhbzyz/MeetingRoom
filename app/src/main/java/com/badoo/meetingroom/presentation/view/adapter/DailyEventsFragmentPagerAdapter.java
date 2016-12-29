@@ -4,6 +4,10 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
+import android.view.ViewGroup;
+
 import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
 
 import java.text.SimpleDateFormat;
@@ -21,13 +25,17 @@ import javax.inject.Inject;
 
 public class DailyEventsFragmentPagerAdapter extends FragmentPagerAdapter {
 
+    SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+
     private Context mContext;
-    private final int numOfDays = 10;
+    private final int numOfDays = 5;
     private List<String>tabTitles = new ArrayList<>(numOfDays);
+    private FragmentManager mFragmentManager;
 
     @Inject
     public DailyEventsFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
+        this.mFragmentManager = fm;
         this.mContext = context;
         tabTitles.add("Today");
 
@@ -55,5 +63,22 @@ public class DailyEventsFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return tabTitles.get(position);
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        Fragment fragment = (Fragment) super.instantiateItem(container, position);
+        registeredFragments.put(position, fragment);
+        return fragment;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        registeredFragments.remove(position);
+        super.destroyItem(container, position, object);
+    }
+
+    public DailyEventsFragment getRegisteredFragment(int position) {
+        return (DailyEventsFragment) registeredFragments.get(position);
     }
 }

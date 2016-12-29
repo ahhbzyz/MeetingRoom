@@ -30,6 +30,10 @@ public class TimeHelper {
         return Calendar.getInstance().getTimeInMillis();
     }
 
+    public static String getCurrentTimeInMillisInText() {
+        return formatTime(getCurrentTimeInMillis());
+    }
+
     public static String formatTime(long millis) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         return sdf.format(new Date(millis));

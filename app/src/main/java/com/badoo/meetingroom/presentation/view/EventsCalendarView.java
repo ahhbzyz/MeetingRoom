@@ -7,4 +7,5 @@ package com.badoo.meetingroom.presentation.view;
 public interface EventsCalendarView extends LoadDataView {
     void setUpToolbar();
     void setUpViewPager();
+    void updateFragmentCurrTimeMark();
 }

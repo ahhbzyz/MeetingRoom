@@ -1,19 +1,25 @@
 package com.badoo.meetingroom.presentation.view.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
 import com.badoo.meetingroom.presentation.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.List;
 
@@ -26,9 +32,13 @@ import butterknife.ButterKnife;
 public class DailyEventsFragment extends BaseFragment implements DailyEventsView{
 
     @Inject DailyEventsPresenterImpl mPresenter;
-    @Inject DailyEventsAdapter mAdapter;
+    private DailyEventsAdapter mAdapter;
 
     @BindView(R.id.rv_daily_events) RecyclerView mRecyclerView;
+    @BindView(R.id.layout_current_time_mark) LinearLayout mCurrentTimeMarkLayout;
+    @BindView(R.id.tv_current_time) TextView mCurrentTimeTv;
+
+    private ProgressDialog mProgressDialog;
 
     private static final String ARG_PAGE = "page";
     private int mPage;
@@ -40,7 +50,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
 
-    public static DailyEventsFragment newInstance(int page) {
+    public static DailyEventsFragment   newInstance(int page) {
         DailyEventsFragment fragment = new DailyEventsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -64,6 +74,8 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         View view = inflater.inflate(R.layout.fragment_daily_events, container, false);
         ButterKnife.bind(this, view);
 
+
+        setUpProgressDialog();
         setUpRecyclerView();
         mPresenter.setView(this);
         mPresenter.init();
@@ -96,9 +108,26 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         mListener = null;
     }
 
+    private void setUpProgressDialog() {
+        mProgressDialog = new ProgressDialog(this.getContext());
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setMessage("Loading Data...");
+        mProgressDialog.setCanceledOnTouchOutside(false);
+    }
+
     private void setUpRecyclerView() {
+
+        mAdapter = new DailyEventsAdapter(this.getContext(), mPresenter.getWidthTimeRatio());
+        mAdapter.setOnItemClickListener(mOnItemClickListener);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(context()));
         this.mRecyclerView.setAdapter(mAdapter);
+        this.mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                mPresenter.updateCurrentTimeMarkWhenScrolled(dy);
+            }
+        });
     }
 
     @Override
@@ -112,9 +141,57 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void showLoadingData(boolean visibility) {
+    public void showCurrentTimeMark(boolean visibility, long currentTime, String time) {
+        if (visibility) {
+            mCurrentTimeMarkLayout.setVisibility(View.VISIBLE);
+        } else {
+            mCurrentTimeMarkLayout.setVisibility(View.GONE);
+        }
 
+        float currTimeHeight = currentTime *  mPresenter.getWidthTimeRatio();
+        mCurrentTimeMarkLayout.measure(0, 0);
+        mCurrentTimeMarkLayout.setY((int)(currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f));
+        mCurrentTimeTv.setText(time);
     }
+
+    @Override
+    public void bookMeeting(long startTime, long endTime) {
+        Toast.makeText(this.getContext(), TimeHelper.formatTime(startTime), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateCurrentTimeMarkPosition(int dy) {
+        float startY = mCurrentTimeMarkLayout.getY();
+        mCurrentTimeMarkLayout.setY(startY - dy);
+    }
+
+    @Override
+    public void updateCurrentTimeMarkPosition(long currentTimeInMillis) {
+        int startY = (int) mCurrentTimeMarkLayout.getY();
+        int incremental = (int) (60f * 1000 * mPresenter.getWidthTimeRatio());
+        mCurrentTimeMarkLayout.setY(startY + incremental);
+    }
+
+    @Override
+    public void updateCurrentTimeText(String time) {
+        mCurrentTimeTv.setText(time);
+    }
+
+
+    @Override
+    public void updateDailyEventList() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showLoadingData(boolean visibility) {
+        if (visibility) {
+            mProgressDialog.show();
+        } else {
+            mProgressDialog.dismiss();
+        }
+    }
+
 
     @Override
     public void showRetryLoading(boolean visibility) {
@@ -130,6 +207,18 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public Context context() {
         return null;
     }
+
+    public DailyEventsPresenterImpl getPresenter() {
+        return mPresenter;
+    }
+
+
+    private DailyEventsAdapter.OnItemClickListener mOnItemClickListener = position -> {
+        if (mPresenter != null) {
+            mPresenter.onEventClicked(position);
+        }
+    };
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

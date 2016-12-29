@@ -1,11 +1,18 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
@@ -24,11 +31,14 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
 
     @Inject
-    EventsCalendarPresenterImpl mEventsCalendarPresenter;
+    EventsCalendarPresenterImpl mPresenter;
+
+    DailyEventsFragmentPagerAdapter mAdapter;
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +48,10 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
         this.getApplicationComponent().inject(this);
 
-        mEventsCalendarPresenter.setView(this);
-        mEventsCalendarPresenter.init();
+        mPresenter.setView(this);
+        mPresenter.init();
+
+       registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
 
     @Override
@@ -60,8 +72,21 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
     @Override
     public void setUpViewPager() {
-        mViewPager.setAdapter(new DailyEventsFragmentPagerAdapter(getSupportFragmentManager(), this));
+        mAdapter = new DailyEventsFragmentPagerAdapter(getSupportFragmentManager(), this);
+        mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        // Center tab layout
+        int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+        mTabLayout.setPadding((int)(width / 2f - getResources().getDimension(R.dimen.tab_max_width) / 2f), 0 , 0, 8);
+    }
+
+    @Override
+    public void updateFragmentCurrTimeMark() {
+        if (mViewPager.getChildCount() > 0 ) {
+            mAdapter.getRegisteredFragment(0).getPresenter().updateCurrentTimeMark();
+            mAdapter.getRegisteredFragment(0).getPresenter().updateRecyclerView();
+        }
     }
 
     @Override
@@ -87,5 +112,30 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private BroadcastReceiver mTimeRefreshReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
+                mPresenter.updateFragmentCurrTimeMark();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mTimeRefreshReceiver);
     }
 }

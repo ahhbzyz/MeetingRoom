@@ -61,12 +61,11 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_events);
         ButterKnife.bind(this);
-
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setMessage("Loading Data...");
-
         this.getApplicationComponent().inject(this);
+
+        setUpProgressDialog();
+        setUpToolbar();
+
         mRoomEventsPresenter.setView(this);
         mRoomEventsPresenter.init();
 
@@ -76,7 +75,13 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
 
-    @Override
+    private void setUpProgressDialog() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setMessage("Loading Data...");
+        mProgressDialog.setCanceledOnTouchOutside(false);
+    }
+
     public void setUpToolbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);

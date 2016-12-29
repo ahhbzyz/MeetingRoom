@@ -84,18 +84,11 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     @Override
     public void init() {
-        setUpToolbar();
         loadRoomEventList();
         setUpCircleTimeView();
         setUpHorizontalTimelineView();
         updateCurrentTimeForHtv();
     }
-
-    private void setUpToolbar() {
-        mRoomEventsView.setUpToolbar();
-    }
-
-
 
     private void loadRoomEventList() {
         this.showViewRetry(false);
@@ -154,7 +147,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     @Override
     public void updateCurrentTimeForHtv() {
-        String currentTime = TimeHelper.formatTime(TimeHelper.getCurrentTimeInMillis());
+        String currentTime = TimeHelper.getCurrentTimeInMillisInText();
         mRoomEventsView.setCurrentTimeText(currentTime);
     }
 
