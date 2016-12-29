@@ -3,11 +3,9 @@ package com.badoo.meetingroom.presentation.mapper;
 import com.badoo.meetingroom.domain.entity.RoomEvent;
 import com.badoo.meetingroom.domain.entity.RoomEventImpl;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,10 +16,15 @@ import javax.inject.Inject;
 
 public class RoomEventModelMapper {
 
-    private long startDateTime;
+    private long mEventStartTime;
+    private long mEventEndTime;
 
     @Inject
-    RoomEventModelMapper() {}
+    RoomEventModelMapper() {
+        // Default time period is one day
+        mEventStartTime = TimeHelper.getMidNightTimeOfDay(0);
+        mEventEndTime = TimeHelper.getMidNightTimeOfDay(1);
+    }
 
     private RoomEventModel map(RoomEvent roomEvent) {
         if (roomEvent == null) {
@@ -33,86 +36,86 @@ public class RoomEventModelMapper {
         roomEventModel.setStatus(roomEvent.getStatus());
         roomEventModel.setStartTime(roomEvent.getStartTime());
         roomEventModel.setEndTime(roomEvent.getEndTime());
+        roomEventModel.setStatus(RoomEventImpl.BUSY);
         return roomEventModel;
     }
 
-    public List<RoomEventModel> map(Collection<RoomEvent> roomEventCollection) {
-        List<RoomEventModel> roomEventModelList;
+    public List<RoomEventModel> map(List<RoomEvent> roomEventList) {
 
-        if (roomEventCollection != null && !roomEventCollection.isEmpty()) {
+        if (mEventStartTime > mEventEndTime) {
+            throw new IllegalArgumentException("Event end time cannot less than event end time");
+        }
 
-            roomEventModelList = new ArrayList<>();
+        List<RoomEventModel> roomEventModelList = new ArrayList<>();
 
-            for(RoomEvent roomEvent : roomEventCollection) {
-                roomEventModelList.add(map(roomEvent));
+        if (roomEventList != null) {
+
+            long startTime = mEventStartTime;
+
+            long endTime = roomEventList.isEmpty() ? mEventEndTime : roomEventList.get(0).getStartTime();
+
+            if (endTime > mEventEndTime || endTime < mEventStartTime) {
+                return  roomEventModelList;
             }
-        } else {
-            roomEventModelList = Collections.emptyList();
+
+
+            RoomEventModel firstEvent = generateAvailableEvent(startTime, endTime);
+            roomEventModelList.add(firstEvent);
+
+            long lastEventEndTime = roomEventModelList.get(0).getEndTime();
+
+            for (RoomEvent roomEvent : roomEventList) {
+                final RoomEventModel roomEventModel = map(roomEvent);
+
+                if (roomEventModel != null) {
+                    startTime = roomEvent.getStartTime();
+                    endTime = roomEvent.getEndTime();
+
+                    if (startTime < mEventStartTime || startTime > mEventEndTime ||
+                        endTime > mEventEndTime || endTime < mEventStartTime) {
+                        return roomEventModelList;
+                    }
+
+                    if (startTime > lastEventEndTime) {
+                        final RoomEventModel availableEvent = generateAvailableEvent(lastEventEndTime, startTime);
+                        roomEventModelList.add(availableEvent);
+                    }
+
+                    roomEventModelList.add(roomEventModel);
+                    lastEventEndTime = endTime;
+                }
+            }
+
+            if (lastEventEndTime < mEventEndTime) {
+                RoomEventModel lastEvent = generateAvailableEvent(lastEventEndTime, mEventEndTime);
+                roomEventModelList.add(lastEvent);
+            }
         }
 
         return roomEventModelList;
     }
 
-
-    private long getMidNightTimeOfNextDays(int i) {
-
-        Calendar date = Calendar.getInstance();
-        date.set(Calendar.HOUR_OF_DAY, 0);
-        date.set(Calendar.MINUTE, 0);
-        date.set(Calendar.SECOND, 0);
-        date.set(Calendar.MILLISECOND, 0);
-        date.add(Calendar.DAY_OF_MONTH, i);
-        return date.getTimeInMillis();
-    }
-
-    private int daysBetween(long t1, long t2) {
-        return (int) ((t2 - t1) / (1000 * 60 * 60 * 24));
-    }
-
-    private RoomEvent generateAvailableEvent(long startTime, long endTime) {
-        RoomEvent roomEvent = new RoomEventImpl();
+    private RoomEventModel generateAvailableEvent(long startTime, long endTime) {
+        RoomEventModel roomEvent = new RoomEventModel();
         roomEvent.setStartTime(startTime);
         roomEvent.setEndTime(endTime);
+        roomEvent.setOrganizer("None");
         roomEvent.setStatus(RoomEventImpl.AVAILABLE);
         return roomEvent;
     }
 
-    public void setStartDateTime(long startDateTime) {
-        this.startDateTime = startDateTime;
+    public void setEventStartTime(long eventStartTime) {
+        if (eventStartTime < TimeHelper.getMidNightTimeOfDay(0)) {
+            throw new IllegalArgumentException("Event start time cannot less than today");
+        }
+        this.mEventStartTime = eventStartTime;
+    }
+
+    public void setEventEndTime(long eventEndTime) {
+        if (eventEndTime < TimeHelper.getMidNightTimeOfDay(0)) {
+            throw new IllegalArgumentException("Event end time cannot less than today");
+        }
+        this.mEventEndTime = eventEndTime;
     }
 }
-//
-//    final List<RoomEvent> roomEventList = new ArrayList<>();
-//
-//    long eventStartTime = eventList.isEmpty() ?  getMidNightTimeOfNextDays(0) : eventList.get(0).getStart().getDateTime().getValue();
-//
-//    long startTime = getMidNightTimeOfNextDays(daysBetween(getMidNightTimeOfNextDays(0),  eventStartTime));
-//    long endTime = eventList.isEmpty() ? getMidNightTimeOfNextDays(1) : eventStartTime;
-//
-//    RoomEvent firstEvent = generateAvailableEvent(startTime, endTime);
-//roomEventList.add(firstEvent);
-//    long lastEventEndTime = roomEventList.get(0).getEndTime();
-//
-//    for (Event event : eventList) {
-//
-//final RoomEvent roomEvent = transform(event);
-//
-//    if (roomEvent != null) {
-//
-//    startTime = roomEvent.getStartTime();
-//    endTime = roomEvent.getEndTime();
-//
-//    if (startTime > lastEventEndTime) {
-//final RoomEvent availableEvent = generateAvailableEvent(lastEventEndTime, startTime);
-//    roomEventList.add(availableEvent);
-//    }
-//
-//    roomEventList.add(roomEvent);
-//    lastEventEndTime = endTime;
-//    }
-//    }
-//
-//    if (lastEventEndTime < getMidNightTimeOfNextDays(1)) {
-//    RoomEvent lastEvent = generateAvailableEvent(lastEventEndTime, getMidNightTimeOfNextDays(1));
-//    roomEventList.add(lastEvent);
-//    }
+

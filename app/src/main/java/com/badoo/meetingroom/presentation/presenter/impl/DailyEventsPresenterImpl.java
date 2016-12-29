@@ -37,31 +37,25 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     GoogleAccountCredential mCredential;
 
     @Inject
-    public DailyEventsPresenterImpl(@Named(GetRoomEventList.NAME)GetRoomEventList getRoomEventListUseCase,
+    DailyEventsPresenterImpl(@Named(GetRoomEventList.NAME)GetRoomEventList getRoomEventListUseCase,
                                     RoomEventModelMapper mMapper) {
         this.getRoomEventListUseCase = getRoomEventListUseCase;
         this.mMapper = mMapper;
     }
 
-
-
     @Override
     public void init() {
         mPage = mDailyEventsView.getCurrentPage();
         loadRoomEventList();
-        setUpDailyEventList();
-
     }
-
-
 
     private void loadRoomEventList() {
         this.showViewLoading(true);
         this.getRoomEventList();
     }
 
-    private void setUpDailyEventList() {
-        mDailyEventsView.setUpRecyclerView();
+    private void showDailyEventsInView(List<RoomEventModel> roomEventModelList) {
+        mDailyEventsView.renderDailyEvents(roomEventModelList);
     }
 
     private void showViewLoading(boolean visibility) {
@@ -74,14 +68,15 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         this.mDailyEventsView = dailyEventsView;
     }
 
-    public void getRoomEventList() {
+    private void getRoomEventList() {
         DateTime start = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage));
-        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(2));
+        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
         EventsParams params = new EventsParams.EventsParamsBuilder(mCredential)
             .startTime(start)
             .endTime(end)
             .build();
-        mMapper.setStartDateTime(start.getValue());
+        mMapper.setEventStartTime(start.getValue());
+        mMapper.setEventEndTime(end.getValue());
         this.getRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
     }
 
@@ -89,7 +84,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
         @Override
         public void onNext(List<RoomEvent> roomEvents) {
-            Collection<RoomEventModel> mEventModelList = mMapper.map(roomEvents);
+            showDailyEventsInView(mMapper.map(roomEvents));
         }
 
         @Override

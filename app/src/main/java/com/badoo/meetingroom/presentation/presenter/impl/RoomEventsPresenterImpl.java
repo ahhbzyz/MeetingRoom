@@ -56,7 +56,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     @Override
     public void onCountDownTicking(long millisUntilFinished) {
-        if (mCurrentEvent.isBusy()) {
+        if (mCurrentEvent.isConfirmed()) {
             mRoomEventsView.setCircleTimeViewTime(mCurrentEvent.getEndTimeInText());
         } else {
             long hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished);
@@ -166,6 +166,8 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
             .endTime(end)
             .build();
 
+        mMapper.setEventStartTime(start.getValue());
+        mMapper.setEventEndTime(end.getValue());
         this.getRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
     }
 

@@ -14,21 +14,19 @@ import android.graphics.drawable.Drawable;
 public class TimelineBarDrawable extends Drawable {
 
     private final Paint backgroundPaint;
-    private int[]colors;
+    private int topColor;
+    private int bottomColor;
     private float leftProgress;
 
-    public TimelineBarDrawable(int[]colors, float leftProgress) {
-        this.colors = colors;
+    public TimelineBarDrawable(int topColor, int bottomColor, float leftProgress) {
+        this.topColor = topColor;
+        this.bottomColor = bottomColor;
         this.leftProgress = leftProgress;
-        backgroundPaint = new Paint();
+        this.backgroundPaint = new Paint();
     }
 
     @Override
     public void draw(Canvas canvas) {
-
-        if (colors.length != 2) {
-            return;
-        }
 
         // get drawable dimensions
         Rect bounds = getBounds();
@@ -42,10 +40,10 @@ public class TimelineBarDrawable extends Drawable {
         float leftBarHeight= leftProgress * height;
         float firstBarHeight = height - leftBarHeight;
 
-        backgroundPaint.setColor(colors[0]);
+        backgroundPaint.setColor(topColor);
         canvas.drawRect(0, 0, width, firstBarHeight, backgroundPaint);
 
-        backgroundPaint.setColor(colors[1]);
+        backgroundPaint.setColor(bottomColor);
         canvas.drawRect(0, firstBarHeight, width, height, backgroundPaint);
 
 

@@ -17,7 +17,7 @@
         android:id="@+id/img_timeline_bar"
         android:layout_height="match_parent"
         android:layout_width="8dp"
-        android:background="@color/time_slot_past" />
+        android:background="@color/time_slot_expired" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -26,7 +26,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:background="@color/time_slot_past"
+            android:background="@color/time_slot_expired"
             android:id="@+id/view_item_divider"
             android:layout_height="0.5dp" />
 

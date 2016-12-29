@@ -72,7 +72,11 @@ public class RoomEventModel {
         return startTime > TimeHelper.getCurrentTimeInMillis() ? getDuration() : endTime - TimeHelper.getCurrentTimeInMillis();
     }
 
-    public boolean isBusy (){
+    public boolean isBusy() {
+        return status == BUSY;
+    }
+
+    public boolean isConfirmed (){
         return status != AVAILABLE && !isDoNotDisturb() && !isOnHold();
     }
 
@@ -118,6 +122,22 @@ public class RoomEventModel {
         }
     }
 
+    public final int getAvailableColor() {
+        return RoomEventColor.AVAILABLE_COLOR;
+    }
+
+    public final int getBusyColor() {
+        return RoomEventColor.BUSY_COLOR;
+    }
+
+    public final int getBusyBgColor() {
+        return RoomEventColor.BUSY_BG_COLOR;
+    }
+
+    public final int getEventExpiredColor() {
+        return RoomEventColor.EXPIRED_COLOR;
+    }
+
     public boolean isExpired(){
         return endTime < TimeHelper.getCurrentTimeInMillis();
     }
@@ -131,7 +151,7 @@ public class RoomEventModel {
     }
 
     public String getPeriod() {
-        return TimeHelper.formatTime(startTime) + " - " + TimeHelper.formatTime(endTime);
+        return getStartTimeInText() + " - " + getEndTimeInText();
     }
 
     public String getStartTimeInText() {

@@ -633,7 +633,7 @@ public class CircleTimerView extends View {
         mDNDVisibility = mCurrRoomEvent.isDoNotDisturb();
         mTimerTimeVisibility = !mCurrRoomEvent.isDoNotDisturb();
         mCircleBtnVisibility = !mCurrRoomEvent.isDoNotDisturb() && !mCurrRoomEvent.isOnHold();
-        mTailIconVisibility = mCurrRoomEvent.isBusy() || mCurrRoomEvent.isOnHold();
+        mTailIconVisibility = mCurrRoomEvent.isConfirmed() || mCurrRoomEvent.isOnHold();
 
         switch (mCurrRoomEvent.getStatus()) {
             case RoomEventModel.AVAILABLE:

@@ -8,6 +8,7 @@ import com.badoo.meetingroom.presentation.view.activity.BaseActivity;
 import com.badoo.meetingroom.presentation.view.activity.EventsCalendarActivity;
 import com.badoo.meetingroom.presentation.view.activity.MainActivity;
 import com.badoo.meetingroom.presentation.view.activity.RoomEventsActivity;
+import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
 
 import javax.inject.Singleton;
 
@@ -20,4 +21,5 @@ public interface ApplicationComponent {
   void inject(RoomEventsActivity activity);
   void inject(EventsCalendarActivity activity);
   void inject(MainActivity activity);
+  void inject(DailyEventsFragment fragment);
 }
