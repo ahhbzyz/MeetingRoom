@@ -16,5 +16,5 @@ public interface DailyEventsView extends LoadDataView{
     void updateCurrentTimeMarkPosition(int dy);
     void updateDailyEventList();
     void showCurrentTimeMark(boolean visibility, long currentTime, String time);
-    void bookMeeting(long startTime, long endTime);
+    void bookingRoom(long startTime, long endTime);
 }

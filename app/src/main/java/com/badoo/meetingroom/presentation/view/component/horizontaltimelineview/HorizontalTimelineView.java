@@ -263,7 +263,7 @@ public class HorizontalTimelineView extends View {
         float initSlotWidth = event.getDuration() * mWidthTimeRatio;
 
         // Draw slot time text
-        String startTimeText = TimeHelper.getCurrentTimeInMillisInText();
+        String startTimeText = event.getStartTimeInText();
         canvas.drawText(startTimeText, mAccumTimeSlotWidth - (initSlotWidth - currSlotWidth), mTimelineCy + getTimelineOffset() - mTimelineStrokeWidth / 2f - mSlotTimeOffset, mSlotTimeTextPaint);
 
 

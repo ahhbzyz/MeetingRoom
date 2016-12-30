@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#69E27E</color>
 
     <color name="room_status_available">#69E27E</color>
     <color name="room_status_onhold">#FFB000</color>
@@ -13,5 +13,6 @@
     <color name="time_slot_expired">#D4D4D4</color>
 
     <color name="text_gray">#808080</color>
+    <color name="text_light_gray">#AEAEB1</color>
 
 </resources>

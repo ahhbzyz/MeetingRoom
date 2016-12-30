@@ -2,6 +2,7 @@ package com.badoo.meetingroom.presentation.view.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,20 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
 import com.badoo.meetingroom.presentation.view.DailyEventsView;
+import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
-import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -32,13 +32,13 @@ import butterknife.ButterKnife;
 public class DailyEventsFragment extends BaseFragment implements DailyEventsView{
 
     @Inject DailyEventsPresenterImpl mPresenter;
-    private DailyEventsAdapter mAdapter;
 
     @BindView(R.id.rv_daily_events) RecyclerView mRecyclerView;
     @BindView(R.id.layout_current_time_mark) LinearLayout mCurrentTimeMarkLayout;
     @BindView(R.id.tv_current_time) TextView mCurrentTimeTv;
+    @BindView(R.id.pb_loading_data) ProgressBar mLoadingDataPb;
 
-    private ProgressDialog mProgressDialog;
+    private DailyEventsAdapter mAdapter;
 
     private static final String ARG_PAGE = "page";
     private int mPage;
@@ -50,7 +50,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
 
-    public static DailyEventsFragment   newInstance(int page) {
+    public static DailyEventsFragment newInstance(int page) {
         DailyEventsFragment fragment = new DailyEventsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -74,8 +74,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         View view = inflater.inflate(R.layout.fragment_daily_events, container, false);
         ButterKnife.bind(this, view);
 
-
-        setUpProgressDialog();
         setUpRecyclerView();
         mPresenter.setView(this);
         mPresenter.init();
@@ -106,13 +104,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    private void setUpProgressDialog() {
-        mProgressDialog = new ProgressDialog(this.getContext());
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setMessage("Loading Data...");
-        mProgressDialog.setCanceledOnTouchOutside(false);
     }
 
     private void setUpRecyclerView() {
@@ -155,8 +146,13 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void bookMeeting(long startTime, long endTime) {
-        Toast.makeText(this.getContext(), TimeHelper.formatTime(startTime), Toast.LENGTH_SHORT).show();
+    public void bookingRoom(long startTime, long endTime) {
+        Intent intent = new Intent(this.getActivity(), RoomBookingActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong("startTime", startTime);
+        bundle.putLong("endTime", endTime);
+        intent.putExtra("eventParams", bundle);
+        startActivity(intent);
     }
 
     @Override
@@ -186,9 +182,9 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @Override
     public void showLoadingData(boolean visibility) {
         if (visibility) {
-            mProgressDialog.show();
+            mLoadingDataPb.setVisibility(View.VISIBLE);
         } else {
-            mProgressDialog.dismiss();
+            mLoadingDataPb.setVisibility(View.GONE);
         }
     }
 

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/activity_room_booking"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout_status_bar"
+        android:layout_height="32dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/img_badoo_logo"
+            android:adjustViewBounds="true"
+            android:layout_marginStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:src="@drawable/ic_badoo_logo" />
+
+        <TextView
+            android:text="Wednesday, 11, July"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/tv_curr_date_time"
+            android:textColor="@android:color/black"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/toolbar">
+
+        <TextView
+            android:text="Bahamas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_room_name"
+            android:textSize="48sp"
+            android:layout_marginStart="32dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"/>
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:text="Today"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_booking_date"
+        android:textColor="@android:color/black"
+        android:textSize="28sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="64dp" />
+
+    <TextView
+        android:text="11:45 - 12:30"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_booking_period"
+        android:textSize="42dp"
+        android:textColor="@android:color/black"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="16dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:text="Enter your email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:layout_marginTop="32dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textSize="16sp"
+        android:textColor="@color/text_light_gray" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="64dp"
+        android:paddingEnd="64dp">
+
+        <com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/et_email"
+            android:layout_marginTop="16dp"
+            android:imeOptions="actionDone"
+            android:text="@string/badoo_mail_suffix"
+            android:textAlignment="center" />
+
+        <Button
+            android:text="BOOK"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:stateListAnimator="@null"
+            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:id="@+id/btn_book"
+            android:layout_marginTop="32dp"
+            android:textSize="18sp"
+            android:layout_height="64dp" />
+    </LinearLayout>
+
+</LinearLayout>

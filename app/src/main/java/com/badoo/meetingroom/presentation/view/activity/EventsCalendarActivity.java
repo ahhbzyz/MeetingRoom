@@ -7,12 +7,10 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
@@ -116,11 +114,9 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 

@@ -1,10 +1,7 @@
 package com.badoo.meetingroom.presentation.view.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -155,12 +152,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 BusyBgDrawable bg = new BusyBgDrawable(Color.TRANSPARENT, Color.TRANSPARENT, progress);
                 holder.mEventContentLayout.setBackground(bg);
             }
-
-            holder.mEventContentParentLayout.setOnClickListener(v -> {
-                if (this.mOnItemClickListener != null) {
-                    this.mOnItemClickListener.onEventItemClicked(position);
-                }
-            });
         }
 
         // Event is coming
@@ -178,6 +169,14 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE);
                 holder.mEventContentLayout.setBackground(bg);
             }
+        }
+
+        if (event.isAvailable() && !event.isExpired()) {
+            holder.mEventContentParentLayout.setOnClickListener(v -> {
+                if (this.mOnItemClickListener != null) {
+                    this.mOnItemClickListener.onEventItemClicked(position);
+                }
+            });
         }
     }
 
