@@ -1,28 +1,36 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
+import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText;
+import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RoomBookingActivity extends BaseActivity {
+public class RoomBookingActivity extends BaseActivity implements RoomBookingView{
+
+    @Inject RoomBookingPresenterImpl mPresenter;
+    @Inject TimeSlotsAdapter mAdapter;
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.tv_booking_date) TextView mBookingDateTv;
     @BindView(R.id.tv_booking_period) TextView mBookingPeriodTv;
     @BindView(R.id.et_email) ExtendedEditText mEmailEt;
+    @BindView(R.id.rv_time_slots) RecyclerView mTimeSlotsRv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +38,15 @@ public class RoomBookingActivity extends BaseActivity {
         setContentView(R.layout.activity_room_booking);
         ButterKnife.bind(this);
 
+        this.getApplicationComponent().inject(this);
+
         setUpToolbar();
         setUpTextViews();
         setUpEditText();
+        setUpRecyclerView();
 
+        mPresenter.setView(this);
+        mPresenter.init();
     }
 
 
@@ -69,9 +82,25 @@ public class RoomBookingActivity extends BaseActivity {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 mEmailEt.clearFocus();
             }
-
             return false;
         });
+    }
+
+    private void setUpRecyclerView() {
+        mTimeSlotsRv.setLayoutManager(new LinearLayoutManager(
+            context(),
+            LinearLayoutManager.HORIZONTAL,
+            false));
+        mTimeSlotsRv.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void setTimeSlotsInView() {
+        Bundle bundle = getIntent().getBundleExtra("timePeriod");
+        long startTime = bundle.getLong("startTime");
+        long endTime = bundle.getLong("endTime");
+        mAdapter.setTimeSlots(startTime, endTime);
+
     }
 
     @Override
@@ -81,4 +110,26 @@ public class RoomBookingActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void showLoadingData(boolean visibility) {
+
+    }
+
+    @Override
+    public void showRetryLoading(boolean visibility) {
+
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public Context context() {
+        return getApplicationContext();
+    }
+
+
 }

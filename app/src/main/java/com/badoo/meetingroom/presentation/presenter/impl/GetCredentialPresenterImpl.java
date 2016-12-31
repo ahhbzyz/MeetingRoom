@@ -12,7 +12,7 @@ import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
 import com.badoo.meetingroom.presentation.mapper.GoogleAccountModelMapper;
 import com.badoo.meetingroom.presentation.model.GoogleAccountModel;
 import com.badoo.meetingroom.presentation.presenter.intf.GetCredentialPresenter;
-import com.badoo.meetingroom.presentation.view.GetCredentialView;
+import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
 
 import javax.inject.Inject;
 import javax.inject.Named;

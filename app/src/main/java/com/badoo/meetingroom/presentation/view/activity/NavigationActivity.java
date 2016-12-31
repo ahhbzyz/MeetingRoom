@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.GetCredentialPresenterImpl;
-import com.badoo.meetingroom.presentation.view.GetCredentialView;
+import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 

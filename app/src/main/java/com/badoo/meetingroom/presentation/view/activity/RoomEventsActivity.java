@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomEventsPresenterImpl;
-import com.badoo.meetingroom.presentation.view.RoomEventsView;
+import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView;
 import com.badoo.meetingroom.presentation.view.component.custombutton.LongPressButton;
 import com.badoo.meetingroom.presentation.view.component.custombutton.TwoLineTextButton;

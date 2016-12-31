@@ -3,7 +3,7 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 import android.support.annotation.NonNull;
 
 import com.badoo.meetingroom.presentation.presenter.intf.EventsCalendarPresenter;
-import com.badoo.meetingroom.presentation.view.EventsCalendarView;
+import com.badoo.meetingroom.presentation.view.view.EventsCalendarView;
 
 import javax.inject.Inject;
 

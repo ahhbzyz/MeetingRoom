@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.EventsCalendarPresenterImpl;
-import com.badoo.meetingroom.presentation.view.EventsCalendarView;
+import com.badoo.meetingroom.presentation.view.view.EventsCalendarView;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsFragmentPagerAdapter;
 import com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.TabLayout;
 import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;

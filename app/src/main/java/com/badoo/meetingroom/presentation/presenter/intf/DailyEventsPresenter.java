@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.presentation.presenter.intf;
 
-import com.badoo.meetingroom.presentation.view.DailyEventsView;
+import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 
 /**
  * Created by zhangyaozhong on 28/12/2016.

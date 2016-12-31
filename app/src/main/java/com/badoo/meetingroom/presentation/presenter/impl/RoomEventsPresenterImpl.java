@@ -9,7 +9,7 @@ import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomEventsPresenter;
-import com.badoo.meetingroom.presentation.view.RoomEventsView;
+import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.DateTime;

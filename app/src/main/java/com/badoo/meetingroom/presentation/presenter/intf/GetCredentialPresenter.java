@@ -2,9 +2,7 @@ package com.badoo.meetingroom.presentation.presenter.intf;
 
 import android.support.annotation.NonNull;
 
-import com.badoo.meetingroom.presentation.view.GetCredentialView;
-
-import javax.inject.Inject;
+import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
 
 /**
  * Created by zhangyaozhong on 23/12/2016.

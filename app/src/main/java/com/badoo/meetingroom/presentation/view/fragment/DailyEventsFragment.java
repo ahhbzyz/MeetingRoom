@@ -1,13 +1,11 @@
 package com.badoo.meetingroom.presentation.view.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,7 @@ import android.widget.TextView;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
-import com.badoo.meetingroom.presentation.view.DailyEventsView;
+import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
 
@@ -107,7 +105,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     private void setUpRecyclerView() {
-
+        // Todo di for adapter
         mAdapter = new DailyEventsAdapter(this.getContext(), mPresenter.getWidthTimeRatio());
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(context()));
@@ -151,7 +149,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         Bundle bundle = new Bundle();
         bundle.putLong("startTime", startTime);
         bundle.putLong("endTime", endTime);
-        intent.putExtra("eventParams", bundle);
+        intent.putExtra("timePeriod", bundle);
         startActivity(intent);
     }
 
@@ -187,7 +185,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             mLoadingDataPb.setVisibility(View.GONE);
         }
     }
-
 
     @Override
     public void showRetryLoading(boolean visibility) {

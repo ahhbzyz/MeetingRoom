@@ -23,6 +23,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by zhangyaozhong on 19/12/2016.
  */
@@ -36,18 +39,15 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mStartTimeTv, mEventPeriodTv, mEventInfoTv;
-        private ImageView mTimelineBar;
-        private LinearLayout mEventContentLayout;
-        private FrameLayout mEventContentParentLayout;
+        @BindView(R.id.tv_start_time) TextView mStartTimeTv;
+        @BindView(R.id.tv_event_period) TextView mEventPeriodTv;
+        @BindView(R.id.tv_event_info) TextView mEventInfoTv;
+        @BindView(R.id.img_timeline_bar) ImageView mTimelineBar;
+        @BindView(R.id.layout_event_content) LinearLayout mEventContentLayout;
+        @BindView(R.id.layout_event_content_parent) FrameLayout mEventContentParentLayout;
         private ViewHolder(View view) {
             super(view);
-            mStartTimeTv = (TextView)view.findViewById(R.id.tv_start_time);
-            mEventPeriodTv = (TextView)view.findViewById(R.id.tv_event_period);
-            mEventInfoTv = (TextView)view.findViewById(R.id.tv_event_info);
-            mTimelineBar = (ImageView)view.findViewById(R.id.img_timeline_bar);
-            mEventContentLayout = (LinearLayout)view.findViewById(R.id.layout_event_content);
-            mEventContentParentLayout  = (FrameLayout)view.findViewById(R.id.layout_event_content_parent);
+            ButterKnife.bind(this, view);
         }
     }
 
