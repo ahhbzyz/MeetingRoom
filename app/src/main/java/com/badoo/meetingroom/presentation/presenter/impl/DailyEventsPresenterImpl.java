@@ -96,7 +96,8 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     public void onEventClicked(int position) {
         if (mEventList != null && mEventList.get(position).isAvailable()) {
             RoomEventModel event = mEventList.get(position);
-            mDailyEventsView.bookingRoom(event.getStartTime(), event.getEndTime());
+            long startTime = event.isProcessing() ? TimeHelper.getCurrentTimeInMillis() : event.getStartTime();
+            mDailyEventsView.bookingRoom(startTime, event.getEndTime());
         }
     }
 

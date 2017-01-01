@@ -55,4 +55,9 @@ public class ViewHelper {
         linearLayout.addView(tv);
         return linearLayout;
     }
+
+    public static float dp2px(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return dp * scale + 0.5f;
+    }
 }

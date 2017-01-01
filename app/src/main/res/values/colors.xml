@@ -3,16 +3,24 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#69E27E</color>
+    <color name="colorAccentDark">#41BB56</color>
 
-    <color name="room_status_available">#69E27E</color>
-    <color name="room_status_onhold">#FFB000</color>
-    <color name="room_status_busy">#F5584F</color>
-    <color name="room_status_onhold_bg">#FFF2DB</color>
-    <color name="room_status_busy_bg">#FFE8E8</color>
+    <color name="roomStatusAvailable">#69E27E</color>
+    <color name="roomStatusOnHold">#FFB000</color>
 
-    <color name="time_slot_expired">#D4D4D4</color>
+    <color name="roomStatusBusy">#F5584F</color>
+    <color name="roomStatusBusyDark">#E6342A</color>
 
-    <color name="text_gray">#808080</color>
-    <color name="text_light_gray">#AEAEB1</color>
+
+    <color name="roomStatusOnHoldBg">#FFF2DB</color>
+    <color name="roomStatusBusyBg">#FFE8E8</color>
+
+    <color name="timeSlotExpired">#D4D4D4</color>
+
+    <color name="textGray">#808080</color>
+    <color name="textLightGray">#AEAEB1</color>
+
+    <color name="unselectedTimeSlot">#EEEEEE</color>
+    <color name="unselectedTimeSlotDark">#D8D8D8</color>
 
 </resources>

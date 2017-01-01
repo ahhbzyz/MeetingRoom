@@ -14,7 +14,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     private RoomBookingView mRoomBookingView;
 
     @Inject
-    public RoomBookingPresenterImpl() {}
+    RoomBookingPresenterImpl() {}
 
     @Override
     public void init() {
@@ -44,6 +44,8 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     public void setView(RoomBookingView roomBookingView) {
         this.mRoomBookingView = roomBookingView;
     }
+
+
 
 
 }

@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity">
 
     <RelativeLayout
@@ -70,34 +71,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_booking_period"
-        android:textSize="42dp"
+        android:textSize="42sp"
         android:textColor="@android:color/black"
         android:gravity="center_vertical|center_horizontal"
         android:layout_marginTop="16dp" />
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/rv_time_slots">
 
-    </android.support.v7.widget.RecyclerView>
 
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_time_slots"
+            android:clipToPadding="false"
+            android:layout_marginTop="32dp">
+        </android.support.v7.widget.RecyclerView>
     <TextView
         android:text="Enter your email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView3"
+        android:id="@+id/tv_tip"
         android:layout_marginTop="32dp"
         android:gravity="center_vertical|center_horizontal"
         android:textSize="16sp"
-        android:textColor="@color/text_light_gray" />
+        android:textColor="@color/textLightGray" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="64dp"
-        android:paddingEnd="64dp">
+        android:paddingStart="@dimen/room_booking_view_margin"
+        android:paddingEnd="@dimen/room_booking_view_margin">
 
         <com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText
             android:layout_width="match_parent"
@@ -106,6 +109,7 @@
             android:ems="10"
             android:id="@+id/et_email"
             android:layout_marginTop="16dp"
+            android:textSize="20sp"
             android:imeOptions="actionDone"
             android:text="@string/badoo_mail_suffix"
             android:textAlignment="center" />
@@ -118,7 +122,6 @@
             android:layout_width="match_parent"
             android:id="@+id/btn_book"
             android:layout_marginTop="32dp"
-            android:textSize="18sp"
             android:layout_height="64dp" />
     </LinearLayout>
 

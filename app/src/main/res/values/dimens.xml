@@ -6,4 +6,10 @@
 
     <dimen name="status_bar_height">16dp</dimen>
     <dimen name="tab_max_width">100dp</dimen>
+
+    <dimen name="room_booking_time_slot_height">42dp</dimen>
+    <dimen name="room_booking_time_slot_width">100dp</dimen>
+    <dimen name="room_booking_view_margin">64dp</dimen>
+
+    <dimen name="room_booking_time_slot_divider_width">1.5dp</dimen>
 </resources>

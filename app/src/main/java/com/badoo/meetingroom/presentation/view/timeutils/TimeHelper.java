@@ -39,6 +39,16 @@ public class TimeHelper {
         return sdf.format(new Date(millis));
     }
 
+
+    public static String formatDate(long millis) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
+        Date date = new Date(millis);
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        date = c.getTime();
+        return sdf.format(date);
+    }
+
     public static String formatMillisInMinsAndSecs(long millis) {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis));
         long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));

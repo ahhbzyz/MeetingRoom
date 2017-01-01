@@ -1,6 +1,7 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,10 +15,10 @@ import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 
 import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -97,10 +98,36 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Override
     public void setTimeSlotsInView() {
         Bundle bundle = getIntent().getBundleExtra("timePeriod");
+        if (bundle == null) {
+            return;
+        }
         long startTime = bundle.getLong("startTime");
         long endTime = bundle.getLong("endTime");
+
+        if (startTime < TimeHelper.getMidNightTimeOfDay(1)) {
+            mBookingDateTv.setText("Today");
+        } else {
+            mBookingDateTv.setText(TimeHelper.formatDate(startTime));
+        }
+        mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " +TimeHelper.formatTime(endTime));
+
         mAdapter.setTimeSlots(startTime, endTime);
 
+        // Set left padding
+        if (mAdapter.getItemCount() >= 1) {
+            int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+            int availableSlotLength = (int) ((mAdapter.getItemCount() - 1) * getResources().getDimension(R.dimen.room_booking_time_slot_width));
+
+            int leftPadding;
+
+            if (availableSlotLength >= width - 2 * getResources().getDimension(R.dimen.room_booking_view_margin)) {
+                leftPadding = (int) getResources().getDimension(R.dimen.room_booking_view_margin);
+            } else {
+                leftPadding = (width - availableSlotLength) / 2;
+            }
+            mTimeSlotsRv.setPadding(leftPadding, 0, 0, 0);
+            mAdapter.setRecyclerViewParams(width, leftPadding);
+        }
     }
 
     @Override
