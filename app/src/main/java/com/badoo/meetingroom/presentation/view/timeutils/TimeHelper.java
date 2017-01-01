@@ -83,4 +83,13 @@ public class TimeHelper {
 
         return date.getTimeInMillis();
     }
+
+    public static boolean isMidNight(long milliseconds){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliseconds);
+        return calendar.get(Calendar.HOUR_OF_DAY) == 0
+            && calendar.get(Calendar.MINUTE) == 0
+            && calendar.get(Calendar.SECOND) == 0
+            && calendar.get(Calendar.MILLISECOND) == 0;
+    }
 }

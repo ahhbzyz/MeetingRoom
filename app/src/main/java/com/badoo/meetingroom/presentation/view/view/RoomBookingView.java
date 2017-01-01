@@ -6,4 +6,5 @@ package com.badoo.meetingroom.presentation.view.view;
 
 public interface RoomBookingView extends LoadDataView {
     void setTimeSlotsInView();
+    void updateTimePeriodTextView(long selectedEndTime, long selectedEndTime1);
 }

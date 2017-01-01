@@ -18,6 +18,9 @@ import com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditTe
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 
+
+import java.util.List;
+
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,7 +112,11 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         } else {
             mBookingDateTv.setText(TimeHelper.formatDate(startTime));
         }
-        mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " +TimeHelper.formatTime(endTime));
+        if (TimeHelper.isMidNight(endTime)) {
+            mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + "24:00");
+        } else {
+            mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " +TimeHelper.formatTime(endTime));
+        }
 
         mAdapter.setTimeSlots(startTime, endTime);
 
@@ -127,6 +134,23 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             }
             mTimeSlotsRv.setPadding(leftPadding, 0, 0, 0);
             mAdapter.setRecyclerViewParams(width, leftPadding);
+        }
+
+        mAdapter.setOnItemClickListener(timeSlotList -> {
+            mPresenter.setTimeSlotList(timeSlotList);
+        });
+    }
+
+    @Override
+    public void updateTimePeriodTextView(long startTime, long endTime) {
+        if (startTime != -1 && endTime != -1) {
+            if (TimeHelper.isMidNight(endTime)) {
+                mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + "24:00");
+            } else {
+                mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " +TimeHelper.formatTime(endTime));
+            }
+        } else {
+            mBookingPeriodTv.setText("No Slots Selected");
         }
     }
 

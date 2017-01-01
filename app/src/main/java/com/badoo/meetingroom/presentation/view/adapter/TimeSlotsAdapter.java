@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,6 +35,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     private final long mDefaultSlotLength = 15 * 60 * 1000;
     private int mRecyclerViewWidth = -1;
     private int mLeftPadding = -1;
+    private OnItemClickListener mOnItemClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -161,12 +163,18 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                 holder.mTimeSlotImg.setLayoutParams(params);
             }
             holder.mDivider.setVisibility(View.GONE);
+            if (TimeHelper.isMidNight(slot.getStartTime())) {
+                holder.mStartTimeTv.setText("24:00");
+            }
         } else {
             holder.mDivider.setVisibility(View.INVISIBLE);
 
             holder.itemView.setOnClickListener(v -> {
                 slot.setSelected();
                 notifyDataSetChanged();
+                if (this.mOnItemClickListener != null) {
+                    this.mOnItemClickListener.onEventItemClicked(mTimeSlotList);
+                }
             });
             holder.itemView.setOnLongClickListener(v -> {
                 if (slot.isSelected) {
@@ -179,6 +187,11 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                     }
                 }
                 notifyDataSetChanged();
+
+                if (this.mOnItemClickListener != null) {
+                    this.mOnItemClickListener.onEventItemClicked(mTimeSlotList);
+                }
+
                 return false;
             });
         }
@@ -198,7 +211,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     }
 
 
-    private class TimeSlot{
+    public class TimeSlot{
 
         private long startTime;
         private boolean isSelected = true;
@@ -226,5 +239,13 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
         String getStartTimeInText() {
             return TimeHelper.formatTime(startTime);
         }
+    }
+
+    public void setOnItemClickListener (TimeSlotsAdapter.OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onEventItemClicked(List<TimeSlot> mTimeSlotList);
     }
 }

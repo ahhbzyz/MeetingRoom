@@ -88,7 +88,11 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
         holder.mStartTimeTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
         holder.mStartTimeTv.setText(event.getStartTimeInText());
-        holder.mEventPeriodTv.setText(event.getPeriod());
+        if (position == getItemCount() - 1) {
+            holder.mEventPeriodTv.setText(event.getStartTimeInText() + " - " + "24:00");
+        } else {
+            holder.mEventPeriodTv.setText(event.getPeriod());
+        }
         holder.mEventPeriodTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
 
         // Reset view
@@ -102,14 +106,16 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         // Event Expired
         if (event.isExpired()) {
 
-            holder.mTimelineBar.setBackgroundColor(event.getEventExpiredColor());
 
             if (event.isAvailable()) {
                 holder.mEventInfoTv.setText("");
             } else {
                 holder.mEventInfoTv.setText(event.getOrganizer());
             }
+
+            holder.mTimelineBar.setBackgroundColor(event.getEventExpiredColor());
             holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
+            holder.mEventContentLayout.setBackground(null);
         }
 
         // Event in processing
