@@ -1,8 +1,8 @@
 package com.badoo.meetingroom.data.repository;
 
-import com.badoo.meetingroom.data.repository.datasource.GoogleAccountDataStore;
-import com.badoo.meetingroom.data.repository.datasource.GoogleAccountDataStoreFactory;
-import com.badoo.meetingroom.domain.entity.GoogleAccount;
+import com.badoo.meetingroom.data.repository.datasource.intf.GoogleAccountDataStore;
+import com.badoo.meetingroom.data.repository.datasource.impl.GoogleAccountDataStoreFactory;
+import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
 import com.badoo.meetingroom.domain.mapper.GoogleAccountDataMapper;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
 

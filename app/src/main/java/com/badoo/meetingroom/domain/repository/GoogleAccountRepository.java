@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.domain.repository;
 
-import com.badoo.meetingroom.domain.entity.GoogleAccount;
+import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
 
 import rx.Observable;
 

@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.badoo.meetingroom.data.exception.GooglePlayServicesAvailabilityException;
 import com.badoo.meetingroom.data.exception.NoAccountNameFoundInCacheException;
 import com.badoo.meetingroom.data.exception.NoPermissionToAccessContactsException;
-import com.badoo.meetingroom.domain.entity.GoogleAccount;
+import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;

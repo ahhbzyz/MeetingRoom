@@ -1,11 +1,14 @@
 package com.badoo.meetingroom.domain.mapper;
 
-import com.badoo.meetingroom.domain.entity.RoomEvent;
-import com.badoo.meetingroom.domain.entity.RoomEventImpl;
+import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
+import com.badoo.meetingroom.domain.entity.impl.RoomEventImpl;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
+import com.google.api.services.calendar.model.EventDateTime;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -40,7 +43,7 @@ public class RoomEventDataMapper {
         return roomEvent;
     }
 
-    public List<RoomEvent> transform(List<Event> eventList) {
+    public List<RoomEvent> map(List<Event> eventList) {
         final List<RoomEvent> roomEventList = new ArrayList<>();
 
         for (Event event : eventList) {

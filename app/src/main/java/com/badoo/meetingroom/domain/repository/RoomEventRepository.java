@@ -1,8 +1,8 @@
 package com.badoo.meetingroom.domain.repository;
 
-import com.badoo.meetingroom.data.EventParams;
-import com.badoo.meetingroom.data.EventsParams;
-import com.badoo.meetingroom.domain.entity.RoomEvent;
+import com.badoo.meetingroom.data.InsertEventParams;
+import com.badoo.meetingroom.data.GetEventsParams;
+import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.google.api.services.calendar.model.Event;
 
 import java.util.List;
@@ -14,6 +14,6 @@ import rx.Observable;
  */
 
 public interface RoomEventRepository {
-    Observable<List<RoomEvent>> getRoomEventList(EventsParams params);
-    Observable<Event> insertUserEvent(EventParams params);
+    Observable<List<RoomEvent>> getRoomEventList(GetEventsParams params);
+    Observable<Event> insertEvent(InsertEventParams params);
 }

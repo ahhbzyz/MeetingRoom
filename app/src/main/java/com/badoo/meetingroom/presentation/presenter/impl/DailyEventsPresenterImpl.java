@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
-import com.badoo.meetingroom.data.EventsParams;
-import com.badoo.meetingroom.domain.entity.RoomEvent;
+import com.badoo.meetingroom.data.GetEventsParams;
+import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
@@ -97,14 +97,14 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         if (mEventList != null && mEventList.get(position).isAvailable()) {
             RoomEventModel event = mEventList.get(position);
             long startTime = event.isProcessing() ? TimeHelper.getCurrentTimeInMillis() : event.getStartTime();
-            mDailyEventsView.bookingRoom(startTime, event.getEndTime());
+            mDailyEventsView.bookRoom(startTime, event.getEndTime());
         }
     }
 
     private void getRoomEventList() {
         DateTime start = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage));
         DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
-        EventsParams params = new EventsParams.EventsParamsBuilder(mCredential)
+        GetEventsParams params = new GetEventsParams.EventsParamsBuilder(mCredential)
             .startTime(start)
             .endTime(end)
             .build();
@@ -121,7 +121,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     public void updateRecyclerView() {
         mDailyEventsView.updateDailyEventList();
     }
-
 
 
     private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {

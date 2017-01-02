@@ -12,6 +12,7 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import javax.inject.Singleton;
 
@@ -25,13 +26,13 @@ import dagger.Provides;
 public class ApplicationModule {
 
     private final AndroidApplication application;
-    private final String[] SCOPES = { CalendarScopes.CALENDAR_READONLY };
+    private final String[] SCOPES = {CalendarScopes.CALENDAR};
     private GoogleAccountCredential mCredential;
 
     public ApplicationModule(AndroidApplication application) {
         this.application = application;
         this.mCredential = GoogleAccountCredential.usingOAuth2(
-            application.getApplicationContext(), Arrays.asList(SCOPES))
+            application.getApplicationContext(), Collections.singleton(CalendarScopes.CALENDAR))
             .setBackOff(new ExponentialBackOff());
     }
 

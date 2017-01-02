@@ -24,8 +24,8 @@ import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomEventsPresenterImpl;
 import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView;
-import com.badoo.meetingroom.presentation.view.component.custombutton.LongPressButton;
-import com.badoo.meetingroom.presentation.view.component.custombutton.TwoLineTextButton;
+import com.badoo.meetingroom.presentation.view.component.button.LongPressButton;
+import com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton;
 import com.badoo.meetingroom.presentation.view.component.horizontaltimelineview.HorizontalTimelineView;
 import com.badoo.meetingroom.presentation.view.viewutils.ViewHelper;
 

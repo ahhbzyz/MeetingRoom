@@ -19,12 +19,10 @@ public class RoomEventModel {
     private long startTime;
     private long endTime;
 
-    private boolean isBusy;
     private boolean isOnHold;
     private boolean doNotDisturb;
 
-    public RoomEventModel() {
-    }
+    public RoomEventModel() {}
 
     public String getOrganizer() {
         return organizer;

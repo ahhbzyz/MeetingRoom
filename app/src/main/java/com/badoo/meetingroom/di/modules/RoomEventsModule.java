@@ -2,6 +2,7 @@ package com.badoo.meetingroom.di.modules;
 
 import com.badoo.meetingroom.data.repository.RoomEventDataRepository;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
+import com.badoo.meetingroom.domain.interactor.InsertEvent;
 import com.badoo.meetingroom.domain.repository.RoomEventRepository;
 
 import javax.inject.Named;
@@ -20,9 +21,15 @@ public class RoomEventsModule {
     public RoomEventsModule() {}
 
     @Provides
-    @Named("getRoomEventList")
+    @Named(GetRoomEventList.NAME)
     GetRoomEventList provideGetRoomEventListUseCase(GetRoomEventList getRoomEventList) {
         return getRoomEventList;
+    }
+
+    @Provides
+    @Named(InsertEvent.NAME)
+    InsertEvent provideInsertEventUseCase(InsertEvent insertEvent) {
+        return insertEvent;
     }
 
     @Provides

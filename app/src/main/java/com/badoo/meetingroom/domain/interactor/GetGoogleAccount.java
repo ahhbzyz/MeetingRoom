@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.domain.interactor;
 
-import com.badoo.meetingroom.domain.entity.GoogleAccount;
+import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
 
 

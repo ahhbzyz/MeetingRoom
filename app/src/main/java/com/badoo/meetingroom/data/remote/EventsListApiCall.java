@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.data.remote;
 
-import com.badoo.meetingroom.data.EventsParams;
+import com.badoo.meetingroom.data.GetEventsParams;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -17,26 +17,26 @@ import java.util.concurrent.Callable;
  * Created by zhangyaozhong on 20/12/2016.
  */
 
-public class EventsListApiCall implements Callable<List<Event>>{
+class EventsListApiCall implements Callable<List<Event>>{
 
     private Calendar mServices = null;
     private List<Event> mResponse;
-    private EventsParams mParams;
+    private GetEventsParams mParams;
 
-    private EventsListApiCall(EventsParams params) {
+    private EventsListApiCall(GetEventsParams params) {
 
         this.mParams = params;
 
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-
+        System.out.println(mParams.getCredential().getScope());
         mServices = new com.google.api.services.calendar.Calendar.Builder(
             transport, jsonFactory, mParams.getCredential())
             .setApplicationName("Meeting Room")
             .build();
     }
 
-    static EventsListApiCall createGET(EventsParams params) {
+    static EventsListApiCall createGET(GetEventsParams params) {
         return new EventsListApiCall(params);
     }
 

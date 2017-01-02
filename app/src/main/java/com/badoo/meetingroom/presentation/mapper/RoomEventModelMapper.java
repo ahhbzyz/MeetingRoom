@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.presentation.mapper;
 
-import com.badoo.meetingroom.domain.entity.RoomEvent;
-import com.badoo.meetingroom.domain.entity.RoomEventImpl;
+import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
+import com.badoo.meetingroom.domain.entity.impl.RoomEventImpl;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 

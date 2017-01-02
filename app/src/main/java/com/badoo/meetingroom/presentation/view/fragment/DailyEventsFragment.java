@@ -144,7 +144,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void bookingRoom(long startTime, long endTime) {
+    public void bookRoom(long startTime, long endTime) {
         Intent intent = new Intent(this.getActivity(), RoomBookingActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong("startTime", startTime);

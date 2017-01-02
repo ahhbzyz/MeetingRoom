@@ -2,8 +2,8 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import android.support.annotation.NonNull;
 
-import com.badoo.meetingroom.data.EventsParams;
-import com.badoo.meetingroom.domain.entity.RoomEvent;
+import com.badoo.meetingroom.data.GetEventsParams;
+import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
@@ -30,7 +30,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private RoomEventsView mRoomEventsView;
 
-    private final GetRoomEventList getRoomEventListUseCase;
+    private final GetRoomEventList mGetRoomEventListUseCase;
 
     private final RoomEventModelMapper mMapper;
 
@@ -38,14 +38,15 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private RoomEventModel mCurrentEvent;
 
-    @Inject
-    GoogleAccountCredential mCredential;
+    private final GoogleAccountCredential mCredential;
 
     @Inject
     RoomEventsPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
-                            RoomEventModelMapper mapper) {
-        this.getRoomEventListUseCase = getRoomEventListUseCase;
+                            RoomEventModelMapper mapper,
+                            GoogleAccountCredential credential) {
+        this.mGetRoomEventListUseCase = getRoomEventListUseCase;
         this.mMapper = mapper;
+        this.mCredential = credential;
     }
 
     @Override
@@ -154,14 +155,14 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     private void getRoomEventList() {
         DateTime start = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
         DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
-        EventsParams params = new EventsParams.EventsParamsBuilder(mCredential)
+        GetEventsParams params = new GetEventsParams.EventsParamsBuilder(mCredential)
             .startTime(start)
             .endTime(end)
             .build();
 
         mMapper.setEventStartTime(start.getValue());
         mMapper.setEventEndTime(end.getValue());
-        this.getRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
+        this.mGetRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
     }
 
     @Override
@@ -228,6 +229,6 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     @Override
     public void destroy() {
-        getRoomEventListUseCase.unSubscribe();
+        mGetRoomEventListUseCase.unSubscribe();
     }
 }

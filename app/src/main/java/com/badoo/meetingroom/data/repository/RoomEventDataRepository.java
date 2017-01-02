@@ -1,11 +1,11 @@
 package com.badoo.meetingroom.data.repository;
 
-import com.badoo.meetingroom.data.EventParams;
-import com.badoo.meetingroom.data.EventsParams;
+import com.badoo.meetingroom.data.InsertEventParams;
+import com.badoo.meetingroom.data.GetEventsParams;
 import com.badoo.meetingroom.domain.mapper.RoomEventDataMapper;
-import com.badoo.meetingroom.data.repository.datasource.RoomEventDataStoreFactory;
-import com.badoo.meetingroom.data.repository.datasource.RoomEventDataStore;
-import com.badoo.meetingroom.domain.entity.RoomEvent;
+import com.badoo.meetingroom.data.repository.datasource.impl.RoomEventDataStoreFactory;
+import com.badoo.meetingroom.data.repository.datasource.intf.RoomEventDataStore;
+import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.repository.RoomEventRepository;
 import com.google.api.services.calendar.model.Event;
 
@@ -27,20 +27,19 @@ public class RoomEventDataRepository implements RoomEventRepository {
     private final RoomEventDataStore mRoomEventDataStore;
 
     @Inject
-    public RoomEventDataRepository(RoomEventDataStoreFactory roomEventDataStoreFactory,
+    RoomEventDataRepository(RoomEventDataStoreFactory roomEventDataStoreFactory,
                                    RoomEventDataMapper roomEventDataMapper) {
         this.mRoomEventDataMapper = roomEventDataMapper;
         this.mRoomEventDataStore = roomEventDataStoreFactory.createRemoteDataStore();
     }
 
     @Override
-    public Observable<List<RoomEvent>> getRoomEventList(EventsParams params) {
-
-        return mRoomEventDataStore.getEventList(params).map(this.mRoomEventDataMapper::transform);
+    public Observable<List<RoomEvent>> getRoomEventList(GetEventsParams params) {
+        return mRoomEventDataStore.getEventList(params).map(this.mRoomEventDataMapper::map);
     }
 
     @Override
-    public Observable<Event> insertUserEvent(EventParams params) {
+    public Observable<Event> insertEvent(InsertEventParams params) {
         return mRoomEventDataStore.insertEvent(params);
     }
 }

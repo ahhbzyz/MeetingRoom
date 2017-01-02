@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.domain.mapper;
 
-import com.badoo.meetingroom.domain.entity.GoogleAccount;
-import com.badoo.meetingroom.domain.entity.GoogleAccountImpl;
+import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
+import com.badoo.meetingroom.domain.entity.impl.GoogleAccountImpl;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

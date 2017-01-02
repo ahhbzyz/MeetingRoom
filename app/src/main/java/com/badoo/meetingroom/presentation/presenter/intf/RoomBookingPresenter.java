@@ -8,4 +8,5 @@ import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 
 public interface RoomBookingPresenter extends Presenter {
     void setView(RoomBookingView roomBookingView);
+    void bookRoom(String organizer);
 }

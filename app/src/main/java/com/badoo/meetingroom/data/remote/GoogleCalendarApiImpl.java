@@ -4,8 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.badoo.meetingroom.data.EventParams;
-import com.badoo.meetingroom.data.EventsParams;
+import com.badoo.meetingroom.data.InsertEventParams;
+import com.badoo.meetingroom.data.GetEventsParams;
 import com.badoo.meetingroom.data.exception.NetworkConnectionException;
 import com.google.api.services.calendar.model.Event;
 
@@ -29,7 +29,7 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
     }
 
     @Override
-    public Observable<List<Event>> getEventList(EventsParams params) {
+    public Observable<List<Event>> getEventList(GetEventsParams params) {
         return Observable.create(subscriber -> {
             if(hasInternetConnection()) {
                 try {
@@ -51,7 +51,7 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
     }
 
     @Override
-    public Observable<Event> insertEvent(EventParams params) {
+    public Observable<Event> insertEvent(InsertEventParams params) {
         return Observable.create(subscriber -> {
             if (hasInternetConnection()) {
                 try {
@@ -71,11 +71,11 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
         });
     }
 
-    private List<Event> getEventsFromApi(EventsParams params) {
+    private List<Event> getEventsFromApi(GetEventsParams params) {
         return EventsListApiCall.createGET(params).requestSyncCall();
     }
 
-    private Event insertEventFromApi(EventParams params) {
+    private Event insertEventFromApi(InsertEventParams params) {
         return EventInsertApiCall.createINSERT(params).requestSyncCall();
     }
 

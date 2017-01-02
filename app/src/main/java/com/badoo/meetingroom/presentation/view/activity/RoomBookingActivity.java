@@ -8,7 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
@@ -17,9 +19,6 @@ import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
-
-
-import java.util.List;
 
 import javax.inject.Inject;
 import butterknife.BindView;
@@ -35,6 +34,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @BindView(R.id.tv_booking_period) TextView mBookingPeriodTv;
     @BindView(R.id.et_email) ExtendedEditText mEmailEt;
     @BindView(R.id.rv_time_slots) RecyclerView mTimeSlotsRv;
+    @BindView(R.id.btn_book) Button mBookBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         setUpTextViews();
         setUpEditText();
         setUpRecyclerView();
+        setUpBookButton();
 
         mPresenter.setView(this);
         mPresenter.init();
@@ -96,6 +97,10 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             LinearLayoutManager.HORIZONTAL,
             false));
         mTimeSlotsRv.setAdapter(mAdapter);
+    }
+
+    private void setUpBookButton() {
+        mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mEmailEt.getText().toString().trim()));
     }
 
     @Override
@@ -181,6 +186,4 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     public Context context() {
         return getApplicationContext();
     }
-
-
 }

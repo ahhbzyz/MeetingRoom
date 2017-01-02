@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
-import com.badoo.meetingroom.presentation.view.component.customdrawable.BusyBgDrawable;
-import com.badoo.meetingroom.presentation.view.component.customdrawable.TimelineBarDrawable;
+import com.badoo.meetingroom.presentation.view.component.drawable.BusyBgDrawable;
+import com.badoo.meetingroom.presentation.view.component.drawable.TimelineBarDrawable;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;
@@ -142,7 +142,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             } else {
                 // Text
                 holder.mEventPeriodTv.measure(0, 0);
-
+                // Todo sometimes not hide
                 if (bottomHeight < holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight()) {
                     holder.mEventPeriodTv.setVisibility(View.INVISIBLE);
                     holder.mEventInfoTv.setVisibility(View.INVISIBLE);
