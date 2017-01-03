@@ -12,4 +12,6 @@
     <dimen name="room_booking_view_margin">64dp</dimen>
 
     <dimen name="room_booking_time_slot_divider_width">1.5dp</dimen>
+
+    <dimen name="circle_time_btn_view_radius">48dp</dimen>
 </resources>

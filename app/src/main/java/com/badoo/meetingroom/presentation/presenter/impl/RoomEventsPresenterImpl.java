@@ -185,10 +185,12 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     }
 
     @Override
-    public void setDoNotDisturb() {
-        mCurrentEvent.setDoNotDisturb(true);
-        mRoomEventsView.updateEventStatus();
-        showButtonsForEvent();
+    public void setDoNotDisturb(boolean doNotDisturb) {
+        if (mCurrentEvent != null) {
+            mCurrentEvent.setDoNotDisturb(doNotDisturb);
+            mRoomEventsView.updateEventStatus();
+            showButtonsForEvent();
+        }
     }
 
 

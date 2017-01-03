@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 
 public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.ViewHolder> {
 
-    private static float mWidthPerMillis;
+    private float mWidthPerMillis =  38f / TimeHelper.min2Millis(DailyEventsFragment.MIN_BOOKING_TIME);
     private List<RoomEventModel> mEvents;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
@@ -54,7 +54,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             super(view);
             ButterKnife.bind(this, view);
             mEventPeriodTv.measure(0, 0);
-            mWidthPerMillis =  (float)mEventPeriodTv.getMeasuredHeight() / TimeHelper.min2Millis(5);
+
+
         }
     }
 

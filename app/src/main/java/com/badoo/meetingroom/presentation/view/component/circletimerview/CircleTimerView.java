@@ -68,7 +68,7 @@ public class CircleTimerView extends View {
 
     // Circle button
     private final int DEFAULT_CIRCLE_BTN_COLOR = Color.parseColor("#F1F1F1");
-    private final float DEFAULT_CIRCLE_BTN_RADIUS = dp2px(32);
+    private final float DEFAULT_CIRCLE_BTN_RADIUS = dp2px(28);
 
     /**
      * For save and restore instance of progressbar.
@@ -396,25 +396,36 @@ public class CircleTimerView extends View {
         // Center timer time
         if (mTimerTimeVisibility && mTimerTimeText != null) {
             float textY = (canvas.getHeight() / 2f - ((mTimerTimeTextPaint.descent() + mTimerTimeTextPaint.ascent()) / 2f));
-            canvas.drawText(mTimerTimeText, mBgCircleCx, textY, mTimerTimeTextPaint);
-            //float textWidth = mTimerTimeTextPaint.measureText("00:00", 0, "00:00".length());
-        }
+            float halfCharWidth = mTimerTimeTextPaint.measureText("0", 0, "0".length()) / 2f;
+            if (mTimerTimeText.length() == 5) {
+                canvas.drawText(String.valueOf(mTimerTimeText.charAt(0)), mBgCircleCx - 3.3f * halfCharWidth, textY, mTimerTimeTextPaint);
+                canvas.drawText(String.valueOf(mTimerTimeText.charAt(1)), mBgCircleCx - 1.5f * halfCharWidth, textY, mTimerTimeTextPaint);
 
-        // Set coordinates of circle button
-        mCircleBtnCx = mBgCircleCx;
-        mCircleBtnCy = mBgCircleCy + mBgCircleRadius / 2f;
+                canvas.drawText(String.valueOf(mTimerTimeText.charAt(2)), mBgCircleCx, textY, mTimerTimeTextPaint);
 
-        // Draw circle button
-        if (mCircleBtnVisibility && mCircleBtnIconDrawable != null) {
-            canvas.drawCircle(mCircleBtnCx, mCircleBtnCy, mCircleBtnRadius, mCircleBtnPaint);
-
-            // Draw icon on circle btn
-            if (mCircleBtnIconDrawable != null) {
-                mCircleBtnIconDrawable.setBounds((int) (mCircleBtnCx - mCircleBtnRadius / 4f), (int) (mCircleBtnCy - mCircleBtnRadius / 4f),
-                    (int) (mCircleBtnCx + mCircleBtnRadius / 4f), (int) (mCircleBtnCy + mCircleBtnRadius / 4f));
-                mCircleBtnIconDrawable.draw(canvas);
+                canvas.drawText(String.valueOf(mTimerTimeText.charAt(3)), mBgCircleCx + 1.5f * halfCharWidth, textY, mTimerTimeTextPaint);
+                canvas.drawText(String.valueOf(mTimerTimeText.charAt(4)), mBgCircleCx + 3.3f * halfCharWidth, textY, mTimerTimeTextPaint);
+            } else {
+                canvas.drawText(mTimerTimeText, mBgCircleCx, textY, mTimerTimeTextPaint);
             }
+
         }
+
+//        // Set coordinates of circle button
+//        mCircleBtnCx = mBgCircleCx;
+//        mCircleBtnCy = mBgCircleCy + mBgCircleRadius / 2f;
+//
+//        // Draw circle button
+//        if (mCircleBtnVisibility && mCircleBtnIconDrawable != null) {
+//            //canvas.drawCircle(mCircleBtnCx, mCircleBtnCy, mCircleBtnRadius, mCircleBtnPaint);
+//
+//            // Draw icon on circle btn
+//            if (mCircleBtnIconDrawable != null) {
+//                mCircleBtnIconDrawable.setBounds((int) (mCircleBtnCx - mCircleBtnRadius / 1f), (int) (mCircleBtnCy - mCircleBtnRadius / 1f),
+//                    (int) (mCircleBtnCx + mCircleBtnRadius / 1f), (int) (mCircleBtnCy + mCircleBtnRadius / 1f));
+//                mCircleBtnIconDrawable.draw(canvas);
+//            }
+//        }
 
         // Draw alert icon
         if (mAlertIconVisibility && mAlertIconDrawable != null) {
@@ -520,8 +531,6 @@ public class CircleTimerView extends View {
         bundle.putLong(INSTANCE_LEFT_COUNT_DOWN_TIME, mLeftCountDownTime);
 
         bundle.putBoolean(INSTANCE_IS_TIMER_RUNNING, isTimerRunning);
-
-       /// bundle.putInt(INSTANCE_CURR_STATUS, mCurrStatus);
 
         return bundle;
     }
@@ -675,6 +684,23 @@ public class CircleTimerView extends View {
         }
         invalidate();
     }
+
+    public RoomEventModel getCurrentRoomEvent() {
+        return mCurrRoomEvent;
+    }
+
+    public float getCircleCx() {
+        return mBgCircleCx;
+    }
+
+    public float getCircleCy() {
+        return mBgCircleCy;
+    }
+
+    public float getCircleRadius() {
+        return mBgCircleRadius;
+    }
+
 
     public void startCountDownTimer(RoomEventModel event) {
 

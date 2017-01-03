@@ -6,7 +6,10 @@
     <color name="colorAccentDark">#41BB56</color>
 
     <color name="roomStatusAvailable">#69E27E</color>
+    <color name="roomStatusAvailableDark">#41BB56</color>
+
     <color name="roomStatusOnHold">#FFB000</color>
+    <color name="roomStatusOnHoldDark">#D99C16</color>
 
     <color name="roomStatusBusy">#F5584F</color>
     <color name="roomStatusBusyDark">#E6342A</color>

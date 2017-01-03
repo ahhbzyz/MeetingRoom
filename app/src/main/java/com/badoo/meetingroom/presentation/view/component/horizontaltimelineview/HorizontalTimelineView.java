@@ -48,6 +48,8 @@ public class HorizontalTimelineView extends View {
     private static final float DEFAULT_SLOT_TIME_TEXT_SIZE = 25f;
     private static final int DEFAULT_SLOT_TIME_TEXT_COLOR = Color.parseColor("#C2C2C2");
 
+    private static final int MIN_SLOT_TIME = 5;
+
 
     /**
      * Current time text
@@ -130,7 +132,7 @@ public class HorizontalTimelineView extends View {
     private OverScroller mScroller;
 
     private float mHourHeight = 240f;
-    private float mWidthTimeRatio;
+    private float mWidthPerMillis;
 
 
     public HorizontalTimelineView(Context context, AttributeSet attrs) {
@@ -177,7 +179,6 @@ public class HorizontalTimelineView extends View {
         mHtvTouchHandler = new HtvTouchHandler(this);
         mScroller = mHtvTouchHandler.getScroller();
 
-        mWidthTimeRatio = mHourHeight / (60 * 60 * 1000);
 
         // Time line paint
         mTimelinePathPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -196,6 +197,7 @@ public class HorizontalTimelineView extends View {
         mMovedTimelineMarkPaint.setColor(mMovedTimelineMarkColor);
         mMovedTimelineMarkPaint.setStrokeWidth(mTimelineMarkWidth);
 
+
         // Current time text
         mCurrTimeTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCurrTimeTextPaint.setTextSize(mCurrTimeTextSize);
@@ -211,11 +213,17 @@ public class HorizontalTimelineView extends View {
         mSlotTimeTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mSlotTimeTextPaint.setColor(mSlotTimeTextColor);
         mSlotTimeTextPaint.setTextSize(mSlotTimeTextSize);
+        Rect rect = new Rect();
+        mSlotTimeTextPaint.getTextBounds("00:00", 0, "00:00".length(), rect);
+        mWidthPerMillis = rect.width() * 1.5f / TimeHelper.min2Millis(MIN_SLOT_TIME);
 
         mGapTimeSlotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mGapTimeSlotPaint.setColor(mGapTimeSlotColor);
         mGapTimeSlotPaint.setStyle(Paint.Style.STROKE);
         mGapTimeSlotPaint.setStrokeWidth(mTimelineStrokeWidth);
+
+
+
     }
 
     @Override
@@ -236,7 +244,7 @@ public class HorizontalTimelineView extends View {
         while (mListIterator.hasNext()) {
             drawSlot(canvas, mListIterator.next());
             if (mAccumTimeSlotWidth > canvas.getWidth()) {
-                //break;
+                break;
             }
         }
 
@@ -259,8 +267,8 @@ public class HorizontalTimelineView extends View {
 
 
 
-        float currSlotWidth = event.getRemainingTime() * mWidthTimeRatio;
-        float initSlotWidth = event.getDuration() * mWidthTimeRatio;
+        float currSlotWidth = event.getRemainingTime() * mWidthPerMillis;
+        float initSlotWidth = event.getDuration() * mWidthPerMillis;
 
         // Draw slot time text
         String startTimeText = event.getStartTimeInText();
@@ -327,7 +335,7 @@ public class HorizontalTimelineView extends View {
     }
 
     public float getWidthTimeRatio() {
-        return mWidthTimeRatio;
+        return mWidthPerMillis;
     }
 
     public float getTimelineCy() {
@@ -368,7 +376,7 @@ public class HorizontalTimelineView extends View {
 
     private float getTodayLeftTimeWidth() {
         float nextDayMidNight = TimeHelper.getMidNightTimeOfDay(1);
-        return (nextDayMidNight - TimeHelper.getCurrentTimeInMillis()) * mWidthTimeRatio;
+        return (nextDayMidNight - TimeHelper.getCurrentTimeInMillis()) * mWidthPerMillis;
     }
 
     public void updateTimelineMarkCx(float i) {

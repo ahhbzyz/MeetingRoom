@@ -18,5 +18,5 @@ public interface RoomEventsPresenter extends Presenter {
     RoomEventModel getCurrentEvent();
     void confirmEvent();
     void dismissEvent();
-    void setDoNotDisturb();
+    void setDoNotDisturb(boolean doNotDisturb);
 }

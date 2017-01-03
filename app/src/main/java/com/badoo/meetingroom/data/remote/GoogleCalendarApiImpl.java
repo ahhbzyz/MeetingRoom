@@ -47,14 +47,14 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
                         subscriber.onNext(responseEvents);
                         subscriber.onCompleted();
                     } else {
-                        subscriber.onError(new NetworkConnectionException());
+                        subscriber.onError(new NetworkConnectionException("Please check network connection"));
                     }
                 } catch (Exception e) {
                     subscriber.onError(e);
                 }
 
             } else {
-                subscriber.onError(new NetworkConnectionException());
+                subscriber.onError(new NetworkConnectionException("Please check network connection"));
             }
         });
     }
@@ -69,13 +69,13 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
                         subscriber.onNext(event);
                         subscriber.onCompleted();
                     } else {
-                        subscriber.onError(new NetworkConnectionException());
+                        subscriber.onError(new NetworkConnectionException("Please check network connection"));
                     }
                 } catch (Exception e) {
                     subscriber.onError(e);
                 }
             } else {
-                subscriber.onError(new NetworkConnectionException());
+                subscriber.onError(new NetworkConnectionException("Please check network connection"));
             }
         });
     }

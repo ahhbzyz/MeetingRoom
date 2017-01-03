@@ -44,7 +44,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @BindView(R.id.pb_loading_data) ProgressBar mLoadingDataPb;
 
     private DailyEventsAdapter mAdapter;
-    private int mScrollOffset = 0;
+    private int mScrollOffset;
     private static final String ARG_PAGE = "page";
     private int mPage;
     private OnFragmentInteractionListener mListener;
@@ -118,6 +118,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this.getContext()));
         this.mRecyclerView.setAdapter(mAdapter);
+        mScrollOffset = 0;
         this.mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -133,13 +134,14 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @Override
     public void renderDailyEvents(List<RoomEventModel> roomEventModelList) {
         mAdapter.setDailyEventList(roomEventModelList);
-        mPresenter.showCurrentTimeMark();
+
         for (int i = 0 ; i < roomEventModelList.size(); i++) {
             if (roomEventModelList.get(i).isProcessing()) {
                 mRecyclerView.smoothScrollToPosition(i);
                 break;
             }
         }
+        mPresenter.showCurrentTimeMark();
     }
 
     @Override

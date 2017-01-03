@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,8 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @BindView(R.id.layout_btns) LinearLayout mButtonsLayout;
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.tv_fast_book) TextView mFastBookTv;
+    @BindView(R.id.img_book) ImageView mBookBtn;
+    @BindView(R.id.layout_book_btn_parent) RelativeLayout mBookBtnParentLayout;
 
     private ProgressDialog mProgressDialog;
 
@@ -69,11 +72,14 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         setUpProgressDialog();
         setUpToolbar();
 
+
         mPresenter.setView(this);
         mPresenter.init();
 
         Typeface stolzlRegular = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
         mFastBookTv.setTypeface(stolzlRegular);
+
+
 
         registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
@@ -96,6 +102,15 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+    }
+
+    private void setUpCircleTimeViewButton() {
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookBtnParentLayout.getLayoutParams();
+        params.setMargins(0, 110, 0, 0);
+        //System.out.println(mBookBtnParentLayout);
+        //mBookBtn.setLayoutParams(params);
+        mBookBtnParentLayout.setPadding(0, (int) (mCtv.getCircleRadius() * 2), 0, 0);
     }
 
     @Override
@@ -132,9 +147,13 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @Override
     public void setUpCircleTimeView() {
         mCtv.setTailIconDrawable(R.drawable.ic_arrow_left_white);
-        mCtv.setCircleBtnIconDrawable(R.drawable.ic_add_black);
+        mCtv.setCircleBtnIconDrawable(R.drawable.btn_oval_confirm);
         mCtv.setAlertIconDrawable(R.drawable.ic_alert_white);
         mCtv.setOnCountDownListener(mOnCountDownListener);
+        setUpCircleTimeViewButton();
+        mCtv.setOnClickListener(v -> {
+            mPresenter.setDoNotDisturb(false);
+        });
     }
 
     @Override
@@ -193,6 +212,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     public void showButtonsInOnHoldStatus() {
         mFastBookTv.setVisibility(View.GONE);
         mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        mButtonsLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
         // Confirm button
         ImageButton mConfirmBtn = new ImageButton(this);
@@ -235,6 +255,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     public void showButtonsInBusyStatus() {
         mFastBookTv.setVisibility(View.GONE);
         mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        mButtonsLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
         // Hold to end btn
         LongPressButton mEndBnt = new LongPressButton(this, null);
@@ -258,7 +279,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         params.setMargins(buttonMargin, 0, buttonMargin, 0);
         mDNDBtnWithText.setLayoutParams(params);
         mButtonsLayout.addView(mDNDBtnWithText);
-        mDNDBtn.setOnClickListener(v -> mPresenter.setDoNotDisturb());
+        mDNDBtn.setOnClickListener(v -> mPresenter.setDoNotDisturb(true));
 
         ImageButton mExtentBtn  = new ImageButton(this);
         mExtentBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
@@ -275,6 +296,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     public void showButtonsInDoNotDisturbStatus(String eventEndTime) {
         mFastBookTv.setVisibility(View.GONE);
         mButtonsLayout.setOrientation(LinearLayout.VERTICAL);
+        mButtonsLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
         TextView busyUntilTv = new TextView(this);
         busyUntilTv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
