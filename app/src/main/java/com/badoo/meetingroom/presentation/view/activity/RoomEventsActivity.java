@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
@@ -28,6 +29,7 @@ import com.badoo.meetingroom.presentation.view.component.button.LongPressButton;
 import com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton;
 import com.badoo.meetingroom.presentation.view.component.horizontaltimelineview.HorizontalTimelineView;
 import com.badoo.meetingroom.presentation.view.viewutils.ViewHelper;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.LinkedList;
 
@@ -42,8 +44,9 @@ import butterknife.ButterKnife;
 
 public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
+    private static final int REQUEST_AUTHORIZATION = 1001;
     @Inject
-    RoomEventsPresenterImpl mRoomEventsPresenter;
+    RoomEventsPresenterImpl mPresenter;
 
     @BindView(R.id.ctv_status) CircleTimerView mCtv;
     @BindView(R.id.htv_room_events) HorizontalTimelineView mHtv;
@@ -66,8 +69,8 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         setUpProgressDialog();
         setUpToolbar();
 
-        mRoomEventsPresenter.setView(this);
-        mRoomEventsPresenter.init();
+        mPresenter.setView(this);
+        mPresenter.init();
 
         Typeface stolzlRegular = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
         mFastBookTv.setTypeface(stolzlRegular);
@@ -111,7 +114,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     @Override
     public void showError(String message) {
-
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -201,7 +204,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mConfirmBtn.setImageDrawable(confirmBtnDrawable);
         LinearLayout mConfirmBtnWithText = ViewHelper.addTextUnderBtn(this, mConfirmBtn, "Confirm");
         mButtonsLayout.addView(mConfirmBtnWithText);
-        mConfirmBtn.setOnClickListener(v -> mRoomEventsPresenter.confirmEvent());
+        mConfirmBtn.setOnClickListener(v -> mPresenter.confirmEvent());
 
         // Fake button
         ImageButton mFakeBtn = new ImageButton(this);
@@ -225,7 +228,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mDismissBtn.setImageDrawable(dismissBtnDrawable);
         LinearLayout mDismissBtnWithText = ViewHelper.addTextUnderBtn(this, mDismissBtn, "Dismiss");
         mButtonsLayout.addView(mDismissBtnWithText);
-        mDismissBtn.setOnClickListener(v -> mRoomEventsPresenter.dismissEvent());
+        mDismissBtn.setOnClickListener(v -> mPresenter.dismissEvent());
     }
 
     @Override
@@ -255,7 +258,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         params.setMargins(buttonMargin, 0, buttonMargin, 0);
         mDNDBtnWithText.setLayoutParams(params);
         mButtonsLayout.addView(mDNDBtnWithText);
-        mDNDBtn.setOnClickListener(v -> mRoomEventsPresenter.setDoNotDisturb());
+        mDNDBtn.setOnClickListener(v -> mPresenter.setDoNotDisturb());
 
         ImageButton mExtentBtn  = new ImageButton(this);
         mExtentBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
@@ -300,16 +303,33 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mHtv.updateCurrentStatus();
     }
 
+    @Override
+    public void showRecoverableAuth(UserRecoverableAuthIOException e) {
+        this.startActivityForResult(e.getIntent(), 1000);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK) {
+                    mPresenter.init();
+                }
+                break;
+        }
+    }
+
     private CircleTimerView.OnCountDownListener mOnCountDownListener =
         new CircleTimerView.OnCountDownListener() {
             @Override
             public void onCountDownTicking(long millisUntilFinished) {
-                mRoomEventsPresenter.onCountDownTicking(millisUntilFinished);
+                mPresenter.onCountDownTicking(millisUntilFinished);
             }
 
             @Override
             public void onCountDownFinished() {
-                mRoomEventsPresenter.onCountDownFinished();
+                mPresenter.onCountDownFinished();
             }
         };
 
@@ -318,7 +338,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
-                mRoomEventsPresenter.updateCurrentTimeForHtv();
+                mPresenter.updateCurrentTimeForHtv();
             }
         }
     };

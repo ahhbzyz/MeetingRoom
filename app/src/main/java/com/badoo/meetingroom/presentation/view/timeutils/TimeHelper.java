@@ -92,4 +92,8 @@ public class TimeHelper {
             && calendar.get(Calendar.SECOND) == 0
             && calendar.get(Calendar.MILLISECOND) == 0;
     }
+
+    public static long min2Millis(int min) {
+        return min * 60 * 1000;
+    }
 }

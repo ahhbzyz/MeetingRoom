@@ -9,7 +9,6 @@ import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 public interface DailyEventsPresenter extends Presenter {
     void setView(DailyEventsView dailyEventsView);
     void updateCurrentTimeMark();
-    float getWidthTimeRatio();
     void updateCurrentTimeMarkWhenScrolled(int dy);
     void onEventClicked(int position);
 }

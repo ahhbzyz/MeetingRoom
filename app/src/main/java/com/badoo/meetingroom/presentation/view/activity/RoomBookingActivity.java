@@ -1,6 +1,8 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,10 +10,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
@@ -19,6 +21,7 @@ import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import javax.inject.Inject;
 import butterknife.BindView;
@@ -26,6 +29,7 @@ import butterknife.ButterKnife;
 
 public class RoomBookingActivity extends BaseActivity implements RoomBookingView{
 
+    private static final int REQUEST_AUTHORIZATION = 1001;
     @Inject RoomBookingPresenterImpl mPresenter;
     @Inject TimeSlotsAdapter mAdapter;
 
@@ -35,6 +39,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @BindView(R.id.et_email) ExtendedEditText mEmailEt;
     @BindView(R.id.rv_time_slots) RecyclerView mTimeSlotsRv;
     @BindView(R.id.btn_book) Button mBookBtn;
+
+    private ProgressDialog mLoadingDataDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         setUpEditText();
         setUpRecyclerView();
         setUpBookButton();
+        setUpLoadingDataDialog();
 
         mPresenter.setView(this);
         mPresenter.init();
@@ -101,6 +108,13 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     private void setUpBookButton() {
         mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mEmailEt.getText().toString().trim()));
+    }
+
+    private void setUpLoadingDataDialog(){
+        mLoadingDataDialog = new ProgressDialog(this);
+        mLoadingDataDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mLoadingDataDialog.setMessage("Booking room...");
+        mLoadingDataDialog.setCanceledOnTouchOutside(false);
     }
 
     @Override
@@ -160,6 +174,18 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     @Override
+    public void showRecoverableAuth(UserRecoverableAuthIOException e) {
+        startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
+    }
+
+    @Override
+    public void showBookingSuccessful() {
+        Toast.makeText(this, "Room is booked successfully", Toast.LENGTH_SHORT).show();
+        finish();
+        overridePendingTransition(0, 0);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
@@ -169,7 +195,17 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     public void showLoadingData(boolean visibility) {
+        if (visibility) {
+            mLoadingDataDialog.show();
+        } else {
+            mLoadingDataDialog.dismiss();
+        }
+    }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -179,7 +215,20 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     public void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK) {
+                    mPresenter.bookRoom(mEmailEt.getText().toString().trim());
+                }
+                break;
+        }
     }
 
     @Override

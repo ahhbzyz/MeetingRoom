@@ -1,7 +1,9 @@
 package com.badoo.meetingroom.data.remote;
 
 import com.badoo.meetingroom.data.GetEventsParams;
+import com.badoo.meetingroom.presentation.view.activity.RoomEventsActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -29,7 +31,7 @@ class EventsListApiCall implements Callable<List<Event>>{
 
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-        System.out.println(mParams.getCredential().getScope());
+
         mServices = new com.google.api.services.calendar.Calendar.Builder(
             transport, jsonFactory, mParams.getCredential())
             .setApplicationName("Meeting Room")
@@ -40,15 +42,13 @@ class EventsListApiCall implements Callable<List<Event>>{
         return new EventsListApiCall(params);
     }
 
-    List<Event> requestSyncCall() {
+    List<Event> requestSyncCall() throws Exception {
         connectToApi();
         return mResponse;
     }
 
-
-    private void connectToApi() {
+    private void connectToApi() throws Exception {
         Events events;
-        try {
             events = mServices.events().list("primary")
                 .setTimeMin(mParams.getStartTime())
                 .setTimeMax(mParams.getEndTime())
@@ -57,10 +57,6 @@ class EventsListApiCall implements Callable<List<Event>>{
                 .execute();
             mResponse = events.getItems();
 
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

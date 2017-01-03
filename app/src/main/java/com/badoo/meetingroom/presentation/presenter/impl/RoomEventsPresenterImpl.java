@@ -12,6 +12,8 @@ import com.badoo.meetingroom.presentation.presenter.intf.RoomEventsPresenter;
 import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
 
 import java.util.Collection;
@@ -162,6 +164,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
         mMapper.setEventStartTime(start.getValue());
         mMapper.setEventEndTime(end.getValue());
+
         this.mGetRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
     }
 
@@ -195,6 +198,8 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
         @Override
         public void onNext(List<RoomEvent> roomEvents) {
+
+
             Collection<RoomEventModel> mEventModelList = mMapper.map(roomEvents);
             mEventModelQueue = new LinkedList<>();
             mEventModelQueue.addAll(mEventModelList);
@@ -212,8 +217,18 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         public void onError(Throwable e) {
             super.onError(e);
             showViewLoading(false);
-            //show error message;
-            showViewRetry(true);
+            try {
+                throw e;
+            } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
+                mRoomEventsView.showRecoverableAuth(userRecoverableAuthIOException);
+            } catch (GoogleJsonResponseException googleJsonResponseException) {
+                mRoomEventsView.showError(googleJsonResponseException.getDetails().getMessage());
+            } catch (Exception exception) {
+                mRoomEventsView.showError(exception.getMessage());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
         }
     }
 

@@ -7,9 +7,15 @@ import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.json.Json;
+import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
+
+import org.json.JSONArray;
 
 import java.util.List;
 
@@ -51,7 +57,6 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
     @Override
     public void bookRoom(String organizer) {
-    System.out.println(organizer);
         DateTime startDateTime = new DateTime(selectedStartTime);
         EventDateTime start = new EventDateTime()
             .setDateTime(startDateTime)
@@ -111,17 +116,32 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         @Override
         public void onNext(Event event) {
             super.onNext(event);
-            System.out.println(event.getHtmlLink());
+            if (event.getStatus().equals("confirmed")){
+               mRoomBookingView.showBookingSuccessful();
+            }
         }
 
         @Override
         public void onCompleted() {
             super.onCompleted();
+            showViewLoading(false);
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
+            showViewLoading(false);
+            try {
+                throw e;
+            } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
+                mRoomBookingView.showRecoverableAuth(userRecoverableAuthIOException);
+            } catch (GoogleJsonResponseException googleJsonResponseException) {
+                mRoomBookingView.showError(googleJsonResponseException.getDetails().getMessage());
+            } catch (Exception exception) {
+                mRoomBookingView.showError(exception.getMessage());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 

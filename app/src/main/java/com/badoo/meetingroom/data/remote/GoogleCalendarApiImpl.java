@@ -7,8 +7,17 @@ import android.net.NetworkInfo;
 import com.badoo.meetingroom.data.InsertEventParams;
 import com.badoo.meetingroom.data.GetEventsParams;
 import com.badoo.meetingroom.data.exception.NetworkConnectionException;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.Events;
 
+import java.io.IOException;
 import java.util.List;
 
 import rx.Observable;
@@ -41,7 +50,7 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
                         subscriber.onError(new NetworkConnectionException());
                     }
                 } catch (Exception e) {
-                    subscriber.onError(new NetworkConnectionException(e.getCause()));
+                    subscriber.onError(e);
                 }
 
             } else {
@@ -63,7 +72,7 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
                         subscriber.onError(new NetworkConnectionException());
                     }
                 } catch (Exception e) {
-                    subscriber.onError(new NetworkConnectionException(e.getCause()));
+                    subscriber.onError(e);
                 }
             } else {
                 subscriber.onError(new NetworkConnectionException());
@@ -71,11 +80,11 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
         });
     }
 
-    private List<Event> getEventsFromApi(GetEventsParams params) {
+    private List<Event> getEventsFromApi(GetEventsParams params) throws Exception {
         return EventsListApiCall.createGET(params).requestSyncCall();
     }
 
-    private Event insertEventFromApi(InsertEventParams params) {
+    private Event insertEventFromApi(InsertEventParams params) throws Exception {
         return EventInsertApiCall.createINSERT(params).requestSyncCall();
     }
 

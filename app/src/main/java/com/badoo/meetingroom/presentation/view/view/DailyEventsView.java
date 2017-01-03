@@ -1,6 +1,9 @@
 package com.badoo.meetingroom.presentation.view.view;
 
+import android.content.Intent;
+
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.List;
 
@@ -17,4 +20,5 @@ public interface DailyEventsView extends LoadDataView{
     void updateDailyEventList();
     void showCurrentTimeMark(boolean visibility, long currentTime, String time);
     void bookRoom(long startTime, long endTime);
+    void showUserRecoverableAuth(UserRecoverableAuthIOException e);
 }

@@ -11,12 +11,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.GetCredentialPresenterImpl;
 import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class NavigationActivity extends BaseActivity implements GetCredentialView, EasyPermissions.PermissionCallbacks {
+public class GetCredentialActivity extends BaseActivity implements GetCredentialView, EasyPermissions.PermissionCallbacks {
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -46,7 +48,7 @@ public class NavigationActivity extends BaseActivity implements GetCredentialVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation);
+        setContentView(R.layout.activity_get_credential);
         ButterKnife.bind(this);
 
         this.getApplicationComponent().inject(this);
@@ -54,17 +56,17 @@ public class NavigationActivity extends BaseActivity implements GetCredentialVie
         mGetCredentialPresenter.init();
 
         findViewById(R.id.btn_status).setOnClickListener(view -> {
-            Intent intent = new Intent(NavigationActivity.this, RoomEventsActivity.class);
+            Intent intent = new Intent(GetCredentialActivity.this, RoomEventsActivity.class);
             startActivity(intent);
         });
 
         findViewById(R.id.btn_cal).setOnClickListener(view -> {
-            Intent intent = new Intent(NavigationActivity.this, EventsCalendarActivity.class);
+            Intent intent = new Intent(GetCredentialActivity.this, EventsCalendarActivity.class);
             startActivity(intent);
         });
 
         findViewById(R.id.btn_booking).setOnClickListener(v -> {
-            Intent intent = new Intent(NavigationActivity.this, RoomBookingActivity.class);
+            Intent intent = new Intent(GetCredentialActivity.this, RoomBookingActivity.class);
             startActivity(intent);
         });
     }
@@ -73,7 +75,7 @@ public class NavigationActivity extends BaseActivity implements GetCredentialVie
     public void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         Dialog dialog = apiAvailability.getErrorDialog(
-            NavigationActivity.this,
+            GetCredentialActivity.this,
             connectionStatusCode,
             REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
@@ -93,6 +95,16 @@ public class NavigationActivity extends BaseActivity implements GetCredentialVie
         Snackbar.make(mGoogleServicesInfoLayout,
             "No Google Play Services on your device",
             Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showRecoverableAuth(UserRecoverableAuthIOException e) {
+        this.startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
+    }
+
+    @Override
+    public void showConnectGoogleCalendarSuccessful() {
+        Toast.makeText(this, "Connected with Google Calendar", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -128,7 +140,6 @@ public class NavigationActivity extends BaseActivity implements GetCredentialVie
                     String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
                         mGetCredentialPresenter.storeGoogleAccountName(accountName);
-                        mGetCredentialPresenter.init();
                     }
                 }
                 break;
@@ -144,8 +155,7 @@ public class NavigationActivity extends BaseActivity implements GetCredentialVie
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(
-            requestCode, permissions, grantResults, this);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     @Override
@@ -155,7 +165,6 @@ public class NavigationActivity extends BaseActivity implements GetCredentialVie
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        //mGetCredentialPresenter.init();
     }
 
     @Override
@@ -174,7 +183,7 @@ public class NavigationActivity extends BaseActivity implements GetCredentialVie
 
     @Override
     public void showError(String message) {
-
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

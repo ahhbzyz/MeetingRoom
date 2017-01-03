@@ -10,6 +10,8 @@ import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
 
 import java.util.List;
@@ -34,8 +36,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     private List<RoomEventModel> mEventList;
 
-    private final float mWidthTimeRatio = 300f / (60 * 60 * 1000);
-
     @Inject
     GoogleAccountCredential mCredential;
 
@@ -50,10 +50,9 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     public void init() {
         mPage = mDailyEventsView.getCurrentPage();
         loadRoomEventList();
-        showCurrentTimeMark();
     }
 
-    private void showCurrentTimeMark() {
+    public void showCurrentTimeMark() {
         long currentTime = TimeHelper.getCurrentTimeSinceMidNight();
         if (mDailyEventsView.getCurrentPage() == 0) {
             mDailyEventsView.showCurrentTimeMark(true, currentTime, TimeHelper.getCurrentTimeInMillisInText());
@@ -62,7 +61,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         }
     }
 
-    private void loadRoomEventList() {
+    public void loadRoomEventList() {
         this.showViewLoading(true);
         this.getRoomEventList();
     }
@@ -113,11 +112,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         this.getRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
     }
 
-    @Override
-    public float getWidthTimeRatio() {
-        return mWidthTimeRatio;
-    }
-
     public void updateRecyclerView() {
         mDailyEventsView.updateDailyEventList();
     }
@@ -129,6 +123,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         public void onNext(List<RoomEvent> roomEvents) {
             mEventList = mMapper.map(roomEvents);
             showDailyEventsInView(mEventList);
+            showCurrentTimeMark();
         }
 
         @Override
@@ -141,6 +136,17 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         public void onError(Throwable e) {
             super.onError(e);
             showViewLoading(false);
+            try {
+                throw e;
+            } catch (UserRecoverableAuthIOException e1) {
+                mDailyEventsView.showUserRecoverableAuth(e1);
+            } catch (GoogleJsonResponseException googleJsonResponseException) {
+                mDailyEventsView.showError(googleJsonResponseException.getDetails().getMessage());
+            } catch (Exception exception) {
+                mDailyEventsView.showError(exception.getMessage());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 

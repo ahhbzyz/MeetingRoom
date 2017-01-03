@@ -12,13 +12,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.List;
 
@@ -26,8 +29,13 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class DailyEventsFragment extends BaseFragment implements DailyEventsView{
+
+    private static final int REQUEST_AUTHORIZATION = 1001;
+    public static final int MIN_BOOKING_TIME = 15;
 
     @Inject DailyEventsPresenterImpl mPresenter;
 
@@ -41,6 +49,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     private static final String ARG_PAGE = "page";
     private int mPage;
     private OnFragmentInteractionListener mListener;
+
 
     public DailyEventsFragment() {
         // Required empty public constructor
@@ -106,7 +115,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     private void setUpRecyclerView() {
         // Todo di for adapter
-        mAdapter = new DailyEventsAdapter(this.getContext(), mPresenter.getWidthTimeRatio());
+        mAdapter = new DailyEventsAdapter(this.getContext());
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(context()));
         this.mRecyclerView.setAdapter(mAdapter);
@@ -137,7 +146,8 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             mCurrentTimeMarkLayout.setVisibility(View.GONE);
         }
 
-        float currTimeHeight = currentTime *  mPresenter.getWidthTimeRatio();
+        System.out.println(mAdapter.getWidthPerMillis());
+        float currTimeHeight = currentTime * mAdapter.getWidthPerMillis();
         mCurrentTimeMarkLayout.measure(0, 0);
         mCurrentTimeMarkLayout.setY((int)(currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f));
         mCurrentTimeTv.setText(time);
@@ -150,7 +160,13 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         bundle.putLong("startTime", startTime);
         bundle.putLong("endTime", endTime);
         intent.putExtra("timePeriod", bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
+    }
+
+    @Override
+    public void showUserRecoverableAuth(UserRecoverableAuthIOException e) {
+        this.startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
     }
 
     @Override
@@ -162,7 +178,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @Override
     public void updateCurrentTimeMarkPosition(long currentTimeInMillis) {
         int startY = (int) mCurrentTimeMarkLayout.getY();
-        int incremental = (int) (60f * 1000 * mPresenter.getWidthTimeRatio());
+        int incremental = (int) (TimeHelper.min2Millis(1) * mAdapter.getWidthPerMillis());
         mCurrentTimeMarkLayout.setY(startY + incremental);
     }
 
@@ -193,12 +209,24 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     @Override
     public void showError(String message) {
-
+        Toast.makeText(this.getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public Context context() {
         return null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK) {
+                    mPresenter.loadRoomEventList();
+                }
+                break;
+        }
     }
 
     public DailyEventsPresenterImpl getPresenter() {

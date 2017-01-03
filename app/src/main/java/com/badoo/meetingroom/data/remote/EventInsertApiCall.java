@@ -30,7 +30,6 @@ class EventInsertApiCall implements Callable<Event>{
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
-        System.out.println(mParams.getCredential().getScope());
         mServices = new com.google.api.services.calendar.Calendar.Builder(
             transport, jsonFactory, mParams.getCredential())
             .setApplicationName("Meeting Room")
@@ -41,12 +40,12 @@ class EventInsertApiCall implements Callable<Event>{
         return new EventInsertApiCall(params);
     }
 
-    Event requestSyncCall() {
+    Event requestSyncCall() throws Exception {
         connectToApi();
         return mResponse;
     }
 
-    private void connectToApi() {
+    private void connectToApi() throws Exception {
         Event event = new Event();
         event.setStart(mParams.getStartDataTime());
         event.setEnd(mParams.getEndDataTime());
@@ -54,11 +53,7 @@ class EventInsertApiCall implements Callable<Event>{
             new EventAttendee().setEmail(mParams.getOrganizer()),
         };
         event.setAttendees(Arrays.asList(attendees));
-        try {
-            mResponse = mServices.events().insert("primary", event).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mResponse = mServices.events().insert("primary", event).execute();
     }
 
     @Override

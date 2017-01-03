@@ -2,17 +2,31 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import android.support.annotation.NonNull;
 
+import com.badoo.meetingroom.data.GetEventsParams;
 import com.badoo.meetingroom.data.exception.GooglePlayServicesAvailabilityException;
 import com.badoo.meetingroom.data.exception.NoAccountNameFoundInCacheException;
 import com.badoo.meetingroom.data.exception.NoPermissionToAccessContactsException;
 import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
+import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
+import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
 import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
 import com.badoo.meetingroom.presentation.mapper.GoogleAccountModelMapper;
+import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.GoogleAccountModel;
+import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.GetCredentialPresenter;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.util.DateTime;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,24 +39,45 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
 
     private GetCredentialView mGetCredentialView;
 
-    private GetGoogleAccount mGetGoogleAccountUseCase;
-    private PutGoogleAccount mPutGoogleAccountUseCase;
-
-    private final GoogleAccountModelMapper mMapper;
+    private final GetGoogleAccount mGetGoogleAccountUseCase;
+    private final PutGoogleAccount mPutGoogleAccountUseCase;
+    private final GetRoomEventList mGetRoomEventListUseCase;
+    private final GoogleAccountCredential mCredential;
+    private final GoogleAccountModelMapper mGoogleAccountMapper;
+    private final RoomEventModelMapper mRoomEventModelMapper;
 
     @Inject
     GetCredentialPresenterImpl(@Named(GetGoogleAccount.NAME) GetGoogleAccount getGoogleAccountUseCase,
-                                      @Named(PutGoogleAccount.NAME) PutGoogleAccount putGoogleAccountUseCase,
-                                      GoogleAccountModelMapper mapper) {
+                               @Named(PutGoogleAccount.NAME) PutGoogleAccount putGoogleAccountUseCase,
+                               @Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
+                               GoogleAccountCredential credential,
+                               GoogleAccountModelMapper googleAccountModelMapper,
+                               RoomEventModelMapper roomEventModelMapper) {
         this.mGetGoogleAccountUseCase = getGoogleAccountUseCase;
         this.mPutGoogleAccountUseCase = putGoogleAccountUseCase;
-        this.mMapper = mapper;
+        this.mGetRoomEventListUseCase = getRoomEventListUseCase;
+        this.mCredential = credential;
+        this.mGoogleAccountMapper = googleAccountModelMapper;
+        this.mRoomEventModelMapper = roomEventModelMapper;
     }
 
     @Override
     public void init() {
         showViewLoading(true);
         loadGoogleAccount();
+    }
+
+    private void getModifyCalendarAuth() {
+        DateTime start = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
+        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
+        GetEventsParams params = new GetEventsParams.EventsParamsBuilder(mCredential)
+            .startTime(start)
+            .endTime(end)
+            .build();
+        mRoomEventModelMapper.setEventStartTime(start.getValue());
+        mRoomEventModelMapper.setEventEndTime(end.getValue());
+
+        this.mGetRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
     }
 
     private void loadGoogleAccount() {
@@ -54,7 +89,7 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     }
 
     private void showAccountNameOnSnackBar(GoogleAccount account) {
-        GoogleAccountModel googleAccountModel = this.mMapper.map(account);
+        GoogleAccountModel googleAccountModel = this.mGoogleAccountMapper.map(account);
         mGetCredentialView.showAccountNameOnSnackBar(googleAccountModel.getAccountName());
     }
 
@@ -90,6 +125,7 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     public void destroy() {
         mGetGoogleAccountUseCase.unSubscribe();
         mPutGoogleAccountUseCase.unSubscribe();
+        mGetRoomEventListUseCase.unSubscribe();
     }
 
     @Override
@@ -110,6 +146,7 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
                 //TODO
             }
             showAccountNameOnSnackBar(googleAccount);
+            getModifyCalendarAuth();
         }
 
         @Override
@@ -137,6 +174,14 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
 
                 showChooseAccountDialog();
 
+            } catch (GoogleJsonResponseException googleJsonResponseException) {
+
+                mGetCredentialView.showError(googleJsonResponseException.getDetails().getMessage());
+
+            } catch (Exception exception) {
+
+                mGetCredentialView.showError(exception.getMessage());
+
             } catch (Throwable throwable) {
 
                 throwable.printStackTrace();
@@ -148,6 +193,12 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     private final class PutGoogleAccountSubscriber extends DefaultSubscriber<Void> {
 
         @Override
+        public void onStart() {
+            super.onStart();
+            showViewLoading(true);
+        }
+
+        @Override
         public void onNext(Void aVoid) {
             super.onNext(aVoid);
         }
@@ -155,11 +206,44 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
+            showViewLoading(false);
+            loadGoogleAccount();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
+        }
+    }
+
+    private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {
+
+        @Override
+        public void onNext(List<RoomEvent> roomEvents) {
+            Collection<RoomEventModel> mEventModelList = mRoomEventModelMapper.map(roomEvents);
+            if (mEventModelList != null) {
+                mGetCredentialView.showConnectGoogleCalendarSuccessful();
+            }
+        }
+
+        @Override
+        public void onCompleted() {
+            super.onCompleted();
+            showViewLoading(false);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            super.onError(e);
+            showViewLoading(false);
+            try {
+                throw e;
+            } catch (UserRecoverableAuthIOException e1) {
+                mGetCredentialView.showRecoverableAuth(e1);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
         }
     }
 }

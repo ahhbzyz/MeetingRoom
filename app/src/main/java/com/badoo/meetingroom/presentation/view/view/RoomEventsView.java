@@ -1,7 +1,11 @@
 package com.badoo.meetingroom.presentation.view.view;
 
 
+import android.content.Intent;
+
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.LinkedList;
 
@@ -23,6 +27,6 @@ public interface RoomEventsView extends LoadDataView {
     void showButtonsInOnHoldStatus();
     void showButtonsInBusyStatus();
     void showButtonsInDoNotDisturbStatus(String endTimeInText);
-
     void updateEventStatus();
+    void showRecoverableAuth(UserRecoverableAuthIOException e);
 }
