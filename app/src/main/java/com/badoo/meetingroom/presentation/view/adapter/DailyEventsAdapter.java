@@ -49,6 +49,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         @BindView(R.id.img_timeline_bar) ImageView mTimelineBar;
         @BindView(R.id.layout_event_content) LinearLayout mEventContentLayout;
         @BindView(R.id.layout_event_content_parent) FrameLayout mEventContentParentLayout;
+        @BindView(R.id.tv_24) TextView m24Tv;
         private ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
@@ -80,13 +81,53 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder,  int position) {
+
+        // Current position
         position = holder.getAdapterPosition();
 
+        // Current event
         RoomEventModel event = mEvents.get(position);
+
+        // Calculate item height
         int viewHeight =  (int) (event.getDuration() * mWidthPerMillis);
+
+        holder.mStartTimeTv.measure(0, 0);
+        holder.mEventPeriodTv.measure(0, 0);
+        holder.mEventInfoTv.measure(0, 0);
+
+        holder.mStartTimeTv.setVisibility(View.VISIBLE);
+        holder.mEventPeriodTv.setVisibility(View.VISIBLE);
+        holder.mEventInfoTv.setVisibility(View.VISIBLE);
+        holder.m24Tv.setVisibility(View.INVISIBLE);
+
+
+        if (position == 0) {
+            holder.mStartTimeTv.setVisibility(View.INVISIBLE);
+        }
+
+        if (position == (getItemCount() - 1)) {
+            holder.m24Tv.measure(0, 0);
+            if (viewHeight >= (holder.mStartTimeTv.getMeasuredHeight() + holder.m24Tv.getMeasuredHeight())) {
+                holder.m24Tv.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (viewHeight < holder.mStartTimeTv.getMeasuredHeight()) {
+            holder.mStartTimeTv.setVisibility(View.INVISIBLE);
+        }
+
+        if (viewHeight < holder.mEventPeriodTv.getMeasuredHeight()) {
+            holder.mEventPeriodTv.setVisibility(View.INVISIBLE);
+            holder.mEventInfoTv.setVisibility(View.INVISIBLE);
+        } else if (viewHeight < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
+            holder.mEventInfoTv.setVisibility(View.INVISIBLE);
+        }
+
+
+        // Remaining progress of event
         float restProgress = event.getRemainingTime() / (float)event.getDuration();
 
-
+        // new item layout
         RelativeLayout.LayoutParams params = new
             RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, viewHeight);
         holder.itemView.setLayoutParams(params);
@@ -94,6 +135,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         holder.mStartTimeTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
         holder.mStartTimeTv.setText(event.getStartTimeInText());
 
+        // Check if end time is 24:00
         if (position == getItemCount() - 1) {
             holder.mEventPeriodTv.setText(event.getStartTimeInText() + " - " + "24:00");
         } else {
@@ -106,9 +148,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         offsetParams.setMargins(0, 0, 0, 0);
         holder.mEventPeriodTv.setLayoutParams(offsetParams);
-        holder.mEventPeriodTv.setVisibility(View.VISIBLE);
-        holder.mEventInfoTv.setVisibility(View.VISIBLE);
-        holder.mStartTimeTv.setVisibility(View.VISIBLE);
 
         // Event Expired
         if (event.isExpired()) {
@@ -132,7 +171,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
             int topTimelineBarHeight = (int) (viewHeight * (1 - restProgress));
 
-            holder.mStartTimeTv.measure(0, 0);
             if (topTimelineBarHeight < (holder.mStartTimeTv.getMeasuredHeight())) {
                 holder.mStartTimeTv.setVisibility(View.INVISIBLE);
             }
@@ -148,9 +186,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 holder.mEventPeriodTv.setText(event.getPeriod());
             } else {
                 // Text
-                holder.mEventPeriodTv.measure(0, 0);
-                holder.mEventInfoTv.measure(0, 0);
-
                 if (mBottomTimelineBarHeight < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
                     holder.mEventPeriodTv.setVisibility(View.INVISIBLE);
                     holder.mEventInfoTv.setVisibility(View.INVISIBLE);
@@ -171,12 +206,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             }
         }
 
-
-
         // Event is coming
         if (event.isComing()){
-
-            holder.mStartTimeTv.measure(0, 0);
             if (position == currentProcessingItem + 1 && mBottomTimelineBarHeight < (holder.mStartTimeTv.getMeasuredHeight())) {
                 holder.mStartTimeTv.setVisibility(View.INVISIBLE);
             }

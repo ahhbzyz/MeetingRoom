@@ -62,7 +62,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     }
 
     public void loadRoomEventList() {
-        this.showViewLoading(true);
         this.getRoomEventList();
     }
 
@@ -120,10 +119,15 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {
 
         @Override
+        public void onStart() {
+            super.onStart();
+            showViewLoading(true);
+        }
+
+        @Override
         public void onNext(List<RoomEvent> roomEvents) {
             mEventList = mMapper.map(roomEvents);
             showDailyEventsInView(mEventList);
-            showCurrentTimeMark();
         }
 
         @Override

@@ -94,8 +94,6 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     }
 
     private void loadRoomEventList() {
-        this.showViewRetry(false);
-        this.showViewLoading(true);
         this.getRoomEventList();
     }
 
@@ -195,6 +193,12 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
 
     private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            showViewLoading(true);
+        }
 
         @Override
         public void onNext(List<RoomEvent> roomEvents) {

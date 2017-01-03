@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
-import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
+import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
@@ -45,7 +44,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @BindView(R.id.pb_loading_data) ProgressBar mLoadingDataPb;
 
     private DailyEventsAdapter mAdapter;
-
+    private int mScrollOffset = 0;
     private static final String ARG_PAGE = "page";
     private int mPage;
     private OnFragmentInteractionListener mListener;
@@ -117,20 +116,30 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         // Todo di for adapter
         mAdapter = new DailyEventsAdapter(this.getContext());
         mAdapter.setOnItemClickListener(mOnItemClickListener);
-        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(context()));
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this.getContext()));
         this.mRecyclerView.setAdapter(mAdapter);
         this.mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                mScrollOffset += dy;
                 mPresenter.updateCurrentTimeMarkWhenScrolled(dy);
             }
         });
+
+
     }
 
     @Override
     public void renderDailyEvents(List<RoomEventModel> roomEventModelList) {
         mAdapter.setDailyEventList(roomEventModelList);
+        mPresenter.showCurrentTimeMark();
+        for (int i = 0 ; i < roomEventModelList.size(); i++) {
+            if (roomEventModelList.get(i).isProcessing()) {
+                mRecyclerView.smoothScrollToPosition(i);
+                break;
+            }
+        }
     }
 
     @Override
@@ -146,7 +155,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             mCurrentTimeMarkLayout.setVisibility(View.GONE);
         }
 
-        System.out.println(mAdapter.getWidthPerMillis());
         float currTimeHeight = currentTime * mAdapter.getWidthPerMillis();
         mCurrentTimeMarkLayout.measure(0, 0);
         mCurrentTimeMarkLayout.setY((int)(currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f));
@@ -177,9 +185,9 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     @Override
     public void updateCurrentTimeMarkPosition(long currentTimeInMillis) {
-        int startY = (int) mCurrentTimeMarkLayout.getY();
-        int incremental = (int) (TimeHelper.min2Millis(1) * mAdapter.getWidthPerMillis());
-        mCurrentTimeMarkLayout.setY(startY + incremental);
+        float currTimeHeight = currentTimeInMillis * mAdapter.getWidthPerMillis();
+        mCurrentTimeMarkLayout.measure(0, 0);
+        mCurrentTimeMarkLayout.setY((int)(currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
     }
 
     @Override

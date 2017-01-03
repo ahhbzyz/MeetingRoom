@@ -81,7 +81,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
     @Override
     public void updateFragmentCurrTimeMark() {
-        if (mViewPager.getChildCount() > 0 ) {
+        if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
             mAdapter.getRegisteredFragment(0).getPresenter().updateCurrentTimeMark();
             mAdapter.getRegisteredFragment(0).getPresenter().updateRecyclerView();
         }

@@ -23,7 +23,7 @@ public class BusyBgDrawable extends Drawable {
 
     private Paint mBgPaint;
     private Paint mDividerPaint;
-    private final float gap = 20f;
+    private final float gap = 25f;
 
     public BusyBgDrawable(int bgColor, int dividerColor) {
 
