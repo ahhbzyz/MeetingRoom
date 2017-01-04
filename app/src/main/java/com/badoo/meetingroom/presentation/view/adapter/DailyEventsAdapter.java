@@ -34,7 +34,8 @@ import butterknife.ButterKnife;
 
 public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.ViewHolder> {
 
-    private float mWidthPerMillis =  38f / TimeHelper.min2Millis(DailyEventsFragment.MIN_BOOKING_TIME);
+    private float mWidthPerMillis =  38f / TimeHelper.min2Millis(DailyEventsFragment.MIN_SLOT_TIME);
+
     private List<RoomEventModel> mEvents;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
@@ -140,7 +141,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         if (position == getItemCount() - 1) {
             holder.mEventPeriodTv.setText(event.getStartTimeInText() + " - " + "24:00");
         } else {
-            holder.mEventPeriodTv.setText(event.getPeriod());
+            holder.mEventPeriodTv.setText(event.getDurationInText());
         }
         holder.mEventPeriodTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
 
@@ -184,10 +185,11 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
                 BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE, restProgress);
                 holder.mEventContentLayout.setBackground(bg);
-                holder.mEventPeriodTv.setText(event.getPeriod());
+                holder.mEventPeriodTv.setText(event.getDurationInText());
             } else {
                 // Text
                 if (mBottomTimelineBarHeight < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
+                    //TODO need to check don hide both
                     holder.mEventPeriodTv.setVisibility(View.INVISIBLE);
                     holder.mEventInfoTv.setVisibility(View.INVISIBLE);
                 } else {

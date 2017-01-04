@@ -1,177 +1,68 @@
 package com.badoo.meetingroom.presentation.model;
 
-import android.graphics.Color;
-
-import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
-
 /**
- * Created by zhangyaozhong on 17/12/2016.
+ * Created by zhangyaozhong on 04/01/2017.
  */
+public interface RoomEventModel {
+    String getId();
 
-public class RoomEventModel {
+    void setId(String id);
 
-    public static final int AVAILABLE = 0;
-    public static final int BUSY = 1;
+    String getOrganizer();
 
-    private String organizer;
+    void setOrganizer(String organizer);
 
-    private int status;
-    private long startTime;
-    private long endTime;
+    int getStatus();
 
-    private boolean isOnHold;
-    private boolean doNotDisturb;
+    void setStatus(int status);
 
-    public RoomEventModel() {}
+    long getStartTime();
 
-    public String getOrganizer() {
-        return organizer;
-    }
+    void setStartTime(long startTime);
 
-    public void setOrganizer(String organizer) {
-        this.organizer = organizer;
-    }
+    long getEndTime();
 
-    public int getStatus() {
-        return status;
-    }
+    void setEndTime(long endTime);
 
-    public void setStatus(int status) {
-        if (status == BUSY) {
-            isOnHold = true;
-        }
-        this.status = status;
-    }
+    long getDuration();
 
-    public long getStartTime() {
-        return startTime;
-    }
+    long getRemainingTime();
 
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
+    boolean isBusy();
 
-    public long getEndTime() {
-        return endTime;
-    }
+    boolean isConfirmed();
 
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
-    }
+    boolean isAvailable();
 
-    public long getDuration() {
-        return endTime - startTime;
-    }
+    boolean isOnHold();
 
-    public long getRemainingTime() {
-        if (isExpired()) {
-            return 0;
-        }
-        return startTime > TimeHelper.getCurrentTimeInMillis() ? getDuration() : endTime - TimeHelper.getCurrentTimeInMillis();
-    }
+    void setOnHold(boolean onHold);
 
-    public boolean isBusy() {
-        return status == BUSY;
-    }
+    boolean isDoNotDisturb();
 
-    public boolean isConfirmed (){
-        return status != AVAILABLE && !isDoNotDisturb() && !isOnHold();
-    }
+    void setDoNotDisturb(boolean doNotDisturb);
 
-    public boolean isAvailable() {
-        return status == AVAILABLE;
-    }
+    int getEventColor();
 
-    public boolean isOnHold() {
-        return isOnHold;
-    }
+    int getEventBgColor();
 
-    public void setOnHold(boolean onHold) {
-        isOnHold = onHold;
-    }
+    int getAvailableColor();
 
-    public boolean isDoNotDisturb() {
-        return doNotDisturb;
-    }
+    int getBusyColor();
 
-    public void setDoNotDisturb(boolean doNotDisturb) {
-        this.doNotDisturb = doNotDisturb;
-    }
+    int getBusyBgColor();
 
-    public int getEventColor() {
-        switch (status) {
-            case RoomEventModel.AVAILABLE:
-                return RoomEventColor.AVAILABLE_COLOR;
-            case RoomEventModel.BUSY:
-                return isOnHold ? RoomEventColor.ON_HOLD_COLOR : RoomEventColor.BUSY_COLOR;
-            default:
-                return RoomEventColor.EXPIRED_COLOR;
-        }
-    }
+    int getEventExpiredColor();
 
-    public int getEventBgColor() {
-        switch (status) {
-            case RoomEventModel.AVAILABLE:
-                return RoomEventColor.AVAILABLE_COLOR;
-            case RoomEventModel.BUSY:
-                return isOnHold ? RoomEventColor.ON_HOLD_BG_COLOR : RoomEventColor.BUSY_BG_COLOR;
-            default:
-                return RoomEventColor.EXPIRED_COLOR;
-        }
-    }
+    boolean isExpired();
 
-    public final int getAvailableColor() {
-        return RoomEventColor.AVAILABLE_COLOR;
-    }
+    boolean isProcessing();
 
-    public final int getBusyColor() {
-        return RoomEventColor.BUSY_COLOR;
-    }
+    boolean isComing();
 
-    public final int getBusyBgColor() {
-        return RoomEventColor.BUSY_BG_COLOR;
-    }
+    String getDurationInText();
 
-    public final int getEventExpiredColor() {
-        return RoomEventColor.EXPIRED_COLOR;
-    }
+    String getStartTimeInText();
 
-    public boolean isExpired(){
-        return endTime < TimeHelper.getCurrentTimeInMillis();
-    }
-
-    public boolean isProcessing() {
-        return startTime <= TimeHelper.getCurrentTimeInMillis() && endTime >= TimeHelper.getCurrentTimeInMillis();
-    }
-
-    public boolean isComing() {
-        return startTime > TimeHelper.getCurrentTimeInMillis();
-    }
-
-    public String getPeriod() {
-        return getStartTimeInText() + " - " + getEndTimeInText();
-    }
-
-    public String getStartTimeInText() {
-        return TimeHelper.formatTime(getStartTime());
-    }
-
-    public String getEndTimeInText() {
-        return TimeHelper.formatTime(getEndTime());
-    }
-
-    private static class RoomEventColor {
-
-        private static final int AVAILABLE_COLOR = Color.parseColor("#69E27E");
-        private static final int AVAILABLE_BG_COLOR = Color.parseColor("#69E27E");
-
-        private static final int BUSY_COLOR = Color.parseColor("#F5584F");
-        private static final int BUSY_BG_COLOR = Color.parseColor("#FFE8E8");
-
-        private static final int ON_HOLD_COLOR = Color.parseColor("#FFB000");
-        private static final int ON_HOLD_BG_COLOR = Color.parseColor("#FFF2DB");
-
-        private static final int EXPIRED_COLOR = Color.parseColor("#D4D4D4");
-
-    }
+    String getEndTimeInText();
 }

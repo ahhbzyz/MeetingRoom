@@ -1,9 +1,11 @@
 package com.badoo.meetingroom.presentation.view.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +19,13 @@ import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
 import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
+import java.sql.Time;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,6 +38,9 @@ import static android.app.Activity.RESULT_OK;
 public class DailyEventsFragment extends BaseFragment implements DailyEventsView{
 
     private static final int REQUEST_AUTHORIZATION = 1001;
+    private static final int REQUEST_BOOK_ROOM= 1000;
+
+    public static final int MIN_SLOT_TIME = 5;
     public static final int MIN_BOOKING_TIME = 15;
 
     @Inject DailyEventsPresenterImpl mPresenter;
@@ -45,6 +52,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     private DailyEventsAdapter mAdapter;
     private int mScrollOffset;
+    private int mLastScrollOffset;
     private static final String ARG_PAGE = "page";
     private int mPage;
     private OnFragmentInteractionListener mListener;
@@ -81,6 +89,9 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         ButterKnife.bind(this, view);
 
         setUpRecyclerView();
+        showCurrentTimeMark();
+
+
         mPresenter.setView(this);
         mPresenter.init();
 
@@ -116,9 +127,10 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         // Todo di for adapter
         mAdapter = new DailyEventsAdapter(this.getContext());
         mAdapter.setOnItemClickListener(mOnItemClickListener);
-        this.mRecyclerView.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this.getContext()));
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         this.mRecyclerView.setAdapter(mAdapter);
         mScrollOffset = 0;
+        mLastScrollOffset = 0;
         this.mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -134,33 +146,35 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @Override
     public void renderDailyEvents(List<RoomEventModel> roomEventModelList) {
         mAdapter.setDailyEventList(roomEventModelList);
-
-        for (int i = 0 ; i < roomEventModelList.size(); i++) {
-            if (roomEventModelList.get(i).isProcessing()) {
-                mRecyclerView.smoothScrollToPosition(i);
-                break;
-            }
-        }
-        mPresenter.showCurrentTimeMark();
+        scrollToCurrentTimePosition();
     }
+
+    public void scrollToCurrentTimePosition() {
+        if (mPage == 0) {
+            float currTimeHeight = TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis();
+            mCurrentTimeMarkLayout.measure(0, 0);
+            mRecyclerView.smoothScrollBy(0, (int) (currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
+        }
+    }
+
 
     @Override
     public int getCurrentPage() {
         return this.mPage;
     }
 
-    @Override
-    public void showCurrentTimeMark(boolean visibility, long currentTime, String time) {
-        if (visibility) {
+
+    public void showCurrentTimeMark() {
+        if (mPage == 0) {
             mCurrentTimeMarkLayout.setVisibility(View.VISIBLE);
+            float currTimeHeight = TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis();
+            mCurrentTimeMarkLayout.measure(0, 0);
+            mCurrentTimeMarkLayout.setY((int)(currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
+            mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
         } else {
             mCurrentTimeMarkLayout.setVisibility(View.GONE);
         }
 
-        float currTimeHeight = currentTime * mAdapter.getWidthPerMillis();
-        mCurrentTimeMarkLayout.measure(0, 0);
-        mCurrentTimeMarkLayout.setY((int)(currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f));
-        mCurrentTimeTv.setText(time);
     }
 
     @Override
@@ -171,12 +185,12 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         bundle.putLong("endTime", endTime);
         intent.putExtra("timePeriod", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_BOOK_ROOM);
     }
 
     @Override
     public void showUserRecoverableAuth(UserRecoverableAuthIOException e) {
-        this.startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
+        startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
     }
 
     @Override
@@ -234,6 +248,14 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
                     mPresenter.loadRoomEventList();
+                }
+                break;
+            case REQUEST_BOOK_ROOM:
+                if (resultCode == RESULT_OK) {
+                    Toast.makeText(this.getContext(), "Room is booked successfully", Toast.LENGTH_SHORT).show();
+                    mPresenter.init();
+                    Intent returnIntent = new Intent();
+                    this.getActivity().setResult(Activity.RESULT_OK,returnIntent);
                 }
                 break;
         }

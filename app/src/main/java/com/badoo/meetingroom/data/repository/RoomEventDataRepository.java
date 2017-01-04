@@ -1,7 +1,5 @@
 package com.badoo.meetingroom.data.repository;
 
-import com.badoo.meetingroom.data.InsertEventParams;
-import com.badoo.meetingroom.data.GetEventsParams;
 import com.badoo.meetingroom.domain.mapper.RoomEventDataMapper;
 import com.badoo.meetingroom.data.repository.datasource.impl.RoomEventDataStoreFactory;
 import com.badoo.meetingroom.data.repository.datasource.intf.RoomEventDataStore;
@@ -34,12 +32,22 @@ public class RoomEventDataRepository implements RoomEventRepository {
     }
 
     @Override
-    public Observable<List<RoomEvent>> getRoomEventList(GetEventsParams params) {
-        return mRoomEventDataStore.getEventList(params).map(this.mRoomEventDataMapper::map);
+    public Observable<List<RoomEvent>> getRoomEventList(Event event) {
+        return mRoomEventDataStore.getEventList(event).map(this.mRoomEventDataMapper::map);
     }
 
     @Override
-    public Observable<Event> insertEvent(InsertEventParams params) {
-        return mRoomEventDataStore.insertEvent(params);
+    public Observable<Event> insertEvent(Event event) {
+        return mRoomEventDataStore.insertEvent(event);
+    }
+
+    @Override
+    public Observable<Void> deleteEvent(Event event) {
+        return mRoomEventDataStore.deleteEvent(event);
+    }
+
+    @Override
+    public Observable<Event> updateEvent(Event event) {
+        return mRoomEventDataStore.updateEvent(event);
     }
 }

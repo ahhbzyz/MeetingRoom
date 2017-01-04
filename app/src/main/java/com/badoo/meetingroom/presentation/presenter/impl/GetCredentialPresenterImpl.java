@@ -2,7 +2,6 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import android.support.annotation.NonNull;
 
-import com.badoo.meetingroom.data.GetEventsParams;
 import com.badoo.meetingroom.data.exception.GooglePlayServicesAvailabilityException;
 import com.badoo.meetingroom.data.exception.NoAccountNameFoundInCacheException;
 import com.badoo.meetingroom.data.exception.NoPermissionToAccessContactsException;
@@ -19,13 +18,13 @@ import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.GetCredentialPresenter;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -42,7 +41,6 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     private final GetGoogleAccount mGetGoogleAccountUseCase;
     private final PutGoogleAccount mPutGoogleAccountUseCase;
     private final GetRoomEventList mGetRoomEventListUseCase;
-    private final GoogleAccountCredential mCredential;
     private final GoogleAccountModelMapper mGoogleAccountMapper;
     private final RoomEventModelMapper mRoomEventModelMapper;
 
@@ -50,13 +48,11 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     GetCredentialPresenterImpl(@Named(GetGoogleAccount.NAME) GetGoogleAccount getGoogleAccountUseCase,
                                @Named(PutGoogleAccount.NAME) PutGoogleAccount putGoogleAccountUseCase,
                                @Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
-                               GoogleAccountCredential credential,
                                GoogleAccountModelMapper googleAccountModelMapper,
                                RoomEventModelMapper roomEventModelMapper) {
         this.mGetGoogleAccountUseCase = getGoogleAccountUseCase;
         this.mPutGoogleAccountUseCase = putGoogleAccountUseCase;
         this.mGetRoomEventListUseCase = getRoomEventListUseCase;
-        this.mCredential = credential;
         this.mGoogleAccountMapper = googleAccountModelMapper;
         this.mRoomEventModelMapper = roomEventModelMapper;
     }
@@ -68,16 +64,24 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     }
 
     private void getModifyCalendarAuth() {
-        DateTime start = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
-        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
-        GetEventsParams params = new GetEventsParams.EventsParamsBuilder(mCredential)
-            .startTime(start)
-            .endTime(end)
-            .build();
-        mRoomEventModelMapper.setEventStartTime(start.getValue());
-        mRoomEventModelMapper.setEventEndTime(end.getValue());
 
-        this.mGetRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
+        Event event = new Event();
+        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
+        EventDateTime start = new EventDateTime()
+            .setDateTime(startDateTime)
+            .setTimeZone("Europe/London");
+        event.setStart(start);
+
+        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
+        EventDateTime end = new EventDateTime()
+            .setDateTime(endDateTime)
+            .setTimeZone("Europe/London");
+        event.setEnd(end);
+
+        mRoomEventModelMapper.setEventStartTime(startDateTime.getValue());
+        mRoomEventModelMapper.setEventEndTime(endDateTime.getValue());
+
+        this.mGetRoomEventListUseCase.init(event).execute(new RoomEventListSubscriber());
     }
 
     private void loadGoogleAccount() {

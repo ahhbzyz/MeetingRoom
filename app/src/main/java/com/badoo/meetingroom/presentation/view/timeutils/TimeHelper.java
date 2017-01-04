@@ -49,13 +49,15 @@ public class TimeHelper {
         return sdf.format(date);
     }
 
-    public static String formatMillisInMinsAndSecs(long millis) {
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis));
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
-         return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+    public static String formatMillisInMinAndSec(long millis) {
+        return String.format(Locale.getDefault(), "%02d:%02d",
+            TimeUnit.MILLISECONDS.toMinutes(millis),
+            TimeUnit.MILLISECONDS.toSeconds(millis) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+        );
     }
 
-    public static String formatMillisInHrsAndMins(long millis) {
+    public static String formatMillisInHrAndMin(long millis) {
         long hours = TimeUnit.MILLISECONDS.toHours(millis);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis));
         return String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
@@ -95,5 +97,14 @@ public class TimeHelper {
 
     public static long min2Millis(int min) {
         return min * 60 * 1000;
+    }
+
+    public static boolean isSameTimeIgnoreSec(long time1, long time2){
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTimeInMillis(time1);
+        cal2.setTimeInMillis(time2);
+        return cal1.get(Calendar.HOUR_OF_DAY) == cal2.get(Calendar.HOUR_OF_DAY) &&
+            cal1.get(Calendar.MINUTE) == cal2.get(Calendar.MINUTE);
     }
 }

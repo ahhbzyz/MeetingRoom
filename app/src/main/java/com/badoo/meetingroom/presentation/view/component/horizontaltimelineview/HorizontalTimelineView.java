@@ -215,6 +215,7 @@ public class HorizontalTimelineView extends View {
         mSlotTimeTextPaint.setTextSize(mSlotTimeTextSize);
         Rect rect = new Rect();
         mSlotTimeTextPaint.getTextBounds("00:00", 0, "00:00".length(), rect);
+
         mWidthPerMillis = rect.width() * 1.5f / TimeHelper.min2Millis(MIN_SLOT_TIME);
 
         mGapTimeSlotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

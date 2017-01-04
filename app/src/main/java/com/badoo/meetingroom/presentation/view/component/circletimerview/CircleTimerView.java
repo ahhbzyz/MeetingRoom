@@ -22,9 +22,8 @@ import android.view.animation.LinearInterpolator;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
-
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -400,9 +399,7 @@ public class CircleTimerView extends View {
             if (mTimerTimeText.length() == 5) {
                 canvas.drawText(String.valueOf(mTimerTimeText.charAt(0)), mBgCircleCx - 3.3f * halfCharWidth, textY, mTimerTimeTextPaint);
                 canvas.drawText(String.valueOf(mTimerTimeText.charAt(1)), mBgCircleCx - 1.5f * halfCharWidth, textY, mTimerTimeTextPaint);
-
                 canvas.drawText(String.valueOf(mTimerTimeText.charAt(2)), mBgCircleCx, textY, mTimerTimeTextPaint);
-
                 canvas.drawText(String.valueOf(mTimerTimeText.charAt(3)), mBgCircleCx + 1.5f * halfCharWidth, textY, mTimerTimeTextPaint);
                 canvas.drawText(String.valueOf(mTimerTimeText.charAt(4)), mBgCircleCx + 3.3f * halfCharWidth, textY, mTimerTimeTextPaint);
             } else {
@@ -645,14 +642,14 @@ public class CircleTimerView extends View {
         mTailIconVisibility = mCurrRoomEvent.isConfirmed() || mCurrRoomEvent.isOnHold();
 
         switch (mCurrRoomEvent.getStatus()) {
-            case RoomEventModel.AVAILABLE:
+            case RoomEventModelImpl.AVAILABLE:
                 setTimerInfoText("AVAILABLE FOR");
                 setTimerInfoTextColor(DEFAULT_TIMER_INFO_TEXT_BLACK_COLOR);
                 setBgCircleColor(mCurrRoomEvent.getEventBgColor());
                 setArcColor(mCurrRoomEvent.getEventColor());
                 setBgCirclePaintStyle(Paint.Style.STROKE);
                 break;
-            case RoomEventModel.BUSY:
+            case RoomEventModelImpl.BUSY:
                 if (mCurrRoomEvent.isOnHold()) {
 
                     setTimerInfoText("ON HOLD FOR");
@@ -706,8 +703,8 @@ public class CircleTimerView extends View {
 
 
         if (mAnimator != null) {
-           // mAnimator.cancel();
-            //TODO do nothing
+            mAnimator.removeAllListeners();
+            mAnimator.cancel();
         }
 
         if (event.isExpired()) {

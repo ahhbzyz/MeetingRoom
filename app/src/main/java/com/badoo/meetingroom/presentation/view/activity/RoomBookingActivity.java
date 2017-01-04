@@ -1,14 +1,18 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -41,6 +45,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @BindView(R.id.btn_book) Button mBookBtn;
 
     private ProgressDialog mLoadingDataDialog;
+    private boolean hasSlots;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +101,30 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             }
             return false;
         });
+
+        mEmailEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (hasSlots && isValidEmailAddress(mEmailEt.getText().toString().trim())) {
+                    mBookBtn.setClickable(true);
+                    mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book));
+                } else {
+                    mBookBtn.setClickable(false);
+                    mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void setUpRecyclerView() {
@@ -108,6 +137,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     private void setUpBookButton() {
         mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mEmailEt.getText().toString().trim()));
+        mBookBtn.setClickable(false);
+        mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
     }
 
     private void setUpLoadingDataDialog(){
@@ -132,11 +163,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             mBookingDateTv.setText(TimeHelper.formatDate(startTime));
         }
 
-        if (TimeHelper.isMidNight(endTime)) {
-           // mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + "24:00");
-        } else {
-
-        }
         mBookingPeriodTv.setText("No slots selected");
         mAdapter.setTimeSlots(startTime, endTime);
 
@@ -169,8 +195,18 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             } else {
                 mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " +TimeHelper.formatTime(endTime));
             }
+            hasSlots = true;
         } else {
             mBookingPeriodTv.setText("No Slots Selected");
+            hasSlots = false;
+        }
+
+        if (hasSlots && isValidEmailAddress(mEmailEt.getText().toString().trim())) {
+            mBookBtn.setClickable(true);
+            mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book));
+        } else {
+            mBookBtn.setClickable(false);
+            mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
         }
     }
 
@@ -181,9 +217,9 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     public void showBookingSuccessful() {
-        Toast.makeText(this, "Room is booked successfully", Toast.LENGTH_SHORT).show();
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK,returnIntent);
         finish();
-        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -235,5 +271,12 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Override
     public Context context() {
         return getApplicationContext();
+    }
+
+    public boolean isValidEmailAddress(String email) {
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(email);
+        return m.matches();
     }
 }

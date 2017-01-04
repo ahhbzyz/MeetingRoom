@@ -45,6 +45,7 @@ import butterknife.ButterKnife;
 
 public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
+    private static final int REQUEST_BOOK_ROOM = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
     @Inject
     RoomEventsPresenterImpl mPresenter;
@@ -122,7 +123,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mCalendarImg.setOnClickListener(v -> {
             Intent intent = new Intent(RoomEventsActivity.this, EventsCalendarActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_BOOK_ROOM);
         });
     }
 
@@ -301,15 +302,18 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mButtonsLayout.addView(mDNDBtnWithText);
         mDNDBtn.setOnClickListener(v -> mPresenter.setDoNotDisturb(true));
 
-        ImageButton mExtentBtn  = new ImageButton(this);
-        mExtentBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
-        mExtentBtn.setScaleType(ImageView.ScaleType.CENTER);
-        mExtentBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_busy));
+        ImageButton mExtendBtn  = new ImageButton(this);
+        mExtendBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
+        mExtendBtn.setScaleType(ImageView.ScaleType.CENTER);
+        mExtendBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_busy));
 
-        Drawable extentBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_add_black, 50 ,50);
-        mExtentBtn.setImageDrawable(extentBtnDrawable);
-        LinearLayout mExtentBtnWithText = ViewHelper.addTextUnderBtn(this, mExtentBtn, "Extent");
-        mButtonsLayout.addView(mExtentBtnWithText);
+        Drawable extendBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_add_black, 50 ,50);
+        mExtendBtn.setImageDrawable(extendBtnDrawable);
+        LinearLayout mExtendBtnWithText = ViewHelper.addTextUnderBtn(this, mExtendBtn, "Extend");
+        mButtonsLayout.addView(mExtendBtnWithText);
+        mExtendBtn.setOnClickListener(v -> {
+            mPresenter.extendBookingPeriod();
+        });
     }
 
     @Override
@@ -359,7 +363,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         bundle.putLong("endTime", endTime);
         intent.putExtra("timePeriod", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_BOOK_ROOM);
     }
 
     @Override
@@ -373,6 +377,11 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
             case REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK) {
+                    mPresenter.init();
+                }
+                break;
+            case REQUEST_BOOK_ROOM:
                 if (resultCode == RESULT_OK) {
                     mPresenter.init();
                 }

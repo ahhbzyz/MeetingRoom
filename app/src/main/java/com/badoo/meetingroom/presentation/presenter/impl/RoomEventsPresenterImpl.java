@@ -2,18 +2,18 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import android.support.annotation.NonNull;
 
-import com.badoo.meetingroom.data.GetEventsParams;
-import com.badoo.meetingroom.data.InsertEventParams;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
+import com.badoo.meetingroom.domain.interactor.DeleteEvent;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
 import com.badoo.meetingroom.domain.interactor.InsertEvent;
+import com.badoo.meetingroom.domain.interactor.UpdateEvent;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomEventsPresenter;
 import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
@@ -38,6 +38,8 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private final GetRoomEventList mGetRoomEventListUseCase;
     private final InsertEvent mInsertEventUseCase;
+    private final DeleteEvent mDeleteEventUseCase;
+    private final UpdateEvent mUpdateEventUseCase;
 
     private final RoomEventModelMapper mMapper;
 
@@ -45,17 +47,18 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private RoomEventModel mCurrentEvent;
 
-    private final GoogleAccountCredential mCredential;
 
     @Inject
     RoomEventsPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
                             @Named(InsertEvent.NAME) InsertEvent insertEventUseCase,
-                            RoomEventModelMapper mapper,
-                            GoogleAccountCredential credential) {
+                            @Named(DeleteEvent.NAME) DeleteEvent deleteEventUseCase,
+                            @Named(UpdateEvent.NAME) UpdateEvent updateEventUseCase,
+                            RoomEventModelMapper mapper) {
         this.mGetRoomEventListUseCase = getRoomEventListUseCase;
         this.mInsertEventUseCase = insertEventUseCase;
+        this.mDeleteEventUseCase = deleteEventUseCase;
+        this.mUpdateEventUseCase = updateEventUseCase;
         this.mMapper = mapper;
-        this.mCredential = credential;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
             if (hours >= 2) {
                 mRoomEventsView.setCircleTimeViewTime("2H+");
             } else {
-                mRoomEventsView.setCircleTimeViewTime(TimeHelper.formatMillisInMinsAndSecs(millisUntilFinished));
+                mRoomEventsView.setCircleTimeViewTime(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
             }
         }
 
@@ -109,10 +112,10 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     private void showButtonsForEvent(){
         mRoomEventsView.clearAllButtonsInLayout();
         switch (mCurrentEvent.getStatus()) {
-            case RoomEventModel.AVAILABLE:
+            case RoomEventModelImpl.AVAILABLE:
                 mRoomEventsView.showButtonsInAvailableStatus();
                 break;
-            case RoomEventModel.BUSY:
+            case RoomEventModelImpl.BUSY:
                 if (mCurrentEvent.isOnHold()) {
                     mRoomEventsView.showButtonsInOnHoldStatus();
                 } else if (mCurrentEvent.isDoNotDisturb()) {
@@ -149,17 +152,23 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     }
 
     private void getRoomEventList() {
-        DateTime start = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
-        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
-        GetEventsParams params = new GetEventsParams.EventsParamsBuilder(mCredential)
-            .startTime(start)
-            .endTime(end)
-            .build();
+        Event event = new Event();
+        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
+        EventDateTime start = new EventDateTime()
+            .setDateTime(startDateTime)
+            .setTimeZone("Europe/London");
+        event.setStart(start);
 
-        mMapper.setEventStartTime(start.getValue());
-        mMapper.setEventEndTime(end.getValue());
+        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
+        EventDateTime end = new EventDateTime()
+            .setDateTime(endDateTime)
+            .setTimeZone("Europe/London");
+        event.setEnd(end);
 
-        this.mGetRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
+        mMapper.setEventStartTime(startDateTime.getValue());
+        mMapper.setEventEndTime(endDateTime.getValue());
+
+        this.mGetRoomEventListUseCase.init(event).execute(new RoomEventListSubscriber());
     }
 
     public void insertEvent(int min) {
@@ -167,28 +176,21 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.min2Millis(min);
 
         if (mCurrentEvent.isAvailable() && endTime <= mCurrentEvent.getEndTime()) {
+            Event event = new Event();
             DateTime startDateTime = new DateTime(startTime);
             EventDateTime start = new EventDateTime()
                 .setDateTime(startDateTime)
                 .setTimeZone("Europe/London");
+            event.setStart(start);
+
             DateTime endDateTime = new DateTime(endTime);
             EventDateTime end = new EventDateTime()
                 .setDateTime(endDateTime)
                 .setTimeZone("Europe/London");
-            InsertEventParams params = new InsertEventParams.EventParamsBuilder(mCredential)
-                .startDateTime(start)
-                .endDateTime(end)
-                .organizer(null)
-                .build();
-            this.mInsertEventUseCase.init(params).execute(new InsertEventSubscriber());
+            event.setEnd(end);
+            this.mInsertEventUseCase.init(event).execute(new InsertEventSubscriber());
         }
     }
-
-    @Override
-    public RoomEventModel getCurrentEvent() {
-        return mCurrentEvent;
-    }
-
 
     @Override
     public void confirmEvent() {
@@ -199,7 +201,9 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     @Override
     public void dismissEvent() {
-        //TODO
+        Event event = new Event();
+        event.setId(mCurrentEvent.getId());
+        this.mDeleteEventUseCase.init(event).execute(new DeleteEventSubscriber());
     }
 
     @Override
@@ -218,6 +222,16 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
             mRoomEventsView.bookRoom(TimeHelper.getCurrentTimeInMillis(), mCurrentEvent.getEndTime());
         } else {
 
+        }
+    }
+
+    @Override
+    public void extendBookingPeriod() {
+        if (mEventModelQueue!=null && mEventModelQueue.size() >= 1) {
+            if (mEventModelQueue.get(1).isAvailable()) {
+                long extendedTime = mEventModelQueue.get(1).getDuration() >= TimeHelper.min2Millis(15) ? TimeHelper.min2Millis(15)  : mEventModelQueue.get(1).getDuration();
+                // Extent
+            }
         }
     }
 
@@ -303,6 +317,44 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
             }
         }
     }
+
+    private final class DeleteEventSubscriber extends DefaultSubscriber<Void> {
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            showViewLoading(true);
+        }
+
+        @Override
+        public void onNext(Void aVoid) {
+            super.onNext(aVoid);
+        }
+
+        @Override
+        public void onCompleted() {
+            super.onCompleted();
+            showViewLoading(false);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            super.onError(e);
+            showViewLoading(false);
+            try {
+                throw e;
+            } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
+                mRoomEventsView.showRecoverableAuth(userRecoverableAuthIOException);
+            } catch (GoogleJsonResponseException googleJsonResponseException) {
+                mRoomEventsView.showError(googleJsonResponseException.getDetails().getMessage());
+            } catch (Exception exception) {
+                mRoomEventsView.showError(exception.getMessage());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
+    }
+
 
     @Override
     public void Resume() {}

@@ -7,8 +7,13 @@ import com.badoo.meetingroom.data.repository.RoomEventDataRepository;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
 import com.badoo.meetingroom.domain.repository.RoomEventRepository;
 import com.badoo.meetingroom.di.AndroidApplication;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 
 import java.util.Arrays;
@@ -26,14 +31,24 @@ import dagger.Provides;
 public class ApplicationModule {
 
     private final AndroidApplication application;
-    private final String[] SCOPES = {CalendarScopes.CALENDAR};
     private GoogleAccountCredential mCredential;
+    private Calendar mServices;
 
     public ApplicationModule(AndroidApplication application) {
         this.application = application;
+
+        // Google account credential
         this.mCredential = GoogleAccountCredential.usingOAuth2(
             application.getApplicationContext(), Collections.singleton(CalendarScopes.CALENDAR))
             .setBackOff(new ExponentialBackOff());
+
+        // Calendar services
+        HttpTransport transport = AndroidHttp.newCompatibleTransport();
+        JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        this.mServices = new com.google.api.services.calendar.Calendar.Builder(
+            transport, jsonFactory, mCredential)
+            .setApplicationName("Meeting Room")
+            .build();
     }
 
     @Provides
@@ -46,5 +61,11 @@ public class ApplicationModule {
     @Singleton
     GoogleAccountCredential provideGoogleAccountCredential() {
         return mCredential;
+    }
+
+    @Provides
+    @Singleton
+    Calendar provideCalendarServices() {
+        return mServices;
     }
 }

@@ -12,7 +12,7 @@ import rx.Observable;
  * Created by zhangyaozhong on 21/12/2016.
  */
 
-public class PutGoogleAccount extends UseCaseWithParams<Void, String> {
+public class PutGoogleAccount extends UseCase<Void> {
 
     public static final String NAME = "putGoogleAccount";
 

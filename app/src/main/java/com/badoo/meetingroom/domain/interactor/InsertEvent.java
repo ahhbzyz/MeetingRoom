@@ -1,11 +1,7 @@
 package com.badoo.meetingroom.domain.interactor;
 
-import com.badoo.meetingroom.data.InsertEventParams;
-import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.repository.RoomEventRepository;
 import com.google.api.services.calendar.model.Event;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -15,35 +11,36 @@ import rx.Observable;
  * Created by zhangyaozhong on 02/01/2017.
  */
 
-public class InsertEvent extends UseCaseWithParams<Event, InsertEventParams> {
+public class InsertEvent extends UseCase<Event> {
 
     public static final String NAME = "insertEvent";
 
     private final RoomEventRepository mRoomEventRepository;
-    private InsertEventParams mParams;
+    private Event mEventParams;
 
     @Inject
     InsertEvent(RoomEventRepository mRoomEventRepository) {
         this.mRoomEventRepository = mRoomEventRepository;
     }
 
-    public InsertEvent init(InsertEventParams params) {
-        this.mParams = params;
+    public InsertEvent init(Event event) {
+        this.mEventParams = event;
         return this;
     }
 
     @Override
     protected Observable<Event> buildUseCaseObservable() {
-        if (this.mParams == null) {
-            throw new IllegalArgumentException("init(InsertEventParams) not called, or called with null argument");
+        if (this.mEventParams == null) {
+            throw new IllegalArgumentException("init(EventInsertParams) not called, or called with null argument");
         }
-        return Observable.concat(validate(), mRoomEventRepository.insertEvent(mParams));
+        return Observable.concat(validate(), mRoomEventRepository.insertEvent(mEventParams));
 
     }
 
     private Observable<Event> validate() {
         return Observable.create(subscriber -> {
-            if (InsertEvent.this.mParams.getCredential() == null) {
+            if (InsertEvent.this.mEventParams.getStart().getDateTime() == null ||
+                InsertEvent.this.mEventParams.getEnd().getDateTime() == null) {
 
             } else {
                 subscriber.onCompleted();

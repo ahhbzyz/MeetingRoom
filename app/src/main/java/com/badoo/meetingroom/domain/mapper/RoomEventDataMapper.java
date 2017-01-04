@@ -35,6 +35,7 @@ public class RoomEventDataMapper {
             long endTime = event.getEnd().getDateTime().getValue();
 
             roomEvent = new RoomEventImpl();
+            roomEvent.setId(event.getId());
             roomEvent.setOrganizer(organizer);
             roomEvent.setStartTime(startTime);
             roomEvent.setEndTime(endTime);

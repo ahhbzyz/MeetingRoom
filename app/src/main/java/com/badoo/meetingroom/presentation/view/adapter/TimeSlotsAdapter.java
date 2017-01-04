@@ -66,19 +66,18 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
             startOffset = 0;
         }
         long newStartTime = startTime + (startOffset - remainderOfStartTimeMin) * 60 * 1000;
-
         int numOfSlots = (int) ((endTime - newStartTime) / mDefaultSlotLength);
-
 
         mTimeSlotList.add(new TimeSlot(startTime));
         if (numOfSlots <= 0) {
             mTimeSlotList.add(new TimeSlot(endTime));
         } else {
             for (int i = 0; i < numOfSlots; i++) {
-                newStartTime += mDefaultSlotLength;
+                // TODO
+                newStartTime = newStartTime + mDefaultSlotLength;
                 mTimeSlotList.add(new TimeSlot(newStartTime));
             }
-            if (newStartTime < endTime) {
+            if (!TimeHelper.isSameTimeIgnoreSec(newStartTime, endTime)) {
                 mTimeSlotList.add(new TimeSlot(endTime));
             }
         }

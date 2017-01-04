@@ -116,13 +116,13 @@
 
         <Button
             android:text="BOOK"
-            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:background="@drawable/btn_rounded_book"
             android:stateListAnimator="@null"
             android:textColor="@android:color/white"
             android:layout_width="match_parent"
             android:id="@+id/btn_book"
             android:layout_marginTop="32dp"
-            android:layout_height="64dp" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

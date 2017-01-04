@@ -6,7 +6,7 @@ package com.badoo.meetingroom.data.exception;
 
 public class NetworkConnectionException extends Exception {
     public NetworkConnectionException() {
-        super();
+        super("Please check network connection");
     }
 
     public NetworkConnectionException(String message) {

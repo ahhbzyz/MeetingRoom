@@ -13,13 +13,23 @@ public class RoomEventImpl implements RoomEvent {
     public static final int AVAILABLE = 0;
     public static final int BUSY = 1;
 
+    private String id;
     private int status;
     private long startTime;
     private long endTime;
     private String organizer;
-    private GoogleCredential credential;
 
     public RoomEventImpl() {
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -60,13 +70,5 @@ public class RoomEventImpl implements RoomEvent {
     @Override
     public void setOrganizer(String organizer) {
         this.organizer = organizer;
-    }
-
-    public GoogleCredential getCredential() {
-        return credential;
-    }
-
-    public void setCredential(GoogleCredential credential) {
-        this.credential = credential;
     }
 }

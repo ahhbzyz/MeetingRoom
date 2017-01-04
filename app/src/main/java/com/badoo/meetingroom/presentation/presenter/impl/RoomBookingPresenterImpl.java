@@ -1,22 +1,18 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
-import com.badoo.meetingroom.data.InsertEventParams;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.InsertEvent;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.json.Json;
-import com.google.api.client.json.JsonParser;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
 import com.google.api.services.calendar.model.EventDateTime;
 
-import org.json.JSONArray;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,12 +29,10 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     private long selectedStartTime = -1;
     private long selectedEndTime = -1;
     private final InsertEvent mInsertEventUseCase;
-    private final GoogleAccountCredential mCredential;
 
     @Inject
-    RoomBookingPresenterImpl(@Named(InsertEvent.NAME) InsertEvent insertEvent, GoogleAccountCredential credential) {
+    RoomBookingPresenterImpl(@Named(InsertEvent.NAME) InsertEvent insertEvent) {
         this.mInsertEventUseCase = insertEvent;
-        this.mCredential = credential;
     }
 
     @Override
@@ -57,20 +51,24 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
     @Override
     public void bookRoom(String organizer) {
+        Event event = new Event();
         DateTime startDateTime = new DateTime(selectedStartTime);
         EventDateTime start = new EventDateTime()
             .setDateTime(startDateTime)
             .setTimeZone("Europe/London");
+        event.setStart(start);
+
         DateTime endDateTime = new DateTime(selectedEndTime);
         EventDateTime end = new EventDateTime()
             .setDateTime(endDateTime)
             .setTimeZone("Europe/London");
-        InsertEventParams params = new InsertEventParams.EventParamsBuilder(mCredential)
-            .startDateTime(start)
-            .endDateTime(end)
-            .organizer(organizer)
-            .build();
-        this.mInsertEventUseCase.init(params).execute(new InsertEventSubscriber());
+        event.setEnd(end);
+
+        List<EventAttendee> eventAttendees = new ArrayList<>(1);
+        eventAttendees.add(new EventAttendee().setEmail(organizer));
+        event.setAttendees(eventAttendees);
+
+        this.mInsertEventUseCase.init(event).execute(new InsertEventSubscriber());
     }
 
     public void setTimeSlotList(List<TimeSlotsAdapter.TimeSlot> timeSlotList) {

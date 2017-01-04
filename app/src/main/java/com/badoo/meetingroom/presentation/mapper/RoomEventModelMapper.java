@@ -3,6 +3,7 @@ package com.badoo.meetingroom.presentation.mapper;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.entity.impl.RoomEventImpl;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class RoomEventModelMapper {
             throw new IllegalArgumentException("Cannot transform a null value");
         }
 
-        final RoomEventModel roomEventModel = new RoomEventModel();
+        final RoomEventModel roomEventModel = new RoomEventModelImpl();
         roomEventModel.setOrganizer(roomEvent.getOrganizer());
         roomEventModel.setStatus(roomEvent.getStatus());
         roomEventModel.setStartTime(roomEvent.getStartTime());
@@ -96,7 +97,7 @@ public class RoomEventModelMapper {
     }
 
     private RoomEventModel generateAvailableEvent(long startTime, long endTime) {
-        RoomEventModel roomEvent = new RoomEventModel();
+        RoomEventModel roomEvent = new RoomEventModelImpl();
         roomEvent.setStartTime(startTime);
         roomEvent.setEndTime(endTime);
         roomEvent.setOrganizer("None");

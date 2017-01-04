@@ -1,6 +1,5 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
-import com.badoo.meetingroom.data.GetEventsParams;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
@@ -9,10 +8,11 @@ import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 
 import java.util.List;
 
@@ -37,9 +37,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     private List<RoomEventModel> mEventList;
 
     @Inject
-    GoogleAccountCredential mCredential;
-
-    @Inject
     DailyEventsPresenterImpl(@Named(GetRoomEventList.NAME)GetRoomEventList getRoomEventListUseCase,
                                     RoomEventModelMapper mMapper) {
         this.getRoomEventListUseCase = getRoomEventListUseCase;
@@ -50,15 +47,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     public void init() {
         mPage = mDailyEventsView.getCurrentPage();
         loadRoomEventList();
-    }
-
-    public void showCurrentTimeMark() {
-        long currentTime = TimeHelper.getCurrentTimeSinceMidNight();
-        if (mDailyEventsView.getCurrentPage() == 0) {
-            mDailyEventsView.showCurrentTimeMark(true, currentTime, TimeHelper.getCurrentTimeInMillisInText());
-        } else {
-            mDailyEventsView.showCurrentTimeMark(false, currentTime, TimeHelper.getCurrentTimeInMillisInText());
-        }
     }
 
     public void loadRoomEventList() {
@@ -100,15 +88,24 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     }
 
     private void getRoomEventList() {
-        DateTime start = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage));
-        DateTime end = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
-        GetEventsParams params = new GetEventsParams.EventsParamsBuilder(mCredential)
-            .startTime(start)
-            .endTime(end)
-            .build();
-        mMapper.setEventStartTime(start.getValue());
-        mMapper.setEventEndTime(end.getValue());
-        this.getRoomEventListUseCase.init(params).execute(new RoomEventListSubscriber());
+
+        Event event = new Event();
+        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage));
+        EventDateTime start = new EventDateTime()
+            .setDateTime(startDateTime)
+            .setTimeZone("Europe/London");
+        event.setStart(start);
+
+        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
+        EventDateTime end = new EventDateTime()
+            .setDateTime(endDateTime)
+            .setTimeZone("Europe/London");
+        event.setEnd(end);
+
+
+        mMapper.setEventStartTime(startDateTime.getValue());
+        mMapper.setEventEndTime(endDateTime.getValue());
+        this.getRoomEventListUseCase.init(event).execute(new RoomEventListSubscriber());
     }
 
     public void updateRecyclerView() {

@@ -11,7 +11,7 @@ import rx.subscriptions.Subscriptions;
  * Created by zhangyaozhong on 23/12/2016.
  */
 
-public abstract class UseCase<T> {
+abstract class UseCase<T> {
 
     private Subscription mSubscription = Subscriptions.empty();
 

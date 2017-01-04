@@ -14,11 +14,9 @@ public interface RoomEventsPresenter extends Presenter {
     void onCountDownTicking(long millisUntilFinished);
     void onCountDownFinished();
     void updateCurrentTimeForHtv();
-
-    RoomEventModel getCurrentEvent();
     void confirmEvent();
     void dismissEvent();
     void setDoNotDisturb(boolean doNotDisturb);
-
     void circleTimeViewBtnClick();
+    void extendBookingPeriod();
 }

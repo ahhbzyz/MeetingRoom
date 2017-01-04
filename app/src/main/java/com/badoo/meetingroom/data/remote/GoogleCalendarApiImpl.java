@@ -4,20 +4,14 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.badoo.meetingroom.data.InsertEventParams;
-import com.badoo.meetingroom.data.GetEventsParams;
 import com.badoo.meetingroom.data.exception.NetworkConnectionException;
-import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.badoo.meetingroom.data.remote.api.EventDeleteApiCall;
+import com.badoo.meetingroom.data.remote.api.EventInsertApiCall;
+import com.badoo.meetingroom.data.remote.api.EventUpdateApiCall;
+import com.badoo.meetingroom.data.remote.api.EventsGetApiCall;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.Events;
 
-import java.io.IOException;
 import java.util.List;
 
 import rx.Observable;
@@ -29,64 +23,113 @@ import rx.Observable;
 public class GoogleCalendarApiImpl implements GoogleCalendarApi {
 
     private Context mContext;
+    private Calendar mServices;
 
-    public GoogleCalendarApiImpl(Context context) {
-        if (context == null) {
+    public GoogleCalendarApiImpl(Context context, Calendar services) {
+        if (context == null || services == null) {
             throw new IllegalArgumentException("The constructor parameters cannot be null");
         }
         this.mContext = context;
+        this.mServices = services;
     }
 
     @Override
-    public Observable<List<Event>> getEventList(GetEventsParams params) {
+    public Observable<List<Event>> getEventList(Event event) {
         return Observable.create(subscriber -> {
             if(hasInternetConnection()) {
                 try {
-                    List<Event> responseEvents = getEventsFromApi(params);
+                    List<Event> responseEvents = getEventsFromApi(mServices, event);
                     if (responseEvents != null) {
                         subscriber.onNext(responseEvents);
                         subscriber.onCompleted();
                     } else {
-                        subscriber.onError(new NetworkConnectionException("Please check network connection"));
+                        subscriber.onError(new NetworkConnectionException());
                     }
                 } catch (Exception e) {
                     subscriber.onError(e);
                 }
 
             } else {
-                subscriber.onError(new NetworkConnectionException("Please check network connection"));
+                subscriber.onError(new NetworkConnectionException());
             }
         });
     }
 
     @Override
-    public Observable<Event> insertEvent(InsertEventParams params) {
+    public Observable<Event> insertEvent(Event event) {
         return Observable.create(subscriber -> {
             if (hasInternetConnection()) {
                 try {
-                    Event event = insertEventFromApi(params);
+                    Event result = insertEventFromApi(mServices, event);
                     if (event != null) {
-                        subscriber.onNext(event);
+                        subscriber.onNext(result);
                         subscriber.onCompleted();
                     } else {
-                        subscriber.onError(new NetworkConnectionException("Please check network connection"));
+                        subscriber.onError(new NetworkConnectionException());
                     }
                 } catch (Exception e) {
                     subscriber.onError(e);
                 }
             } else {
-                subscriber.onError(new NetworkConnectionException("Please check network connection"));
+                subscriber.onError(new NetworkConnectionException());
             }
         });
     }
 
-    private List<Event> getEventsFromApi(GetEventsParams params) throws Exception {
-        return EventsListApiCall.createGET(params).requestSyncCall();
+    @Override
+    public Observable<Void> deleteEvent(Event event) {
+        return Observable.create(subscriber -> {
+            if (hasInternetConnection()) {
+                try {
+                    subscriber.onNext(deleteEventFromApi(mServices, event));
+                    subscriber.onCompleted();
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                }
+            } else {
+                subscriber.onError(new NetworkConnectionException());
+            }
+        });
     }
 
-    private Event insertEventFromApi(InsertEventParams params) throws Exception {
-        return EventInsertApiCall.createINSERT(params).requestSyncCall();
+    @Override
+    public Observable<Event> updateEvent(Event event) {
+        return Observable.create(subscriber -> {
+            if (hasInternetConnection()) {
+                try {
+                    Event result = updateEventFromApi(mServices, event);
+                    if (event != null) {
+                        subscriber.onNext(result);
+                        subscriber.onCompleted();
+                    } else {
+                        subscriber.onError(new NetworkConnectionException());
+                    }
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                }
+            } else {
+                subscriber.onError(new NetworkConnectionException());
+            }
+        });
     }
+
+
+    private List<Event> getEventsFromApi(Calendar services, Event event) throws Exception {
+        return EventsGetApiCall.createGET(services, event).requestSyncCall();
+    }
+
+    private Event insertEventFromApi(Calendar services, Event event) throws Exception {
+        return EventInsertApiCall.createINSERT(services, event).requestSyncCall();
+    }
+
+    private Void deleteEventFromApi(Calendar services, Event event) throws Exception {
+        return EventDeleteApiCall.createDelete(services, event).requestSyncCall();
+    }
+
+    private Event updateEventFromApi(Calendar service, Event event) throws Exception {
+        return EventUpdateApiCall.createUpdate(service, event).requestSyncCall();
+    }
+
 
     private boolean hasInternetConnection() {
         boolean isConnected;

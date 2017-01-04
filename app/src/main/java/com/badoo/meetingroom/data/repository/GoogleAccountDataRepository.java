@@ -22,7 +22,7 @@ public class GoogleAccountDataRepository implements GoogleAccountRepository {
     private final GoogleAccountDataStore googleAccountDataStore;
 
     @Inject
-    public GoogleAccountDataRepository(GoogleAccountDataStoreFactory googleAccountDataStoreFactory,
+    GoogleAccountDataRepository(GoogleAccountDataStoreFactory googleAccountDataStoreFactory,
                                        GoogleAccountDataMapper googleAccountDataMapper) {
         this.mGoogleAccountDataMapper = googleAccountDataMapper;
         this.googleAccountDataStore = googleAccountDataStoreFactory.createLocalGoogleAccountNameStore();
