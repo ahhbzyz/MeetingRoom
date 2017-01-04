@@ -33,6 +33,7 @@ public class RoomEventModelMapper {
         }
 
         final RoomEventModel roomEventModel = new RoomEventModelImpl();
+        roomEventModel.setId(roomEvent.getId());
         roomEventModel.setOrganizer(roomEvent.getOrganizer());
         roomEventModel.setStatus(roomEvent.getStatus());
         roomEventModel.setStartTime(roomEvent.getStartTime());

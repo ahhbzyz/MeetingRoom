@@ -266,7 +266,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mDismissBtn.setImageDrawable(dismissBtnDrawable);
         LinearLayout mDismissBtnWithText = ViewHelper.addTextUnderBtn(this, mDismissBtn, "Dismiss");
         mButtonsLayout.addView(mDismissBtnWithText);
-        mDismissBtn.setOnClickListener(v -> mPresenter.dismissEvent());
+        mDismissBtn.setOnClickListener(v -> mPresenter.deleteEvent());
     }
 
     @Override
@@ -279,13 +279,14 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mCircleBtn.setImageDrawable(addDrawable);
 
         // Hold to end btn
-        LongPressButton mEndBnt = new LongPressButton(this, null);
-        mEndBnt.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
-        mEndBnt.setScaleType(ImageView.ScaleType.CENTER);
+        LongPressButton mEndBtn = new LongPressButton(this, null);
+        mEndBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
+        mEndBtn.setScaleType(ImageView.ScaleType.CENTER);
         Drawable endBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_clear_white, 50 ,50);
-        mEndBnt.setImageDrawable(endBtnDrawable);
-        LinearLayout mEndBtnWithText = ViewHelper.addTextUnderBtn(this, mEndBnt, "Hold to end");
+        mEndBtn.setImageDrawable(endBtnDrawable);
+        LinearLayout mEndBtnWithText = ViewHelper.addTextUnderBtn(this, mEndBtn, "Hold to end");
         mButtonsLayout.addView(mEndBtnWithText);
+        mEndBtn.setOnClickListener(v -> mPresenter.deleteEvent());
 
         // Do not disturb btn
         ImageButton mDNDBtn  = new ImageButton(this);
@@ -367,8 +368,18 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     }
 
     @Override
-    public void showBookingSuccessful() {
+    public void showEventInsertSuccessful() {
         Toast.makeText(this, "Room is booked successfully", Toast.LENGTH_SHORT).show();
+        mPresenter.init();
+    }
+
+    @Override
+    public void showEventDeleteSuccessful() {
+        mPresenter.init();
+    }
+
+    @Override
+    public void showEventExtendSuccessful() {
         mPresenter.init();
     }
 

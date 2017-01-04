@@ -19,7 +19,6 @@ public interface RoomEventsView extends LoadDataView {
     void renderNextRoomEvent(RoomEventModel nextEvent);
     void renderRoomEvents(LinkedList<RoomEventModel> mEventModelList);
     void setCurrentTimeText(String currentTime);
-
     void clearAllButtonsInLayout();
     void showButtonsInAvailableStatus();
     void showButtonsInOnHoldStatus();
@@ -28,5 +27,7 @@ public interface RoomEventsView extends LoadDataView {
     void updateEventStatus();
     void showRecoverableAuth(UserRecoverableAuthIOException e);
     void bookRoom(long startTime, long endTime);
-    void showBookingSuccessful();
+    void showEventInsertSuccessful();
+    void showEventDeleteSuccessful();
+    void showEventExtendSuccessful();
 }

@@ -15,7 +15,7 @@ public interface RoomEventsPresenter extends Presenter {
     void onCountDownFinished();
     void updateCurrentTimeForHtv();
     void confirmEvent();
-    void dismissEvent();
+    void deleteEvent();
     void setDoNotDisturb(boolean doNotDisturb);
     void circleTimeViewBtnClick();
     void extendBookingPeriod();
