@@ -131,12 +131,13 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         } else {
             mBookingDateTv.setText(TimeHelper.formatDate(startTime));
         }
-        if (TimeHelper.isMidNight(endTime)) {
-            mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + "24:00");
-        } else {
-            mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " +TimeHelper.formatTime(endTime));
-        }
 
+        if (TimeHelper.isMidNight(endTime)) {
+           // mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + "24:00");
+        } else {
+
+        }
+        mBookingPeriodTv.setText("No slots selected");
         mAdapter.setTimeSlots(startTime, endTime);
 
         // Set left padding

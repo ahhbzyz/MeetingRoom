@@ -19,4 +19,6 @@ public interface RoomEventsPresenter extends Presenter {
     void confirmEvent();
     void dismissEvent();
     void setDoNotDisturb(boolean doNotDisturb);
+
+    void circleTimeViewBtnClick();
 }

@@ -49,10 +49,12 @@ class EventInsertApiCall implements Callable<Event>{
         Event event = new Event();
         event.setStart(mParams.getStartDataTime());
         event.setEnd(mParams.getEndDataTime());
-        EventAttendee[] attendees = new EventAttendee[] {
-            new EventAttendee().setEmail(mParams.getOrganizer()),
-        };
-        event.setAttendees(Arrays.asList(attendees));
+        if (mParams.getOrganizer() != null) {
+            EventAttendee[] attendees = new EventAttendee[]{
+                new EventAttendee().setEmail(mParams.getOrganizer()),
+            };
+            event.setAttendees(Arrays.asList(attendees));
+        }
         mResponse = mServices.events().insert("primary", event).execute();
     }
 

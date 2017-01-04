@@ -133,7 +133,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
-        sha1="03790ca7d9f90d90503bf046a35bae97d29adc27">
+        sha1="8087bf37500063d217b93e769f6b5e94667584ef">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_893acbad770968085fe11731a65510521c8a1794/classes.dex" />
     </item>
     <item
@@ -196,7 +196,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
-        sha1="e4709faedc5411dc2adcd5c4cacaf2f49f896bba">
+        sha1="0d0ce4ae3af2b2792fa5a1783fa8acb6731bb062">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_a0b40c527c4e8e3b3ee57eb1dff30f9048aab349/classes.dex" />
     </item>
     <item

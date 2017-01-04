@@ -111,18 +111,13 @@
                     android:layout_height="match_parent"
                     android:elevation="0dp" />
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:id="@+id/layout_book_btn_parent">
-
-                    <ImageView
-                        android:id="@+id/img_book"
-                        android:background="@drawable/btn_oval_confirm"
-                        android:layout_width="@dimen/circle_time_btn_view_radius"
-                        android:layout_height="@dimen/circle_time_btn_view_radius" />
-                </RelativeLayout>
+                <ImageButton
+                    android:id="@+id/img_book"
+                    android:background="@drawable/btn_oval_grey"
+                    android:layout_width="@dimen/circle_time_btn_view_radius"
+                    android:layout_height="@dimen/circle_time_btn_view_radius"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true" />
 
             </RelativeLayout>
 

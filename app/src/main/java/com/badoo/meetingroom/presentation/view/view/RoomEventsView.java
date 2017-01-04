@@ -15,10 +15,8 @@ import java.util.LinkedList;
  */
 
 public interface RoomEventsView extends LoadDataView {
-    void setUpCircleTimeView();
     void setCircleTimeViewTime(String millis);
     void renderNextRoomEvent(RoomEventModel nextEvent);
-    void setUpHorizontalTimelineView();
     void renderRoomEvents(LinkedList<RoomEventModel> mEventModelList);
     void setCurrentTimeText(String currentTime);
 
@@ -29,4 +27,6 @@ public interface RoomEventsView extends LoadDataView {
     void showButtonsInDoNotDisturbStatus(String endTimeInText);
     void updateEventStatus();
     void showRecoverableAuth(UserRecoverableAuthIOException e);
+    void bookRoom(long startTime, long endTime);
+    void showBookingSuccessful();
 }

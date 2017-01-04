@@ -54,8 +54,8 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @BindView(R.id.layout_btns) LinearLayout mButtonsLayout;
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.tv_fast_book) TextView mFastBookTv;
-    @BindView(R.id.img_book) ImageView mBookBtn;
-    @BindView(R.id.layout_book_btn_parent) RelativeLayout mBookBtnParentLayout;
+    @BindView(R.id.img_book) ImageButton mCircleBtn;
+    @BindView(R.id.img_calendar) ImageView mCalendarImg;
 
     private ProgressDialog mProgressDialog;
 
@@ -69,19 +69,17 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         ButterKnife.bind(this);
         this.getApplicationComponent().inject(this);
 
-        setUpProgressDialog();
         setUpToolbar();
-
+        setUpProgressDialog();
+        setTextViews();
+        setUpCircleTimeViewButton();
+        setUpCircleTimeView();
+        setUpCalendarImageButton();
+        registerTimeRefreshReceiver();
 
         mPresenter.setView(this);
         mPresenter.init();
 
-        Typeface stolzlRegular = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
-        mFastBookTv.setTypeface(stolzlRegular);
-
-
-
-        registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
 
     private void setUpProgressDialog() {
@@ -103,14 +101,33 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
+    private void setTextViews(){
+        Typeface stolzlRegular = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
+        mFastBookTv.setTypeface(stolzlRegular);
+    }
 
     private void setUpCircleTimeViewButton() {
 
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookBtnParentLayout.getLayoutParams();
-        params.setMargins(0, 110, 0, 0);
-        //System.out.println(mBookBtnParentLayout);
-        //mBookBtn.setLayoutParams(params);
-        mBookBtnParentLayout.setPadding(0, (int) (mCtv.getCircleRadius() * 2), 0, 0);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mCircleBtn.getLayoutParams();
+        mCtv.measure(0, 0);
+        params.setMargins(0, 0, 0, (int) (mCtv.getMeasuredHeight()/4f + mCircleBtn.getLayoutParams().width/2f));
+        mCircleBtn.setLayoutParams(params);
+        mCircleBtn.setOnClickListener(v -> {
+            mPresenter.circleTimeViewBtnClick();
+        });
+
+    }
+
+    private void setUpCalendarImageButton() {
+        mCalendarImg.setOnClickListener(v -> {
+            Intent intent = new Intent(RoomEventsActivity.this, EventsCalendarActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        });
+    }
+
+    private void registerTimeRefreshReceiver() {
+        registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
 
     @Override
@@ -144,13 +161,11 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mCtv.setTimerTimeText(time);
     }
 
-    @Override
     public void setUpCircleTimeView() {
         mCtv.setTailIconDrawable(R.drawable.ic_arrow_left_white);
         mCtv.setCircleBtnIconDrawable(R.drawable.btn_oval_confirm);
         mCtv.setAlertIconDrawable(R.drawable.ic_alert_white);
         mCtv.setOnCountDownListener(mOnCountDownListener);
-        setUpCircleTimeViewButton();
         mCtv.setOnClickListener(v -> {
             mPresenter.setDoNotDisturb(false);
         });
@@ -159,11 +174,6 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @Override
     public void renderNextRoomEvent(RoomEventModel nextEvent) {
         mCtv.startCountDownTimer(nextEvent);
-    }
-
-    @Override
-    public void setUpHorizontalTimelineView() {
-
     }
 
     @Override
@@ -191,6 +201,10 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
         mButtonsLayout.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
+        mCircleBtn.setVisibility(View.VISIBLE);
+        Drawable addDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_add_black, 32 ,32);
+        mCircleBtn.setImageDrawable(addDrawable);
+
         TwoLineTextButton[] buttons = new TwoLineTextButton[3];
         final int min = 5;
         for (int i = 0; i < 3; i++) {
@@ -205,6 +219,8 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
             buttons[i].setBottomText("min");
             buttons[i].setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_time));
             mButtonsLayout.addView(buttons[i]);
+            final int temp = i;
+            buttons[i].setOnClickListener(v -> mPresenter.insertEvent(min * (temp + 1)));
         }
     }
 
@@ -213,6 +229,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mFastBookTv.setVisibility(View.GONE);
         mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
         mButtonsLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        mCircleBtn.setVisibility(View.INVISIBLE);
 
         // Confirm button
         ImageButton mConfirmBtn = new ImageButton(this);
@@ -256,6 +273,9 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mFastBookTv.setVisibility(View.GONE);
         mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
         mButtonsLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        mCircleBtn.setVisibility(View.VISIBLE);
+        Drawable addDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_info_black, 12 ,48);
+        mCircleBtn.setImageDrawable(addDrawable);
 
         // Hold to end btn
         LongPressButton mEndBnt = new LongPressButton(this, null);
@@ -297,6 +317,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mFastBookTv.setVisibility(View.GONE);
         mButtonsLayout.setOrientation(LinearLayout.VERTICAL);
         mButtonsLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+        mCircleBtn.setVisibility(View.INVISIBLE);
 
         TextView busyUntilTv = new TextView(this);
         busyUntilTv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -328,6 +349,23 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @Override
     public void showRecoverableAuth(UserRecoverableAuthIOException e) {
         this.startActivityForResult(e.getIntent(), 1000);
+    }
+
+    @Override
+    public void bookRoom(long startTime, long endTime) {
+        Intent intent = new Intent(this, RoomBookingActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putLong("startTime", startTime);
+        bundle.putLong("endTime", endTime);
+        intent.putExtra("timePeriod", bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showBookingSuccessful() {
+        Toast.makeText(this, "Room is booked successfully", Toast.LENGTH_SHORT).show();
+        mPresenter.init();
     }
 
     @Override

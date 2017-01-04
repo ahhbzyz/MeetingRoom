@@ -704,8 +704,10 @@ public class CircleTimerView extends View {
 
     public void startCountDownTimer(RoomEventModel event) {
 
-        if (isTimerRunning()) {
-            return;
+
+        if (mAnimator != null) {
+           // mAnimator.cancel();
+            //TODO do nothing
         }
 
         if (event.isExpired()) {
