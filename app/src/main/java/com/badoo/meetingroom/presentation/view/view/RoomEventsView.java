@@ -30,4 +30,5 @@ public interface RoomEventsView extends LoadDataView {
     void showEventInsertSuccessful();
     void showEventDeleteSuccessful();
     void showEventExtendSuccessful();
+    void showEventOrganizerDialog();
 }

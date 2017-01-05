@@ -236,7 +236,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
             && (mCurrentEvent.getEndTime() - TimeHelper.getCurrentTimeInMillis()) >= TimeHelper.min2Millis(15)) {
             mRoomEventsView.bookRoom(TimeHelper.getCurrentTimeInMillis(), mCurrentEvent.getEndTime());
         } else {
-
+            mRoomEventsView.showEventOrganizerDialog();
         }
     }
 

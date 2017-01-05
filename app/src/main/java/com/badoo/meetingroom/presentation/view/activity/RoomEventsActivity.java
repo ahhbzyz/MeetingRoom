@@ -10,8 +10,10 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -59,6 +61,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @BindView(R.id.img_calendar) ImageView mCalendarImg;
 
     private ProgressDialog mProgressDialog;
+    private AlertDialog mEventOrganizerDialog;
 
     private final int buttonDiameter = 200;
     private final int buttonMargin = 64;
@@ -72,6 +75,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
         setUpToolbar();
         setUpProgressDialog();
+        setUpEventOrganizerDialog();
         setTextViews();
         setUpCircleTimeViewButton();
         setUpCircleTimeView();
@@ -81,6 +85,16 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mPresenter.setView(this);
         mPresenter.init();
 
+    }
+
+    private void setUpEventOrganizerDialog() {
+        LayoutInflater inflater = this.getLayoutInflater();
+        View content =  inflater.inflate(R.layout.dialog_event_organizer, null);
+        mEventOrganizerDialog = new AlertDialog.Builder(this, R.style.MyCustomDialog)
+            .setView(content).create();
+        Typeface stolzlRegular = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
+        ((TextView) content.findViewById(R.id.tv_event_period)).setTypeface(stolzlRegular);
+        ((TextView) content.findViewById(R.id.tv_organizer_email)).setTypeface(stolzlRegular);
     }
 
     private void setUpProgressDialog() {
@@ -381,6 +395,13 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @Override
     public void showEventExtendSuccessful() {
         mPresenter.init();
+    }
+
+    @Override
+    public void showEventOrganizerDialog() {
+        mEventOrganizerDialog.show();
+        mEventOrganizerDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
     }
 
     @Override
