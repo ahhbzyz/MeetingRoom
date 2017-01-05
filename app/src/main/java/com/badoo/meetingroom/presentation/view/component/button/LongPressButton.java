@@ -39,6 +39,8 @@ public class LongPressButton extends ImageButton {
     private Paint mArcPaint;
     private RectF mArcOval;
 
+    private boolean drawCountDownCircle;
+
     private ValueAnimator mAnimator;
 
     private OnCountDownListener mCountDownListener;
@@ -92,11 +94,14 @@ public class LongPressButton extends ImageButton {
         float gapCircleRadius = mCircleRadius + mCountDownCircleWidth / 2f;
         canvas.drawCircle(mCircleCx, mCircleCy, gapCircleRadius, mGapCirclePaint);
 
-        float countDownCircleRadius = gapCircleRadius + mCountDownCircleWidth;
-        canvas.drawCircle(mCircleCx, mCircleCy, countDownCircleRadius, mCountDownCirclePaint);
+        if (drawCountDownCircle) {
 
-        mArcOval.set(mCircleCx - countDownCircleRadius, mCircleCy - countDownCircleRadius, mCircleCx + countDownCircleRadius, mCircleCy + countDownCircleRadius);
-        canvas.drawArc(mArcOval, startDegree, rotateDegree, false, mArcPaint);
+            float countDownCircleRadius = gapCircleRadius + mCountDownCircleWidth;
+            canvas.drawCircle(mCircleCx, mCircleCy, countDownCircleRadius, mCountDownCirclePaint);
+
+            mArcOval.set(mCircleCx - countDownCircleRadius, mCircleCy - countDownCircleRadius, mCircleCx + countDownCircleRadius, mCircleCy + countDownCircleRadius);
+            canvas.drawArc(mArcOval, startDegree, rotateDegree, false, mArcPaint);
+        }
 
         super.onDraw(canvas);
     }
@@ -112,7 +117,8 @@ public class LongPressButton extends ImageButton {
             mAnimator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
-
+                    drawCountDownCircle = true;
+                    invalidate();
                 }
 
                 @Override
@@ -142,6 +148,7 @@ public class LongPressButton extends ImageButton {
                 mAnimator.cancel();
             }
             updateRotateDegree(360);
+            drawCountDownCircle = false;
         }
 
     }

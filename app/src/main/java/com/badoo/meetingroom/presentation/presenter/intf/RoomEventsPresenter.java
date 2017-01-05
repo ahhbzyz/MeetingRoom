@@ -13,7 +13,6 @@ public interface RoomEventsPresenter extends Presenter {
     void setView(@NonNull RoomEventsView roomEventsView);
     void onCountDownTicking(long millisUntilFinished);
     void onCountDownFinished();
-    void updateCurrentTimeForHtv();
     void confirmEvent();
     void deleteEvent();
     void setDoNotDisturb(boolean doNotDisturb);

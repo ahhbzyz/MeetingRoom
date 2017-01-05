@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomEventsPresenterImpl;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView;
 import com.badoo.meetingroom.presentation.view.component.button.LongPressButton;
@@ -80,6 +81,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         setUpCircleTimeViewButton();
         setUpCircleTimeView();
         setUpCalendarImageButton();
+        updateCurrentTimeText();
         registerTimeRefreshReceiver();
 
         mPresenter.setView(this);
@@ -196,11 +198,11 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mHtv.setEventList(mEventModelList);
     }
 
-    @Override
-    public void setCurrentTimeText(String currentTime){
-        if (currentTime != null) {
-            mHtv.setCurrTimeText(currentTime);
-        }
+
+    public void updateCurrentTimeText(){
+       if (mHtv != null) {
+           mHtv.setCurrTimeText(TimeHelper.getCurrentTimeInMillisInText());
+       }
     }
 
     @Override
@@ -294,7 +296,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
         // Hold to end btn
         LongPressButton mEndBtn = new LongPressButton(this, null);
-        mEndBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
+        mEndBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter + 24, buttonDiameter + 24));
         mEndBtn.setScaleType(ImageView.ScaleType.CENTER);
         Drawable endBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_clear_white, 50 ,50);
         mEndBtn.setImageDrawable(endBtnDrawable);
@@ -426,6 +428,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
             @Override
             public void onCountDownTicking(long millisUntilFinished) {
                 mPresenter.onCountDownTicking(millisUntilFinished);
+                mHtv.invalidate();
             }
 
             @Override
@@ -439,7 +442,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
-                mPresenter.updateCurrentTimeForHtv();
+                updateCurrentTimeText();
             }
         }
     };

@@ -107,7 +107,6 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
     @Override
     public void init() {
         loadRoomEventList();
-        updateCurrentTimeForHtv();
     }
 
     private void loadRoomEventList() {
@@ -155,12 +154,6 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         if(mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
             mRoomEventsView.renderRoomEvents(mEventModelQueue);
         }
-    }
-
-    @Override
-    public void updateCurrentTimeForHtv() {
-        String currentTime = TimeHelper.getCurrentTimeInMillisInText();
-        mRoomEventsView.setCurrentTimeText(currentTime);
     }
 
     private void getRoomEventList() {

@@ -18,7 +18,6 @@ public interface RoomEventsView extends LoadDataView {
     void setCircleTimeViewTime(String millis);
     void renderNextRoomEvent(RoomEventModel nextEvent);
     void renderRoomEvents(LinkedList<RoomEventModel> mEventModelList);
-    void setCurrentTimeText(String currentTime);
     void clearAllButtonsInLayout();
     void showButtonsInAvailableStatus();
     void showButtonsInOnHoldStatus();
