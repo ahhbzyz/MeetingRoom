@@ -17,17 +17,60 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f46b7d57-4450-4a02-b2df-30bd98bbd3b8" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_beverage_grey.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_pencil_grey.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_person_grey.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_tv_grey.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_video_grey.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/Room.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomListPresenterImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/intf/RoomListPresenter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/AllRoomsActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/AllRoomsFragmentPagerAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/RoomListAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/RoomListFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/RoomListView.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_all_rooms.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_room_list.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_room.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/button/OnCountDownListener.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/cache.properties.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshotsToTreeSnapshotsIndex.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/fileSnapshotsToTreeSnapshotsIndex.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.14.1/taskArtifacts/taskArtifacts.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/generated/mockable-android-25.jar" afterPath="$PROJECT_DIR$/build/generated/mockable-android-25.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/components/ApplicationComponent.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/components/ApplicationComponent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/ApplicationModule.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/ApplicationModule.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/EventsCalendarModule.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/EventsCalendarModule.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/RoomEventModelImpl.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/RoomEventModelImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/DailyEventsPresenterImpl.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/DailyEventsPresenterImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/GetCredentialPresenterImpl.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/GetCredentialPresenterImpl.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomBookingPresenterImpl.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomBookingPresenterImpl.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomEventsPresenterImpl.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomEventsPresenterImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/intf/RoomEventsPresenter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/intf/RoomEventsPresenter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/EventsCalendarActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/EventsCalendarActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/GetCredentialActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/GetCredentialActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomBookingActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomBookingActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomEventsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomEventsActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsFragmentPagerAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsFragmentPagerAdapter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/TimeSlotsAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/TimeSlotsAdapter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/button/LongPressButton.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/button/LongPressButton.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/RoomEventsView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/RoomEventsView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/horizontaltimelineview/HorizontalTimelineView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/horizontaltimelineview/HorizontalTimelineView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/DailyEventsFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/DailyEventsFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/EventsCalendarView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/EventsCalendarView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/LoadDataView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/LoadDataView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_events_calendar.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_events_calendar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_get_credential.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_get_credential.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_room_events.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_room_events.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/dialog_event_organizer.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_event_organizer.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
     </list>
     <ignored path="MeetingRoom.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -62,24 +105,34 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="RoomEventsActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomEventsActivity.java">
+      <file leaf-file-name="RoomBookingActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomBookingActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="298" column="102" selection-start-line="298" selection-start-column="102" selection-end-line="298" selection-end-column="102" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="779">
+              <caret line="193" column="48" selection-start-line="193" selection-start-column="48" selection-end-line="193" selection-end-column="48" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LongPressButton.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/button/LongPressButton.java">
+      <file leaf-file-name="TimeSlotsAdapter.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/TimeSlotsAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1360">
-              <caret line="89" column="65" selection-start-line="89" selection-start-column="40" selection-end-line="89" selection-end-column="65" />
+            <state relative-caret-position="395">
+              <caret line="194" column="21" selection-start-line="194" selection-start-column="21" selection-end-line="194" selection-end-column="21" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RoomBookingPresenterImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomBookingPresenterImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-8">
+              <caret line="37" column="13" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
+              <folding>
+                <element signature="method#setTimeSlotList#0;class#RoomBookingPresenterImpl#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -89,11 +142,11 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="ASInterface" />
         <option value="Interface" />
-        <option value="ASClass" />
-        <option value="layoutResourceFile_vertical" />
         <option value="resourceFile" />
+        <option value="layoutResourceFile_vertical" />
+        <option value="ASInterface" />
+        <option value="ASClass" />
       </list>
     </option>
   </component>
@@ -1977,42 +2030,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/timeutils/TimeHelper.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/TimeSlotsAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/circletimerview/CircleTimerView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/DailyEventsView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/DailyEventsFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/horizontaltimelineview/HorizontalTimelineView.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/mapper/RoomEventDataMapper.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/entity/impl/RoomEventImpl.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/entity/intf/RoomEvent.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/RoomEventModel.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/RoomEventModelImpl.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventsListApiCall.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/GoogleAccountDataRepository.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/EventsGetParams.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/EventInsertParams.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/datasource/impl/RoomEventDataStoreFactory.java" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/ApplicationModule.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/EventUpdateParams.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventInsertApiCall.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventUpdateApiCall.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventsGetApiCall.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/exception/NetworkConnectionException.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/datasource/intf/RoomEventDataStore.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/repository/RoomEventRepository.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/InsertEvent.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/GetRoomEventList.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/UseCase.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/PutGoogleAccount.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/RoomEventsModule.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomBookingPresenterImpl.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/DailyEventsPresenterImpl.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/GetCredentialPresenterImpl.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/UpdateEvent.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/GoogleCalendarApi.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventDeleteApiCall.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/RoomEventDataRepository.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/datasource/impl/RemoteRoomEventDataStore.java" />
@@ -2021,19 +2038,55 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/GoogleCalendarApiImpl.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_room_booking.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/dialog_rounded_organizer.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/dialog_event_organizer.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/RoomEventsView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/intf/RoomEventsPresenter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomEventsPresenterImpl.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/dialog_event_organizer.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/button/LongPressButton.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/LoadDataView.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomEventsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/DailyEventsPresenterImpl.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/GetCredentialPresenterImpl.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomBookingPresenterImpl.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/EventsCalendarView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/circletimerview/CircleTimerView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_room_events.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_get_credential.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/GetCredentialActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/components/ApplicationComponent.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsFragmentPagerAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/ApplicationModule.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_events_calendar.xml" />
+        <option value="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_events_calendar.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/EventsCalendarActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/AllRoomsFragmentPagerAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/AllRoomsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_all_rooms.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/DailyEventsFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/intf/RoomListPresenter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/Room.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/RoomListView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/RoomListAdpater.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/RoomListAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/EventsCalendarModule.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/RoomListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_room_list.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomListPresenterImpl.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/item_room.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/RoomEventModelImpl.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomEventsPresenterImpl.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/horizontaltimelineview/HorizontalTimelineView.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomBookingActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/TimeSlotsAdapter.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1440" />
-    <option name="height" value="900" />
+    <option name="width" value="2560" />
+    <option name="height" value="1440" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -2079,7 +2132,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -2180,8 +2232,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -2266,7 +2316,93 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="adapter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MeetingRoom" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="meetingroom" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="presentation" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="view" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="activity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MeetingRoom" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="meetingroom" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="presentation" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="presenter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MeetingRoom" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="meetingroom" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="presentation" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="presenter" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="impl" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2312,6 +2448,9 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2319,8 +2458,8 @@
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="device.picker.selection" value="Nexus_9_API_24" />
-    <property name="SearchEverywhereHistoryKey" value="Androi&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/AndroidManifest.xml&#10;fra&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/res/layout/fragment_daily_events.xml&#10;anm&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/AndroidManifest.xml&#10;DaiF&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/DailyEventsFragment.java&#10;and&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/AndroidManifest.xml&#10;Eventsca&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/EventsCalendarActivity.java&#10;Ad&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsAdapter.java&#10;Cir&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/component/circletimerview/CircleTimerView.java&#10;isBusy&#9;PSI&#9;JAVA://com.badoo.meetingroom.presentation.model.RoomEventModel#isBusy&#10;getMidNightTimeOfDay&#9;PSI&#9;JAVA://com.badoo.meetingroom.domain.mapper.RoomEventDataMapper#getMidNightTimeOfNextDays&#10;re&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/res/layout/activity_room_events.xml&#10;cir&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/component/circletimerview/CircleTimerView.java&#10;rea&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomEventsActivity.java&#10;Circl&#9;PSI&#9;JAVA://com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView&#10;wr&#9;PSI&#9;JAVA://com.badoo.meetingroom.presentation.presenter.GetCredentialPresenterImpl.WriteGoogleAccountSubscriber&#10;write&#9;PSI&#9;JAVA://com.badoo.meetingroom.presentation.presenter.GetCredentialPresenterImpl#mWriteGoogleAccountUseCase&#10;writeG&#9;PSI&#9;JAVA://com.badoo.meetingroom.di.modules.GetCredentialModule#provideWriteGoogleAccountUseCase" />
+    <property name="device.picker.selection" value="07e11616" />
+    <property name="SearchEverywhereHistoryKey" value="all&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/res/layout/activity_all_rooms.xml&#10;Androi&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/AndroidManifest.xml&#10;fra&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/res/layout/fragment_daily_events.xml&#10;anm&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/AndroidManifest.xml&#10;DaiF&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/DailyEventsFragment.java&#10;and&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/AndroidManifest.xml&#10;Eventsca&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/EventsCalendarActivity.java&#10;Ad&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsAdapter.java&#10;Cir&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/component/circletimerview/CircleTimerView.java&#10;isBusy&#9;PSI&#9;JAVA://com.badoo.meetingroom.presentation.model.RoomEventModel#isBusy&#10;getMidNightTimeOfDay&#9;PSI&#9;JAVA://com.badoo.meetingroom.domain.mapper.RoomEventDataMapper#getMidNightTimeOfNextDays&#10;re&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/res/layout/activity_room_events.xml&#10;cir&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/component/circletimerview/CircleTimerView.java&#10;rea&#9;FILE&#9;file:///Users/zhangyaozhong/Badoo/MeetingRoom/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomEventsActivity.java&#10;Circl&#9;PSI&#9;JAVA://com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView&#10;wr&#9;PSI&#9;JAVA://com.badoo.meetingroom.presentation.presenter.GetCredentialPresenterImpl.WriteGoogleAccountSubscriber&#10;write&#9;PSI&#9;JAVA://com.badoo.meetingroom.presentation.presenter.GetCredentialPresenterImpl#mWriteGoogleAccountUseCase&#10;writeG&#9;PSI&#9;JAVA://com.badoo.meetingroom.di.modules.GetCredentialModule#provideWriteGoogleAccountUseCase" />
     <property name="UI_DESIGNER_EDITOR_MODE.NlPaletteManager-NlPreviewForm.SHOW" value="false" />
     <property name="UI_DESIGNER_EDITOR_MODE.NlPropertiesWindowManager-NlEditorPanel.SHOW" value="true" />
     <property name="UI_DESIGNER_EDITOR_MODE.NlPaletteManager-NlEditorPanel.WIDTH" value="220" />
@@ -2328,6 +2467,9 @@
     <property name="FullScreen" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
+    </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="com.badoo.meetingroom.presentation.model" />
     </key>
@@ -2336,9 +2478,6 @@
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/src/main/res/drawable-mdpi" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/main/res/drawable" />
     </key>
   </component>
   <component name="RunManager" selected="Android App.app">
@@ -2649,31 +2788,32 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="0" width="2560" height="1440" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.48014888" sideWeight="0.5028612" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31885856" sideWeight="0.49713877" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31872213" sideWeight="0.49713877" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Dynamic Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962668" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32506204" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32466567" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287841" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32838038" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287841" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32838038" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22889842" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22875299" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297568" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -2733,437 +2873,529 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="20" />
+      <option name="time" value="22" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/EventsCalendarView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="69" selection-start-line="8" selection-start-column="69" selection-end-line="8" selection-end-column="69" />
+        <state relative-caret-position="102">
+          <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
           <folding />
         </state>
       </provider>
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/ApplicationModule.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/GetCredentialPresenterImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="39" column="36" selection-start-line="39" selection-start-column="36" selection-end-line="39" selection-end-column="36" />
+        <state relative-caret-position="980">
+          <caret line="175" column="34" selection-start-line="175" selection-start-column="16" selection-end-line="175" selection-end-column="34" />
           <folding>
-            <element signature="e#2180#2181#0" expanded="false" />
-            <element signature="e#2214#2215#0" expanded="false" />
-            <element signature="e#2285#2286#0" expanded="false" />
-            <element signature="e#2317#2318#0" expanded="false" />
+            <element signature="e#3006#3007#0" expanded="false" />
+            <element signature="e#3041#3042#0" expanded="false" />
+            <element signature="e#5313#5314#0" expanded="false" />
+            <element signature="e#5384#5385#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-calendar/v3-rev225-1.22.0/86e628deac859b2aa5356aa1cc5baa24b0150cc9/google-api-services-calendar-v3-rev225-1.22.0-sources.jar!/com/google/api/services/calendar/Calendar.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/circletimerview/CircleTimerView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8079">
-          <caret line="6636" column="32" selection-start-line="6636" selection-start-column="10" selection-end-line="6636" selection-end-column="32" />
+        <state relative-caret-position="476">
+          <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/components/ApplicationComponent.java">
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.api-client/google-api-client/1.22.0/3cc07afd5540c754663e472c88f4b29c9a31f26e/google-api-client-1.22.0-sources.jar!/com/google/api/client/googleapis/services/AbstractGoogleClientRequest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+        <state relative-caret-position="-3170">
+          <caret line="350" column="22" selection-start-line="350" selection-start-column="22" selection-end-line="350" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventsGetApiCall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="40" column="16" selection-start-line="40" selection-start-column="16" selection-end-line="40" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_all_rooms_acitivty.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/AllRoomsAcitivty.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_room_events.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/tablayoutwithoval/TabLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#83601#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_get_credential.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/GetCredentialView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/GetCredentialActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="117" column="13" selection-start-line="117" selection-start-column="13" selection-end-line="117" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/EventsGetParams.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/EventUpdateParams.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/EventInsertParams.java" />
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventUpdateApiCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="36" column="42" selection-start-line="36" selection-start-column="42" selection-end-line="36" selection-end-column="42" />
+        <state relative-caret-position="833">
+          <caret line="75" column="11" selection-start-line="75" selection-start-column="11" selection-end-line="75" selection-end-column="11" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#629#630#0" expanded="false" />
-            <element signature="e#691#692#0" expanded="false" />
+            <element signature="e#6496#6497#0" expanded="false" />
+            <element signature="e#6562#6563#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/DefaultSubscriber.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/exception/NetworkConnectionException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="47" selection-start-line="8" selection-start-column="47" selection-end-line="8" selection-end-column="47" />
-          <folding>
-            <element signature="e#199#200#0" expanded="false" />
-            <element signature="e#255#256#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventsGetApiCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="43" column="36" selection-start-line="43" selection-start-column="36" selection-end-line="43" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventInsertApiCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/GoogleAccountDataRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="24" column="4" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/UseCase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/PutGoogleAccount.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="14" column="45" selection-start-line="14" selection-start-column="45" selection-end-line="14" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/GetGoogleAccount.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="16" column="59" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/GetRoomEventList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="45" column="37" selection-start-line="45" selection-start-column="28" selection-end-line="45" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/InsertEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="50" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomBookingPresenterImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="method#setTimeSlotList#0;class#RoomBookingPresenterImpl#0" expanded="false" />
-            <element signature="class#InsertEventSubscriber#0;class#RoomBookingPresenterImpl#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/GetCredentialPresenterImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="446">
-          <caret line="74" column="30" selection-start-line="74" selection-start-column="30" selection-end-line="74" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/DailyEventsPresenterImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="791">
-          <caret line="109" column="47" selection-start-line="109" selection-start-column="47" selection-end-line="109" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/RoomEventsModule.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="37" column="17" selection-start-line="37" selection-start-column="17" selection-end-line="37" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/AndroidApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/UpdateEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/repository/RoomEventRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="16" column="21" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/local/GoogleAccountCacheImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-357">
-          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/api/EventDeleteApiCall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#600#601#0" expanded="false" />
-            <element signature="e#662#663#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/domain/interactor/DeleteEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/GoogleCalendarApiImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="84" column="45" selection-start-line="84" selection-start-column="45" selection-end-line="84" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/mapper/RoomEventModelMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-323">
-          <caret line="35" column="46" selection-start-line="35" selection-start-column="46" selection-end-line="35" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/RoomEventDataRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="24" column="28" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
-          <folding>
-            <element signature="e#1520#1521#0" expanded="false" />
-            <element signature="e#1581#1582#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/datasource/intf/RoomEventDataStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/datasource/impl/RemoteRoomEventDataStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="33" column="36" selection-start-line="33" selection-start-column="36" selection-end-line="33" selection-end-column="36" />
-          <folding>
-            <element signature="e#905#906#0" expanded="false" />
-            <element signature="e#962#963#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/remote/GoogleCalendarApi.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="21" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/data/repository/datasource/impl/RoomEventDataStoreFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/btn_circle_time.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="108" selection-start-line="1" selection-start-column="89" selection-end-line="1" selection-end-column="108" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/organizer_avatar.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/dialog_rounded_organizer.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="30" selection-start-line="3" selection-start-column="30" selection-end-line="3" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_room_booking.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/GetCredentialModule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.0/res/values/values.xml">
+    <entry file="file://$PROJECT_DIR$/app/build/generated/source/apt/debug/com/badoo/meetingroom/presentation/view/activity/AllRoomsActivity_ViewBinding.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="570" column="17" selection-start-line="570" selection-start-column="17" selection-end-line="570" selection-end-column="17" />
+        <state relative-caret-position="221">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsFragmentPagerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="481">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="64" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build/intermediates/res/merged/debug/layout/activity_events_calendar.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="62" selection-start-line="2" selection-start-column="62" selection-end-line="2" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/EventsCalendarActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="638">
+          <caret line="77" column="113" selection-start-line="77" selection-start-column="113" selection-end-line="77" selection-end-column="113" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_events_calendar.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="923">
+          <caret line="90" column="45" selection-start-line="90" selection-start-column="45" selection-end-line="90" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="44" selection-start-line="9" selection-start-column="44" selection-end-line="9" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/AllRoomsFragmentPagerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="50" selection-start-line="16" selection-start-column="50" selection-end-line="16" selection-end-column="50" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#869#870#0" expanded="true" />
+            <element signature="e#912#913#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_daily_events.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="61" selection-start-line="24" selection-start-column="61" selection-end-line="24" selection-end-column="61" />
+        <state relative-caret-position="425">
+          <caret line="25" column="40" selection-start-line="25" selection-start-column="40" selection-end-line="25" selection-end-column="40" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_event.xml">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="67" column="32" selection-start-line="67" selection-start-column="32" selection-end-line="67" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_all_rooms.xml">
       <provider selected="true" editor-type-id="android-designer2">
         <state />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_event_organizer.xml">
       <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/circletimerview/CircleTimerView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-11152">
-          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/horizontaltimelineview/HorizontalTimelineView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5780">
-          <caret line="382" column="36" selection-start-line="382" selection-start-column="16" selection-end-line="382" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/RoomEventsView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/intf/RoomEventsPresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomEventsPresenterImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="109" column="0" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
+        <state relative-caret-position="974">
+          <caret line="68" column="57" selection-start-line="68" selection-start-column="57" selection-end-line="68" selection-end-column="57" />
           <folding>
-            <element signature="e#4183#4184#0" expanded="true" />
-            <element signature="class#DeleteEventSubscriber#0;class#RoomEventsPresenterImpl#0" expanded="false" />
+            <element signature="e#2699#2731#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/button/LongPressButton.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/colors.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="89" column="65" selection-start-line="89" selection-start-column="40" selection-end-line="89" selection-end-column="65" />
+        <state relative-caret-position="527">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/AllRoomsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="714">
+          <caret line="42" column="36" selection-start-line="42" selection-start-column="36" selection-end-line="42" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/Room.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="30" column="27" selection-start-line="30" selection-start-column="27" selection-end-line="30" selection-end-column="27" />
+          <folding>
+            <element signature="e#487#488#0" expanded="false" />
+            <element signature="e#514#515#0" expanded="false" />
+            <element signature="e#554#555#0" expanded="false" />
+            <element signature="e#586#587#0" expanded="false" />
+            <element signature="e#643#644#0" expanded="false" />
+            <element signature="e#682#683#0" expanded="false" />
+            <element signature="e#716#717#0" expanded="false" />
+            <element signature="e#746#747#0" expanded="false" />
+            <element signature="e#775#776#0" expanded="false" />
+            <element signature="e#816#817#0" expanded="false" />
+            <element signature="e#852#853#0" expanded="false" />
+            <element signature="e#899#900#0" expanded="false" />
+            <element signature="e#934#935#0" expanded="false" />
+            <element signature="e#998#999#0" expanded="false" />
+            <element signature="e#1046#1047#0" expanded="false" />
+            <element signature="e#1078#1079#0" expanded="false" />
+            <element signature="e#1109#1110#0" expanded="false" />
+            <element signature="e#1154#1155#0" expanded="false" />
+            <element signature="e#1194#1195#0" expanded="false" />
+            <element signature="e#1232#1233#0" expanded="false" />
+            <element signature="e#1268#1269#0" expanded="false" />
+            <element signature="e#1323#1324#0" expanded="false" />
+            <element signature="e#1366#1367#0" expanded="false" />
+            <element signature="e#1417#1418#0" expanded="false" />
+            <element signature="e#1466#1467#0" expanded="false" />
+            <element signature="e#1547#1548#0" expanded="false" />
+            <element signature="e#1616#1617#0" expanded="false" />
+            <element signature="e#1660#1661#0" expanded="false" />
+            <element signature="e#1702#1703#0" expanded="false" />
+            <element signature="e#1769#1770#0" expanded="false" />
+            <element signature="e#1824#1825#0" expanded="false" />
+            <element signature="e#1870#1871#0" expanded="false" />
+            <element signature="e#1914#1915#0" expanded="false" />
+            <element signature="e#1985#1986#0" expanded="false" />
+            <element signature="e#2044#2045#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/DailyEventsPresenterImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="47" column="32" selection-start-line="47" selection-start-column="16" selection-end-line="47" selection-end-column="32" />
+          <folding>
+            <element signature="e#2047#2048#0" expanded="false" />
+            <element signature="e#2104#2105#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/intf/RoomListPresenter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/RoomListView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="18" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/view/DailyEventsView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/DailyEventsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="37" column="71" selection-start-line="37" selection-start-column="71" selection-end-line="37" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/ApplicationModule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/EventsCalendarModule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/modules/RoomEventsModule.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/components/ApplicationComponent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/fragment/RoomListFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-573">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="e#2396#2397#0" expanded="true" />
+            <element signature="e#2424#2425#0" expanded="true" />
+            <element signature="e#2499#2500#0" expanded="true" />
+            <element signature="e#2545#2546#0" expanded="true" />
+            <element signature="e#2867#2868#0" expanded="true" />
+            <element signature="e#2894#2895#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/RoomListAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1183#1184#0" expanded="true" />
+            <element signature="e#1222#1223#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/di/AndroidApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="42" selection-start-line="5" selection-start-column="42" selection-end-line="5" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomListPresenterImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="38" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#599#600#0" expanded="true" />
+            <element signature="e#644#645#0" expanded="true" />
+            <element signature="e#704#705#0" expanded="true" />
+            <element signature="e#745#746#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_room_list.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="45" selection-start-line="10" selection-start-column="45" selection-end-line="10" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/item_room.xml">
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="-1168">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="4" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/RoomEventModelImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="952">
+          <caret line="188" column="5" selection-start-line="188" selection-start-column="5" selection-end-line="188" selection-end-column="5" />
+          <folding>
+            <element signature="e#4490#4491#0" expanded="true" />
+            <element signature="e#4596#4597#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/model/RoomEventModel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/DailyEventsAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="77">
+          <caret line="145" column="20" selection-start-line="145" selection-start-column="8" selection-end-line="145" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomEventsActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="298" column="102" selection-start-line="298" selection-start-column="102" selection-end-line="298" selection-end-column="102" />
+        <state relative-caret-position="808">
+          <caret line="131" column="31" selection-start-line="131" selection-start-column="31" selection-end-line="131" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/component/horizontaltimelineview/HorizontalTimelineView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="536">
+          <caret line="274" column="40" selection-start-line="274" selection-start-column="40" selection-end-line="274" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomEventsPresenterImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="524">
+          <caret line="235" column="13" selection-start-line="235" selection-start-column="13" selection-end-line="235" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/presenter/impl/RoomBookingPresenterImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8">
+          <caret line="37" column="13" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="method#setTimeSlotList#0;class#RoomBookingPresenterImpl#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/activity/RoomBookingActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="779">
+          <caret line="193" column="48" selection-start-line="193" selection-start-column="48" selection-end-line="193" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/badoo/meetingroom/presentation/view/adapter/TimeSlotsAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="395">
+          <caret line="194" column="21" selection-start-line="194" selection-start-column="21" selection-end-line="194" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>

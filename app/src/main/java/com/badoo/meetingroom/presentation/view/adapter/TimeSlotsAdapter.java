@@ -169,7 +169,38 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
             holder.mDivider.setVisibility(View.INVISIBLE);
 
             holder.itemView.setOnClickListener(v -> {
-                slot.setSelected();
+
+                slot.setSelected(!slot.isSelected());
+
+                boolean meetFirstSelectedSlot = false;
+                for (int i = 0; i < position; i++) {
+                    if (!mTimeSlotList.get(i).isSelected() && !meetFirstSelectedSlot) {
+                        continue;
+                    }
+                    meetFirstSelectedSlot = true;
+                    mTimeSlotList.get(i).setSelected(true);
+                }
+
+                int firstSelectedSlotAfterPos = position;
+                for (int i = position + 1; i < mTimeSlotList.size(); i++) {
+                    if (mTimeSlotList.get(i).isSelected()) {
+                        firstSelectedSlotAfterPos = i;
+                        break;
+                    }
+                }
+
+                if (!slot.isSelected() && meetFirstSelectedSlot) {
+                    for (int i = position + 1; i < mTimeSlotList.size(); i++) {
+                        mTimeSlotList.get(i).setSelected(false);
+                    }
+                } else {
+                    for (int i = position + 1; i <= firstSelectedSlotAfterPos; i++) {
+                        mTimeSlotList.get(i).setSelected(true);
+                    }
+                }
+
+
+
                 notifyDataSetChanged();
                 if (this.mOnItemClickListener != null) {
                     this.mOnItemClickListener.onEventItemClicked(mTimeSlotList);

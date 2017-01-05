@@ -57,9 +57,14 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         mDailyEventsView.renderDailyEvents(roomEventModelList);
     }
 
-    private void showViewLoading(boolean visibility) {
-        this.mDailyEventsView.showLoadingData(visibility);
+    private void showViewLoading() {
+        this.mDailyEventsView.showLoadingData("");
     }
+
+    private void dismissViewLoading() {
+        this.mDailyEventsView.dismissLoadingData();
+    }
+
 
 
     @Override
@@ -118,7 +123,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading(true);
+            showViewLoading();
         }
 
         @Override
@@ -130,13 +135,13 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            showViewLoading(false);
+            dismissViewLoading();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            showViewLoading(false);
+            dismissViewLoading();
             try {
                 throw e;
             } catch (UserRecoverableAuthIOException e1) {

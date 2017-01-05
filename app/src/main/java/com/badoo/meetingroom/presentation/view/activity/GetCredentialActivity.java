@@ -69,6 +69,11 @@ public class GetCredentialActivity extends BaseActivity implements GetCredential
             Intent intent = new Intent(GetCredentialActivity.this, RoomBookingActivity.class);
             startActivity(intent);
         });
+
+        findViewById(R.id.btn_all_room).setOnClickListener(v -> {
+            Intent intent = new Intent(GetCredentialActivity.this, AllRoomsActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -167,13 +172,15 @@ public class GetCredentialActivity extends BaseActivity implements GetCredential
     public void onPermissionsDenied(int requestCode, List<String> perms) {
     }
 
+
     @Override
-    public void showLoadingData(boolean visibility) {
-        if (visibility) {
-            this.mLoadingDataBar.setVisibility(View.VISIBLE);
-        } else {
-            this.mLoadingDataBar.setVisibility(View.GONE);
-        }
+    public void showLoadingData(String message) {
+        this.mLoadingDataBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void dismissLoadingData() {
+        this.mLoadingDataBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

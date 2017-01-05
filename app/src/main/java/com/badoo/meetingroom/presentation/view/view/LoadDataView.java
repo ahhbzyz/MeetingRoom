@@ -8,7 +8,9 @@ import android.content.Context;
 
 public interface LoadDataView {
 
-    void showLoadingData(boolean visibility);
+    void showLoadingData(String message);
+
+    void dismissLoadingData();
 
     void showRetryLoading(boolean visibility);
 

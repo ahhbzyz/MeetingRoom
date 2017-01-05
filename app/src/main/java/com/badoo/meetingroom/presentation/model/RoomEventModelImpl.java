@@ -195,13 +195,12 @@ public class RoomEventModelImpl implements RoomEventModel {
 
     @Override
     public String getEndTimeInText() {
-        return TimeHelper.formatTime(getEndTime());
+        return TimeHelper.isMidNight(getEndTime()) ? "24:00" : TimeHelper.formatTime(getEndTime());
     }
 
     private static class RoomEventColor {
 
         private static final int AVAILABLE_COLOR = Color.parseColor("#69E27E");
-        private static final int AVAILABLE_BG_COLOR = Color.parseColor("#69E27E");
 
         private static final int BUSY_COLOR = Color.parseColor("#F5584F");
         private static final int BUSY_BG_COLOR = Color.parseColor("#FFE8E8");

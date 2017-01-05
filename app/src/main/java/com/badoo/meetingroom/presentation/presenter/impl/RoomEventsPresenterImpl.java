@@ -113,8 +113,12 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         this.getRoomEventList();
     }
 
-    private void showViewLoading(boolean visibility) {
-        this.mRoomEventsView.showLoadingData(visibility);
+    private void showViewLoading(String message) {
+        this.mRoomEventsView.showLoadingData(message);
+    }
+
+    private void dismissViewLoading() {
+        this.mRoomEventsView.dismissLoadingData();
     }
 
     private void showButtonsForEvent(){
@@ -228,7 +232,8 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         if (mCurrentEvent.isAvailable()
             && (mCurrentEvent.getEndTime() - TimeHelper.getCurrentTimeInMillis()) >= TimeHelper.min2Millis(15)) {
             mRoomEventsView.bookRoom(TimeHelper.getCurrentTimeInMillis(), mCurrentEvent.getEndTime());
-        } else {
+        }
+        if (!mCurrentEvent.isAvailable()){
             mRoomEventsView.showEventOrganizerDialog();
         }
     }
@@ -257,7 +262,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading(true);
+            showViewLoading("Loading...");
         }
 
         @Override
@@ -272,13 +277,13 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            showViewLoading(false);
+            dismissViewLoading();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            showViewLoading(false);
+            dismissViewLoading();
             try {
                 throw e;
             } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
@@ -299,7 +304,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading(true);
+            showViewLoading("Booking...");
         }
 
         @Override
@@ -313,13 +318,13 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            showViewLoading(false);
+            dismissViewLoading();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            showViewLoading(false);
+            dismissViewLoading();
             try {
                 throw e;
             } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
@@ -339,7 +344,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading(true);
+            showViewLoading("Canceling...");
         }
 
         @Override
@@ -351,13 +356,13 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            showViewLoading(false);
+            dismissViewLoading();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            showViewLoading(false);
+            dismissViewLoading();
             try {
                 throw e;
             } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
@@ -377,7 +382,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading(true);
+            showViewLoading("Booking...");
         }
 
         @Override
@@ -391,13 +396,13 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            showViewLoading(false);
+            dismissViewLoading();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            showViewLoading(false);
+            dismissViewLoading();
             try {
                 throw e;
             } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {

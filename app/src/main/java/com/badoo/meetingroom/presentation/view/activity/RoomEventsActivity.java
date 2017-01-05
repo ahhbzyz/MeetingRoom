@@ -102,7 +102,6 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     private void setUpProgressDialog() {
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setMessage("Loading Data...");
         mProgressDialog.setCanceledOnTouchOutside(false);
     }
 
@@ -148,12 +147,14 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     }
 
     @Override
-    public void showLoadingData(boolean visibility) {
-        if (visibility) {
-            mProgressDialog.show();
-        } else {
-            mProgressDialog.dismiss();
-        }
+    public void showLoadingData(String message) {
+        mProgressDialog.setMessage(message);
+        mProgressDialog.show();
+    }
+
+    @Override
+    public void dismissLoadingData() {
+        mProgressDialog.dismiss();
     }
 
     @Override
@@ -302,7 +303,9 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mEndBtn.setImageDrawable(endBtnDrawable);
         LinearLayout mEndBtnWithText = ViewHelper.addTextUnderBtn(this, mEndBtn, "Hold to end");
         mButtonsLayout.addView(mEndBtnWithText);
-        mEndBtn.setOnClickListener(v -> mPresenter.deleteEvent());
+        mEndBtn.setOnCountDownListener(() -> {
+            mPresenter.deleteEvent();
+        });
 
         // Do not disturb btn
         ImageButton mDNDBtn  = new ImageButton(this);

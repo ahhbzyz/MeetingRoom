@@ -59,7 +59,6 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
 
     @Override
     public void init() {
-        showViewLoading(true);
         loadGoogleAccount();
     }
 
@@ -88,8 +87,12 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         mGetGoogleAccountUseCase.execute(new GetGoogleAccountSubscriber());
     }
 
-    private void showViewLoading(boolean visibility) {
-        this.mGetCredentialView.showLoadingData(visibility);
+    private void showViewLoading() {
+        this.mGetCredentialView.showLoadingData("");
+    }
+
+    private void dismissViewLoading() {
+        this.mGetCredentialView.dismissLoadingData();
     }
 
     private void showAccountNameOnSnackBar(GoogleAccount account) {
@@ -143,6 +146,13 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     }
 
     private final class GetGoogleAccountSubscriber extends DefaultSubscriber<GoogleAccount> {
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            showViewLoading();
+        }
+
         @Override
         public void onNext(GoogleAccount googleAccount) {
             super.onNext(googleAccount);
@@ -156,14 +166,14 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            showViewLoading(false);
+            dismissViewLoading();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
             try {
-                showViewLoading(false);
+                dismissViewLoading();
                 throw e;
 
             } catch (GooglePlayServicesAvailabilityException e1) {
@@ -199,7 +209,7 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading(true);
+            showViewLoading();
         }
 
         @Override
@@ -210,7 +220,7 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            showViewLoading(false);
+            dismissViewLoading();
             loadGoogleAccount();
         }
 
@@ -223,6 +233,12 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {
 
         @Override
+        public void onStart() {
+            super.onStart();
+            showViewLoading();
+        }
+
+        @Override
         public void onNext(List<RoomEvent> roomEvents) {
             Collection<RoomEventModel> mEventModelList = mRoomEventModelMapper.map(roomEvents);
             if (mEventModelList != null) {
@@ -233,13 +249,13 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            showViewLoading(false);
+            dismissViewLoading();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            showViewLoading(false);
+            dismissViewLoading();
             try {
                 throw e;
             } catch (UserRecoverableAuthIOException e1) {

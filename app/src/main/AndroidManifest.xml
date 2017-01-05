@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
-
     <application
         android:name=".di.AndroidApplication"
         android:allowBackup="true"
@@ -28,6 +27,7 @@
         <activity android:name=".presentation.view.activity.RoomEventsActivity" />
         <activity android:name=".presentation.view.activity.EventsCalendarActivity" />
         <activity android:name=".presentation.view.activity.RoomBookingActivity" />
+        <activity android:name=".presentation.view.activity.AllRoomsActivity"></activity>
     </application>
 
 </manifest>

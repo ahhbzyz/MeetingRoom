@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:background="@drawable/dialog_rounded_organizer"
-    android:paddingTop="72dp"
-    android:paddingBottom="72dp"
-    android:paddingStart="80dp"
-    android:paddingEnd="80dp">
+    android:paddingTop="64dp"
+    android:paddingBottom="64dp"
+    android:paddingStart="72dp"
+    android:paddingEnd="72dp">
 
     <ImageView
         app:srcCompat="@drawable/organizer_avatar"

@@ -161,4 +161,12 @@ public class LongPressButton extends ImageButton {
     public void setOnCountDownListener(OnCountDownListener listener) {
         this.mCountDownListener = listener;
     }
+
+    /**
+     * Created by zhangyaozhong on 08/12/2016.
+     */
+
+    public interface OnCountDownListener {
+        void onCountDownFinished();
+    }
 }

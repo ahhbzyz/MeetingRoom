@@ -137,12 +137,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         holder.mStartTimeTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
         holder.mStartTimeTv.setText(event.getStartTimeInText());
 
-        // Check if end time is 24:00
-        if (position == getItemCount() - 1) {
-            holder.mEventPeriodTv.setText(event.getStartTimeInText() + " - " + "24:00");
-        } else {
-            holder.mEventPeriodTv.setText(event.getDurationInText());
-        }
+        holder.mEventPeriodTv.setText(event.getDurationInText());
         holder.mEventPeriodTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
 
         // Reset view
@@ -187,15 +182,19 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 holder.mEventContentLayout.setBackground(bg);
                 holder.mEventPeriodTv.setText(event.getDurationInText());
             } else {
-                // Text
-                if (mBottomTimelineBarHeight < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
-                    //TODO need to check don hide both
+
+
+                if (mBottomTimelineBarHeight < holder.mEventPeriodTv.getMeasuredHeight()) {
                     holder.mEventPeriodTv.setVisibility(View.INVISIBLE);
                     holder.mEventInfoTv.setVisibility(View.INVISIBLE);
+                } else if (mBottomTimelineBarHeight < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
+                    holder.mEventInfoTv.setVisibility(View.INVISIBLE);
                 } else {
-                    offsetParams.setMargins(0, topTimelineBarHeight, 0, 0);
-                    holder.mEventPeriodTv.setLayoutParams(offsetParams);
+
                 }
+
+                offsetParams.setMargins(0, topTimelineBarHeight, 0, 0);
+                holder.mEventPeriodTv.setLayoutParams(offsetParams);
 
                 TimelineBarDrawable barDrawable
                     = new TimelineBarDrawable(event.getEventExpiredColor(), event.getAvailableColor(), restProgress);

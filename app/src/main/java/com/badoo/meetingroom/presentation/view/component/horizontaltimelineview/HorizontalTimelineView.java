@@ -245,7 +245,7 @@ public class HorizontalTimelineView extends View {
         while (mListIterator.hasNext()) {
             drawSlot(canvas, mListIterator.next());
             if (mAccumTimeSlotWidth > canvas.getWidth()) {
-                break;
+                //break;
             }
         }
 
@@ -272,6 +272,7 @@ public class HorizontalTimelineView extends View {
         float initSlotWidth = event.getDuration() * mWidthPerMillis;
 
         // Draw slot time text
+        // TODO Hide text when no space
         String startTimeText = event.getStartTimeInText();
         canvas.drawText(startTimeText, mAccumTimeSlotWidth - (initSlotWidth - currSlotWidth), mTimelineCy + getTimelineOffset() - mTimelineStrokeWidth / 2f - mSlotTimeOffset, mSlotTimeTextPaint);
 

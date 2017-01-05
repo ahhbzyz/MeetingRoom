@@ -2,10 +2,6 @@ package com.badoo.meetingroom.di.modules;
 
 import android.content.Context;
 
-import com.badoo.meetingroom.data.repository.GoogleAccountDataRepository;
-import com.badoo.meetingroom.data.repository.RoomEventDataRepository;
-import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
-import com.badoo.meetingroom.domain.repository.RoomEventRepository;
 import com.badoo.meetingroom.di.AndroidApplication;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -16,7 +12,6 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import javax.inject.Singleton;

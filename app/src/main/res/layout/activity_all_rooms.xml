@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/activity_events_calendar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.badoo.meetingroom.presentation.view.activity.EventsCalendarActivity"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:id="@+id/layout_status_bar"
+        android:layout_height="32dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/img_badoo_logo"
+            android:adjustViewBounds="true"
+            android:layout_marginStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:src="@drawable/ic_badoo_logo" />
+
+        <TextView
+            android:text="Wednesday, 11, July"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/tv_curr_date_time"
+            android:textColor="@android:color/black"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/toolbar">
+
+        <TextView
+            android:text="All rooms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_all_rooms"
+            android:textSize="48sp"
+            android:layout_marginStart="32dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"/>
+
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <android.support.design.widget.TabLayout
+        android:background="@android:color/white"
+        android:clipChildren="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabTextAppearance="@style/MyRoomListTabTextAppearance"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="@dimen/room_list_tab_height"
+        app:tabMinWidth="@dimen/room_list_tab_min_width"
+        android:id="@+id/tab_layout_floors"/>
+
+    <android.support.v4.view.ViewPager
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/view_pager">
+
+    </android.support.v4.view.ViewPager>
+</LinearLayout>

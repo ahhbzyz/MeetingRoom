@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -28,7 +27,7 @@ public class DailyEventsFragmentPagerAdapter extends FragmentPagerAdapter {
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 
     private Context mContext;
-    private final int numOfDays = 5;
+    private final int numOfDays = 10;
     private List<String>tabTitles = new ArrayList<>(numOfDays);
     private FragmentManager mFragmentManager;
 

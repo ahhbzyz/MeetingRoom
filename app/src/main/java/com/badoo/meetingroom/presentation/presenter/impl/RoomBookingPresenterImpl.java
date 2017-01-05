@@ -108,7 +108,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading(true);
+            showViewLoading();
         }
 
         @Override
@@ -122,13 +122,13 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            showViewLoading(false);
+            dismissViewLoading();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            showViewLoading(false);
+            dismissViewLoading();
             try {
                 throw e;
             } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
@@ -144,9 +144,11 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     }
 
 
-    private void showViewLoading(boolean visibility) {
-        this.mRoomBookingView.showLoadingData(visibility);
+    private void showViewLoading() {
+        this.mRoomBookingView.showLoadingData("Booking...");
     }
+
+    private void dismissViewLoading() {this.mRoomBookingView.dismissLoadingData();}
 
 
     @Override

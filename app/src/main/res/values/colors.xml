@@ -26,4 +26,6 @@
     <color name="unselectedTimeSlot">#EEEEEE</color>
     <color name="unselectedTimeSlotDark">#D8D8D8</color>
 
+    <color name="roomListDividerColor">#EDF0F2</color>
+
 </resources>

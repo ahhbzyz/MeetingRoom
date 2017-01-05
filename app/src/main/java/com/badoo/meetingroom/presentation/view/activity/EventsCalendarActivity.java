@@ -25,12 +25,11 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EventsCalendarActivity extends BaseActivity implements EventsCalendarView, DailyEventsFragment.OnFragmentInteractionListener {
+public class EventsCalendarActivity extends BaseActivity implements EventsCalendarView {
 
 
     @Inject
     EventsCalendarPresenterImpl mPresenter;
-
     DailyEventsFragmentPagerAdapter mAdapter;
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
@@ -76,7 +75,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
         // Center tab layout
         int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-        mTabLayout.setPadding((int)(width / 2f - getResources().getDimension(R.dimen.tab_max_width) / 2f), 0 , 0, 8);
+        mTabLayout.setPadding((int)(width / 2f - getResources().getDimension(R.dimen.event_calendar_tab_min_width) / 2f), 0 , 0, 8);
     }
 
     @Override
@@ -85,31 +84,6 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
             mAdapter.getRegisteredFragment(0).getPresenter().updateCurrentTimeMark();
             mAdapter.getRegisteredFragment(0).getPresenter().updateRecyclerView();
         }
-    }
-
-    @Override
-    public void showLoadingData(boolean visibility) {
-
-    }
-
-    @Override
-    public void showRetryLoading(boolean visibility) {
-
-    }
-
-    @Override
-    public void showError(String message) {
-
-    }
-
-    @Override
-    public Context context() {
-        return this.getApplicationContext();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     @Override

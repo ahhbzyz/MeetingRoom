@@ -111,13 +111,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (hasSlots && isValidEmailAddress(mEmailEt.getText().toString().trim())) {
-                    mBookBtn.setClickable(true);
-                    mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book));
-                } else {
-                    mBookBtn.setClickable(false);
-                    mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
-                }
+                validateBookingParameters();
             }
 
             @Override
@@ -197,10 +191,15 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             }
             hasSlots = true;
         } else {
-            mBookingPeriodTv.setText("No Slots Selected");
+            mBookingPeriodTv.setText("No slots selected");
             hasSlots = false;
         }
 
+        validateBookingParameters();
+
+    }
+
+    private void validateBookingParameters() {
         if (hasSlots && isValidEmailAddress(mEmailEt.getText().toString().trim())) {
             mBookBtn.setClickable(true);
             mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book));
@@ -231,18 +230,20 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     @Override
-    public void showLoadingData(boolean visibility) {
-        if (visibility) {
-            mLoadingDataDialog.show();
-        } else {
-            mLoadingDataDialog.dismiss();
-        }
-    }
-
-    @Override
     public void finish() {
         super.finish();
         overridePendingTransition(0, 0);
+    }
+
+    @Override
+    public void showLoadingData(String message) {
+        mLoadingDataDialog.setMessage(message);
+        mLoadingDataDialog.show();
+    }
+
+    @Override
+    public void dismissLoadingData() {
+        mLoadingDataDialog.dismiss();
     }
 
     @Override

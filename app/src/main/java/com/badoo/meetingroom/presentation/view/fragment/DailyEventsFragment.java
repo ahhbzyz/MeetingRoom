@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 
 
-public class DailyEventsFragment extends BaseFragment implements DailyEventsView{
+public class DailyEventsFragment extends BaseFragment implements DailyEventsView {
 
     private static final int REQUEST_AUTHORIZATION = 1001;
     private static final int REQUEST_BOOK_ROOM= 1000;
@@ -52,14 +52,11 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     private DailyEventsAdapter mAdapter;
     private int mScrollOffset;
-    private int mLastScrollOffset;
     private static final String ARG_PAGE = "page";
     private int mPage;
-    private OnFragmentInteractionListener mListener;
 
 
     public DailyEventsFragment() {
-        // Required empty public constructor
         setRetainInstance(true);
     }
 
@@ -98,39 +95,13 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        }
-        else {
-            throw new RuntimeException(context.toString()
-                + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     private void setUpRecyclerView() {
         // Todo di for adapter
         mAdapter = new DailyEventsAdapter(this.getContext());
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         this.mRecyclerView.setAdapter(mAdapter);
-        mScrollOffset = 0;
-        mLastScrollOffset = 0;
+        this.mScrollOffset = 0;
         this.mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -218,12 +189,13 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void showLoadingData(boolean visibility) {
-        if (visibility) {
-            mLoadingDataPb.setVisibility(View.VISIBLE);
-        } else {
-            mLoadingDataPb.setVisibility(View.GONE);
-        }
+    public void showLoadingData(String message) {
+        mLoadingDataPb.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void dismissLoadingData() {
+        mLoadingDataPb.setVisibility(View.GONE);
     }
 
     @Override
@@ -271,10 +243,4 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             mPresenter.onEventClicked(position);
         }
     };
-
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }
