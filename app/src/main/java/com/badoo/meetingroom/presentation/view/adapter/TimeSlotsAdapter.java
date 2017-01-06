@@ -241,7 +241,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     }
 
 
-    public class TimeSlot{
+    public class TimeSlot {
 
         private long startTime;
         private boolean isSelected = false;

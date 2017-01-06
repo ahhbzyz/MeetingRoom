@@ -2,6 +2,8 @@ package com.badoo.meetingroom.presentation.mapper;
 
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.entity.impl.RoomEventImpl;
+import com.badoo.meetingroom.presentation.Badoo;
+import com.badoo.meetingroom.presentation.model.Room;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -23,8 +25,8 @@ public class RoomEventModelMapper {
     @Inject
     RoomEventModelMapper() {
         // Default time period is one day
-        mEventStartTime = TimeHelper.getMidNightTimeOfDay(0);
-        mEventEndTime = TimeHelper.getMidNightTimeOfDay(1);
+        mEventStartTime = Badoo.START_TIME;
+        mEventEndTime = Badoo.END_TIME;
     }
 
     private RoomEventModel map(RoomEvent roomEvent) {
@@ -38,7 +40,7 @@ public class RoomEventModelMapper {
         roomEventModel.setStatus(roomEvent.getStatus());
         roomEventModel.setStartTime(roomEvent.getStartTime());
         roomEventModel.setEndTime(roomEvent.getEndTime());
-        roomEventModel.setStatus(RoomEventImpl.BUSY);
+        roomEventModel.setStatus(RoomEventModel.BUSY);
         return roomEventModel;
     }
 

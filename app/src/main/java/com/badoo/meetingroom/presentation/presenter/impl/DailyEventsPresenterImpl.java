@@ -3,6 +3,7 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
@@ -74,8 +75,8 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     @Override
     public void updateCurrentTimeMark() {
-        mDailyEventsView.updateCurrentTimeText(TimeHelper.getCurrentTimeInMillisInText());
-        mDailyEventsView.updateCurrentTimeMarkPosition(TimeHelper.getCurrentTimeSinceMidNight());
+        mDailyEventsView.updateCurrentTimeText();
+        mDailyEventsView.updateCurrentTimeMarkPosition();
     }
 
     @Override
@@ -95,13 +96,13 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     private void getRoomEventList() {
 
         Event event = new Event();
-        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage));
+        DateTime startDateTime = new DateTime(Badoo.START_TIME + mPage * TimeHelper.hr2Millis(24));
         EventDateTime start = new EventDateTime()
             .setDateTime(startDateTime)
             .setTimeZone("Europe/London");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
+        DateTime endDateTime = new DateTime(Badoo.END_TIME + mPage * TimeHelper.hr2Millis(24));
         EventDateTime end = new EventDateTime()
             .setDateTime(endDateTime)
             .setTimeZone("Europe/London");

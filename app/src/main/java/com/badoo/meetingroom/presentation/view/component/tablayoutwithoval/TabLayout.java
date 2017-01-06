@@ -1178,9 +1178,9 @@ public class TabLayout extends HorizontalScrollView {
             final int nextWidth = nextChild != null ? nextChild.getWidth() : 0;
 
             return selectedChild.getLeft()
-                + ((int) ((selectedWidth + nextWidth) * positionOffset * 0.5f))
-                + (selectedChild.getWidth() / 2)
-                - (getWidth() / 2);
+                + ((int) ((selectedWidth + nextWidth) * positionOffset * 0.5f));
+                //+ (selectedChild.getWidth() / 2)
+                //- (getWidth() / 2);
         }
         return 0;
     }

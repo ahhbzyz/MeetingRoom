@@ -10,9 +10,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
 public class RoomEventImpl implements RoomEvent {
 
-    public static final int AVAILABLE = 0;
-    public static final int BUSY = 1;
-
     private String id;
     private int status;
     private long startTime;

@@ -10,8 +10,7 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 public class RoomEventModelImpl implements RoomEventModel {
 
-    public static final int AVAILABLE = 0;
-    public static final int BUSY = 1;
+
 
     private String id;
     private int status;
@@ -127,9 +126,9 @@ public class RoomEventModelImpl implements RoomEventModel {
     @Override
     public int getEventColor() {
         switch (status) {
-            case RoomEventModelImpl.AVAILABLE:
+            case AVAILABLE:
                 return RoomEventColor.AVAILABLE_COLOR;
-            case RoomEventModelImpl.BUSY:
+            case BUSY:
                 return (isOnHold && isProcessing())? RoomEventColor.ON_HOLD_COLOR : RoomEventColor.BUSY_COLOR;
             default:
                 return RoomEventColor.EXPIRED_COLOR;
@@ -139,9 +138,9 @@ public class RoomEventModelImpl implements RoomEventModel {
     @Override
     public int getEventBgColor() {
         switch (status) {
-            case RoomEventModelImpl.AVAILABLE:
+            case AVAILABLE:
                 return RoomEventColor.AVAILABLE_COLOR;
-            case RoomEventModelImpl.BUSY:
+            case BUSY:
                 return (isOnHold && isProcessing()) ? RoomEventColor.ON_HOLD_BG_COLOR : RoomEventColor.BUSY_BG_COLOR;
             default:
                 return RoomEventColor.EXPIRED_COLOR;

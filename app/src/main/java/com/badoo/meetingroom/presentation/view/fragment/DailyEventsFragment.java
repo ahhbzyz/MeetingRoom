@@ -16,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
+import com.badoo.meetingroom.presentation.view.adapter.TimeStampAdapter;
 import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
@@ -45,7 +47,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     @Inject DailyEventsPresenterImpl mPresenter;
 
-    @BindView(R.id.rv_daily_events) RecyclerView mRecyclerView;
+    @BindView(R.id.rv_daily_events) RecyclerView mDailyEventsRv;
     @BindView(R.id.layout_current_time_mark) LinearLayout mCurrentTimeMarkLayout;
     @BindView(R.id.tv_current_time) TextView mCurrentTimeTv;
     @BindView(R.id.pb_loading_data) ProgressBar mLoadingDataPb;
@@ -85,7 +87,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         View view = inflater.inflate(R.layout.fragment_daily_events, container, false);
         ButterKnife.bind(this, view);
 
-        setUpRecyclerView();
+        setUpEventsRecyclerView();
         showCurrentTimeMark();
 
 
@@ -94,15 +96,15 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
         return view;
     }
-
-    private void setUpRecyclerView() {
+    
+    private void setUpEventsRecyclerView() {
         // Todo di for adapter
         mAdapter = new DailyEventsAdapter(this.getContext());
         mAdapter.setOnItemClickListener(mOnItemClickListener);
-        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        this.mRecyclerView.setAdapter(mAdapter);
+        this.mDailyEventsRv.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        this.mDailyEventsRv.setAdapter(mAdapter);
         this.mScrollOffset = 0;
-        this.mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        this.mDailyEventsRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -122,9 +124,8 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     public void scrollToCurrentTimePosition() {
         if (mPage == 0) {
-            float currTimeHeight = TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis();
             mCurrentTimeMarkLayout.measure(0, 0);
-            mRecyclerView.smoothScrollBy(0, (int) (currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
+            mDailyEventsRv.smoothScrollBy(0, (int) (getTimelineMarkOffset() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
         }
     }
 
@@ -138,9 +139,8 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public void showCurrentTimeMark() {
         if (mPage == 0) {
             mCurrentTimeMarkLayout.setVisibility(View.VISIBLE);
-            float currTimeHeight = TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis();
             mCurrentTimeMarkLayout.measure(0, 0);
-            mCurrentTimeMarkLayout.setY((int)(currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
+            mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
             mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
         } else {
             mCurrentTimeMarkLayout.setVisibility(View.GONE);
@@ -171,15 +171,18 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void updateCurrentTimeMarkPosition(long currentTimeInMillis) {
-        float currTimeHeight = currentTimeInMillis * mAdapter.getWidthPerMillis();
+    public void updateCurrentTimeMarkPosition() {
         mCurrentTimeMarkLayout.measure(0, 0);
-        mCurrentTimeMarkLayout.setY((int)(currTimeHeight - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
+        mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
+    }
+
+    private float getTimelineMarkOffset() {
+       return  (TimeHelper.getCurrentTimeInMillis() - Badoo.START_TIME) * mAdapter.getWidthPerMillis();
     }
 
     @Override
-    public void updateCurrentTimeText(String time) {
-        mCurrentTimeTv.setText(time);
+    public void updateCurrentTimeText() {
+        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
     }
 
 

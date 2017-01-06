@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -67,6 +68,8 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     private final int buttonDiameter = 200;
     private final int buttonMargin = 64;
 
+    private Handler mDialogHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +86,8 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         setUpCalendarImageButton();
         updateCurrentTimeText();
         registerTimeRefreshReceiver();
+
+        mDialogHandler = new Handler();
 
         mPresenter.setView(this);
         mPresenter.init();
@@ -148,12 +153,16 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     @Override
     public void showLoadingData(String message) {
-        mProgressDialog.setMessage(message);
-        mProgressDialog.show();
+        mDialogHandler.postDelayed(() -> {
+            mProgressDialog.setMessage(message);
+            mProgressDialog.show();
+        }, 2000);
+
     }
 
     @Override
     public void dismissLoadingData() {
+        mDialogHandler.removeCallbacksAndMessages(null);
         mProgressDialog.dismiss();
     }
 
@@ -394,6 +403,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     @Override
     public void showEventDeleteSuccessful() {
+        Toast.makeText(this, "Event is dismissed", Toast.LENGTH_SHORT).show();
         mPresenter.init();
     }
 
@@ -405,7 +415,9 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @Override
     public void showEventOrganizerDialog() {
         mEventOrganizerDialog.show();
-        mEventOrganizerDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        if (mEventOrganizerDialog.getWindow() != null) {
+            mEventOrganizerDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        }
 
     }
 

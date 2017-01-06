@@ -99,6 +99,8 @@ public class TimeHelper {
         return min * 60 * 1000;
     }
 
+    public static long hr2Millis(int hr) {return hr * min2Millis(60); }
+
     public static boolean isSameTimeIgnoreSec(long time1, long time2){
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
@@ -106,5 +108,19 @@ public class TimeHelper {
         cal2.setTimeInMillis(time2);
         return cal1.get(Calendar.HOUR_OF_DAY) == cal2.get(Calendar.HOUR_OF_DAY) &&
             cal1.get(Calendar.MINUTE) == cal2.get(Calendar.MINUTE);
+    }
+
+    public static int getHour(long millis) {
+        Date date = new Date(millis);   // given date
+        Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
+        calendar.setTime(date);   // assigns calendar to given date
+        return calendar.get(Calendar.HOUR_OF_DAY);
+    }
+
+    public static int getMin(long millis) {
+        Date date = new Date(millis);   // given date
+        Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
+        calendar.setTime(date);   // assigns calendar to given date
+        return calendar.get(Calendar.MINUTE);
     }
 }

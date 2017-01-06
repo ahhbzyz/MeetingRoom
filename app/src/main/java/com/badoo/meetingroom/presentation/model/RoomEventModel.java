@@ -1,9 +1,15 @@
 package com.badoo.meetingroom.presentation.model;
 
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
+
 /**
  * Created by zhangyaozhong on 04/01/2017.
  */
 public interface RoomEventModel {
+
+    int AVAILABLE = 0;
+    int BUSY = 1;
+
     String getId();
 
     void setId(String id);

@@ -8,6 +8,7 @@ import com.badoo.meetingroom.domain.interactor.DeleteEvent;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
 import com.badoo.meetingroom.domain.interactor.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.UpdateEvent;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
@@ -162,13 +163,13 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private void getRoomEventList() {
         Event event = new Event();
-        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
+        DateTime startDateTime = new DateTime(Badoo.START_TIME);
         EventDateTime start = new EventDateTime()
             .setDateTime(startDateTime)
             .setTimeZone("Europe/London");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
+        DateTime endDateTime = new DateTime(Badoo.END_TIME);
         EventDateTime end = new EventDateTime()
             .setDateTime(endDateTime)
             .setTimeZone("Europe/London");

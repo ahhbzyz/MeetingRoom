@@ -1,11 +1,11 @@
 package com.badoo.meetingroom.domain.entity.intf;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-
 /**
  * Created by zhangyaozhong on 22/12/2016.
  */
 public interface RoomEvent extends Entity {
+    int AVAILABLE = 0;
+    int BUSY = 1;
     void setId(String id);
     String getId();
     int getStatus();

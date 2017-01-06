@@ -39,7 +39,7 @@ public class RoomEventDataMapper {
             roomEvent.setOrganizer(organizer);
             roomEvent.setStartTime(startTime);
             roomEvent.setEndTime(endTime);
-            roomEvent.setStatus(RoomEventImpl.BUSY);
+            roomEvent.setStatus(RoomEvent.BUSY);
         }
         return roomEvent;
     }

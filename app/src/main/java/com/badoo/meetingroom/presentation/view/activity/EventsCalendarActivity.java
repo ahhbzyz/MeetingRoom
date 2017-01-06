@@ -11,10 +11,12 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.EventsCalendarPresenterImpl;
+import com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.FadePageTransformer;
 import com.badoo.meetingroom.presentation.view.view.EventsCalendarView;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsFragmentPagerAdapter;
 import com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.TabLayout;
@@ -71,10 +73,11 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     public void setUpViewPager() {
         mAdapter = new DailyEventsFragmentPagerAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setPageTransformer(false , new FadePageTransformer());
         mTabLayout.setupWithViewPager(mViewPager);
 
         // Center tab layout
-        int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+        float width = Resources.getSystem().getDisplayMetrics().widthPixels;
         mTabLayout.setPadding((int)(width / 2f - getResources().getDimension(R.dimen.event_calendar_tab_min_width) / 2f), 0 , 0, 8);
     }
 
