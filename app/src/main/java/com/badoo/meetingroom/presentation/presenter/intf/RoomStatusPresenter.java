@@ -9,7 +9,7 @@ import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
  * Created by zhangyaozhong on 23/12/2016.
  */
 
-public interface RoomEventsPresenter extends Presenter {
+public interface RoomStatusPresenter extends Presenter {
     void setView(@NonNull RoomEventsView roomEventsView);
     void onCountDownTicking(long millisUntilFinished);
     void onCountDownFinished();

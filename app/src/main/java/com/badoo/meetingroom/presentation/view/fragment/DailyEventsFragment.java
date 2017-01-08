@@ -3,7 +3,6 @@ package com.badoo.meetingroom.presentation.view.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,15 +18,12 @@ import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
-import com.badoo.meetingroom.presentation.view.adapter.TimeStampAdapter;
-import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
-import java.sql.Time;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -99,7 +95,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     
     private void setUpEventsRecyclerView() {
         // Todo di for adapter
-        mAdapter = new DailyEventsAdapter(this.getContext());
+        mAdapter = new DailyEventsAdapter(this.getContext(), mPage);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         this.mDailyEventsRv.setLayoutManager(new LinearLayoutManager(this.getContext()));
         this.mDailyEventsRv.setAdapter(mAdapter);
@@ -123,9 +119,9 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     public void scrollToCurrentTimePosition() {
-        if (mPage == 0) {
+        if (mPage == 0 && getTimelineMarkOffset() > 0) {
             mCurrentTimeMarkLayout.measure(0, 0);
-            mDailyEventsRv.smoothScrollBy(0, (int) (getTimelineMarkOffset() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
+            mDailyEventsRv.smoothScrollBy(0, (int) (getTimelineMarkOffset() - mScrollOffset));
         }
     }
 
@@ -140,7 +136,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         if (mPage == 0) {
             mCurrentTimeMarkLayout.setVisibility(View.VISIBLE);
             mCurrentTimeMarkLayout.measure(0, 0);
-            mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
+            mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mScrollOffset));
             mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
         } else {
             mCurrentTimeMarkLayout.setVisibility(View.GONE);
@@ -173,11 +169,11 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @Override
     public void updateCurrentTimeMarkPosition() {
         mCurrentTimeMarkLayout.measure(0, 0);
-        mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f - mScrollOffset));
+        mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mScrollOffset));
     }
 
     private float getTimelineMarkOffset() {
-       return  (TimeHelper.getCurrentTimeInMillis() - Badoo.START_TIME) * mAdapter.getWidthPerMillis();
+       return  (TimeHelper.getCurrentTimeInMillis() - Badoo.getStartTimeOfDay(0)) * mAdapter.getWidthPerMillis() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f;
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.view.component.drawable.BusyBgDrawable;
 import com.badoo.meetingroom.presentation.view.component.drawable.TimelineBarDrawable;
@@ -40,6 +41,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     private List<RoomEventModel> mEvents;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
+    private final int mPage;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -58,8 +60,9 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     }
 
     @Inject
-    public DailyEventsAdapter(Context context) {
+    public DailyEventsAdapter(Context context, int page) {
         mContext = context;
+        mPage = page;
         mEvents = new ArrayList<>();
     }
 
@@ -85,7 +88,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         int hour = TimeHelper.getHour(event.getStartTime());
 
         while (true) {
-            long timestamp = TimeHelper.getMidNightTimeOfDay(0) + TimeHelper.hr2Millis(hour++);
+            long timestamp = TimeHelper.getMidNightTimeOfDay(mPage) + TimeHelper.hr2Millis(hour++);
             if (timestamp >= event.getStartTime() && timestamp <= event.getEndTime()) {
                 result.add(timestamp);
             }
@@ -109,7 +112,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         // Calculate item height
         int viewHeight =  (int) (event.getDuration() * WIDTH_PER_MILLIS);
 
-
         List<Long> timestamps = getAllTimeStampsInView(event);
 
         holder.mTimestampLayout.removeAllViews();
@@ -122,13 +124,22 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mTimestampLayout.addView(timestampTv);
         }
 
-        for (long ts : timestamps) {
-            float topMargin = (ts - event.getStartTime()) * WIDTH_PER_MILLIS;
+        for (int i = 0; i < timestamps.size(); i++) {
+            long ts = timestamps.get(i);
             TextView timestampTv = new TextView(mContext);
             timestampTv.setText(TimeHelper.formatTime(ts));
             timestampTv.setPadding(0, 0, 32, 0);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            holder.itemView.setLayoutParams(params);
+            timestampTv.measure(0, 0);
+            float textOffset;
+            if (ts == Badoo.getStartTimeOfDay(mPage)) {
+                textOffset = 0;
+            } else if (ts == Badoo.getEndTimeOfDay(mPage)) {
+                textOffset = timestampTv.getMeasuredHeight();
+            } else {
+                textOffset = timestampTv.getMeasuredHeight() / 2f;
+            }
+            float topMargin = (ts - event.getStartTime()) * WIDTH_PER_MILLIS - textOffset;
             params.setMargins(0, (int) topMargin, 0, 0);
             timestampTv.setLayoutParams(params);
             holder.mTimestampLayout.addView(timestampTv);

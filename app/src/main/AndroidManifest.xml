@@ -24,7 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.view.activity.RoomEventsActivity" />
+        <activity android:name=".presentation.view.activity.RoomStatusActivity" />
         <activity android:name=".presentation.view.activity.EventsCalendarActivity" />
         <activity android:name=".presentation.view.activity.RoomBookingActivity" />
         <activity android:name=".presentation.view.activity.AllRoomsActivity"></activity>

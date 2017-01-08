@@ -25,8 +25,8 @@ public class RoomEventModelMapper {
     @Inject
     RoomEventModelMapper() {
         // Default time period is one day
-        mEventStartTime = Badoo.START_TIME;
-        mEventEndTime = Badoo.END_TIME;
+        mEventStartTime = TimeHelper.getMidNightTimeOfDay(0);
+        mEventEndTime = TimeHelper.getMidNightTimeOfDay(1);
     }
 
     private RoomEventModel map(RoomEvent roomEvent) {

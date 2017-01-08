@@ -206,24 +206,6 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                     this.mOnItemClickListener.onEventItemClicked(mTimeSlotList);
                 }
             });
-            holder.itemView.setOnLongClickListener(v -> {
-                if (slot.isSelected) {
-                    for (TimeSlot t: mTimeSlotList) {
-                        t.setSelected(false);
-                    }
-                } else {
-                    for (TimeSlot t: mTimeSlotList) {
-                        t.setSelected(true);
-                    }
-                }
-                notifyDataSetChanged();
-
-                if (this.mOnItemClickListener != null) {
-                    this.mOnItemClickListener.onEventItemClicked(mTimeSlotList);
-                }
-
-                return false;
-            });
         }
     }
 

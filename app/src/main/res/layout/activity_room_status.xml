@@ -6,87 +6,94 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context="com.badoo.meetingroom.presentation.view.activity.RoomEventsActivity"
+    tools:context="com.badoo.meetingroom.presentation.view.activity.RoomStatusActivity"
     android:orientation="vertical">
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:id="@+id/layout_status_bar"
-        android:layout_height="32dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/img_badoo_logo"
-            android:adjustViewBounds="true"
-            android:layout_marginStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:src="@drawable/ic_badoo_logo" />
-
-        <TextView
-            android:text="Wednesday, 11, July"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/tv_curr_date_time"
-            android:textColor="@android:color/black"
-            android:layout_marginEnd="16dp"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_alignParentEnd="true" />
-
-    </RelativeLayout>
-
-    <android.support.v7.widget.Toolbar
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:id="@+id/toolbar">
+        android:id="@+id/layout_top_content">
 
-        <TextView
-            android:text="Bahamas"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/layout_status_bar"
+            android:layout_height="32dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/img_badoo_logo"
+                android:layout_marginStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:src="@drawable/ic_badoo_logo"
+                android:adjustViewBounds="true" />
+
+            <TextView
+                android:text="Wednesday, 11, July"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/tv_curr_date_time"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_room_name"
-            android:textSize="48sp"
-            android:layout_marginStart="32dp"
-            android:gravity="center_vertical|center_horizontal"
-            android:textColor="@android:color/black" />
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize"
+            android:id="@+id/toolbar">
 
-        <ImageView
-            android:layout_width="36dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_room"
-            android:id="@+id/img_room"
-            android:adjustViewBounds="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="32dp"
-            android:layout_gravity="end"/>
+            <TextView
+                android:text="Bahamas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_room_name"
+                android:textSize="48sp"
+                android:layout_marginStart="32dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@android:color/black" />
 
-        <TextView
-            android:text="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_ava_rooms"
-            android:layout_toStartOf="@+id/img_room"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="24sp"
-            android:textColor="@android:color/black"
-            android:layout_marginEnd="8dp"
-            android:layout_gravity="end"/>
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_room"
+                android:id="@+id/img_room"
+                android:adjustViewBounds="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="32dp"
+                android:layout_gravity="end"/>
 
-        <ImageView
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_calendar"
-            android:id="@+id/img_calendar"
-            android:layout_gravity="end"
-            android:layout_marginEnd="48dp"
-            android:adjustViewBounds="true"
-            android:layout_width="36dp" />
+            <TextView
+                android:text="2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_ava_rooms"
+                android:layout_toStartOf="@+id/img_room"
+                android:gravity="center_vertical|center_horizontal"
+                android:textSize="24sp"
+                android:textColor="@android:color/black"
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="end"/>
+
+            <ImageView
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_calendar"
+                android:id="@+id/img_calendar"
+                android:layout_gravity="end"
+                android:layout_marginEnd="48dp"
+                android:adjustViewBounds="true"
+                android:layout_width="36dp" />
 
 
-    </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"

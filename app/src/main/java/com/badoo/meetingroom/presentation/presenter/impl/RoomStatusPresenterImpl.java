@@ -8,11 +8,10 @@ import com.badoo.meetingroom.domain.interactor.DeleteEvent;
 import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
 import com.badoo.meetingroom.domain.interactor.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.UpdateEvent;
-import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
-import com.badoo.meetingroom.presentation.presenter.intf.RoomEventsPresenter;
+import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
@@ -34,7 +33,7 @@ import javax.inject.Named;
  * Created by zhangyaozhong on 22/12/2016.
  */
 
-public class RoomEventsPresenterImpl implements RoomEventsPresenter {
+public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     private RoomEventsView mRoomEventsView;
 
@@ -52,7 +51,7 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
 
     @Inject
-    RoomEventsPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
+    RoomStatusPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
                             @Named(InsertEvent.NAME) InsertEvent insertEventUseCase,
                             @Named(DeleteEvent.NAME) DeleteEvent deleteEventUseCase,
                             @Named(UpdateEvent.NAME) UpdateEvent updateEventUseCase,
@@ -163,13 +162,13 @@ public class RoomEventsPresenterImpl implements RoomEventsPresenter {
 
     private void getRoomEventList() {
         Event event = new Event();
-        DateTime startDateTime = new DateTime(Badoo.START_TIME);
+        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
         EventDateTime start = new EventDateTime()
             .setDateTime(startDateTime)
             .setTimeZone("Europe/London");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime(Badoo.END_TIME);
+        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
         EventDateTime end = new EventDateTime()
             .setDateTime(endDateTime)
             .setTimeZone("Europe/London");

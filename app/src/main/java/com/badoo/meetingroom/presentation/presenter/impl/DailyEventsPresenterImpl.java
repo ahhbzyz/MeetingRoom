@@ -96,13 +96,13 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     private void getRoomEventList() {
 
         Event event = new Event();
-        DateTime startDateTime = new DateTime(Badoo.START_TIME + mPage * TimeHelper.hr2Millis(24));
+        DateTime startDateTime = new DateTime(Badoo.getStartTimeOfDay(mPage));
         EventDateTime start = new EventDateTime()
             .setDateTime(startDateTime)
             .setTimeZone("Europe/London");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime(Badoo.END_TIME + mPage * TimeHelper.hr2Millis(24));
+        DateTime endDateTime = new DateTime(Badoo.getEndTimeOfDay(mPage));
         EventDateTime end = new EventDateTime()
             .setDateTime(endDateTime)
             .setTimeZone("Europe/London");

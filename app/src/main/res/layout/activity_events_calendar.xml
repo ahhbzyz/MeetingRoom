@@ -83,15 +83,12 @@
 
     <com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.TabLayout
         android:background="@android:color/white"
-        android:clipChildren="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/MyCustomTabLayout"
         app:tabMode="scrollable"
         app:tabMinWidth="@dimen/event_calendar_tab_min_width"
         android:id="@+id/tab_layout"
-        android:paddingBottom="8dp"
-        app:tabPaddingStart="14dp"
         android:clipToPadding="false"/>
 
     <android.support.v4.view.ViewPager

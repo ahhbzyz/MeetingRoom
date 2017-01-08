@@ -9,7 +9,7 @@ import com.badoo.meetingroom.presentation.view.activity.BaseActivity;
 import com.badoo.meetingroom.presentation.view.activity.EventsCalendarActivity;
 import com.badoo.meetingroom.presentation.view.activity.GetCredentialActivity;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
-import com.badoo.meetingroom.presentation.view.activity.RoomEventsActivity;
+import com.badoo.meetingroom.presentation.view.activity.RoomStatusActivity;
 import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
 import com.badoo.meetingroom.presentation.view.fragment.RoomListFragment;
 
@@ -21,7 +21,7 @@ import dagger.Component;
 @Component(modules = {ApplicationModule.class, EventsCalendarModule.class, RoomEventsModule.class, GetCredentialModule.class})
 public interface ApplicationComponent {
   void inject(BaseActivity activity);
-  void inject(RoomEventsActivity activity);
+  void inject(RoomStatusActivity activity);
   void inject(EventsCalendarActivity activity);
   void inject(GetCredentialActivity activity);
   void inject(DailyEventsFragment fragment);

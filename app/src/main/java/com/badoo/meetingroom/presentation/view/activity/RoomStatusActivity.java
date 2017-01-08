@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
-import com.badoo.meetingroom.presentation.presenter.impl.RoomEventsPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.impl.RoomStatusPresenterImpl;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView;
@@ -47,12 +47,12 @@ import butterknife.ButterKnife;
  * Created by zhangyaozhong on 22/12/2016.
  */
 
-public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
+public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
     @Inject
-    RoomEventsPresenterImpl mPresenter;
+    RoomStatusPresenterImpl mPresenter;
 
     @BindView(R.id.ctv_status) CircleTimerView mCtv;
     @BindView(R.id.htv_room_events) HorizontalTimelineView mHtv;
@@ -61,6 +61,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @BindView(R.id.tv_fast_book) TextView mFastBookTv;
     @BindView(R.id.img_book) ImageButton mCircleBtn;
     @BindView(R.id.img_calendar) ImageView mCalendarImg;
+    @BindView(R.id.layout_top_content) LinearLayout mTopContentLayout;
 
     private ProgressDialog mProgressDialog;
     private AlertDialog mEventOrganizerDialog;
@@ -73,7 +74,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room_events);
+        setContentView(R.layout.activity_room_status);
         ButterKnife.bind(this);
         this.getApplicationComponent().inject(this);
 
@@ -141,7 +142,7 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
 
     private void setUpCalendarImageButton() {
         mCalendarImg.setOnClickListener(v -> {
-            Intent intent = new Intent(RoomEventsActivity.this, EventsCalendarActivity.class);
+            Intent intent = new Intent(RoomStatusActivity.this, EventsCalendarActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityForResult(intent, REQUEST_BOOK_ROOM);
         });
@@ -195,6 +196,8 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         mCtv.setOnCountDownListener(mOnCountDownListener);
         mCtv.setOnClickListener(v -> {
             mPresenter.setDoNotDisturb(false);
+            mTopContentLayout.animate().translationY(0);
+            mHtv.animate().translationY(0);
         });
     }
 
@@ -329,7 +332,11 @@ public class RoomEventsActivity extends BaseActivity implements RoomEventsView {
         params.setMargins(buttonMargin, 0, buttonMargin, 0);
         mDNDBtnWithText.setLayoutParams(params);
         mButtonsLayout.addView(mDNDBtnWithText);
-        mDNDBtn.setOnClickListener(v -> mPresenter.setDoNotDisturb(true));
+        mDNDBtn.setOnClickListener(v -> {
+            mPresenter.setDoNotDisturb(true);
+            mTopContentLayout.animate().translationY(-mTopContentLayout.getHeight());
+            mHtv.animate().translationY(mHtv.getHeight());
+        });
 
         ImageButton mExtendBtn  = new ImageButton(this);
         mExtendBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));

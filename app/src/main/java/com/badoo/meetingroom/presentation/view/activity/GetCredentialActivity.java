@@ -56,7 +56,7 @@ public class GetCredentialActivity extends BaseActivity implements GetCredential
         mGetCredentialPresenter.init();
 
         findViewById(R.id.btn_status).setOnClickListener(view -> {
-            Intent intent = new Intent(GetCredentialActivity.this, RoomEventsActivity.class);
+            Intent intent = new Intent(GetCredentialActivity.this, RoomStatusActivity.class);
             startActivity(intent);
         });
 
