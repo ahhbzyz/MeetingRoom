@@ -20,4 +20,6 @@
     <dimen name="horizontal_timeline_height">48dp</dimen>
     <dimen name="horizontal_timeline_time_mark_left_margin">120dp</dimen>
     <dimen name="horizontal_timeline_divider_width">2dp</dimen>
+    <dimen name="daily_events_divider_height">0.5dp</dimen>
+    <dimen name="horizontal_timeline_time_mark_width">1.5dp</dimen>
 </resources>

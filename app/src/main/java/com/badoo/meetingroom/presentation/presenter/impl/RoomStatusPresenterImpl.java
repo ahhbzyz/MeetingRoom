@@ -272,7 +272,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void updateHorizontalTimelineData() {
-        mRoomEventsView.updateHorizontalTimelineView(TimeHelper.getCurrentTimeSinceMidNight(), expiredEvents);
+        mRoomEventsView.updateHorizontalTimelineView(expiredEvents);
     }
 
 

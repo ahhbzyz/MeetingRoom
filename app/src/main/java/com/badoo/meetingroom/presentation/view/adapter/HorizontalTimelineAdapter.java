@@ -29,7 +29,6 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
 
     private static final float WIDTH_PER_MILLIS =  38f / TimeHelper.min2Millis(DailyEventsFragment.MIN_SLOT_TIME);
 
-    private Context mContext;
     private List<RoomEventModel> mEvents;
     private float mDividerWidth;
 
@@ -45,9 +44,8 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     }
 
     public HorizontalTimelineAdapter(Context context) {
-        mContext = context;
         mEvents = new ArrayList<>();
-        mDividerWidth = mContext.getResources().getDimension(R.dimen.horizontal_timeline_divider_width);
+        mDividerWidth = context.getResources().getDimension(R.dimen.horizontal_timeline_divider_width);
     }
 
     public void setEventList(List<RoomEventModel> roomEventModelList) {
@@ -71,9 +69,9 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     public void onBindViewHolder(ViewHolder holder, int position) {
         RoomEventModel event = mEvents.get(position);
         float restProgress = event.getRemainingTime() / (float)event.getDuration();
-        int viewWidth = (int) (event.getDuration() * WIDTH_PER_MILLIS + mDividerWidth);
+        float viewWidth = event.getDuration() * WIDTH_PER_MILLIS + mDividerWidth;
         RelativeLayout.LayoutParams params = new
-            RelativeLayout.LayoutParams(viewWidth, RelativeLayout.LayoutParams.MATCH_PARENT);
+            RelativeLayout.LayoutParams(Math.round(viewWidth), RelativeLayout.LayoutParams.MATCH_PARENT);
         holder.itemView.setLayoutParams(params);
         holder.mStartTimeTv.setText(event.getStartTimeInText());
         holder.mStartTimeTv.measure(0, 0);

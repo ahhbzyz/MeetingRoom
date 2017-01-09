@@ -33,5 +33,5 @@ public interface RoomEventsView extends LoadDataView {
     void showEventDeleteSuccessful();
     void showEventExtendSuccessful();
     void showEventOrganizerDialog();
-    void updateHorizontalTimelineView(long currentTimeSinceMidNight, int expiredEvents);
+    void updateHorizontalTimelineView(int expiredEvents);
 }

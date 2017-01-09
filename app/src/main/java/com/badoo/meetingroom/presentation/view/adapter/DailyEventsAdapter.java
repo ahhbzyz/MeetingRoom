@@ -50,7 +50,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         @BindView(R.id.tv_event_info) TextView mEventInfoTv;
         @BindView(R.id.img_timeline_bar) ImageView mTimelineBar;
         @BindView(R.id.layout_event_content) LinearLayout mEventContentLayout;
-        @BindView(R.id.layout_event_content_parent) FrameLayout mEventContentParentLayout;
         @BindView(R.id.layout_timestamp) RelativeLayout mTimestampLayout;
 
         private ViewHolder(View view) {
@@ -116,7 +115,11 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         float restProgress = event.getRemainingTime() / (float)event.getDuration();
 
         // Calculate item height
-        int viewHeight =  (int) (event.getDuration() * HEIGHT_PER_MILLIS);
+        float viewHeight =  event.getDuration() * HEIGHT_PER_MILLIS + mContext.getResources().getDimension(R.dimen.daily_events_divider_height);
+
+        RelativeLayout.LayoutParams params = new
+            RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, Math.round(viewHeight));
+        holder.itemView.setLayoutParams(params);
 
         List<Long> timestamps = getAllTimeStampsInView(event);
         if (position == getItemCount() - 1) {
@@ -141,7 +144,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             TextView timestampTv = new TextView(mContext);
             timestampTv.setText(TimeHelper.formatTime(ts));
             timestampTv.setPadding(0, 0, 32, 0);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams textViewParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             timestampTv.measure(0, 0);
             float textOffset;
             float textViewHeight = timestampTv.getMeasuredHeight();
@@ -153,8 +156,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 textOffset = textViewHeight / 2f;
             }
             float topMargin = (ts - event.getStartTime()) * HEIGHT_PER_MILLIS - textOffset;
-            params.setMargins(0, (int) topMargin, 0, 0);
-            timestampTv.setLayoutParams(params);
+            textViewParams.setMargins(0, (int) topMargin, 0, 0);
+            timestampTv.setLayoutParams(textViewParams);
 
             float hideOffset = textViewHeight / 4f;
             if (mPage == 0) {
@@ -187,12 +190,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mEventInfoTv.setVisibility(View.INVISIBLE);
         }
 
-
-
         // new item layout
-        RelativeLayout.LayoutParams params = new
-            RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, viewHeight);
-        holder.itemView.setLayoutParams(params);
 
         holder.mEventPeriodTv.setText(event.getDurationInText());
         holder.mEventPeriodTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
@@ -272,13 +270,13 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
         if (event.isAvailable() && !event.isExpired()) {
             int finalPosition = position;
-            holder.mEventContentParentLayout.setOnClickListener(v -> {
+            holder.mEventContentLayout.setOnClickListener(v -> {
                 if (this.mOnItemClickListener != null) {
                     this.mOnItemClickListener.onEventItemClicked(finalPosition);
                 }
             });
         } else {
-            holder.mEventContentParentLayout.setOnClickListener(null);
+            holder.mEventContentLayout.setOnClickListener(null);
         }
     }
 

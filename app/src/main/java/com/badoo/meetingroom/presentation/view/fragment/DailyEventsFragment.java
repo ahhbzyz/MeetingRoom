@@ -83,12 +83,9 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_daily_events, container, false);
         ButterKnife.bind(this, view);
+        mPresenter.setView(this);
 
         setUpEventsRecyclerView();
-        showCurrentTimeMark();
-
-
-        mPresenter.setView(this);
         mPresenter.init();
 
         return view;
@@ -108,28 +105,20 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
                 mScrollOffset += dy;
                 updateCurrentTimeMarkPosition(dy);
             }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == SCROLL_STATE_IDLE) {
-                    mCurrentTimeMarkLayout.measure(0, 0);
-                    mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mScrollOffset));
-                }
-            }
         });
     }
 
     @Override
     public void renderDailyEvents(List<RoomEventModel> roomEventModelList) {
         mAdapter.setDailyEventList(roomEventModelList);
+        showCurrentTimeMark();
         scrollToCurrentTimePosition();
     }
 
     public void scrollToCurrentTimePosition() {
         if (mPage == 0 && getTimelineMarkOffset() > 0) {
             mCurrentTimeMarkLayout.measure(0, 0);
-            mDailyEventsRv.smoothScrollBy(0, (int) (getTimelineMarkOffset() - mScrollOffset));
+            mDailyEventsRv.smoothScrollBy(0, Math.round (getTimelineMarkOffset()) - mScrollOffset);
         }
     }
 
@@ -143,9 +132,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public void showCurrentTimeMark() {
         if (mPage == 0) {
             mCurrentTimeMarkLayout.setVisibility(View.VISIBLE);
-            mCurrentTimeMarkLayout.measure(0, 0);
-            mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mScrollOffset));
-            mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
+            updateCurrentTimeView();
         } else {
             mCurrentTimeMarkLayout.setVisibility(View.GONE);
         }
@@ -174,14 +161,18 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     private float getTimelineMarkOffset() {
-       return  (TimeHelper.getCurrentTimeInMillis() - Badoo.getStartTimeOfDay(0)) * mAdapter.getHeightPerMillis() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f;
+       return (TimeHelper.getCurrentTimeInMillis() - Badoo.getStartTimeOfDay(0)) * mAdapter.getHeightPerMillis()
+              - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f
+              + mPresenter.getNumOfExpiredEvents() * getActivity().getApplicationContext().getResources().getDimension(R.dimen.daily_events_divider_height);
     }
 
     public void updateCurrentTimeView() {
         mCurrentTimeMarkLayout.measure(0, 0);
-        mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mScrollOffset));
+        mCurrentTimeMarkLayout.setY(Math.round(getTimelineMarkOffset()) - mScrollOffset);
         mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-        mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

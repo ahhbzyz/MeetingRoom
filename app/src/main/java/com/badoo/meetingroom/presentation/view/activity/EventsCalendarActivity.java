@@ -94,6 +94,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
                 if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
+                    mAdapter.getRegisteredFragment(0).getPresenter().updateNumOfExpiredEvents();
                     mAdapter.getRegisteredFragment(0).updateCurrentTimeView();
                 }
             }

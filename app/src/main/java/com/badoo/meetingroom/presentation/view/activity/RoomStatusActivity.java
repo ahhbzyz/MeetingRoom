@@ -175,13 +175,14 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
     }
 
     @Override
-    public void updateHorizontalTimelineView(long pastTime, int expiredEvents) {
-        float leftMargin = pastTime * mAdapter.getWidthPerMillis()
-                         + expiredEvents * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_divider_width)
-                         - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_mark_left_margin);
+    public void updateHorizontalTimelineView(int expiredEvents) {
+        float leftMargin = (TimeHelper.getCurrentTimeSinceMidNight()) * mAdapter.getWidthPerMillis()
+                         + (expiredEvents + 1) * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_divider_width)
+                         - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_mark_left_margin)
+                         - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_mark_width);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
-        params.setMargins((int) -leftMargin, params.topMargin, params.rightMargin, params.bottomMargin);
+        params.setMargins(Math.round(-leftMargin), params.topMargin, params.rightMargin, params.bottomMargin);
         mHorizontalTimelineRv.setLayoutParams(params);
         mAdapter.notifyDataSetChanged();
     }

@@ -37,6 +37,8 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     private List<RoomEventModel> mEventList;
 
+    private int numOfExpiredEvents;
+
     @Inject
     DailyEventsPresenterImpl(@Named(GetRoomEventList.NAME)GetRoomEventList getRoomEventListUseCase,
                                     RoomEventModelMapper mMapper) {
@@ -55,6 +57,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     }
 
     private void showDailyEventsInView(List<RoomEventModel> roomEventModelList) {
+        updateNumOfExpiredEvents();
         mDailyEventsView.renderDailyEvents(roomEventModelList);
     }
 
@@ -99,6 +102,21 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         mMapper.setEventStartTime(startDateTime.getValue());
         mMapper.setEventEndTime(endDateTime.getValue());
         this.getRoomEventListUseCase.init(event).execute(new RoomEventListSubscriber());
+    }
+
+    public float getNumOfExpiredEvents() {
+        return numOfExpiredEvents;
+    }
+
+    public void updateNumOfExpiredEvents() {
+        numOfExpiredEvents = 0;
+        for (RoomEventModel event: mEventList) {
+            if(event.isExpired()) {
+                numOfExpiredEvents++;
+            } else {
+                break;
+            }
+        }
     }
 
     private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {
