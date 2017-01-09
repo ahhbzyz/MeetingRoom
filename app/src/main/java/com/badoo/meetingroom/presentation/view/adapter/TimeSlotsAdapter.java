@@ -35,6 +35,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     private final long mDefaultSlotLength = 15 * 60 * 1000;
     private int mRecyclerViewWidth = -1;
     private int mLeftPadding = -1;
+    private final int [] timestamps = new int[]{0, 15, 30, 45};
     private OnItemClickListener mOnItemClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -56,33 +57,37 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
     public void setTimeSlots(long startTime, long endTime) {
 
-        if (endTime < startTime || (endTime - startTime) < mDefaultSlotLength) {
-            throw new IllegalArgumentException("End time cannot less than start time " +
-                "or time period cannot less than 15 minutes");
+        if (endTime <= startTime) {
+            throw new IllegalArgumentException("End time cannot less than or equal to start time");
         }
-        int remainderOfStartTimeMin = getRemainderOfMin(startTime);
-        int startOffset = remainderOfStartTimeMin > 5 ? 10 : 5;
-        if (remainderOfStartTimeMin == 0) {
-            startOffset = 0;
+
+        startTime = TimeHelper.getDroppedMillis(startTime);
+        endTime = TimeHelper.getDroppedMillis(endTime);
+
+        long newStartTime = startTime;
+        for (int t : timestamps) {
+            if (TimeHelper.getMin(startTime) <= t) {
+                newStartTime = startTime + TimeHelper.min2Millis(t - TimeHelper.getMin(startTime));
+                break;
+            }
         }
-        long newStartTime = startTime + (startOffset - remainderOfStartTimeMin) * 60 * 1000;
         int numOfSlots = (int) ((endTime - newStartTime) / mDefaultSlotLength);
 
-        mTimeSlotList.add(new TimeSlot(startTime));
+        if (newStartTime != startTime) {
+            mTimeSlotList.add(new TimeSlot(startTime));
+        }
         if (numOfSlots <= 0) {
             mTimeSlotList.add(new TimeSlot(endTime));
         } else {
-            for (int i = 0; i < numOfSlots; i++) {
-                // TODO
-                newStartTime = newStartTime + mDefaultSlotLength;
+            for (int i = 0; i <= numOfSlots; i++) {
                 mTimeSlotList.add(new TimeSlot(newStartTime));
+                newStartTime += mDefaultSlotLength;
             }
+            newStartTime -= mDefaultSlotLength;
             if (!TimeHelper.isSameTimeIgnoreSec(newStartTime, endTime)) {
                 mTimeSlotList.add(new TimeSlot(endTime));
             }
         }
-
-
         notifyDataSetChanged();
     }
 
@@ -214,15 +219,6 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
         return mTimeSlotList.size();
     }
 
-    private int getRemainderOfMin(long time) {
-        Date date = new Date(time);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int min = calendar.get(Calendar.MINUTE);
-        return min % 10;
-    }
-
-
     public class TimeSlot {
 
         private long startTime;
@@ -238,10 +234,6 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
         public boolean isSelected() {
             return isSelected;
-        }
-
-        void setSelected(){
-            isSelected = !isSelected;
         }
 
         void setSelected(boolean selected) {

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:id="@+id/activity_daily_events"
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment">
 
     <ProgressBar
         style="?android:attr/progressBarStyle"
@@ -17,6 +17,7 @@ tools:context="com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragm
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_daily_events"
         android:scrollbars="none"
+        android:clipChildren="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

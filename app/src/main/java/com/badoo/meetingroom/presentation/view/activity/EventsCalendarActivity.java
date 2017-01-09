@@ -82,14 +82,6 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     }
 
     @Override
-    public void updateFragmentCurrTimeMark() {
-        if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
-            mAdapter.getRegisteredFragment(0).getPresenter().updateCurrentTimeMark();
-            mAdapter.getRegisteredFragment(0).getPresenter().updateRecyclerView();
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
@@ -101,7 +93,9 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
-                mPresenter.updateFragmentCurrTimeMark();
+                if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
+                    mAdapter.getRegisteredFragment(0).updateCurrentTimeView();
+                }
             }
         }
     };

@@ -1,8 +1,14 @@
 package com.badoo.meetingroom.data.remote.api;
 
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
+import com.google.api.services.calendar.model.EventDateTime;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -33,7 +39,12 @@ public class EventUpdateApiCall implements Callable<Event>{
         // Retrieve the event from the API
         Event event = mServices.events().get("primary", mEventParams.getId()).execute();
 
-        event.setEnd(mEventParams.getEnd());
+        DateTime endDateTime = new DateTime(TimeHelper.getDroppedMillis(mEventParams.getEnd().getDateTime().getValue()));
+        EventDateTime end = new EventDateTime()
+            .setDateTime(endDateTime)
+            .setTimeZone("Europe/London");
+        event.setEnd(end);
+
         // Update the event
         mResponse = mServices.events().update("primary", event.getId(), event).execute();
     }

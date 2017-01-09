@@ -46,10 +46,6 @@ public class EventsCalendarPresenterImpl implements EventsCalendarPresenter {
         this.mEventsCalendarView = eventsCalendarView;
     }
 
-    @Override
-    public void updateFragmentCurrTimeMark() {
-        mEventsCalendarView.updateFragmentCurrTimeMark();
-    }
 
     @Override
     public void Resume() {

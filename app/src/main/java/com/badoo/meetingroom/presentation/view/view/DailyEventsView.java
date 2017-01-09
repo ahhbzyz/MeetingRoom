@@ -14,10 +14,6 @@ import java.util.List;
 public interface DailyEventsView extends LoadDataView{
     void renderDailyEvents(List<RoomEventModel> roomEventModelList);
     int getCurrentPage();
-    void updateCurrentTimeText();
-    void updateCurrentTimeMarkPosition();
-    void updateCurrentTimeMarkPosition(int dy);
-    void updateDailyEventList();
     void bookRoom(long startTime, long endTime);
     void showUserRecoverableAuth(UserRecoverableAuthIOException e);
 }

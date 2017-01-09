@@ -17,4 +17,5 @@
 
     <dimen name="circle_time_btn_view_radius">48dp</dimen>
     <dimen name="room_list_tab_height">3dp</dimen>
+    <dimen name="horizontal_timeline_height">48dp</dimen>
 </resources>

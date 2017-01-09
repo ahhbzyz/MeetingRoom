@@ -13,10 +13,15 @@ import android.graphics.drawable.Drawable;
 
 public class TimelineBarDrawable extends Drawable {
 
+    public static final int VERTICAL = 0;
+    public static final int HORIZONTAL = 1;
+
     private final Paint backgroundPaint;
     private int topColor;
     private int bottomColor;
     private float leftProgress;
+    private int orientation = VERTICAL;
+
 
     public TimelineBarDrawable(int topColor, int bottomColor, float leftProgress) {
         this.topColor = topColor;
@@ -34,19 +39,25 @@ public class TimelineBarDrawable extends Drawable {
         float width = bounds.right - bounds.left;
         float height = bounds.bottom - bounds.top;
 
-        // draw background gradient
+        if (orientation == VERTICAL) {
+            float leftBarHeight = leftProgress * height;
+            float firstBarHeight = height - leftBarHeight;
 
+            backgroundPaint.setColor(topColor);
+            canvas.drawRect(0, 0, width, firstBarHeight, backgroundPaint);
 
-        float leftBarHeight= leftProgress * height;
-        float firstBarHeight = height - leftBarHeight;
+            backgroundPaint.setColor(bottomColor);
+            canvas.drawRect(0, firstBarHeight, width, height, backgroundPaint);
+        } else {
+            float leftBarWidth = leftProgress * width;
+            float firstBarWidth = width - leftBarWidth;
 
-        backgroundPaint.setColor(topColor);
-        canvas.drawRect(0, 0, width, firstBarHeight, backgroundPaint);
+            backgroundPaint.setColor(topColor);
+            canvas.drawRect(0, 0, firstBarWidth, height, backgroundPaint);
 
-        backgroundPaint.setColor(bottomColor);
-        canvas.drawRect(0, firstBarHeight, width, height, backgroundPaint);
-
-
+            backgroundPaint.setColor(bottomColor);
+            canvas.drawRect(firstBarWidth, 0, width, height, backgroundPaint);
+        }
     }
 
     @Override
@@ -68,5 +79,10 @@ public class TimelineBarDrawable extends Drawable {
     @Override
     public int getOpacity() {
         return PixelFormat.OPAQUE;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+        invalidateSelf();
     }
 }

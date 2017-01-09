@@ -66,22 +66,9 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         this.mDailyEventsView.dismissLoadingData();
     }
 
-
-
     @Override
     public void setView(DailyEventsView dailyEventsView) {
         this.mDailyEventsView = dailyEventsView;
-    }
-
-    @Override
-    public void updateCurrentTimeMark() {
-        mDailyEventsView.updateCurrentTimeText();
-        mDailyEventsView.updateCurrentTimeMarkPosition();
-    }
-
-    @Override
-    public void updateCurrentTimeMarkWhenScrolled(int dy) {
-        mDailyEventsView.updateCurrentTimeMarkPosition(dy);
     }
 
     @Override
@@ -102,7 +89,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
             .setTimeZone("Europe/London");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime(Badoo.getEndTimeOfDay(mPage));
+        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
         EventDateTime end = new EventDateTime()
             .setDateTime(endDateTime)
             .setTimeZone("Europe/London");
@@ -113,11 +100,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         mMapper.setEventEndTime(endDateTime.getValue());
         this.getRoomEventListUseCase.init(event).execute(new RoomEventListSubscriber());
     }
-
-    public void updateRecyclerView() {
-        mDailyEventsView.updateDailyEventList();
-    }
-
 
     private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {
 

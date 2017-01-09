@@ -24,8 +24,6 @@ public class TimeHelper {
         return DateUtils.formatDateTime(context, getCurrentTimeInMillis(), DateUtils.FORMAT_ABBREV_MONTH| DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY);
     }
 
-
-
     public static long getCurrentTimeInMillis() {
         return Calendar.getInstance().getTimeInMillis();
     }
@@ -122,5 +120,16 @@ public class TimeHelper {
         Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
         calendar.setTime(date);   // assigns calendar to given date
         return calendar.get(Calendar.MINUTE);
+    }
+
+    public static int getSec(long millis) {
+        Date date = new Date(millis);   // given date
+        Calendar calendar = Calendar.getInstance(); // creates a new calendar instance
+        calendar.setTime(date);   // assigns calendar to given date
+        return calendar.get(Calendar.SECOND);
+    }
+
+    public static long getDroppedMillis(long millis) {
+        return 1000 * (millis/ 1000);
     }
 }

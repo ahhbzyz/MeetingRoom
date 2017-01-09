@@ -38,8 +38,10 @@ public class RoomEventModelMapper {
         roomEventModel.setId(roomEvent.getId());
         roomEventModel.setOrganizer(roomEvent.getOrganizer());
         roomEventModel.setStatus(roomEvent.getStatus());
-        roomEventModel.setStartTime(roomEvent.getStartTime());
-        roomEventModel.setEndTime(roomEvent.getEndTime());
+
+        roomEventModel.setStartTime(TimeHelper.getDroppedMillis(roomEvent.getStartTime()));
+        roomEventModel.setEndTime(TimeHelper.getDroppedMillis(roomEvent.getEndTime()));
+
         roomEventModel.setStatus(RoomEventModel.BUSY);
         return roomEventModel;
     }

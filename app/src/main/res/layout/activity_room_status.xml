@@ -159,18 +159,43 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipChildren="false"
             android:layout_weight="7">
 
-            <com.badoo.meetingroom.presentation.view.component.horizontaltimelineview.HorizontalTimelineView
-                android:id="@+id/htv_room_events"
-                android:layout_width="match_parent"
+            <TextView
+                android:text="12:00"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
+                android:id="@+id/tv_start_time"
+                android:layout_alignStart="@+id/layout_current_time"
+                android:layout_marginStart="72dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="72dp"
+                android:gravity="center_horizontal"
+                android:clipChildren="false"
+                android:id="@+id/layout_current_time">
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_horizontal_timeline"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+
+        </LinearLayout>
     </LinearLayout>
 
 

@@ -31,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 
 public class DailyEventsFragment extends BaseFragment implements DailyEventsView {
@@ -105,11 +106,18 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 mScrollOffset += dy;
-                mPresenter.updateCurrentTimeMarkWhenScrolled(dy);
+                updateCurrentTimeMarkPosition(dy);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == SCROLL_STATE_IDLE) {
+                    mCurrentTimeMarkLayout.measure(0, 0);
+                    mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mScrollOffset));
+                }
             }
         });
-
-
     }
 
     @Override
@@ -160,30 +168,19 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
     }
 
-    @Override
     public void updateCurrentTimeMarkPosition(int dy) {
         float startY = mCurrentTimeMarkLayout.getY();
         mCurrentTimeMarkLayout.setY(startY - dy);
     }
 
-    @Override
-    public void updateCurrentTimeMarkPosition() {
+    private float getTimelineMarkOffset() {
+       return  (TimeHelper.getCurrentTimeInMillis() - Badoo.getStartTimeOfDay(0)) * mAdapter.getHeightPerMillis() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f;
+    }
+
+    public void updateCurrentTimeView() {
         mCurrentTimeMarkLayout.measure(0, 0);
         mCurrentTimeMarkLayout.setY((int)(getTimelineMarkOffset() - mScrollOffset));
-    }
-
-    private float getTimelineMarkOffset() {
-       return  (TimeHelper.getCurrentTimeInMillis() - Badoo.getStartTimeOfDay(0)) * mAdapter.getWidthPerMillis() - mCurrentTimeMarkLayout.getMeasuredHeight() / 2f;
-    }
-
-    @Override
-    public void updateCurrentTimeText() {
         mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-    }
-
-
-    @Override
-    public void updateDailyEventList() {
         mAdapter.notifyDataSetChanged();
     }
 
