@@ -20,6 +20,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -49,6 +50,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     private RoomEventModel mCurrentEvent;
     private HashSet<String> mConfirmedIds;
 
+    private int expiredEvents;
 
     @Inject
     RoomStatusPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
@@ -93,6 +95,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                 mConfirmedIds.remove(mCurrentEvent.getId());
             }
             mEventModelQueue.remove();
+            expiredEvents++;
             if (!mEventModelQueue.isEmpty()) {
                 mCurrentEvent = mEventModelQueue.peek();
                 if (mConfirmedIds.contains(mCurrentEvent.getId())) {
@@ -106,6 +109,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void init() {
+        expiredEvents = 0;
         loadRoomEventList();
     }
 
@@ -145,6 +149,14 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     private void showFirstEventOnCircleTimeView() {
         if (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
+            while (!mEventModelQueue.isEmpty()) {
+                if (mEventModelQueue.peek().isExpired()) {
+                    mEventModelQueue.remove();
+                    expiredEvents++;
+                } else {
+                    break;
+                }
+            }
             mCurrentEvent = mEventModelQueue.peek();
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mCurrentEvent.setOnHold(false);
@@ -154,9 +166,11 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
-    private void showEventsOnHorizontalTimelineView() {
-        if(mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
-            mRoomEventsView.renderRoomEvents(mEventModelQueue);
+    private void showEventsOnHorizontalTimelineView(Collection<RoomEventModel> roomEventModelCollection) {
+        if(roomEventModelCollection != null && !roomEventModelCollection.isEmpty()) {
+            List<RoomEventModel> roomEventModelList = new ArrayList<>();
+            roomEventModelList.addAll(roomEventModelCollection);
+            mRoomEventsView.renderRoomEvents(roomEventModelList);
         }
     }
 
@@ -256,6 +270,11 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
+    @Override
+    public void updateHorizontalTimelineData() {
+        mRoomEventsView.updateHorizontalTimelineView(TimeHelper.getCurrentTimeSinceMidNight(), expiredEvents);
+    }
+
 
     private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {
 
@@ -271,7 +290,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             mEventModelQueue = new LinkedList<>();
             mEventModelQueue.addAll(mEventModelList);
             showFirstEventOnCircleTimeView();
-            showEventsOnHorizontalTimelineView();
+            showEventsOnHorizontalTimelineView(mEventModelList);
         }
 
         @Override

@@ -81,6 +81,11 @@ public class RoomEventModelImpl implements RoomEventModel {
     }
 
     @Override
+    public long getPastTime() {
+        return getDuration() - getRemainingTime();
+    }
+
+    @Override
     public long getRemainingTime() {
         if (isExpired()) {
             return 0;

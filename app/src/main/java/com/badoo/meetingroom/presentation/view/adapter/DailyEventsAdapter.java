@@ -89,7 +89,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         float hour = TimeHelper.getHour(event.getStartTime());
 
         while (true) {
-            long timestamp = TimeHelper.getMidNightTimeOfDay(mPage) + TimeHelper.min2Millis((int) (hour * 10));
+            long timestamp = TimeHelper.getMidNightTimeOfDay(mPage) + TimeHelper.min2Millis((int) (hour * 30));
             hour += 0.5f;
             if ((timestamp > event.getStartTime() || TimeHelper.isSameTimeIgnoreSec(timestamp, event.getStartTime())) &&
                 (timestamp < event.getEndTime()) && !TimeHelper.isSameTimeIgnoreSec(timestamp, event.getEndTime())) {
@@ -156,21 +156,17 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             params.setMargins(0, (int) topMargin, 0, 0);
             timestampTv.setLayoutParams(params);
 
-            float hideOffset = textViewHeight / 2f;
+            float hideOffset = textViewHeight / 4f;
             if (mPage == 0) {
                 if (event.isProcessing() && topTimelineBarHeight >= (topMargin - hideOffset) &&
                     topTimelineBarHeight <= (topMargin + textViewHeight + hideOffset)) {
                     continue;
                 }
 
-                if (position < (getItemCount() - 1) && mEvents.get(position + 1).isProcessing()) {
-                   // System.out.println(mPage + " " + mEvents.get(position + 1).getDurationInText());
-                }
-
                 if (position > 0 && mEvents.get(position - 1).isProcessing() &&
                     mBottomTimelineBarHeights.get(position - 1) > 0 &&
                     mBottomTimelineBarHeights.get(position - 1) <= textViewHeight / 2f + hideOffset
-                    && topMargin <= textViewHeight) {
+                    && topMargin <= textViewHeight/2f) {
                     continue;
                 }
             }

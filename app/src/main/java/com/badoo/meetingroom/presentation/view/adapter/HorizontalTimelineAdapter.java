@@ -31,6 +31,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
 
     private Context mContext;
     private List<RoomEventModel> mEvents;
+    private float mDividerWidth;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -46,6 +47,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     public HorizontalTimelineAdapter(Context context) {
         mContext = context;
         mEvents = new ArrayList<>();
+        mDividerWidth = mContext.getResources().getDimension(R.dimen.horizontal_timeline_divider_width);
     }
 
     public void setEventList(List<RoomEventModel> roomEventModelList) {
@@ -54,6 +56,8 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         }
         mEvents = roomEventModelList;
         notifyDataSetChanged();
+        // TODO Item change
+        //notifyItemChanged();
     }
 
     @Override
@@ -67,12 +71,17 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     public void onBindViewHolder(ViewHolder holder, int position) {
         RoomEventModel event = mEvents.get(position);
         float restProgress = event.getRemainingTime() / (float)event.getDuration();
-        int viewWidth = (int) (event.getDuration() * WIDTH_PER_MILLIS);
+        int viewWidth = (int) (event.getDuration() * WIDTH_PER_MILLIS + mDividerWidth);
         RelativeLayout.LayoutParams params = new
             RelativeLayout.LayoutParams(viewWidth, RelativeLayout.LayoutParams.MATCH_PARENT);
         holder.itemView.setLayoutParams(params);
-
         holder.mStartTimeTv.setText(event.getStartTimeInText());
+        holder.mStartTimeTv.measure(0, 0);
+        if (viewWidth >= holder.mStartTimeTv.getMeasuredWidth()) {
+            holder.mStartTimeTv.setVisibility(View.VISIBLE);
+        } else {
+            holder.mStartTimeTv.setVisibility(View.INVISIBLE);
+        }
         TimelineBarDrawable barDrawable
             = new TimelineBarDrawable(event.getEventExpiredColor(), event.getEventColor(), restProgress);
         barDrawable.setOrientation(TimelineBarDrawable.HORIZONTAL);
@@ -82,6 +91,10 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     @Override
     public int getItemCount() {
         return mEvents.size();
+    }
+
+    public float getWidthPerMillis() {
+        return WIDTH_PER_MILLIS;
     }
 
 }

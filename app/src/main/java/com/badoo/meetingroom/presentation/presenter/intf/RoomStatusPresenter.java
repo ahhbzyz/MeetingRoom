@@ -18,4 +18,5 @@ public interface RoomStatusPresenter extends Presenter {
     void setDoNotDisturb(boolean doNotDisturb);
     void circleTimeViewBtnClick();
     void extendBookingPeriod();
+    void updateHorizontalTimelineData();
 }

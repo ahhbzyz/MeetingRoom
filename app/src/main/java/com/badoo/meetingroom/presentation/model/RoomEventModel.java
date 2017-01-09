@@ -30,6 +30,8 @@ public interface RoomEventModel {
 
     long getDuration();
 
+    long getPastTime();
+
     long getRemainingTime();
 
     boolean isBusy();

@@ -159,43 +159,59 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipChildren="false"
-            android:layout_weight="7">
+            android:layout_weight="6"
+            android:id="@+id/layout_bottom_content">
 
             <TextView
-                android:text="12:00"
+                android:text="fake"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_start_time"
-                android:layout_alignStart="@+id/layout_current_time"
-                android:layout_marginStart="72dp" />
+                android:id="@+id/tv_current_time_fake"
+                android:visibility="invisible" />
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_horizontal_timeline"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="72dp"
-                android:gravity="center_horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tv_current_time_fake"
+                android:layout_marginTop="5dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/horizontal_timeline_time_mark_left_margin"
                 android:clipChildren="false"
                 android:id="@+id/layout_current_time">
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/black"/>
+                <TextView
+                    android:text="12:00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_current_time"
+                    android:layout_alignStart="@+id/layout_current_time"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="normal|bold" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_horizontal_timeline"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                <View
+                    android:layout_height="match_parent"
+                    android:background="@android:color/black"
+                    android:id="@+id/view_time_mark"
+                    android:layout_width="1.5dp" />
+
             </LinearLayout>
 
 
-        </LinearLayout>
+        </RelativeLayout>
+
     </LinearLayout>
 
 

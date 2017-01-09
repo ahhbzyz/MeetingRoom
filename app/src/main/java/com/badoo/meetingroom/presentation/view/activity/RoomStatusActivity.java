@@ -40,6 +40,7 @@ import com.badoo.meetingroom.presentation.view.viewutils.ViewHelper;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -54,18 +55,21 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
+
     @Inject
     RoomStatusPresenterImpl mPresenter;
 
     @BindView(R.id.ctv_status) CircleTimerView mCtv;
-    //@BindView(R.id.htv_room_events) HorizontalTimelineView mHtv;
     @BindView(R.id.rv_horizontal_timeline) RecyclerView mHorizontalTimelineRv;
+    @BindView(R.id.tv_current_time) TextView mCurrentTimeTv;
+    @BindView(R.id.view_time_mark) View mTimeMarkView;
     @BindView(R.id.layout_btns) LinearLayout mButtonsLayout;
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.tv_fast_book) TextView mFastBookTv;
     @BindView(R.id.img_book) ImageButton mCircleBtn;
     @BindView(R.id.img_calendar) ImageView mCalendarImg;
     @BindView(R.id.layout_top_content) LinearLayout mTopContentLayout;
+    @BindView(R.id.layout_bottom_content) RelativeLayout mBottomContentLayout;
 
     private HorizontalTimelineAdapter mAdapter;
 
@@ -84,6 +88,8 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
         ButterKnife.bind(this);
         this.getApplicationComponent().inject(this);
 
+        mPresenter.setView(this);
+
         setUpToolbar();
         setUpProgressDialog();
         setUpEventOrganizerDialog();
@@ -92,12 +98,12 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
         setUpCircleTimeView();
         setUpCalendarImageButton();
         setUpHorizontalTimelineView();
-        //updateCurrentTimeText();
+        updateCurrentTimeText();
         registerTimeRefreshReceiver();
 
         mDialogHandler = new Handler();
 
-        mPresenter.setView(this);
+
         mPresenter.init();
 
     }
@@ -161,6 +167,23 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mHorizontalTimelineRv.setLayoutManager(manager);
         mHorizontalTimelineRv.setAdapter(mAdapter);
+
+        mCurrentTimeTv.measure(0, 0);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mCurrentTimeTv.getLayoutParams();
+        params.setMargins((int) (-mCurrentTimeTv.getMeasuredWidth() / 2f), params.topMargin, params.rightMargin, params.bottomMargin);
+        mCurrentTimeTv.setLayoutParams(params);
+    }
+
+    @Override
+    public void updateHorizontalTimelineView(long pastTime, int expiredEvents) {
+        float leftMargin = pastTime * mAdapter.getWidthPerMillis()
+                         + expiredEvents * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_divider_width)
+                         - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_mark_left_margin);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
+        params.setMargins((int) -leftMargin, params.topMargin, params.rightMargin, params.bottomMargin);
+        mHorizontalTimelineRv.setLayoutParams(params);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void registerTimeRefreshReceiver() {
@@ -212,7 +235,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
         mCtv.setOnClickListener(v -> {
             mPresenter.setDoNotDisturb(false);
             mTopContentLayout.animate().translationY(0);
-            mHorizontalTimelineRv.animate().translationY(0);
+            mBottomContentLayout.animate().translationY(0);
         });
     }
 
@@ -222,16 +245,15 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
     }
 
     @Override
-    public void renderRoomEvents(LinkedList<RoomEventModel> mEventModelList) {
+    public void renderRoomEvents(List<RoomEventModel> mEventModelList) {
         mAdapter.setEventList(mEventModelList);
+        mPresenter.updateHorizontalTimelineData();
     }
 
 
-//    public void updateCurrentTimeText(){
-//       if (mHtv != null) {
-//           mHtv.setCurrTimeText(TimeHelper.getCurrentTimeInMillisInText());
-//       }
-//    }
+    public void updateCurrentTimeText(){
+        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
+    }
 
     @Override
     public void clearAllButtonsInLayout() {
@@ -350,7 +372,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
         mDNDBtn.setOnClickListener(v -> {
             mPresenter.setDoNotDisturb(true);
             mTopContentLayout.animate().translationY(-mTopContentLayout.getHeight());
-            mHorizontalTimelineRv.animate().translationY(mHorizontalTimelineRv.getHeight());
+            mBottomContentLayout.animate().translationY(mBottomContentLayout.getHeight());
         });
 
         ImageButton mExtendBtn  = new ImageButton(this);
@@ -398,7 +420,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
     @Override
     public void updateEventStatus() {
         mCtv.updateCurrentStatus();
-        //mHorizontalTimelineRv.updateCurrentStatus();
     }
 
     @Override
@@ -465,7 +486,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
             @Override
             public void onCountDownTicking(long millisUntilFinished) {
                 mPresenter.onCountDownTicking(millisUntilFinished);
-                mAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -479,7 +500,8 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
-                //updateCurrentTimeText();
+                updateCurrentTimeText();
+                mPresenter.updateHorizontalTimelineData();
             }
         }
     };
