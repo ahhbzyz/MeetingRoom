@@ -29,7 +29,7 @@ public class ViewHelper {
         return processed;
     }
 
-    public static LinearLayout addTextUnderBtn(Context context, View btnView, String text) {
+    public static LinearLayout addTextUnderBtn(Context context, View btnView, String text, int topMargin) {
         LinearLayout linearLayout = new LinearLayout(context);
         LayoutParams layoutParams = new LayoutParams(
             LayoutParams.WRAP_CONTENT,
@@ -45,7 +45,7 @@ public class ViewHelper {
             LayoutParams.WRAP_CONTENT,
             LayoutParams.WRAP_CONTENT
         );
-        tvParams.setMargins(0, 16, 0, 0);
+        tvParams.setMargins(0, topMargin, 0, 0);
         TextView tv = new TextView(context);
         tv.setGravity(Gravity.CENTER);
         tv.setText(text);
@@ -56,7 +56,7 @@ public class ViewHelper {
         return linearLayout;
     }
 
-    public static float dp2px(Context context, float dp) {
+    private static float dp2px(Context context, float dp) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return dp * scale + 0.5f;
     }

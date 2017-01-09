@@ -110,6 +110,9 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     public void updateNumOfExpiredEvents() {
         numOfExpiredEvents = 0;
+        if (mEventList == null) {
+            return;
+        }
         for (RoomEventModel event: mEventList) {
             if(event.isExpired()) {
                 numOfExpiredEvents++;

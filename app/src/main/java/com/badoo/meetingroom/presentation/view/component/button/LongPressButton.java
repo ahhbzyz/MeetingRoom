@@ -27,7 +27,7 @@ public class LongPressButton extends ImageButton {
 
     private Paint mGapCirclePaint;
 
-    private float mCountDownCircleWidth = 6f;
+    private float mCountDownCircleWidth = 3;
 
     private Paint mCountDownCirclePaint;
 
@@ -45,13 +45,17 @@ public class LongPressButton extends ImageButton {
 
     private OnCountDownListener mCountDownListener;
 
+    private Context mContext;
+
     public LongPressButton(Context context) {
         super(context);
+        mContext = context;
         init();
     }
 
     public LongPressButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
         init();
     }
 
@@ -63,18 +67,18 @@ public class LongPressButton extends ImageButton {
 
         mGapCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mGapCirclePaint.setStyle(Paint.Style.STROKE);
-        mGapCirclePaint.setStrokeWidth(mCountDownCircleWidth);
+        mGapCirclePaint.setStrokeWidth(dp2px(mCountDownCircleWidth));
         mGapCirclePaint.setColor(Color.TRANSPARENT);
 
 
         mCountDownCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCountDownCirclePaint.setStyle(Paint.Style.STROKE);
-        mCountDownCirclePaint.setStrokeWidth(mCountDownCircleWidth);
+        mCountDownCirclePaint.setStrokeWidth(dp2px(mCountDownCircleWidth));
         mCountDownCirclePaint.setColor(Color.parseColor("#FFE8E8"));
 
         mArcPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mArcPaint.setStyle(Paint.Style.STROKE);
-        mArcPaint.setStrokeWidth(mCountDownCircleWidth);
+        mArcPaint.setStrokeWidth(dp2px(mCountDownCircleWidth));
         mArcPaint.setColor(Color.parseColor("#F5584F"));
         mArcOval = new RectF();
 
@@ -87,16 +91,16 @@ public class LongPressButton extends ImageButton {
         int diameter = Math.min(getWidth(), getHeight());
         mCircleCx = diameter / 2f;
         mCircleCy = diameter / 2f;
-        mCircleRadius = diameter / 2f - 2 * mCountDownCircleWidth;
+        mCircleRadius = diameter / 2f - 2 * dp2px(mCountDownCircleWidth);
 
         canvas.drawCircle(mCircleCx, mCircleCy, mCircleRadius, mCirclePaint);
 
-        float gapCircleRadius = mCircleRadius + mCountDownCircleWidth / 2f;
+        float gapCircleRadius = mCircleRadius + dp2px(mCountDownCircleWidth) / 2f;
         canvas.drawCircle(mCircleCx, mCircleCy, gapCircleRadius, mGapCirclePaint);
 
         if (drawCountDownCircle) {
 
-            float countDownCircleRadius = gapCircleRadius + mCountDownCircleWidth;
+            float countDownCircleRadius = gapCircleRadius + dp2px(mCountDownCircleWidth);
             canvas.drawCircle(mCircleCx, mCircleCy, countDownCircleRadius, mCountDownCirclePaint);
 
             mArcOval.set(mCircleCx - countDownCircleRadius, mCircleCy - countDownCircleRadius, mCircleCx + countDownCircleRadius, mCircleCy + countDownCircleRadius);
@@ -168,5 +172,14 @@ public class LongPressButton extends ImageButton {
 
     public interface OnCountDownListener {
         void onCountDownFinished();
+    }
+
+    public float getCountDownCircleWidth() {
+        return dp2px(mCountDownCircleWidth);
+    }
+
+    private float dp2px(float dp) {
+        final float scale = mContext.getResources().getDisplayMetrics().density;
+        return dp * scale + 0.5f;
     }
 }

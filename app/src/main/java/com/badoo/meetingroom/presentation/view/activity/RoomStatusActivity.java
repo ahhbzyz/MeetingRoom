@@ -35,11 +35,9 @@ import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView;
 import com.badoo.meetingroom.presentation.view.component.button.LongPressButton;
 import com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton;
-import com.badoo.meetingroom.presentation.view.component.horizontaltimelineview.HorizontalTimelineView;
 import com.badoo.meetingroom.presentation.view.viewutils.ViewHelper;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -78,6 +76,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
 
     private final int buttonDiameter = 200;
     private final int buttonMargin = 64;
+    private final int mButtonTextTopMargin = 32;
 
     private Handler mDialogHandler;
 
@@ -307,14 +306,14 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
 
         Drawable confirmBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_done_white, 80 ,60);
         mConfirmBtn.setImageDrawable(confirmBtnDrawable);
-        LinearLayout mConfirmBtnWithText = ViewHelper.addTextUnderBtn(this, mConfirmBtn, "Confirm");
+        LinearLayout mConfirmBtnWithText = ViewHelper.addTextUnderBtn(this, mConfirmBtn, "Confirm", mButtonTextTopMargin);
         mButtonsLayout.addView(mConfirmBtnWithText);
         mConfirmBtn.setOnClickListener(v -> mPresenter.confirmEvent());
 
         // Fake button
         ImageButton mFakeBtn = new ImageButton(this);
         mFakeBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter, buttonDiameter));
-        LinearLayout mFakeBtnWithText = ViewHelper.addTextUnderBtn(this, mFakeBtn, "fake");
+        LinearLayout mFakeBtnWithText = ViewHelper.addTextUnderBtn(this, mFakeBtn, "fake", mButtonTextTopMargin);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(buttonMargin, 0, buttonMargin, 0);
@@ -331,7 +330,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
 
         Drawable dismissBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_clear_black, 50 ,50);
         mDismissBtn.setImageDrawable(dismissBtnDrawable);
-        LinearLayout mDismissBtnWithText = ViewHelper.addTextUnderBtn(this, mDismissBtn, "Dismiss");
+        LinearLayout mDismissBtnWithText = ViewHelper.addTextUnderBtn(this, mDismissBtn, "Dismiss", mButtonTextTopMargin);
         mButtonsLayout.addView(mDismissBtnWithText);
         mDismissBtn.setOnClickListener(v -> mPresenter.deleteEvent());
     }
@@ -346,12 +345,14 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
         mCircleBtn.setImageDrawable(addDrawable);
 
         // Hold to end btn
-        LongPressButton mEndBtn = new LongPressButton(this, null);
-        mEndBtn.setLayoutParams(new LinearLayout.LayoutParams(buttonDiameter + 24, buttonDiameter + 24));
+        LongPressButton mEndBtn = new LongPressButton(this);
+        int width = (int) (buttonDiameter + mEndBtn.getCountDownCircleWidth() * 4);
+        mEndBtn.setLayoutParams(new LinearLayout.LayoutParams(width, width));
         mEndBtn.setScaleType(ImageView.ScaleType.CENTER);
         Drawable endBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_clear_white, 50 ,50);
         mEndBtn.setImageDrawable(endBtnDrawable);
-        LinearLayout mEndBtnWithText = ViewHelper.addTextUnderBtn(this, mEndBtn, "Hold to end");
+        LinearLayout mEndBtnWithText = ViewHelper.addTextUnderBtn(this, mEndBtn, "Hold to end", (int) (mButtonTextTopMargin - 2 * mEndBtn.getCountDownCircleWidth()));
+        mEndBtnWithText.getChildAt(1).setPadding(0, 0, 0, (int) (2 * mEndBtn.getCountDownCircleWidth()));
         mButtonsLayout.addView(mEndBtnWithText);
         mEndBtn.setOnCountDownListener(() -> {
             mPresenter.deleteEvent();
@@ -364,7 +365,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
         mDNDBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_busy));
         Drawable DNDBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_donotdisturb_black, 50 ,70);
         mDNDBtn.setImageDrawable(DNDBtnDrawable);
-        LinearLayout mDNDBtnWithText = ViewHelper.addTextUnderBtn(this, mDNDBtn, "Do not disturb");
+        LinearLayout mDNDBtnWithText = ViewHelper.addTextUnderBtn(this, mDNDBtn, "Do not disturb", mButtonTextTopMargin);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(buttonMargin, 0, buttonMargin, 0);
@@ -383,7 +384,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
 
         Drawable extendBtnDrawable = ViewHelper.createScaleDrawable(this, R.drawable.ic_add_black, 50 ,50);
         mExtendBtn.setImageDrawable(extendBtnDrawable);
-        LinearLayout mExtendBtnWithText = ViewHelper.addTextUnderBtn(this, mExtendBtn, "Extend");
+        LinearLayout mExtendBtnWithText = ViewHelper.addTextUnderBtn(this, mExtendBtn, "Extend", mButtonTextTopMargin);
         mButtonsLayout.addView(mExtendBtnWithText);
         mExtendBtn.setOnClickListener(v -> {
             mPresenter.extendBookingPeriod();
@@ -421,6 +422,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView {
     @Override
     public void updateEventStatus() {
         mCtv.updateCurrentStatus();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
