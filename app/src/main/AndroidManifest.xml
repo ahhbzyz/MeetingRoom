@@ -27,7 +27,6 @@
         <activity android:name=".presentation.view.activity.RoomStatusActivity" />
         <activity android:name=".presentation.view.activity.EventsCalendarActivity" />
         <activity android:name=".presentation.view.activity.RoomBookingActivity" />
-        <activity android:name=".presentation.view.activity.AllRoomsActivity"></activity>
+        <activity android:name=".presentation.view.activity.AllRoomsActivity"/>
     </application>
-
 </manifest>

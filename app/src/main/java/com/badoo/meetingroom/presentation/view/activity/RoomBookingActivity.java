@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -34,7 +35,8 @@ import butterknife.ButterKnife;
 public class RoomBookingActivity extends BaseActivity implements RoomBookingView{
 
     private static final int REQUEST_AUTHORIZATION = 1001;
-    @Inject RoomBookingPresenterImpl mPresenter;
+    @Inject
+    RoomBookingPresenter mPresenter;
     @Inject TimeSlotsAdapter mAdapter;
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
@@ -53,7 +55,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         setContentView(R.layout.activity_room_booking);
         ButterKnife.bind(this);
 
-        this.getApplicationComponent().inject(this);
+        this.getComponent().inject(this);
 
         setUpToolbar();
         setUpTextViews();

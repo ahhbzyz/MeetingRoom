@@ -23,10 +23,7 @@ public class ViewHelper {
     public static Drawable createScaleDrawable(Context context, int resId, int width, int height) {
         Drawable origin = ContextCompat.getDrawable(context, resId);
         Bitmap bitmap = ((BitmapDrawable) origin).getBitmap();
-        Drawable processed = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, width, height, true));
-        //if (bitmap != null)
-            //bitmap.recycle();
-        return processed;
+        return new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, width, height, true));
     }
 
     public static LinearLayout addTextUnderBtn(Context context, View btnView, String text, int topMargin) {

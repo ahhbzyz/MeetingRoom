@@ -18,6 +18,7 @@ import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
@@ -42,7 +43,8 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public static final int MIN_SLOT_TIME = 5;
     public static final int MIN_BOOKING_TIME = 15;
 
-    @Inject DailyEventsPresenterImpl mPresenter;
+    @Inject
+    DailyEventsPresenter mPresenter;
 
     @BindView(R.id.rv_daily_events) RecyclerView mDailyEventsRv;
     @BindView(R.id.layout_current_time_mark) LinearLayout mCurrentTimeMarkLayout;
@@ -74,7 +76,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         if (getArguments() != null) {
             mPage = getArguments().getInt(ARG_PAGE);
         }
-        this.getApplicationComponent().inject(this);
+        this.getComponent().inject(this);
     }
 
     @Override
@@ -220,7 +222,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         }
     }
 
-    public DailyEventsPresenterImpl getPresenter() {
+    public DailyEventsPresenter getPresenter() {
         return mPresenter;
     }
 

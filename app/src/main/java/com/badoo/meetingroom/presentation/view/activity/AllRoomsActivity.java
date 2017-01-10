@@ -26,8 +26,7 @@ public class AllRoomsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_rooms);
         ButterKnife.bind(this);
-
-        this.getApplicationComponent().inject(this);
+        this.getComponent().inject(this);
 
         setUpToolbar();
         setUpViewPager();

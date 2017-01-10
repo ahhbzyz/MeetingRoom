@@ -3,6 +3,7 @@ package com.badoo.meetingroom.di;
 import android.app.Application;
 
 import com.badoo.meetingroom.di.components.ApplicationComponent;
+
 import com.badoo.meetingroom.di.components.DaggerApplicationComponent;
 import com.badoo.meetingroom.di.modules.ApplicationModule;
 
@@ -17,17 +18,17 @@ public class AndroidApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        this.initInjector();
+        initInjector();
     }
 
     private void initInjector() {
-        this.applicationComponent = DaggerApplicationComponent.builder()
+        applicationComponent = DaggerApplicationComponent.builder()
             .applicationModule(new ApplicationModule(this))
             .build();
     }
 
     public ApplicationComponent getApplicationComponent() {
-        return this.applicationComponent;
+        return applicationComponent;
     }
 
 }

@@ -18,6 +18,8 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -43,7 +45,8 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         }
     }
 
-    public HorizontalTimelineAdapter(Context context) {
+    @Inject
+    HorizontalTimelineAdapter(Context context) {
         mEvents = new ArrayList<>();
         mDividerWidth = context.getResources().getDimension(R.dimen.horizontal_timeline_divider_width);
     }

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.Room;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomListPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.RoomListAdapter;
 import com.badoo.meetingroom.presentation.view.view.RoomListView;
 
@@ -31,7 +32,7 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
     private RoomListAdapter mAdapter;
 
     @Inject
-    RoomListPresenterImpl mPresenter;
+    RoomListPresenter mPresenter;
 
     public RoomListFragment() {
         // Required empty public constructor
@@ -54,7 +55,7 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
         if (getArguments() != null) {
             mPage = getArguments().getInt(ARG_PAGE);
         }
-        this.getApplicationComponent().inject(this);
+        this.getComponent().inject(this);
     }
 
     @Override

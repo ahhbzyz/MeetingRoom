@@ -12,8 +12,6 @@ public interface LoadDataView {
 
     void dismissLoadingData();
 
-    void showRetryLoading(boolean visibility);
-
     void showError(String message);
 
     Context context();

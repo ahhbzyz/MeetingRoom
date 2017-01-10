@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.EventsCalendarPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.intf.EventsCalendarPresenter;
 import com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.FadePageTransformer;
 import com.badoo.meetingroom.presentation.view.view.EventsCalendarView;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsFragmentPagerAdapter;
@@ -31,7 +32,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
 
     @Inject
-    EventsCalendarPresenterImpl mPresenter;
+    EventsCalendarPresenter mPresenter;
     DailyEventsFragmentPagerAdapter mAdapter;
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
@@ -45,7 +46,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
         setContentView(R.layout.activity_events_calendar);
         ButterKnife.bind(this);
 
-        this.getApplicationComponent().inject(this);
+        this.getComponent().inject(this);
 
         mPresenter.setView(this);
         mPresenter.init();

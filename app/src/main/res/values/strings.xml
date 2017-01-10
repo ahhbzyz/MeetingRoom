@@ -7,4 +7,17 @@
 
 
     <string name="badoo_mail_suffix">\@corp.badoo.com</string>
+    <string name="confirm">Confirm</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="hold_to_end">Hold to end</string>
+    <string name="do_not_disturb">Do not disturb</string>
+    <string name="extend">Extend</string>
+    <string name="busy_until">BUSY_UNTIL</string>
+    <string name="available_for_upper_case">AVAILABLE FOR</string>
+    <string name="on_hold_for_upper_case">ON HOLD FOR</string>
+    <string name="do_not_disturb_upper_case">DO NOT DISTURB</string>
+    <string name="busy_until_upper_case">BUSY_UNTIL</string>
+    <string name="loading">Loading</string>
+    <string name="booking">Booking</string>
+    <string name="canceling">Canceling</string>
 </resources>

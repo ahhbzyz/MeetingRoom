@@ -6,8 +6,6 @@ package com.badoo.meetingroom.presentation.presenter.intf;
 
 public interface Presenter {
 
-    void init();
-
     void Resume();
 
     void Pause();

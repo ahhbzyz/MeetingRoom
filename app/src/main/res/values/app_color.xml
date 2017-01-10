@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Non feature related colors-->
+
+    <color name="red_1">#ee203c</color>
+    <color name="red_1_black_10">#d51c35</color>
+    <color name="red_1_alpha_30">#4dee203c</color>
+    <color name="red_2">#ff2c40</color>
+    <color name="red_2_black_10">#e5283A</color>
+    <color name="red_2_alpha_30">#4dff2c40</color>
+
+    <color name="green_1">#56b647</color>
+    <color name="green_1_black_10">#499c3d</color>
+    <color name="green_1_alpha_30">#4d56b647</color>
+    <color name="green_2">#54c642</color>
+    <color name="green_3">#28cf28</color>
+    <color name="green_3_black_10">#22b522</color>
+    <color name="green_3_alpha_30">#4d22b522</color>
+    <color name="green_4">#1cb130</color>
+    <color name="green_5">#199f2b</color>
+    <color name="green_6">#35b122</color>
+    <color name="green_6_black_10">#309f1f</color>
+
+    <color name="blue_1">#2b65f8</color>
+    <color name="blue_1_black_10">#265ade</color>
+    <color name="blue_1_alpha_10">#1a2b65f8</color>
+    <color name="blue_1_alpha_30">#4d2b65f8</color>
+    <color name="blue_1_alpha_50">#802b65f8</color>
+    <color name="blue_1_alpha_80">#cd2b65f8</color>
+    <color name="blue_2">#4e80ff</color>
+    <color name="blue_3">#1a66a7</color>
+    <color name="blue_4">#27cdf6</color>
+
+    <!--for 3 steps registration background-->
+    <color name="blue_5">#4c85fb</color>
+    <color name="blue_6">#4478e2</color>
+
+    <!--for invisible feature promo button-->
+    <color name="blue_7">#1bb9fb</color>
+    <color name="blue_7_black_10">#18aae7</color>
+    <color name="blue_7_alpha_30">#4d1bb9fb</color>
+
+    <color name="azure_1">#2b8cfc</color>
+    <color name="azure_1_black_10">#277ee3</color>
+    <color name="azure_1_alpha_30">#4d2b8cfc</color>
+    <color name="feature_invisible_blue">#08B5FD</color>
+
+    <color name="turquoise_1">#00caa8</color>
+    <color name="turquoise_1_black_10">#00b093</color>
+    <color name="turquoise_1_alpha_30">#4d00caa8</color>
+
+    <color name="orange_1">#ff8b00</color>
+    <color name="orange_1_black_10">#e67e00</color>
+    <color name="orange_1_alpha_30">#4dff8b00</color>
+
+    <color name="orange_2">#FFC831</color>
+    <color name="orange_2_black_10">#e6af18</color>
+    <color name="orange_2_alpha_30">#4dFFC831</color>
+
+    <color name="orange_3">#fe7900</color>
+    <color name="orange_4">#fdbe00</color>
+    <color name="orange_4_alpha_10">#1afdbe00</color>
+
+    <color name="purple_1">#6521e0</color>
+    <color name="purple_1_alpha_70">#b26521e0</color>
+
+    <color name="black_1_alpha_15">#24000000</color>
+    <color name="black_1_alpha_30">#48000000</color>
+    <color name="black_1_alpha_40">#66000000</color>
+    <color name="black_1_alpha_50">#80000000</color>
+
+    <color name="grey_0">#f2f5f8</color>
+    <color name="grey_1">#e6ecf2</color>
+    <color name="grey_1_black_10">#ced3d9</color>
+    <color name="grey_1_alpha_35">#59e6ecf2</color>
+    <color name="grey_1_alpha_50">#7fe6ecf2</color>
+    <color name="grey_1_alpha_80">#cce6ecf2</color>
+    <color name="grey_2">#9aa3ab</color>
+    <color name="grey_2_black_10">#7d8891</color>
+    <color name="grey_2_alpha_15">#2693a0ab</color>
+    <color name="grey_2_alpha_20">#3293a0ab</color>
+    <color name="grey_2_alpha_30">#4d7d8891</color>
+    <color name="grey_2_alpha_40">#6493a0ab</color>
+    <color name="grey_3">#5e6773</color>
+    <color name="grey_3_black_10">#495059</color>
+    <color name="grey_3_alpha_20">#325e6773</color>
+    <color name="grey_3_alpha_30">#4d5e6773</color>
+    <color name="grey_3_alpha_40">#645e6773</color>
+    <color name="grey_4">#333844</color>
+    <color name="grey_4_alpha_60">#99333844</color>
+    <!--In the menu this color happens to be transparent on 4.1 devices this fix is ugly but it works leaving only 1% of transparency -->
+    <color name="grey_5">#fe21262e</color>
+    <!-- tint colours need to be fully opaque-->
+    <color name="grey_5_alpha_100">#ff21262e</color>
+    <color name="grey_6">#1c2027</color>
+    <color name="grey_6_alpha_10">#e61c2027</color>
+    <color name="grey_7">#171819</color>
+
+    <color name="white_alpha_15">#26ffffff</color>
+    <color name="white_alpha_20">#32ffffff</color>
+    <color name="white_alpha_40">#64ffffff</color>
+    <color name="white_alpha_50">#80ffffff</color>
+    <color name="white_alpha_70">#B2ffffff</color>
+    <color name="white_alpha_80">#cdffffff</color>
+
+    <color name="action_1">#FFBB00</color>
+
+    <color name="yellow_action_button">#FFCA1B</color>
+
+    <!--End of Non feature related colors-->
+
+    <!--Common-->
+
+    <color name="grey_bg_highlight">#f3f6f8</color>
+
+    <!--End of Common-->
+
+    <!--Popularity-->
+
+    <color name="popularity_high">#36cd36</color>
+    <color name="popularity_average">#ffc626</color>
+    <color name="popularity_low">#f82644</color>
+
+    <!--Popularity text colors are slightly more vibrant-->
+
+    <color name="popularity_text_high">#46cc3f</color>
+    <color name="popularity_text_average">#fcdc3c</color>
+    <color name="popularity_text_low">#ff331e</color>
+
+    <!--End of Popularity-->
+
+    <!--Profile Vote Buttons-->
+
+    <color name="profile_vote_hot">@color/red_1</color>
+    <color name="profile_vote_not_hot">@color/blue_1</color>
+
+    <!--End of Profile Vote Buttons-->
+
+
+    <!--Common places external providers-->
+
+    <color name="external_provider_foursquare">#f94877</color>
+    <color name="external_provider_instagram">#47779f</color>
+    <color name="external_provider_swarm">#f7a23f</color>
+
+    <!--End of Common places external providers-->
+
+    <!--Status colors-->
+
+    <color name="status_p2p">#4C85FB</color>
+    <color name="status_online">#61C34F</color>
+    <color name="status_idle">#F1B115</color>
+
+    <!--End of Status colors-->
+
+    <!--Menu colors-->
+
+    <color name="menu_divider">@color/grey_2_alpha_20</color>
+    <color name="menu_highlight">@color/blue_1_alpha_50</color>
+    <color name="menu_highlight_white">@color/blue_special_delivery_alpha_50</color>
+    <color name="menu_background">@color/grey_5</color>
+    <color name="menu_background_white">@android:color/white</color>
+    <color name="menu_expanded_status_bar">@android:color/black</color>
+    <color name="menu_background_debug">@color/orange_1</color>
+
+    <!--End of Menu colors-->
+
+    <!-- Login provider colors -->
+
+    <color name="facebook">#3169D2</color>
+        
+    <color name="googleplus">#DC483B</color>
+        
+    <color name="vkontakte">#4C75A3</color>
+        
+    <color name="odnoklassniki">#F2720C</color>
+        
+    <color name="twitter">#00A6FF</color>
+        
+    <color name="linkedin">#00659E</color>
+        
+    <color name="instagram">#125688</color>
+
+        <!-- End of Login provider colors -->
+
+    <!-- Verification method action colors -->
+    <color name="verification_phone">#2ABA3F</color>
+        
+    <color name="verification_photo">#00B1FF</color>
+        
+    <color name="verification_spp">#FFBB00</color>
+
+    <!-- Person Profile -->
+
+    <color name="background_action_add_photo">@color/blue_1</color>
+    <color name="background_photo_grid_place_holder">@color/grey_3_alpha_40</color>
+
+    <!-- Person Profile -->
+
+    <!-- Social nets import buttons -->
+
+    <color name="social_network_vkontakte_normal">#4c75a3</color>
+    <color name="social_network_vkontakte_pressed">#466892</color>
+    <color name="social_network_facebook_normal">#3b5998</color>
+    <color name="social_network_facebook_pressed">#374f88</color>
+
+    <!-- Social nets import buttons -->
+
+    <!-- Social Photos provider colors -->
+
+    <color name="socialPhotos_instagram">#5188b7</color>
+    <color name="socialPhotos_facebook">@color/social_network_facebook_normal</color>
+
+    <!-- End of Social Photos provider colors -->
+
+    <!-- Swipe to refresh -->
+    <color name="refresh_animation1">#2870c4</color>
+    <color name="refresh_animation2">#4bc9e5</color>
+    <color name="refresh_animation3">#47b616</color>
+    <color name="refresh_animation4">#ff7d00</color>
+
+    <!-- Stat Colors -->
+    <color name="stat_common_friends">#f4b416</color>
+    <color name="stat_bumped_into">#9744e4</color>
+    <color name="stat_common_places">#26c570</color>
+    <color name="stat_common_interests">#f15380</color>
+    <color name="stat_photos">#1978ef</color>
+    <color name="stat_overall_score">#28c4f6</color>
+
+    <!-- Empty chat colors -->
+    <color name="empty_chat_criteria">@color/blue_1</color>
+    <color name="empty_chat_newuser">@color/green_special_newusers</color>
+    <color name="empty_chat_chatquota">#22c2f8</color>
+    <color name="empty_chat_popular">#ff7b00</color>
+    <color name="empty_chat_photo">@color/blue_1</color>
+
+    <!-- PNB banner color-->
+    <color name="blue_special_delivery">#256CF5</color>
+    <color name="blue_special_delivery_black_10">#0c53dc</color>
+    <color name="blue_special_delivery_alpha_30">#4d256CF5</color>
+    <color name="blue_special_delivery_alpha_50">#80256CF5</color>
+
+    <color name="green_special_newusers">#86c313</color>
+    <color name="green_special_newusers_black_10">#6daa00</color>
+    <color name="green_special_newusers_alpha_30">#4d86c313</color>
+
+    <!-- Photo icon colors -->
+    <color name="grey_5_alpha_65">#a621262e</color>
+    <color name="grey_5_alpha_90">#e621262e</color>
+
+    <!-- Popularity FAB colors-->
+    <color name="popularity_fab_low">#F72C47</color>
+    <color name="popularity_fab_average">#FEAF29</color>
+    <color name="popularity_fab_high">#35CD38</color>
+    <color name="fam_bg_color_opened">#99000000</color>
+
+    <!-- Chat Facebook Ad banner -->
+    <color name="chat_app_of_the_day_blue">#08B4FF</color>
+
+    <!-- In App Notificaiton colors -->
+    <color name="inappnot_border_color">#16000000</color>
+    <color name="inappnotification_white">@android:color/white</color>
+    <color name="inappnotification_blue">#3988E8</color>
+    <color name="inappnotification_green">@color/green_4</color>
+    <color name="blue_checked_place_alpha_80">#CD256CF5</color>
+
+    <!-- Badge colours -->
+    <color name="badge_match">#ee203c</color>
+    <color name="badge_riseup">#29CF29</color>
+    <color name="badge_extra_shows">#00caa8</color>
+    <color name="badge_spp">#ffcc00</color>
+    <color name="badge_fastrack">#705ed9</color>
+    <color name="badge_undo_last_vote">#9aa9c5</color>
+    <color name="badge_new_chat">#86c313</color>
+    <color name="badge_popular_users">#fe7900</color>
+    <color name="badge_delivery">#256cf5</color>
+    <color name="badge_spotlight">#2b8cfc</color>
+    <color name="badge_favorites">#ffc831</color>
+    <color name="badge_find_out">#2aba3f</color>
+
+    <!--This is just a stub to override in flavours-->
+    <color name="encounter_loading_circle">@android:color/transparent</color>
+
+    <!-- special grey for special designers -->
+    <color name="payments_grey">#e0e7ef</color>
+
+    <!-- phone registration -->
+    <color name="phone_registration_call_wait_filled_circle">#2ABA3F</color>
+    <color name="phone_registration_call_wait_base_circle">#262ABA3F</color>
+    <color name="phone_registration_call_wait_main_text">#5E6772</color>
+
+    <!-- PNB rainbow placeholders -->
+    <color name="pnb_rainbow_1">#e9f1ff</color>
+    <color name="pnb_rainbow_2">#d4e2fd</color>
+    <color name="pnb_rainbow_3">#bdd3fe</color>
+    <color name="pnb_rainbow_4">#91b6fc</color>
+
+    <!-- Multiple Invites -->
+    <color name="multiple_invite_grey_dark">#5d6673</color>
+
+    <!-- Custom camera -->
+    <color name="camera_buttons_container_background">#181818</color>
+
+    <!-- Profile photo social network blocking screen -->
+    <color name="external_provider_blocking_background">#cd256bf5</color>
+
+    <!-- Photo coaching -->
+    <color name="text_color_coaching_dark">#5e6773</color>
+
+    <!-- Spotlight backgrounds -->
+    <color name="spotlight_background_blue">#B22B8CFC</color>
+    <color name="spotlight_background_green">#B256B647</color>
+    <color name="spotlight_background_yellow">#B2FFCC00</color>
+
+    <!-- Profile quality walkthrough -->
+    <color name="pqw_progress_bar_foreground">#2579F8</color>
+    <color name="pqw_progress_bar_background">#EEF6FD</color>
+    <color name="pqw_progress_bar_foreground_text">#FFFFFF</color>
+    <color name="pqw_progress_bar_background_text">#A8CAE9</color>
+
+    <color name="pqw_summary_progress_foreground">#2579F8</color>
+    <color name="pqw_summary_progress_background">#e0e5ea</color>
+    <color name="pqw_summary_progress_foreground_text">#FFFFFF</color>
+    <color name="pqw_summary_progress_background_text">#FFFFFF</color>
+
+    <color name="pqw_status_filled">#ff56b647</color>
+    <color name="pqw_status_empty">#ffe0e5ea</color>
+    <color name="pqw_divider">#b2e0e5ea</color>
+
+    <color name="pqw_step_photos">#ff256ff5</color>
+    <color name="pqw_step_verification">#ff00b8e3</color>
+    <color name="pqw_step_work_edu">#ff256ff5</color>
+    <color name="pqw_step_about">#ffa325f5</color>
+    <color name="pqw_step_languages">#ff87d835</color>
+    <color name="pqw_step_interests">#ffffb800</color>
+    <color name="pqw_step_height">#ff202dfe</color>
+    <color name="pqw_step_weight">#ffffb100</color>
+    <color name="pqw_step_sexuality">#ffff5a64</color>
+    <color name="pqw_step_relationship">#fff33a15</color>
+    <color name="pqw_step_body_type">#ff87d835</color>
+    <color name="pqw_step_hair">#ff0cdec7</color>
+    <color name="pqw_step_eyes">#fff323a5</color>
+    <color name="pqw_step_living">#ff21ed76</color>
+    <color name="pqw_step_children">#fff33a15</color>
+    <color name="pqw_step_smoking">#ff06c91d</color>
+    <color name="pqw_step_drinking">#fffa32f3</color>
+    <color name="pqw_step_finish">#ff00b8e3</color>
+
+
+    <!--Navigation Bar colors-->
+    <color name="navbar_background">#f7f9fa</color>
+    <color name="navbar_text_color">#1100cf</color>
+</resources>

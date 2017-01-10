@@ -2,7 +2,11 @@ package com.badoo.meetingroom.di.modules;
 
 import android.content.Context;
 
+import com.badoo.meetingroom.data.repository.GoogleAccountDataRepository;
+import com.badoo.meetingroom.data.repository.RoomEventDataRepository;
 import com.badoo.meetingroom.di.AndroidApplication;
+import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
+import com.badoo.meetingroom.domain.repository.RoomEventRepository;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpTransport;
@@ -49,7 +53,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     Context provideApplicationContext() {
-        return this.application;
+        return application;
     }
 
     @Provides
@@ -62,5 +66,17 @@ public class ApplicationModule {
     @Singleton
     Calendar provideCalendarServices() {
         return mServices;
+    }
+
+    @Provides
+    @Singleton
+    RoomEventRepository provideRoomEventRepository(RoomEventDataRepository roomEventDataRepository) {
+        return roomEventDataRepository;
+    }
+
+    @Provides
+    @Singleton
+    GoogleAccountRepository provideGoogleAccountRepository(GoogleAccountDataRepository googleAccountDataRepository) {
+        return googleAccountDataRepository;
     }
 }

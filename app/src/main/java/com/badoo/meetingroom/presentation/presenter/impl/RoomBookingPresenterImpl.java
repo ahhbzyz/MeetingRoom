@@ -71,6 +71,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         this.mInsertEventUseCase.init(event).execute(new InsertEventSubscriber());
     }
 
+    @Override
     public void setTimeSlotList(List<TimeSlotsAdapter.TimeSlot> timeSlotList) {
         this.mTimeSlotList = timeSlotList;
         boolean startTimeHasVal = false;

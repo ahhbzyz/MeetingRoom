@@ -52,6 +52,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         loadRoomEventList();
     }
 
+    @Override
     public void loadRoomEventList() {
         this.getRoomEventList();
     }
@@ -104,10 +105,12 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         this.getRoomEventListUseCase.init(event).execute(new RoomEventListSubscriber());
     }
 
+    @Override
     public float getNumOfExpiredEvents() {
         return numOfExpiredEvents;
     }
 
+    @Override
     public void updateNumOfExpiredEvents() {
         numOfExpiredEvents = 0;
         if (mEventList == null) {

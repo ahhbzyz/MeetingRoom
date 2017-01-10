@@ -4,7 +4,30 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <!--Status bar-->
     <dimen name="status_bar_height">16dp</dimen>
+
+    <!--Room status activity-->
+
+    <dimen name="circle_button_diameter">72dp</dimen>
+    <dimen name="circle_button_left_margin">32dp</dimen>
+    <dimen name="circle_button_name_top_margin">32dp</dimen>
+    <dimen name="circle_time_view_btn_diameter">48dp</dimen>
+
+    <dimen name="circle_time_view_btn_available_img_width">16dp</dimen>
+    <dimen name="circle_time_view_btn_available_img_height">16dp</dimen>
+
+    <dimen name="confirm_btn_img_width">32dp</dimen>
+    <dimen name="confirm_btn_img_height">16dp</dimen>
+
+    <dimen name="horizontal_timeline_height">48dp</dimen>
+    <dimen name="horizontal_timeline_current_time_mark_left_margin">120dp</dimen>
+    <dimen name="horizontal_timeline_current_time_mark_width">1.5dp</dimen>
+    <dimen name="horizontal_timeline_time_slot_divider_width">2dp</dimen>
+
+
+
+
     <dimen name="event_calendar_tab_min_width">100dp</dimen>
 
     <dimen name="room_list_tab_min_width">160dp</dimen>
@@ -15,11 +38,20 @@
 
     <dimen name="room_booking_time_slot_divider_width">1.5dp</dimen>
 
-    <dimen name="circle_time_btn_view_radius">48dp</dimen>
     <dimen name="room_list_tab_height">3dp</dimen>
-    <dimen name="horizontal_timeline_height">48dp</dimen>
-    <dimen name="horizontal_timeline_time_mark_left_margin">120dp</dimen>
-    <dimen name="horizontal_timeline_divider_width">2dp</dimen>
+
     <dimen name="daily_events_divider_height">0.5dp</dimen>
-    <dimen name="horizontal_timeline_time_mark_width">1.5dp</dimen>
+    <dimen name="dismiss_btn_img_width">16dp</dimen>
+    <dimen name="dismiss_btn_img_height">16dp</dimen>
+    <dimen name="circle_time_view_btn_busy_img_width">6</dimen>
+    <dimen name="circle_time_view_btn_busy_img_height">24dp</dimen>
+    <dimen name="end_btn_img_width">24dp</dimen>
+    <dimen name="end_btn_img_height">24dp</dimen>
+    <dimen name="dnd_btn_img_width">25dp</dimen>
+    <dimen name="dnd_btn_img_height">25dp</dimen>
+    <dimen name="extend_btn_img_width">25dp</dimen>
+    <dimen name="extend_btn_img_height">25dp</dimen>
+    <dimen name="dnd_status_busy_until_text_size">30sp</dimen>
+    <dimen name="dnd_status_current_time_text_size">72sp</dimen>
+
 </resources>

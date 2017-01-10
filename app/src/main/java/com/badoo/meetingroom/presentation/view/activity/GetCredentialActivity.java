@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.impl.GetCredentialPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.intf.GetCredentialPresenter;
 import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -36,7 +37,7 @@ public class GetCredentialActivity extends BaseActivity implements GetCredential
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
     @Inject
-    GetCredentialPresenterImpl mGetCredentialPresenter;
+    GetCredentialPresenter mGetCredentialPresenter;
 
     @Inject
     GoogleAccountCredential mCredential;
@@ -51,7 +52,7 @@ public class GetCredentialActivity extends BaseActivity implements GetCredential
         setContentView(R.layout.activity_get_credential);
         ButterKnife.bind(this);
 
-        this.getApplicationComponent().inject(this);
+        this.getComponent().inject(this);
         mGetCredentialPresenter.setView(this);
         mGetCredentialPresenter.init();
 

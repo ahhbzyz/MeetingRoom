@@ -10,8 +10,6 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 public class RoomEventModelImpl implements RoomEventModel {
 
-
-
     private String id;
     private int status;
     private long startTime;
@@ -91,6 +89,11 @@ public class RoomEventModelImpl implements RoomEventModel {
             return 0;
         }
         return startTime > TimeHelper.getCurrentTimeInMillis() ? getDuration() : endTime - TimeHelper.getCurrentTimeInMillis();
+    }
+
+    @Override
+    public String getRemainingTimeInText(){
+        return TimeHelper.formatMillisInMinAndSec(getRemainingTime());
     }
 
     @Override

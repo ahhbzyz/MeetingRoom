@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <View android:layout_height="match_parent"
-        android:layout_width="@dimen/horizontal_timeline_divider_width" />
+        android:layout_width="@dimen/horizontal_timeline_time_slot_divider_width" />
 
     <RelativeLayout
         android:layout_width="match_parent"

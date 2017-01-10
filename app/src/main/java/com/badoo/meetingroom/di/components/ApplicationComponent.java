@@ -1,31 +1,28 @@
 package com.badoo.meetingroom.di.components;
 
-import com.badoo.meetingroom.di.modules.EventsCalendarModule;
-import com.badoo.meetingroom.di.modules.GetCredentialModule;
-import com.badoo.meetingroom.di.modules.RoomEventsModule;
+import android.content.Context;
+
 import com.badoo.meetingroom.di.modules.ApplicationModule;
-import com.badoo.meetingroom.presentation.view.activity.AllRoomsActivity;
+import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
+import com.badoo.meetingroom.domain.repository.RoomEventRepository;
 import com.badoo.meetingroom.presentation.view.activity.BaseActivity;
-import com.badoo.meetingroom.presentation.view.activity.EventsCalendarActivity;
-import com.badoo.meetingroom.presentation.view.activity.GetCredentialActivity;
-import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
-import com.badoo.meetingroom.presentation.view.activity.RoomStatusActivity;
-import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
-import com.badoo.meetingroom.presentation.view.fragment.RoomListFragment;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.services.calendar.Calendar;
+
 
 import javax.inject.Singleton;
 
 import dagger.Component;
 
 @Singleton
-@Component(modules = {ApplicationModule.class, EventsCalendarModule.class, RoomEventsModule.class, GetCredentialModule.class})
+@Component(modules = {ApplicationModule.class})
+
 public interface ApplicationComponent {
   void inject(BaseActivity activity);
-  void inject(RoomStatusActivity activity);
-  void inject(EventsCalendarActivity activity);
-  void inject(GetCredentialActivity activity);
-  void inject(DailyEventsFragment fragment);
-  void inject(RoomBookingActivity activity);
-  void inject(AllRoomsActivity activity);
-  void inject(RoomListFragment fragment);
+
+  Context context();
+  GoogleAccountCredential googleAccountCredential();
+  Calendar services();
+  RoomEventRepository roomEventRepository();
+  GoogleAccountRepository googleAccountRepository();
 }

@@ -34,6 +34,8 @@ public interface RoomEventModel {
 
     long getRemainingTime();
 
+    String getRemainingTimeInText();
+
     boolean isBusy();
 
     boolean isConfirmed();
