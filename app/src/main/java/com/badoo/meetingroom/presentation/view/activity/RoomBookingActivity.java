@@ -248,10 +248,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         mLoadingDataDialog.dismiss();
     }
 
-    @Override
-    public void showRetryLoading(boolean visibility) {
 
-    }
 
     @Override
     public void showError(String message) {

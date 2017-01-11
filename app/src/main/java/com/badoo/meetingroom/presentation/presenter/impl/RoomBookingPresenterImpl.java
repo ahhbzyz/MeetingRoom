@@ -35,7 +35,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         this.mInsertEventUseCase = insertEvent;
     }
 
-    @Override
+
     public void init() {
         setTimeSlotsInView();
     }

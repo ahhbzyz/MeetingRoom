@@ -6,7 +6,7 @@ import android.content.Context;
  * Created by zhangyaozhong on 22/12/2016.
  */
 
-public interface LoadDataView {
+interface LoadDataView {
 
     void showLoadingData(String message);
 

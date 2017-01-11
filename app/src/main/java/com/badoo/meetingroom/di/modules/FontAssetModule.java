@@ -18,14 +18,12 @@ public class FontAssetModule {
     public FontAssetModule() {}
 
     @Provides
-    @Singleton
     @Named("stolzl_regular")
     Typeface provideStolzlRegularFont(Context context) {
         return Typeface.createFromAsset(context.getAssets(),"fonts/stolzl_regular.otf");
     }
 
     @Provides
-    @Singleton
     @Named("stolzl_medium")
     Typeface provideStolzlMediumFont(Context context) {
         return Typeface.createFromAsset(context.getAssets(),"fonts/stolzl_medium.otf");

@@ -22,5 +22,5 @@ public interface RoomStatusPresenter extends Presenter {
     void deleteEvent();
     void updateEvent();
     void insertEvent(int eventId);
-    void updateHorizontalTimeline();
+    void systemTimeRefresh();
 }

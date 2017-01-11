@@ -9,7 +9,7 @@ import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
-import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
+import com.badoo.meetingroom.domain.interactor.GetEvents;
 import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
 import com.badoo.meetingroom.presentation.mapper.GoogleAccountModelMapper;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
@@ -40,24 +40,24 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
 
     private final GetGoogleAccount mGetGoogleAccountUseCase;
     private final PutGoogleAccount mPutGoogleAccountUseCase;
-    private final GetRoomEventList mGetRoomEventListUseCase;
+    private final GetEvents mGetEventsUseCase;
     private final GoogleAccountModelMapper mGoogleAccountMapper;
     private final RoomEventModelMapper mRoomEventModelMapper;
 
     @Inject
     GetCredentialPresenterImpl(@Named(GetGoogleAccount.NAME) GetGoogleAccount getGoogleAccountUseCase,
                                @Named(PutGoogleAccount.NAME) PutGoogleAccount putGoogleAccountUseCase,
-                               @Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
+                               @Named(GetEvents.NAME) GetEvents getEventsUseCase,
                                GoogleAccountModelMapper googleAccountModelMapper,
                                RoomEventModelMapper roomEventModelMapper) {
         this.mGetGoogleAccountUseCase = getGoogleAccountUseCase;
         this.mPutGoogleAccountUseCase = putGoogleAccountUseCase;
-        this.mGetRoomEventListUseCase = getRoomEventListUseCase;
+        this.mGetEventsUseCase = getEventsUseCase;
         this.mGoogleAccountMapper = googleAccountModelMapper;
         this.mRoomEventModelMapper = roomEventModelMapper;
     }
 
-    @Override
+
     public void init() {
         loadGoogleAccount();
     }
@@ -80,7 +80,7 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         mRoomEventModelMapper.setEventStartTime(startDateTime.getValue());
         mRoomEventModelMapper.setEventEndTime(endDateTime.getValue());
 
-        this.mGetRoomEventListUseCase.init(event).execute(new RoomEventListSubscriber());
+        this.mGetEventsUseCase.init(event).execute(new RoomEventListSubscriber());
     }
 
     private void loadGoogleAccount() {
@@ -132,7 +132,7 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     public void destroy() {
         mGetGoogleAccountUseCase.unSubscribe();
         mPutGoogleAccountUseCase.unSubscribe();
-        mGetRoomEventListUseCase.unSubscribe();
+        mGetEventsUseCase.unSubscribe();
     }
 
     @Override

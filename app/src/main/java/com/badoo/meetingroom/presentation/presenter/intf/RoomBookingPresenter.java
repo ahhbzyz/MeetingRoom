@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface RoomBookingPresenter extends Presenter {
     void setView(RoomBookingView roomBookingView);
+    void init();
     void bookRoom(String organizer);
     void setTimeSlotList(List<TimeSlotsAdapter.TimeSlot> timeSlotList);
 }

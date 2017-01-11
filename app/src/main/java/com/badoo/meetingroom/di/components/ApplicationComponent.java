@@ -1,8 +1,10 @@
 package com.badoo.meetingroom.di.components;
 
 import android.content.Context;
+import android.graphics.Typeface;
 
 import com.badoo.meetingroom.di.modules.ApplicationModule;
+import com.badoo.meetingroom.di.modules.FontAssetModule;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
 import com.badoo.meetingroom.domain.repository.RoomEventRepository;
 import com.badoo.meetingroom.presentation.view.activity.BaseActivity;

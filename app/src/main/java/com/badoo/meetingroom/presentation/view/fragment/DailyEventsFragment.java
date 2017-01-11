@@ -188,11 +188,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void showRetryLoading(boolean visibility) {
-
-    }
-
-    @Override
     public void showError(String message) {
         Toast.makeText(this.getActivity(), message, Toast.LENGTH_SHORT).show();
     }

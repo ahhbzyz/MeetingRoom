@@ -7,5 +7,6 @@ import com.badoo.meetingroom.presentation.view.view.RoomListView;
  */
 
 public interface RoomListPresenter extends Presenter {
+    void init();
     void setView(RoomListView view);
 }

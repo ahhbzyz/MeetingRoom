@@ -29,7 +29,7 @@ public class RoomListPresenterImpl implements RoomListPresenter {
         this.mRoomListView = view;
     }
 
-    @Override
+
     public void init() {
         loadRoomList();
         mPage = mRoomListView.getPage();

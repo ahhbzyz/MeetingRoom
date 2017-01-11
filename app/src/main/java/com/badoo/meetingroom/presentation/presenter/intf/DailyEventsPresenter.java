@@ -8,6 +8,7 @@ import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 
 public interface DailyEventsPresenter extends Presenter {
     void setView(DailyEventsView dailyEventsView);
+    void init();
     void onEventClicked(int position);
     float getNumOfExpiredEvents();
     void loadRoomEventList();

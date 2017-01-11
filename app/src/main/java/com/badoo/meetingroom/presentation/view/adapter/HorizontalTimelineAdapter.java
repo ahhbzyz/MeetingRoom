@@ -48,7 +48,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     @Inject
     HorizontalTimelineAdapter(Context context) {
         mEvents = new ArrayList<>();
-        mDividerWidth = context.getResources().getDimension(R.dimen.horizontal_timeline_divider_width);
+        mDividerWidth = context.getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width);
     }
 
     public void setEventList(List<RoomEventModel> roomEventModelList) {
@@ -57,8 +57,6 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         }
         mEvents = roomEventModelList;
         notifyDataSetChanged();
-        // TODO Item change
-        //notifyItemChanged();
     }
 
     @Override

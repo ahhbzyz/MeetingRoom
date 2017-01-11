@@ -2,7 +2,7 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
-import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
+import com.badoo.meetingroom.domain.interactor.GetEvents;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
@@ -29,7 +29,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     private DailyEventsView mDailyEventsView;
 
-    private final GetRoomEventList getRoomEventListUseCase;
+    private final GetEvents getEventsUseCase;
 
     private final RoomEventModelMapper mMapper;
 
@@ -40,13 +40,13 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     private int numOfExpiredEvents;
 
     @Inject
-    DailyEventsPresenterImpl(@Named(GetRoomEventList.NAME)GetRoomEventList getRoomEventListUseCase,
+    DailyEventsPresenterImpl(@Named(GetEvents.NAME)GetEvents getEventsUseCase,
                                     RoomEventModelMapper mMapper) {
-        this.getRoomEventListUseCase = getRoomEventListUseCase;
+        this.getEventsUseCase = getEventsUseCase;
         this.mMapper = mMapper;
     }
 
-    @Override
+
     public void init() {
         mPage = mDailyEventsView.getCurrentPage();
         loadRoomEventList();
@@ -102,7 +102,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
         mMapper.setEventStartTime(startDateTime.getValue());
         mMapper.setEventEndTime(endDateTime.getValue());
-        this.getRoomEventListUseCase.init(event).execute(new RoomEventListSubscriber());
+        this.getEventsUseCase.init(event).execute(new RoomEventListSubscriber());
     }
 
     @Override
@@ -175,6 +175,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     @Override
     public void destroy() {
-        getRoomEventListUseCase.unSubscribe();
+        getEventsUseCase.unSubscribe();
     }
 }

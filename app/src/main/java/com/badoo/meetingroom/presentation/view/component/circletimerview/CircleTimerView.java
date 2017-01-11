@@ -615,7 +615,7 @@ public class CircleTimerView extends View {
      * @param
      */
 
-    public void startCountDownTimer(long startTime, long duration) {
+    public void startCountDownTimer(long startTime, long endTime) {
 
 
         if (mAnimator != null) {
@@ -623,10 +623,10 @@ public class CircleTimerView extends View {
             mAnimator.cancel();
         }
 
-        float currentProgress = (TimeHelper.getCurrentTimeInMillis() - startTime) / (float)duration;
+        float currentProgress = (TimeHelper.getCurrentTimeInMillis() - startTime) / (float)(endTime - startTime);
 
         mAnimator = ValueAnimator.ofFloat(currentProgress * 100, getMaxProgress());
-        long remainingTime = TimeHelper.getCurrentTimeInMillis() - startTime;
+        long remainingTime = endTime - TimeHelper.getCurrentTimeInMillis();
         long animatorDuration = remainingTime > 0 ? remainingTime : 0;
         mAnimator.setDuration(animatorDuration);
         mAnimator.setInterpolator(new LinearInterpolator());

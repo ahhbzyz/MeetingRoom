@@ -184,10 +184,7 @@ public class GetCredentialActivity extends BaseActivity implements GetCredential
         this.mLoadingDataBar.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void showRetryLoading(boolean visibility) {
 
-    }
 
     @Override
     public void showError(String message) {

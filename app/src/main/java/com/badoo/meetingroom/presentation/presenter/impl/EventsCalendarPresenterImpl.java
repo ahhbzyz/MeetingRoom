@@ -20,7 +20,7 @@ public class EventsCalendarPresenterImpl implements EventsCalendarPresenter {
 
     }
 
-    @Override
+
     public void init() {
         setUpToolbar();
         setUpViewPager();

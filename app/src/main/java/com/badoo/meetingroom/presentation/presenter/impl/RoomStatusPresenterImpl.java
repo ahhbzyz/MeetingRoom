@@ -7,7 +7,7 @@ import com.badoo.meetingroom.di.PerActivity;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.DeleteEvent;
-import com.badoo.meetingroom.domain.interactor.GetRoomEventList;
+import com.badoo.meetingroom.domain.interactor.GetEvents;
 import com.badoo.meetingroom.domain.interactor.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.UpdateEvent;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,53 +41,66 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     private RoomEventsView mRoomEventsView;
 
-    private final GetRoomEventList mGetRoomEventListUseCase;
+    private final GetEvents mGetEventsUseCase;
     private final InsertEvent mInsertEventUseCase;
     private final DeleteEvent mDeleteEventUseCase;
     private final UpdateEvent mUpdateEventUseCase;
 
     private final RoomEventModelMapper mMapper;
 
-    private LinkedList<RoomEventModel> mEventModelQueue;
+    private LinkedList<RoomEventModel> mEventQueue;
+    private List<RoomEventModel> mEventList;
 
     private RoomEventModel mCurrentEvent;
     private HashSet<String> mConfirmedIds;
 
     @Inject
-    public RoomStatusPresenterImpl(@Named(GetRoomEventList.NAME) GetRoomEventList getRoomEventListUseCase,
+    RoomStatusPresenterImpl(@Named(GetEvents.NAME) GetEvents getEventsUseCase,
                                    @Named(InsertEvent.NAME) InsertEvent insertEventUseCase,
                                    @Named(DeleteEvent.NAME) DeleteEvent deleteEventUseCase,
                                    @Named(UpdateEvent.NAME) UpdateEvent updateEventUseCase,
                                    RoomEventModelMapper mapper) {
-
-        mGetRoomEventListUseCase = getRoomEventListUseCase;
+        mGetEventsUseCase = getEventsUseCase;
         mInsertEventUseCase = insertEventUseCase;
         mDeleteEventUseCase = deleteEventUseCase;
         mUpdateEventUseCase = updateEventUseCase;
         mMapper = mapper;
         mConfirmedIds = new HashSet<>();
+        mEventQueue = new LinkedList<>();
+        mEventList = new ArrayList<>();
     }
 
     @Override
     public void setView(@NonNull RoomEventsView roomEventsView) {
-        this.mRoomEventsView = roomEventsView;
+        mRoomEventsView = roomEventsView;
     }
 
     @Override
     public void onCountDownTicking(long millisUntilFinished) {
-        mRoomEventsView.updateCircleTimeView(mCurrentEvent);
+        if (mCurrentEvent.isConfirmed()) {
+            mRoomEventsView.setCircleTimeViewTimeText(mCurrentEvent.getEndTimeInText());
+        } else {
+            long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTime());
+            if (hours >= 2) {
+                mRoomEventsView.setCircleTimeViewTimeText("2H+");
+            } else {
+                mRoomEventsView.setCircleTimeViewTimeText(mCurrentEvent.getRemainingTimeInText());
+            }
+        }
     }
 
     @Override
     public void onCountDownFinished() {
-        removeEventFromCircleTimeView();
-        showEventOnCircleTimeView();
+        removeEventFromQueue();
+        showNextEventOnCircleTimeView();
+        mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
     }
 
     @Override
     public void setDoNotDisturb(boolean doNotDisturb) {
         mCurrentEvent.setDoNotDisturb(doNotDisturb);
-        mRoomEventsView.updateCircleTimeView(mCurrentEvent);
+        showButtonsForEvent();
+        mRoomEventsView.updateCircleTimeViewStatus(mCurrentEvent);
         mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
     }
 
@@ -96,13 +110,14 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         if (!mConfirmedIds.contains(mCurrentEvent.getId())) {
             mConfirmedIds.add(mCurrentEvent.getId());
         }
-        mRoomEventsView.updateCircleTimeView(mCurrentEvent);
+        mRoomEventsView.updateCircleTimeViewStatus(mCurrentEvent);
         mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
         showButtonsForEvent();
     }
 
     @Override
-    public void updateHorizontalTimeline() {
+    public void systemTimeRefresh() {
+        mRoomEventsView.updateHorizontalTimelineCurrentTime();
         mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
     }
 
@@ -134,9 +149,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
-    private void showEventOnCircleTimeView() {
-        if (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
-            mCurrentEvent = mEventModelQueue.peek();
+    private void showNextEventOnCircleTimeView() {
+        if (mEventQueue != null && !mEventQueue.isEmpty()) {
+            mCurrentEvent = mEventQueue.peek();
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mCurrentEvent.setOnHold(false);
             }
@@ -145,32 +160,26 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
-    private void removeEventFromCircleTimeView(){
-        if (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
+    private void removeEventFromQueue(){
+        if (mEventQueue != null && !mEventQueue.isEmpty()) {
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mConfirmedIds.remove(mCurrentEvent.getId());
             }
-            mEventModelQueue.remove();
+            mEventQueue.remove();
         }
     }
 
     private void showEventsOnHorizontalTimelineView() {
-        if (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
-            List<RoomEventModel> roomEventModelList = new ArrayList<>();
-            roomEventModelList.addAll(mEventModelQueue);
-            mRoomEventsView.renderRoomEvents(roomEventModelList);
+        if (mEventList != null && !mEventList.isEmpty()) {
+            mRoomEventsView.renderRoomEvents(mEventList);
         }
     }
 
     private int getNumOfExpiredEvents(){
         int mNumOfExpiredEvents = 0;
-        while (mEventModelQueue != null && !mEventModelQueue.isEmpty()) {
-            if (mEventModelQueue.peek().isExpired()) {
-                mEventModelQueue.remove();
-                mNumOfExpiredEvents++;
-            }
-            else {
-                break;
+        for (RoomEventModel event : mEventList) {
+            if (event.isExpired()) {
+                mNumOfExpiredEvents ++;
             }
         }
         return mNumOfExpiredEvents;
@@ -194,7 +203,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         mMapper.setEventStartTime(startDateTime.getValue());
         mMapper.setEventEndTime(endDateTime.getValue());
 
-        this.mGetRoomEventListUseCase.init(event).execute(new GetEventsSubscriber());
+        mGetEventsUseCase.init(event).execute(new GetEventsSubscriber());
     }
     
     @Override
@@ -221,16 +230,18 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     
     @Override
     public void deleteEvent() {
-        Event event = new Event();
-        event.setId(mCurrentEvent.getId());
-        this.mDeleteEventUseCase.init(event).execute(new DeleteEventSubscriber());
+        if (mCurrentEvent.getId() != null) {
+            Event event = new Event();
+            event.setId(mCurrentEvent.getId());
+            mDeleteEventUseCase.init(event).execute(new DeleteEventSubscriber());
+        }
     }
     
     @Override
     public void updateEvent() {
-        if (mEventModelQueue != null && mEventModelQueue.size() >= 1) {
-            if (mEventModelQueue.get(1).isAvailable()) {
-                long extendedTime = mEventModelQueue.get(1).getDuration() >= TimeHelper.min2Millis(15) ? TimeHelper.min2Millis(15) : mEventModelQueue.get(1).getDuration();
+        if (mEventQueue != null && mEventQueue.size() >= 1) {
+            if (mEventQueue.get(1).isAvailable()) {
+                long extendedTime = mEventQueue.get(1).getDuration() >= TimeHelper.min2Millis(15) ? TimeHelper.min2Millis(15) : mEventQueue.get(1).getDuration();
                 // Extent
                 Event event = new Event();
                 event.setId(mCurrentEvent.getId());
@@ -239,7 +250,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                     .setDateTime(endDateTime)
                     .setTimeZone("Europe/London");
                 event.setEnd(end);
-                this.mUpdateEventUseCase.init(event).execute(new UpdateEventSubscriber());
+                mUpdateEventUseCase.init(event).execute(new UpdateEventSubscriber());
             }
         }
     }
@@ -255,9 +266,18 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         @Override
         public void onNext(List<RoomEvent> roomEvents) {
             Collection<RoomEventModel> mEventModelList = mMapper.map(roomEvents);
-            mEventModelQueue = new LinkedList<>();
-            mEventModelQueue.addAll(mEventModelList);
-            showEventOnCircleTimeView();
+            mEventQueue.clear();
+            mEventList.clear();
+            mEventQueue.addAll(mEventModelList);
+            mEventList.addAll(mEventQueue);
+            while (!mEventQueue.isEmpty()) {
+                if (mEventQueue.peek().isExpired()) {
+                    mEventQueue.remove();
+                } else {
+                    break;
+                }
+            }
+            showNextEventOnCircleTimeView();
             showEventsOnHorizontalTimelineView();
         }
 
@@ -307,6 +327,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         public void onCompleted() {
             super.onCompleted();
             dismissViewLoading();
+            getEvents();
         }
 
         @Override
@@ -348,6 +369,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         public void onCompleted() {
             super.onCompleted();
             dismissViewLoading();
+            getEvents();
         }
 
         @Override
@@ -389,6 +411,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         public void onCompleted() {
             super.onCompleted();
             dismissViewLoading();
+            getEvents();
         }
 
         @Override
@@ -429,6 +452,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void destroy() {
-        mGetRoomEventListUseCase.unSubscribe();
+        mGetEventsUseCase.unSubscribe();
     }
 }

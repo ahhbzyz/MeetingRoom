@@ -9,6 +9,7 @@ import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
  */
 public interface GetCredentialPresenter extends Presenter {
     void setView(@NonNull GetCredentialView getCredentialView);
+    void init();
     void onNoGooglePlayServicesError();
     void storeGoogleAccountName(String accountName);
 }

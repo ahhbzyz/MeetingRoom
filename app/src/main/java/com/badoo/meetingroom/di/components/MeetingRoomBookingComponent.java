@@ -2,7 +2,7 @@ package com.badoo.meetingroom.di.components;
 
 import com.badoo.meetingroom.di.PerActivity;
 import com.badoo.meetingroom.di.modules.ActivityModule;
-import com.badoo.meetingroom.di.modules.DialogModule;
+import com.badoo.meetingroom.di.modules.FontAssetModule;
 import com.badoo.meetingroom.di.modules.PresentationModule;
 import com.badoo.meetingroom.di.modules.UseCaseModule;
 import com.badoo.meetingroom.presentation.view.activity.AllRoomsActivity;
@@ -29,7 +29,7 @@ import dagger.Component;
         ActivityModule.class,
         UseCaseModule.class,
         PresentationModule.class,
-        DialogModule.class
+        FontAssetModule.class
     }
 )
 

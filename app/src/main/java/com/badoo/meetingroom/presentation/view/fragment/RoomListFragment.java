@@ -99,11 +99,6 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
     }
 
     @Override
-    public void showRetryLoading(boolean visibility) {
-
-    }
-
-    @Override
     public void showError(String message) {
 
     }
