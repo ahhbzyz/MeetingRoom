@@ -38,13 +38,20 @@ public interface RoomEventModel {
 
     boolean isBusy();
 
-    boolean isConfirmed();
 
     boolean isAvailable();
 
     boolean isOnHold();
 
-    void setOnHold(boolean onHold);
+    long getOnHoldTime();
+
+    long getRemainingOnHoldTime();
+
+    String getRemainingOnHoldTimeInText();
+
+    boolean isConfirmed();
+
+    void setConfirmed(boolean confirmed);
 
     boolean isDoNotDisturb();
 

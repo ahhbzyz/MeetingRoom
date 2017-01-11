@@ -129,7 +129,15 @@ public class TimeHelper {
         return calendar.get(Calendar.SECOND);
     }
 
-    public static long getDroppedMillis(long millis) {
+    public static long dropMillis(long millis) {
         return 1000 * (millis/ 1000);
+    }
+
+    public static long dropSeconds(long millis) {
+        return 60 * 1000 * (millis / (60 * 1000));
+    }
+
+    public static long sec2Millis(int i) {
+        return i * 1000;
     }
 }

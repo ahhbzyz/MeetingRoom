@@ -2,8 +2,6 @@ package com.badoo.meetingroom.presentation.mapper;
 
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.entity.impl.RoomEventImpl;
-import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.model.Room;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -39,8 +37,8 @@ public class RoomEventModelMapper {
         roomEventModel.setOrganizer(roomEvent.getOrganizer());
         roomEventModel.setStatus(roomEvent.getStatus());
 
-        roomEventModel.setStartTime(TimeHelper.getDroppedMillis(roomEvent.getStartTime()));
-        roomEventModel.setEndTime(TimeHelper.getDroppedMillis(roomEvent.getEndTime()));
+        roomEventModel.setStartTime(TimeHelper.dropSeconds(roomEvent.getStartTime()));
+        roomEventModel.setEndTime(TimeHelper.dropSeconds(roomEvent.getEndTime()));
 
         roomEventModel.setStatus(RoomEventModel.BUSY);
         return roomEventModel;

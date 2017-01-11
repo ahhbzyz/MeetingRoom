@@ -11,7 +11,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,11 +45,13 @@ import javax.inject.Named;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
+
 /**
  * Created by zhangyaozhong on 22/12/2016.
  */
 
-public class RoomStatusActivity extends BaseActivity implements RoomEventsView, CircleTimerView.OnCountDownListener {
+public class RoomStatusActivity extends BaseActivity implements RoomEventsView, CircleTimerView.OnCountDownListener, HorizontalTimelineAdapter.OnItemClickListener {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
@@ -108,7 +109,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         initViews();
         setUpCircleTimeView();
         setUpHorizontalTimelineView();
-        registerTimeRefreshReceiver();
 
         mPresenter.getEvents();
     }
@@ -130,7 +130,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCanceledOnTouchOutside(false);
-        View content = View.inflate(this.getApplicationContext(), R.layout.dialog_event_organizer, null);
+        View content = View.inflate(this, R.layout.dialog_event_organizer, null);
         mEventOrganizerDialog = new AlertDialog.Builder(this, R.style.MyEventOrganizerDialog).setView(content).create();
         ((TextView) content.findViewById(R.id.tv_event_period)).setTypeface(mStolzlRegularTypeface);
 
@@ -151,12 +151,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mCircleTimeView.setCircleBtnIconDrawable(R.drawable.btn_oval_confirm);
         mCircleTimeView.setAlertIconDrawable(R.drawable.ic_alert_white);
         mCircleTimeView.setOnCountDownListener(this);
-        mCircleTimeView.setOnClickListener(v -> {
-            // TODO check clickable
-            mPresenter.setDoNotDisturb(false);
-            mTopContentLayout.animate().translationY(0);
-            mBottomContentLayout.animate().translationY(0);
-        });
+        mCircleTimeView.setOnClickListener(v -> mPresenter.setDoNotDisturb(false));
 
         // Circle time view button
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mCircleTimeViewBtn.getLayoutParams();
@@ -170,13 +165,26 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mHorizontalTimelineRv.setLayoutManager(manager);
+        mAdapter.setOnItemClickListener(this);
         mHorizontalTimelineRv.setAdapter(mAdapter);
+        Handler scrollBackHandler = new Handler();
         mHorizontalTimelineRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 float startX = mCurrentTimeLayout.getX();
-                mCurrentTimeLayout.setLeft((int) (startX - dx));
+                mCurrentTimeLayout.setX((int) (startX - dx));
+                scrollBackHandler.removeCallbacksAndMessages(null);
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == SCROLL_STATE_IDLE) {
+                    scrollBackHandler.postDelayed(() -> {
+                        mHorizontalTimelineRv.smoothScrollToPosition(0);
+                    }, 3000);
+                }
             }
         });
 
@@ -188,15 +196,14 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mCurrentTimeTv.setLayoutParams(params);
     }
 
-    private void registerTimeRefreshReceiver() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(mTimeRefreshReceiver,
-            new IntentFilter(Intent.ACTION_TIME_TICK));
-    }
-
     @Override
-    public void renderNextRoomEvent(RoomEventModel nextEvent) {
+    public void renderRoomEvent(RoomEventModel nextEvent) {
         updateCircleTimeViewStatus(nextEvent);
-        mCircleTimeView.startCountDownTimer(nextEvent.getStartTime(), nextEvent.getEndTime());
+        if (nextEvent.isOnHold()) {
+            mCircleTimeView.startCountDownTimer(nextEvent.getStartTime(), nextEvent.getStartTime() + nextEvent.getOnHoldTime());
+        } else {
+            mCircleTimeView.startCountDownTimer(nextEvent.getStartTime(), nextEvent.getEndTime());
+        }
     }
 
     @Override
@@ -212,7 +219,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     }
 
     @Override
-    public void setCircleTimeViewTimeText(String text) {
+    public void updateCircleTimeViewTimeText(String text) {
         mCircleTimeView.setTimerTimeText(text);
     }
 
@@ -225,7 +232,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mCircleTimeView.setDNDVisibility(currentEvent.isDoNotDisturb());
         mCircleTimeView.setTimerTimeVisibility(!currentEvent.isDoNotDisturb());
         mCircleTimeView.setCircleBtnVisibility(!currentEvent.isDoNotDisturb() && !currentEvent.isOnHold());
-        mCircleTimeView.setTailIconVisibility(currentEvent.isConfirmed() || currentEvent.isOnHold());
+        mCircleTimeView.setTailIconVisibility(!currentEvent.isAvailable() && !currentEvent.isDoNotDisturb());
 
         switch (currentEvent.getStatus()) {
             case RoomEventModel.AVAILABLE:
@@ -271,11 +278,10 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     public void updateHorizontalTimelineView(int numOfExpiredEvents) {
         float leftMargin = (TimeHelper.getCurrentTimeSinceMidNight()) * mAdapter.getWidthPerMillis()
             + (numOfExpiredEvents + 1) * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width)
-            - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin)
-            - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_width);
+            - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
         params.setMargins(Math.round(-leftMargin), params.topMargin, params.rightMargin, params.bottomMargin);
-        mHorizontalTimelineRv.setLayoutParams(params);
+        mHorizontalTimelineRv.setLeft((int) -leftMargin);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -288,6 +294,21 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         intent.putExtra("timePeriod", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivityForResult(intent, REQUEST_BOOK_ROOM);
+    }
+
+    @Override
+    public void showEventOrganizerDialog(RoomEventModel mCurrentEvent) {
+        if (mEventOrganizerDialog != null) {
+            mEventOrganizerDialog.show();
+            if (mEventOrganizerDialog.getWindow() != null) {
+                mEventOrganizerDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            }
+        }
+    }
+
+    @Override
+    public void onEventItemClicked(int position) {
+        mPresenter.onEventClicked(position);
     }
 
     @Override
@@ -415,8 +436,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mButtonsLayout.addView(mDNDBtnWithText);
         mDNDBtn.setOnClickListener(v -> {
             mPresenter.setDoNotDisturb(true);
-            mTopContentLayout.animate().translationY(-mTopContentLayout.getHeight());
-            mBottomContentLayout.animate().translationY(mBottomContentLayout.getHeight());
         });
 
         ImageButton mExtendBtn = new ImageButton(this);
@@ -460,16 +479,17 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mButtonsLayout.addView(mEventEndTimeTv);
     }
 
-    private BroadcastReceiver mTimeRefreshReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
-                mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-                mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomStatusActivity.this));
-                mPresenter.systemTimeRefresh();
-            }
-        }
-    };
+    @Override
+    public void hideTopBottomContent() {
+        mTopContentLayout.animate().translationY(-mTopContentLayout.getHeight());
+        mBottomContentLayout.animate().translationY(mBottomContentLayout.getHeight());
+    }
+
+    @Override
+    public void showTopBottomContent() {
+        mTopContentLayout.animate().translationY(0);
+        mBottomContentLayout.animate().translationY(0);
+    }
 
     @Override
     public void onCountDownTicking(long millisUntilFinished) {
@@ -479,16 +499,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     @Override
     public void onCountDownFinished() {
         mPresenter.onCountDownFinished();
-    }
-
-    @Override
-    public void showEventOrganizerDialog() {
-        if (mEventOrganizerDialog != null) {
-            mEventOrganizerDialog.show();
-            if (mEventOrganizerDialog.getWindow() != null) {
-                mEventOrganizerDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            }
-        }
     }
 
     @Override
@@ -520,6 +530,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         this.startActivityForResult(e.getIntent(), 1000);
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -539,9 +550,29 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         }
     }
 
+
     @Override
-    protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mTimeRefreshReceiver);
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mTimeRefreshReceiver != null) {
+            unregisterReceiver(mTimeRefreshReceiver);
+        }
+    }
+
+    private BroadcastReceiver mTimeRefreshReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
+                mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
+                mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomStatusActivity.this));
+                mPresenter.systemTimeUpdate();
+            }
+        }
+    };
 }

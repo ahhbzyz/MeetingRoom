@@ -33,6 +33,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
 
     private List<RoomEventModel> mEvents;
     private float mDividerWidth;
+    private OnItemClickListener mOnItemClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -85,6 +86,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
             = new TimelineBarDrawable(event.getEventExpiredColor(), event.getEventColor(), restProgress);
         barDrawable.setOrientation(TimelineBarDrawable.HORIZONTAL);
         holder.mTimelineBarImg.setBackground(barDrawable);
+        holder.itemView.setOnClickListener(v -> mOnItemClickListener.onEventItemClicked(position));
     }
 
     @Override
@@ -96,4 +98,11 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         return WIDTH_PER_MILLIS;
     }
 
+    public void setOnItemClickListener (OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onEventItemClicked(int position);
+    }
 }

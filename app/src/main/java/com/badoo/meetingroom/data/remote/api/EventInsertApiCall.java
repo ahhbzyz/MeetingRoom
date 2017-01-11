@@ -38,13 +38,13 @@ public class EventInsertApiCall implements Callable<Event>{
     private void connectToApi() throws Exception {
 
         Event event = new Event();
-        DateTime startDateTime = new DateTime(TimeHelper.getDroppedMillis(mEvent.getStart().getDateTime().getValue()));
+        DateTime startDateTime = new DateTime(TimeHelper.dropSeconds(mEvent.getStart().getDateTime().getValue()));
         EventDateTime start = new EventDateTime()
             .setDateTime(startDateTime)
             .setTimeZone("Europe/London");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime(TimeHelper.getDroppedMillis(mEvent.getEnd().getDateTime().getValue()));
+        DateTime endDateTime = new DateTime(TimeHelper.dropSeconds(mEvent.getEnd().getDateTime().getValue()));
         EventDateTime end = new EventDateTime()
             .setDateTime(endDateTime)
             .setTimeZone("Europe/London");

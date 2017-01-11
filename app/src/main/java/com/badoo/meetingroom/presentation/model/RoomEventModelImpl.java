@@ -15,8 +15,9 @@ public class RoomEventModelImpl implements RoomEventModel {
     private long startTime;
     private long endTime;
     private String organizer;
-    private boolean isOnHold;
+    private boolean isConfirmed;
     private boolean doNotDisturb;
+    private final long ON_HOLD_TIME = TimeHelper.min2Millis(5);
 
     public RoomEventModelImpl() {}
 
@@ -47,9 +48,6 @@ public class RoomEventModelImpl implements RoomEventModel {
 
     @Override
     public void setStatus(int status) {
-        if (status == BUSY) {
-            isOnHold = true;
-        }
         this.status = status;
     }
 
@@ -102,24 +100,46 @@ public class RoomEventModelImpl implements RoomEventModel {
     }
 
     @Override
-    public boolean isConfirmed(){
-        return status != AVAILABLE && !isDoNotDisturb() && !isOnHold();
-    }
-
-    @Override
     public boolean isAvailable() {
         return status == AVAILABLE;
     }
 
     @Override
     public boolean isOnHold() {
-        return isOnHold;
+        if (isProcessing() && !isConfirmed() && getDuration() > ON_HOLD_TIME) {
+            if (TimeHelper.getCurrentTimeInMillis() <= getStartTime() + ON_HOLD_TIME) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public void setOnHold(boolean onHold) {
-        isOnHold = onHold;
+    public long getOnHoldTime() {
+        return ON_HOLD_TIME;
     }
+
+    @Override
+    public long getRemainingOnHoldTime() {
+        return getStartTime() + ON_HOLD_TIME - TimeHelper.getCurrentTimeInMillis();
+    }
+
+    @Override
+    public String getRemainingOnHoldTimeInText() {
+        return TimeHelper.formatMillisInMinAndSec(getRemainingOnHoldTime());
+    }
+
+    @Override
+    public boolean isConfirmed(){
+        return isConfirmed;
+    }
+
+    @Override
+    public void setConfirmed(boolean confirmed) {
+        isConfirmed = confirmed;
+    }
+
+
 
     @Override
     public boolean isDoNotDisturb() {
@@ -137,7 +157,7 @@ public class RoomEventModelImpl implements RoomEventModel {
             case AVAILABLE:
                 return RoomEventColor.AVAILABLE_COLOR;
             case BUSY:
-                return (isOnHold && isProcessing())? RoomEventColor.ON_HOLD_COLOR : RoomEventColor.BUSY_COLOR;
+                return (isOnHold() && isProcessing())? RoomEventColor.ON_HOLD_COLOR : RoomEventColor.BUSY_COLOR;
             default:
                 return RoomEventColor.EXPIRED_COLOR;
         }
@@ -149,7 +169,7 @@ public class RoomEventModelImpl implements RoomEventModel {
             case AVAILABLE:
                 return RoomEventColor.AVAILABLE_COLOR;
             case BUSY:
-                return (isOnHold && isProcessing()) ? RoomEventColor.ON_HOLD_BG_COLOR : RoomEventColor.BUSY_BG_COLOR;
+                return (isOnHold() && isProcessing()) ? RoomEventColor.ON_HOLD_BG_COLOR : RoomEventColor.BUSY_BG_COLOR;
             default:
                 return RoomEventColor.EXPIRED_COLOR;
         }

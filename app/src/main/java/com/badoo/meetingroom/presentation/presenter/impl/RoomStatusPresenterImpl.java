@@ -77,38 +77,40 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void onCountDownTicking(long millisUntilFinished) {
-        if (mCurrentEvent.isConfirmed()) {
-            mRoomEventsView.setCircleTimeViewTimeText(mCurrentEvent.getEndTimeInText());
+        if (mCurrentEvent.isBusy()) {
+            if (mCurrentEvent.isOnHold()) {
+                mRoomEventsView.updateCircleTimeViewTimeText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
+            } else {
+                mRoomEventsView.updateCircleTimeViewTimeText(mCurrentEvent.getEndTimeInText());
+            }
         } else {
             long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTime());
             if (hours >= 2) {
-                mRoomEventsView.setCircleTimeViewTimeText("2H+");
+                mRoomEventsView.updateCircleTimeViewTimeText("2H+");
             } else {
-                mRoomEventsView.setCircleTimeViewTimeText(mCurrentEvent.getRemainingTimeInText());
+                mRoomEventsView.updateCircleTimeViewTimeText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
             }
         }
     }
 
     @Override
     public void onCountDownFinished() {
-        removeEventFromQueue();
-        showNextEventOnCircleTimeView();
-        mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
+        if (!mCurrentEvent.isOnHold() && TimeHelper.getCurrentTimeInMillis() < mCurrentEvent.getEndTime()) {
+            deleteEvent();
+        } else {
+            removeFirstEventFromQueue();
+            showCurrentEventOnCircleTimeView();
+            mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
+        }
     }
 
     @Override
-    public void setDoNotDisturb(boolean doNotDisturb) {
-        mCurrentEvent.setDoNotDisturb(doNotDisturb);
-        showButtonsForEvent();
-        mRoomEventsView.updateCircleTimeViewStatus(mCurrentEvent);
-        mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
-    }
-
-    @Override
-    public void setEventConfirmed() {
-        mCurrentEvent.setOnHold(false);
-        if (!mConfirmedIds.contains(mCurrentEvent.getId())) {
-            mConfirmedIds.add(mCurrentEvent.getId());
+    public void setDoNotDisturb(boolean isDoNotDisturb) {
+        mCurrentEvent.setDoNotDisturb(isDoNotDisturb);
+        if (mCurrentEvent.isDoNotDisturb()) {
+            mRoomEventsView.hideTopBottomContent();
+        } else {
+            mRoomEventsView.showTopBottomContent();
         }
         mRoomEventsView.updateCircleTimeViewStatus(mCurrentEvent);
         mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
@@ -116,7 +118,31 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     @Override
-    public void systemTimeRefresh() {
+    public void onEventClicked(int position) {
+        RoomEventModel event = mEventList.get(position);
+        if (event.isAvailable()) {
+            if (event.isProcessing()) {
+                mRoomEventsView.bookRoom(TimeHelper.getCurrentTimeInMillis(), event.getEndTime());
+            } else {
+                mRoomEventsView.bookRoom(event.getStartTime(), event.getEndTime());
+            }
+        } else {
+            mRoomEventsView.showEventOrganizerDialog(mCurrentEvent);
+        }
+    }
+
+    @Override
+    public void setEventConfirmed() {
+        mCurrentEvent.setConfirmed(true);
+        if (!mConfirmedIds.contains(mCurrentEvent.getId())) {
+            mConfirmedIds.add(mCurrentEvent.getId());
+        }
+        showCurrentEventOnCircleTimeView();
+        mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
+    }
+
+    @Override
+    public void systemTimeUpdate() {
         mRoomEventsView.updateHorizontalTimelineCurrentTime();
         mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
     }
@@ -126,7 +152,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         if (mCurrentEvent.isAvailable()) {
             mRoomEventsView.bookRoom(TimeHelper.getCurrentTimeInMillis(), mCurrentEvent.getEndTime());
         } else if (mCurrentEvent.isConfirmed()) {
-            mRoomEventsView.showEventOrganizerDialog();
+            mRoomEventsView.showEventOrganizerDialog(mCurrentEvent);
         }
     }
 
@@ -149,18 +175,18 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
-    private void showNextEventOnCircleTimeView() {
+    private void showCurrentEventOnCircleTimeView() {
         if (mEventQueue != null && !mEventQueue.isEmpty()) {
             mCurrentEvent = mEventQueue.peek();
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
-                mCurrentEvent.setOnHold(false);
+                mCurrentEvent.setConfirmed(true);
             }
-            this.mRoomEventsView.renderNextRoomEvent(mCurrentEvent);
+            this.mRoomEventsView.renderRoomEvent(mCurrentEvent);
             showButtonsForEvent();
         }
     }
 
-    private void removeEventFromQueue(){
+    private void removeFirstEventFromQueue(){
         if (mEventQueue != null && !mEventQueue.isEmpty()) {
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mConfirmedIds.remove(mCurrentEvent.getId());
@@ -207,9 +233,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
     
     @Override
-    public void insertEvent(int min) {
+    public void insertEvent(int bookingPeriod) {
         long startTime = TimeHelper.getCurrentTimeInMillis();
-        long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.min2Millis(min);
+        long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.min2Millis(bookingPeriod);
 
         if (mCurrentEvent.isAvailable() && endTime <= mCurrentEvent.getEndTime()) {
             Event event = new Event();
@@ -277,7 +303,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                     break;
                 }
             }
-            showNextEventOnCircleTimeView();
+            showCurrentEventOnCircleTimeView();
             showEventsOnHorizontalTimelineView();
         }
 

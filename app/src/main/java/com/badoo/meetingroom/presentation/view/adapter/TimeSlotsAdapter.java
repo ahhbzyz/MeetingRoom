@@ -15,8 +15,6 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -61,8 +59,8 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
             throw new IllegalArgumentException("End time cannot less than or equal to start time");
         }
 
-        startTime = TimeHelper.getDroppedMillis(startTime);
-        endTime = TimeHelper.getDroppedMillis(endTime);
+        startTime = TimeHelper.dropSeconds(startTime);
+        endTime = TimeHelper.dropSeconds(endTime);
 
         long newStartTime = startTime;
         for (int t : timestamps) {
@@ -72,6 +70,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
             }
         }
         int numOfSlots = (int) ((endTime - newStartTime) / mDefaultSlotLength);
+
 
         if (newStartTime != startTime) {
             mTimeSlotList.add(new TimeSlot(startTime));

@@ -51,6 +51,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         @BindView(R.id.img_timeline_bar) ImageView mTimelineBar;
         @BindView(R.id.layout_event_content) LinearLayout mEventContentLayout;
         @BindView(R.id.layout_timestamp) RelativeLayout mTimestampLayout;
+        @BindView(R.id.layout_clickable) FrameLayout mClickableLayout;
 
         private ViewHolder(View view) {
             super(view);
@@ -270,13 +271,13 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
         if (event.isAvailable() && !event.isExpired()) {
             int finalPosition = position;
-            holder.mEventContentLayout.setOnClickListener(v -> {
+            holder.mClickableLayout.setOnClickListener(v -> {
                 if (this.mOnItemClickListener != null) {
                     this.mOnItemClickListener.onEventItemClicked(finalPosition);
                 }
             });
         } else {
-            holder.mEventContentLayout.setOnClickListener(null);
+            holder.mClickableLayout.setOnClickListener(null);
         }
     }
 
@@ -285,6 +286,9 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         return mEvents.size();
     }
 
+    public float getHeightPerMillis() {
+        return HEIGHT_PER_MILLIS;
+    }
 
     public void setOnItemClickListener (OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
@@ -292,9 +296,5 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
     public interface OnItemClickListener {
         void onEventItemClicked(int position);
-    }
-
-    public float getHeightPerMillis() {
-        return HEIGHT_PER_MILLIS;
     }
 }

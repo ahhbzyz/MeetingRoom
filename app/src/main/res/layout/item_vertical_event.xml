@@ -33,30 +33,37 @@
             android:layout_width="12dp"
             android:layout_below="@+id/view_item_divider" />
 
-        <LinearLayout
-            android:id="@+id/layout_event_content"
-            android:background="?attr/selectableItemBackground"
-            android:orientation="vertical"
+        <FrameLayout
+            android:id="@+id/layout_clickable"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground"
             android:layout_below="@+id/view_item_divider"
             android:layout_toEndOf="@+id/img_timeline_bar">
 
-            <TextView
-                android:text="08:45 - 10:15"
+            <LinearLayout
+                android:id="@+id/layout_event_content"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_event_period" />
+                android:layout_height="match_parent"
+                android:paddingStart="8dp"
+                android:paddingEnd="0dp">
 
-            <TextView
-                android:text="a.shevelev@corp.badoo.com"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_event_info" />
+                <TextView
+                    android:text="08:45 - 10:15"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_event_period" />
 
-        </LinearLayout>
+                <TextView
+                    android:text="a.shevelev@corp.badoo.com"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_event_info" />
+
+            </LinearLayout>
+        </FrameLayout>
 
     </RelativeLayout>
 
