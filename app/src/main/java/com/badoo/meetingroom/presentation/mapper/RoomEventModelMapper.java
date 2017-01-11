@@ -37,10 +37,14 @@ public class RoomEventModelMapper {
         roomEventModel.setOrganizer(roomEvent.getOrganizer());
         roomEventModel.setStatus(roomEvent.getStatus());
 
-        roomEventModel.setStartTime(TimeHelper.dropSeconds(roomEvent.getStartTime()));
-        roomEventModel.setEndTime(TimeHelper.dropSeconds(roomEvent.getEndTime()));
+        roomEventModel.setStartTime(roomEvent.getStartTime());
+        roomEventModel.setEndTime(roomEvent.getEndTime());
 
         roomEventModel.setStatus(RoomEventModel.BUSY);
+
+        if (roomEvent.isFastBook()) {
+            roomEventModel.setConfirmed(true);
+        }
         return roomEventModel;
     }
 

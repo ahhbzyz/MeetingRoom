@@ -6,14 +6,28 @@ package com.badoo.meetingroom.domain.entity.intf;
 public interface RoomEvent extends Entity {
     int AVAILABLE = 0;
     int BUSY = 1;
+
     void setId(String id);
+
     String getId();
+
     int getStatus();
+
     void setStatus(int status);
+
     long getStartTime();
+
     void setStartTime(long startTime);
+
     long getEndTime();
+
     void setEndTime(long endTime);
+
     String getOrganizer();
+
     void setOrganizer(String organizer);
+
+    boolean isFastBook();
+
+    void setFastBook(boolean isFastBook);
 }

@@ -2,13 +2,9 @@ package com.badoo.meetingroom.domain.mapper;
 
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.entity.impl.RoomEventImpl;
-import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventAttendee;
-import com.google.api.services.calendar.model.EventDateTime;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -40,6 +36,10 @@ public class RoomEventDataMapper {
             roomEvent.setStartTime(startTime);
             roomEvent.setEndTime(endTime);
             roomEvent.setStatus(RoomEvent.BUSY);
+
+            if (event.getDescription() != null && event.getDescription().equals("fast_book")) {
+                roomEvent.setFastBook(true);
+            }
         }
         return roomEvent;
     }

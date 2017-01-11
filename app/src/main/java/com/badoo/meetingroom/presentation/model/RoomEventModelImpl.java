@@ -77,21 +77,11 @@ public class RoomEventModelImpl implements RoomEventModel {
     }
 
     @Override
-    public long getPastTime() {
-        return getDuration() - getRemainingTime();
-    }
-
-    @Override
     public long getRemainingTime() {
         if (isExpired()) {
             return 0;
         }
         return startTime > TimeHelper.getCurrentTimeInMillis() ? getDuration() : endTime - TimeHelper.getCurrentTimeInMillis();
-    }
-
-    @Override
-    public String getRemainingTimeInText(){
-        return TimeHelper.formatMillisInMinAndSec(getRemainingTime());
     }
 
     @Override
@@ -120,16 +110,6 @@ public class RoomEventModelImpl implements RoomEventModel {
     }
 
     @Override
-    public long getRemainingOnHoldTime() {
-        return getStartTime() + ON_HOLD_TIME - TimeHelper.getCurrentTimeInMillis();
-    }
-
-    @Override
-    public String getRemainingOnHoldTimeInText() {
-        return TimeHelper.formatMillisInMinAndSec(getRemainingOnHoldTime());
-    }
-
-    @Override
     public boolean isConfirmed(){
         return isConfirmed;
     }
@@ -138,8 +118,6 @@ public class RoomEventModelImpl implements RoomEventModel {
     public void setConfirmed(boolean confirmed) {
         isConfirmed = confirmed;
     }
-
-
 
     @Override
     public boolean isDoNotDisturb() {

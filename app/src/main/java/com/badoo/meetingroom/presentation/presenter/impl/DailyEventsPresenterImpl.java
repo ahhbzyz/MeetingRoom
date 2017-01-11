@@ -15,6 +15,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,51 +29,33 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
 
     private DailyEventsView mDailyEventsView;
-
-    private final GetEvents getEventsUseCase;
-
+    private final GetEvents mGetEventsUseCase;
     private final RoomEventModelMapper mMapper;
-
-    private int mPage = 0;
-
     private List<RoomEventModel> mEventList;
-
-    private int numOfExpiredEvents;
+    private int mPage = 0;
 
     @Inject
     DailyEventsPresenterImpl(@Named(GetEvents.NAME)GetEvents getEventsUseCase,
-                                    RoomEventModelMapper mMapper) {
-        this.getEventsUseCase = getEventsUseCase;
-        this.mMapper = mMapper;
-    }
-
-
-    public void init() {
-        mPage = mDailyEventsView.getCurrentPage();
-        loadRoomEventList();
-    }
-
-    @Override
-    public void loadRoomEventList() {
-        this.getRoomEventList();
+                                    RoomEventModelMapper mapper) {
+        mGetEventsUseCase = getEventsUseCase;
+        mMapper = mapper;
+        mEventList = new ArrayList<>();
     }
 
     private void showDailyEventsInView(List<RoomEventModel> roomEventModelList) {
-        updateNumOfExpiredEvents();
         mDailyEventsView.renderDailyEvents(roomEventModelList);
+
     }
 
-    private void showViewLoading() {
-        this.mDailyEventsView.showLoadingData("");
-    }
-
-    private void dismissViewLoading() {
-        this.mDailyEventsView.dismissLoadingData();
+    @Override
+    public void updateCurrentTimeLayout() {
+        mDailyEventsView.updateCurrentTimeLayout(getNumOfExpiredEvents());
     }
 
     @Override
     public void setView(DailyEventsView dailyEventsView) {
-        this.mDailyEventsView = dailyEventsView;
+        mDailyEventsView = dailyEventsView;
+        mPage = mDailyEventsView.getCurrentPage();
     }
 
     @Override
@@ -84,38 +67,8 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         }
     }
 
-    private void getRoomEventList() {
-
-        Event event = new Event();
-        DateTime startDateTime = new DateTime(Badoo.getStartTimeOfDay(mPage));
-        EventDateTime start = new EventDateTime()
-            .setDateTime(startDateTime)
-            .setTimeZone("Europe/London");
-        event.setStart(start);
-
-        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
-        EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime)
-            .setTimeZone("Europe/London");
-        event.setEnd(end);
-
-
-        mMapper.setEventStartTime(startDateTime.getValue());
-        mMapper.setEventEndTime(endDateTime.getValue());
-        this.getEventsUseCase.init(event).execute(new RoomEventListSubscriber());
-    }
-
-    @Override
-    public float getNumOfExpiredEvents() {
-        return numOfExpiredEvents;
-    }
-
-    @Override
-    public void updateNumOfExpiredEvents() {
-        numOfExpiredEvents = 0;
-        if (mEventList == null) {
-            return;
-        }
+    private int getNumOfExpiredEvents() {
+        int numOfExpiredEvents = 0;
         for (RoomEventModel event: mEventList) {
             if(event.isExpired()) {
                 numOfExpiredEvents++;
@@ -123,36 +76,59 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
                 break;
             }
         }
+        return numOfExpiredEvents;
     }
 
-    private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {
+    @Override
+    public void getEvents() {
+        Event event = new Event();
+
+        DateTime startDateTime = new DateTime(Badoo.getStartTimeOfDay(mPage));
+        EventDateTime start = new EventDateTime()
+            .setDateTime(startDateTime)
+            .setTimeZone("Europe/London");
+        event.setStart(start);
+
+        DateTime endDateTime = new DateTime(Badoo.getEndTimeOfDay(mPage));
+        EventDateTime end = new EventDateTime()
+            .setDateTime(endDateTime)
+            .setTimeZone("Europe/London");
+        event.setEnd(end);
+
+        mMapper.setEventStartTime(startDateTime.getValue());
+        mMapper.setEventEndTime(endDateTime.getValue());
+        mGetEventsUseCase.init(event).execute(new GetEventsSubscriber());
+    }
+
+    private final class GetEventsSubscriber extends DefaultSubscriber<List<RoomEvent>> {
 
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading();
+            mDailyEventsView.showLoadingData("");
         }
 
         @Override
         public void onNext(List<RoomEvent> roomEvents) {
             mEventList = mMapper.map(roomEvents);
+            updateCurrentTimeLayout();
             showDailyEventsInView(mEventList);
         }
 
         @Override
         public void onCompleted() {
             super.onCompleted();
-            dismissViewLoading();
+            mDailyEventsView.dismissLoadingData();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            dismissViewLoading();
+            mDailyEventsView.dismissLoadingData();
             try {
                 throw e;
             } catch (UserRecoverableAuthIOException e1) {
-                mDailyEventsView.showUserRecoverableAuth(e1);
+                mDailyEventsView.handlerUserRecoverableAuth(e1);
             } catch (GoogleJsonResponseException googleJsonResponseException) {
                 mDailyEventsView.showError(googleJsonResponseException.getDetails().getMessage());
             } catch (Exception exception) {
@@ -175,6 +151,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     @Override
     public void destroy() {
-        getEventsUseCase.unSubscribe();
+        mGetEventsUseCase.unSubscribe();
     }
 }

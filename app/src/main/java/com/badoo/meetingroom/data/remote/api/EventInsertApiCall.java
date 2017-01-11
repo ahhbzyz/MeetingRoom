@@ -19,15 +19,15 @@ public class EventInsertApiCall implements Callable<Event>{
 
     private Calendar mServices = null;
     private Event mResponse;
-    private Event mEvent;
+    private Event mEventParams;
 
-    private EventInsertApiCall(Calendar services, Event event) {
-        this.mEvent = event;
+    private EventInsertApiCall(Calendar services, Event eventParams) {
+        this.mEventParams = eventParams;
         this.mServices = services;
     }
 
-    public static EventInsertApiCall createINSERT(Calendar services, Event event) {
-        return new EventInsertApiCall(services, event);
+    public static EventInsertApiCall createINSERT(Calendar services, Event eventParams) {
+        return new EventInsertApiCall(services, eventParams);
     }
 
     public Event requestSyncCall() throws Exception {
@@ -36,26 +36,7 @@ public class EventInsertApiCall implements Callable<Event>{
     }
 
     private void connectToApi() throws Exception {
-
-        Event event = new Event();
-        DateTime startDateTime = new DateTime(TimeHelper.dropSeconds(mEvent.getStart().getDateTime().getValue()));
-        EventDateTime start = new EventDateTime()
-            .setDateTime(startDateTime)
-            .setTimeZone("Europe/London");
-        event.setStart(start);
-
-        DateTime endDateTime = new DateTime(TimeHelper.dropSeconds(mEvent.getEnd().getDateTime().getValue()));
-        EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime)
-            .setTimeZone("Europe/London");
-        event.setEnd(end);
-
-        if (mEvent.getOrganizer() != null) {
-            List<EventAttendee> eventAttendees = new ArrayList<>(1);
-            eventAttendees.add(new EventAttendee().setEmail(mEvent.getOrganizer().getEmail()));
-            event.setAttendees(eventAttendees);
-        }
-        mResponse = mServices.events().insert("primary", event).execute();
+        mResponse = mServices.events().insert("primary", mEventParams).execute();
     }
 
     @Override

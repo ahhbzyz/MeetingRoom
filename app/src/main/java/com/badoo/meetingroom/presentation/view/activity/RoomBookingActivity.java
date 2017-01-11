@@ -14,7 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -92,9 +95,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     private void setUpEditText() {
-        mEmailEt.setOnClickListener(v -> {
-            mEmailEt.setSelection(0);
-        });
 
         mEmailEt.setOnEditorActionListener((v, actionId, event) -> {
 
@@ -267,6 +267,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
                 break;
         }
     }
+
 
     @Override
     public Context context() {

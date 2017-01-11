@@ -21,26 +21,6 @@ public class EventsCalendarPresenterImpl implements EventsCalendarPresenter {
     }
 
 
-    public void init() {
-        setUpToolbar();
-        setUpViewPager();
-    }
-
-
-    private void setUpToolbar() {
-        mEventsCalendarView.setUpToolbar();
-        loadAvailableRooms();
-    }
-
-    private void loadAvailableRooms() {
-    }
-
-    private void setUpViewPager() {
-        mEventsCalendarView.setUpViewPager();
-    }
-
-
-
     @Override
     public void setView(@NonNull EventsCalendarView eventsCalendarView) {
         this.mEventsCalendarView = eventsCalendarView;

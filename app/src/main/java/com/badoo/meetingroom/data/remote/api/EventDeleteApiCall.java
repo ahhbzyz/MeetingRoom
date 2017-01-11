@@ -15,13 +15,13 @@ public class EventDeleteApiCall implements Callable<Void>{
     private Calendar mServices = null;
     private Event mEventParams;
 
-    private EventDeleteApiCall(Calendar services, Event event) {
-        this.mEventParams = event;
+    private EventDeleteApiCall(Calendar services, Event eventParams) {
+        this.mEventParams = eventParams;
         this.mServices = services;
     }
 
-    public static EventDeleteApiCall createDelete(Calendar services, Event event) {
-        return new EventDeleteApiCall(services, event);
+    public static EventDeleteApiCall createDelete(Calendar services, Event eventParams) {
+        return new EventDeleteApiCall(services, eventParams);
     }
 
     public Void requestSyncCall() throws Exception {

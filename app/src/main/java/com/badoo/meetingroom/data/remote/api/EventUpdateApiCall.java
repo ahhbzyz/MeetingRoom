@@ -18,13 +18,13 @@ public class EventUpdateApiCall implements Callable<Event>{
     private Event mResponse;
     private Event mEventParams;
 
-    private EventUpdateApiCall(Calendar services, Event event) {
+    private EventUpdateApiCall(Calendar services, Event eventParams) {
+        this.mEventParams = eventParams;
         this.mServices = services;
-        this.mEventParams = event;
     }
 
-    public static EventUpdateApiCall createUpdate(Calendar services, Event event) {
-        return new EventUpdateApiCall(services, event);
+    public static EventUpdateApiCall createUpdate(Calendar services, Event eventParams) {
+        return new EventUpdateApiCall(services, eventParams);
     }
 
     public Event requestSyncCall() throws Exception {
@@ -33,17 +33,7 @@ public class EventUpdateApiCall implements Callable<Event>{
     }
 
     private void connectToApi() throws Exception {
-        // Retrieve the event from the API
-        Event event = mServices.events().get("primary", mEventParams.getId()).execute();
-
-        DateTime endDateTime = new DateTime(TimeHelper.dropSeconds(mEventParams.getEnd().getDateTime().getValue()));
-        EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime)
-            .setTimeZone("Europe/London");
-        event.setEnd(end);
-
-        // Update the event
-        mResponse = mServices.events().update("primary", event.getId(), event).execute();
+        mResponse = mServices.events().update("primary", mEventParams.getId(), mEventParams).execute();
     }
 
     @Override

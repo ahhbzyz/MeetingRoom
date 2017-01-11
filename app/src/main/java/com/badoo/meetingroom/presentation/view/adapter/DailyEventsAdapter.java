@@ -36,13 +36,14 @@ import butterknife.ButterKnife;
 
 public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.ViewHolder> {
 
-    static final float HEIGHT_PER_MILLIS =  38f / TimeHelper.min2Millis(DailyEventsFragment.MIN_SLOT_TIME);
+    private static final int MIN_SLOT_TIME = 5;
+    private static final float HEIGHT_PER_MILLIS =  38f / TimeHelper.min2Millis(MIN_SLOT_TIME);
 
+    private final Context mContext;
     private List<RoomEventModel> mEvents;
-    private Context mContext;
     private OnItemClickListener mOnItemClickListener;
-    private final int mPage;
     private SparseIntArray mBottomTimelineBarHeights;
+    private int mPage = 0;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -60,9 +61,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     }
 
     @Inject
-    public DailyEventsAdapter(Context context, int page) {
+    public DailyEventsAdapter(Context context) {
         mContext = context;
-        mPage = page;
         mEvents = new ArrayList<>();
         mBottomTimelineBarHeights = new SparseIntArray();
     }
@@ -73,6 +73,10 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         }
         this.mEvents = roomEventModelList;
         this.notifyDataSetChanged();
+    }
+
+    public void setPage(int page) {
+        mPage = page;
     }
 
     @Override
@@ -123,9 +127,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         holder.itemView.setLayoutParams(params);
 
         List<Long> timestamps = getAllTimeStampsInView(event);
-        if (position == getItemCount() - 1) {
-            timestamps.add(Badoo.getEndTimeOfDay(mPage));
-        }
 
         holder.mTimestampLayout.removeAllViews();
 
@@ -161,18 +162,17 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             timestampTv.setLayoutParams(textViewParams);
 
             float hideOffset = textViewHeight / 4f;
-            if (mPage == 0) {
-                if (event.isProcessing() && topTimelineBarHeight >= (topMargin - hideOffset) &&
-                    topTimelineBarHeight <= (topMargin + textViewHeight + hideOffset)) {
-                    continue;
-                }
 
-                if (position > 0 && mEvents.get(position - 1).isProcessing() &&
-                    mBottomTimelineBarHeights.get(position - 1) > 0 &&
-                    mBottomTimelineBarHeights.get(position - 1) <= textViewHeight / 2f + hideOffset
-                    && topMargin <= textViewHeight/2f) {
-                    continue;
-                }
+            if (event.isProcessing() && topTimelineBarHeight >= (topMargin - hideOffset) &&
+                topTimelineBarHeight <= (topMargin + textViewHeight + hideOffset)) {
+                continue;
+            }
+
+            if (position > 0 && mEvents.get(position - 1).isProcessing() &&
+                mBottomTimelineBarHeights.get(position - 1) > 0 &&
+                mBottomTimelineBarHeights.get(position - 1) <= textViewHeight / 2f + hideOffset
+                && topMargin <= textViewHeight/2f) {
+                continue;
             }
             holder.mTimestampLayout.addView(timestampTv);
         }

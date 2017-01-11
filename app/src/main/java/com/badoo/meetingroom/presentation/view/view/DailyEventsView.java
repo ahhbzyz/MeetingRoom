@@ -15,5 +15,8 @@ public interface DailyEventsView extends LoadDataView{
     void renderDailyEvents(List<RoomEventModel> roomEventModelList);
     int getCurrentPage();
     void bookRoom(long startTime, long endTime);
-    void showUserRecoverableAuth(UserRecoverableAuthIOException e);
+
+    void updateCurrentTimeLayout(int numOfExpiredEvents);
+
+    void handlerUserRecoverableAuth(UserRecoverableAuthIOException e);
 }

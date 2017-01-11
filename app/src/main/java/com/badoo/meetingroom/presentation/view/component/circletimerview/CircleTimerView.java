@@ -623,7 +623,7 @@ public class CircleTimerView extends View {
             mAnimator.cancel();
         }
 
-        long currentProgress = (TimeHelper.getCurrentTimeInMillis() - startTime) / (endTime - startTime);
+        float currentProgress = ((TimeHelper.getCurrentTimeInMillis() - startTime) / (float)(endTime - startTime));
 
         mAnimator = ValueAnimator.ofFloat(currentProgress * 100, getMaxProgress());
         long remainingTime = endTime - TimeHelper.getCurrentTimeInMillis();

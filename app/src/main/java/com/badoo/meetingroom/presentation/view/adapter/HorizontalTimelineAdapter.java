@@ -28,8 +28,8 @@ import butterknife.ButterKnife;
  */
 
 public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTimelineAdapter.ViewHolder>{
-
-    private static final float WIDTH_PER_MILLIS =  38f / TimeHelper.min2Millis(DailyEventsFragment.MIN_SLOT_TIME);
+    public static final int MIN_SLOT_TIME = 5;
+    private static final float WIDTH_PER_MILLIS =  38f / TimeHelper.min2Millis(MIN_SLOT_TIME);
 
     private List<RoomEventModel> mEvents;
     private float mDividerWidth;

@@ -17,13 +17,13 @@ public class EventsGetApiCall implements Callable<List<Event>>{
     private List<Event> mResponse;
     private Event mEventParams;
 
-    private EventsGetApiCall(Calendar services, Event event) {
+    private EventsGetApiCall(Calendar services, Event eventParams) {
         this.mServices = services;
-        this.mEventParams = event;
+        this.mEventParams = eventParams;
     }
 
-    public static EventsGetApiCall createGET(Calendar services, Event event) {
-        return new EventsGetApiCall(services, event);
+    public static EventsGetApiCall createGET(Calendar services, Event eventParams) {
+        return new EventsGetApiCall(services, eventParams);
     }
 
     public List<Event> requestSyncCall() throws Exception {

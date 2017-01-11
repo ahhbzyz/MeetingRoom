@@ -33,7 +33,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     private final long mDefaultSlotLength = 15 * 60 * 1000;
     private int mRecyclerViewWidth = -1;
     private int mLeftPadding = -1;
-    private final int [] timestamps = new int[]{0, 15, 30, 45};
+    private final int [] timestamps = new int[]{15, 30, 45, 60};
     private OnItemClickListener mOnItemClickListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         style="@style/MyCalendarTabLayout"
         app:tabMode="scrollable"
-        app:tabMinWidth="@dimen/event_calendar_tab_min_width"
+        app:tabMinWidth="@dimen/events_calendar_tab_min_width"
         android:id="@+id/tab_layout"
         android:clipToPadding="false"/>
 

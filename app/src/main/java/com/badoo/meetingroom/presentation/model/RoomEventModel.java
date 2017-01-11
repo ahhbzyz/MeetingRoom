@@ -30,24 +30,15 @@ public interface RoomEventModel {
 
     long getDuration();
 
-    long getPastTime();
-
     long getRemainingTime();
 
-    String getRemainingTimeInText();
-
     boolean isBusy();
-
 
     boolean isAvailable();
 
     boolean isOnHold();
 
     long getOnHoldTime();
-
-    long getRemainingOnHoldTime();
-
-    String getRemainingOnHoldTimeInText();
 
     boolean isConfirmed();
 

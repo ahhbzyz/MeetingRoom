@@ -95,7 +95,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void onCountDownFinished() {
-        if (!mCurrentEvent.isOnHold() && TimeHelper.getCurrentTimeInMillis() < mCurrentEvent.getEndTime()) {
+        if (!mCurrentEvent.isConfirmed() && TimeHelper.getCurrentTimeInMillis() < mCurrentEvent.getEndTime()) {
             deleteEvent();
         } else {
             removeFirstEventFromQueue();
@@ -250,6 +250,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                 .setDateTime(endDateTime)
                 .setTimeZone("Europe/London");
             event.setEnd(end);
+
+            event.setDescription("fast_book");
+
             this.mInsertEventUseCase.init(event).execute(new InsertEventSubscriber());
         }
     }

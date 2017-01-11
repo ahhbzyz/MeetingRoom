@@ -2,7 +2,6 @@ package com.badoo.meetingroom.domain.entity.impl;
 
 
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 
 /**
  * Created by zhangyaozhong on 17/12/2016.
@@ -15,6 +14,7 @@ public class RoomEventImpl implements RoomEvent {
     private long startTime;
     private long endTime;
     private String organizer;
+    private boolean isFastBook;
 
     public RoomEventImpl() {
     }
@@ -67,5 +67,15 @@ public class RoomEventImpl implements RoomEvent {
     @Override
     public void setOrganizer(String organizer) {
         this.organizer = organizer;
+    }
+
+    @Override
+    public boolean isFastBook() {
+        return isFastBook;
+    }
+
+    @Override
+    public void setFastBook(boolean isFastBook) {
+        this.isFastBook = isFastBook;
     }
 }

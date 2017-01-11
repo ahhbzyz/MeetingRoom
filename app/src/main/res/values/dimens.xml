@@ -37,7 +37,7 @@
     <dimen name="horizontal_timeline_current_time_mark_width">1.5dp</dimen>
     <dimen name="horizontal_timeline_time_slot_divider_width">2dp</dimen>
 
-    <dimen name="event_calendar_tab_min_width">100dp</dimen>
+    <dimen name="events_calendar_tab_min_width">100dp</dimen>
 
     <dimen name="room_list_tab_min_width">160dp</dimen>
 

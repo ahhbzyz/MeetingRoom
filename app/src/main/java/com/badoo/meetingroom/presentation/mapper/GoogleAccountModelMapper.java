@@ -12,7 +12,7 @@ import javax.inject.Inject;
 public class GoogleAccountModelMapper {
 
     @Inject
-    public GoogleAccountModelMapper() {
+    GoogleAccountModelMapper() {
 
     }
 
