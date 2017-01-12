@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -22,7 +23,7 @@ import javax.inject.Inject;
  * Created by zhangyaozhong on 28/12/2016.
  */
 
-public class DailyEventsFragmentPagerAdapter extends FragmentPagerAdapter {
+public class DailyEventsFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 

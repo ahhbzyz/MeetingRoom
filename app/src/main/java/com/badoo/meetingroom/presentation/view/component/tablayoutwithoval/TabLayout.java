@@ -1179,8 +1179,8 @@ public class TabLayout extends HorizontalScrollView {
 
             return selectedChild.getLeft()
                 + ((int) ((selectedWidth + nextWidth) * positionOffset * 0.5f));
-                //+ (selectedChild.getWidth() / 2)
-                //- (getWidth() / 2);
+            //+ (selectedChild.getWidth() / 2)
+            //- (getWidth() / 2);
         }
         return 0;
     }
@@ -2141,7 +2141,7 @@ public class TabLayout extends HorizontalScrollView {
                 // onPageSelected() instead.
                 final boolean updateIndicator = !(mScrollState == SCROLL_STATE_SETTLING
                     && mPreviousScrollState == SCROLL_STATE_IDLE);
-                tabLayout.setScrollPosition(position, positionOffset, updateText, updateIndicator);
+                //tabLayout.setScrollPosition(position, positionOffset, updateText, updateIndicator);
             }
         }
 
@@ -2177,7 +2177,7 @@ public class TabLayout extends HorizontalScrollView {
 
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            mViewPager.setCurrentItem(tab.getPosition());
+            mViewPager.setCurrentItem(tab.getPosition(), false);
         }
 
         @Override

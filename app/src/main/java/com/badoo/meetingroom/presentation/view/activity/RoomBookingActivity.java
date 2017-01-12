@@ -78,7 +78,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         mRoomNameTv.setTypeface(mStolzMediumTypeface);
-
+        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomBookingActivity.this));
         // add back arrow to toolbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -6,15 +6,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.presenter.intf.EventsCalendarPresenter;
-import com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.FadePageTransformer;
+import com.badoo.meetingroom.presentation.view.component.nonswipeviewpager.NonSwipeViewPager;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.EventsCalendarView;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsFragmentPagerAdapter;
@@ -35,9 +35,10 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     DailyEventsFragmentPagerAdapter mAdapter;
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
+    @BindView(R.id.img_room) ImageView mRoomImg;
     @BindView(R.id.tv_current_date) TextView mCurrentDateTv;
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
-    @BindView(R.id.view_pager) ViewPager mViewPager;
+    @BindView(R.id.view_pager) NonSwipeViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +48,11 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
         getComponent().inject(this);
         mPresenter.setView(this);
 
-        setUpToolbar();
+        initViews();
         setUpViewPager();
-        updateCurrentDate();
     }
 
-    public void setUpToolbar() {
+    public void initViews() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         mRoomNameTv.setTypeface(mStolzMediumTypeface);
@@ -61,21 +61,23 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-    }
 
-    private void updateCurrentDate() {
+        mRoomImg.setOnClickListener(v -> {
+            Intent intent = new Intent(EventsCalendarActivity.this, AllRoomsActivity.class);
+            startActivity(intent);
+        });
+
         mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(this));
     }
+
 
     private void setUpViewPager() {
         mAdapter = new DailyEventsFragmentPagerAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setPageTransformer(false , new FadePageTransformer());
-        mTabLayout.setupWithViewPager(mViewPager);
-
         // Center tab layout
         float width = Resources.getSystem().getDisplayMetrics().widthPixels;
         mTabLayout.setPadding((int)(width / 2f - getResources().getDimension(R.dimen.events_calendar_tab_min_width) / 2f), 0 , 0, 8);
+        mTabLayout.setupWithViewPager(mViewPager);
     }
 
     @Override
@@ -97,7 +99,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
         public void onReceive(Context context, Intent intent) {
             if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
                 if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
-                    updateCurrentDate();
+                    mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(EventsCalendarActivity.this));
                     mAdapter.getRegisteredFragment(0).getPresenter().updateCurrentTimeLayout();
                 }
             }

@@ -86,7 +86,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     private void setUpEventsRecyclerView() {
-
         mAdapter.setPage(mPage);
         mAdapter.setOnItemClickListener(this);
         mDailyEventsRv.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext()));
@@ -115,11 +114,9 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         mAdapter.setDailyEventList(roomEventModelList);
         if (mPage == 0) {
             mCurrentTimeLayout.setVisibility(View.VISIBLE);
-            mDailyEventsRv.smoothScrollBy(0, Math.round(mTimelineMarkOffset) - mScrollOffset);
+            mDailyEventsRv.smoothScrollBy(0, (int) (mTimelineMarkOffset - mScrollOffset));
         }
-        else {
-            mCurrentTimeLayout.setVisibility(View.GONE);
-        }
+
     }
 
     @Override
@@ -187,7 +184,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
                 break;
             case REQUEST_BOOK_ROOM:
                 if (resultCode == RESULT_OK) {
-                    Toast.makeText(this.getContext(), "Room is booked successfully", Toast.LENGTH_SHORT).show();
                     mPresenter.getEvents();
                     Intent returnIntent = new Intent();
                     this.getActivity().setResult(Activity.RESULT_OK, returnIntent);

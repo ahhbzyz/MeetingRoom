@@ -72,7 +72,7 @@
                 android:text="2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_ava_rooms"
+                android:id="@+id/tv_room"
                 android:layout_toStartOf="@+id/img_room"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="24sp"

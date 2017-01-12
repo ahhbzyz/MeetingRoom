@@ -83,6 +83,7 @@
 
     <com.badoo.meetingroom.presentation.view.component.tablayoutwithoval.TabLayout
         android:background="@android:color/white"
+        app:tabBackground="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/MyCalendarTabLayout"
@@ -91,11 +92,10 @@
         android:id="@+id/tab_layout"
         android:clipToPadding="false"/>
 
-    <android.support.v4.view.ViewPager
+    <com.badoo.meetingroom.presentation.view.component.nonswipeviewpager.NonSwipeViewPager
         android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/view_pager">
-
-    </android.support.v4.view.ViewPager>
+    </com.badoo.meetingroom.presentation.view.component.nonswipeviewpager.NonSwipeViewPager>
 </LinearLayout>

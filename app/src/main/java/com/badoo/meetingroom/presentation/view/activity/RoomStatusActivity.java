@@ -70,6 +70,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.img_calendar) ImageView mCalendarImg;
+    @BindView(R.id.img_room) ImageView mRoomImg;
 
     // Circle time view
     @BindView(R.id.ctv_status) CircleTimerView mCircleTimeView;
@@ -141,6 +142,11 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
             startActivityForResult(intent, REQUEST_BOOK_ROOM);
         });
 
+        mRoomImg.setOnClickListener(v -> {
+            Intent intent = new Intent(RoomStatusActivity.this, AllRoomsActivity.class);
+            startActivity(intent);
+        });
+
         mCircleBtnDiameter = (int) getResources().getDimension(R.dimen.circle_button_diameter);
         mCircleBtnLeftMargin = (int) getResources().getDimension(R.dimen.circle_button_left_margin);
         mCircleBtnNameTopMargin = (int) getResources().getDimension(R.dimen.circle_button_name_top_margin);
@@ -162,11 +168,9 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     }
 
     private void setUpHorizontalTimelineView() {
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mHorizontalTimelineRv.setLayoutManager(manager);
         mAdapter.setOnItemClickListener(this);
         mHorizontalTimelineRv.setAdapter(mAdapter);
+        mHorizontalTimelineRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         Handler scrollBackHandler = new Handler();
         mHorizontalTimelineRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -209,13 +213,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     @Override
     public void renderRoomEvents(List<RoomEventModel> roomEventModelList) {
         mAdapter.setEventList(roomEventModelList);
-        int mNumOfExpiredEvents = 0;
-        for (RoomEventModel event : roomEventModelList) {
-            if (event.isExpired()) {
-                mNumOfExpiredEvents ++;
-            }
-        }
-        updateHorizontalTimelineView(mNumOfExpiredEvents);
     }
 
     @Override
@@ -276,6 +273,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
 
     @Override
     public void updateHorizontalTimelineView(int numOfExpiredEvents) {
+
         float leftMargin = (TimeHelper.getCurrentTimeSinceMidNight()) * mAdapter.getWidthPerMillis()
             + (numOfExpiredEvents + 1) * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width)
             - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
