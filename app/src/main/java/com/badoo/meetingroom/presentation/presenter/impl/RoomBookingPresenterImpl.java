@@ -1,5 +1,6 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
+import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.InsertEvent;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
@@ -25,16 +26,14 @@ import javax.inject.Named;
 public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
     private RoomBookingView mRoomBookingView;
-    private List<TimeSlotsAdapter.TimeSlot> mTimeSlotList;
-    private long selectedStartTime = -1;
-    private long selectedEndTime = -1;
+    private long selectedStartTime;
+    private long selectedEndTime;
     private final InsertEvent mInsertEventUseCase;
 
     @Inject
     RoomBookingPresenterImpl(@Named(InsertEvent.NAME) InsertEvent insertEvent) {
         this.mInsertEventUseCase = insertEvent;
     }
-
 
     public void init() {
         setTimeSlotsInView();
@@ -73,9 +72,11 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
     @Override
     public void setTimeSlotList(List<TimeSlotsAdapter.TimeSlot> timeSlotList) {
-        this.mTimeSlotList = timeSlotList;
         boolean startTimeHasVal = false;
         boolean isFirstSelectedSlot = false;
+        selectedStartTime = -1;
+        selectedEndTime = -1;
+
         int numOfSelectedSlots = 0;
 
         for (int i = 0; i < timeSlotList.size(); i++) {
@@ -146,7 +147,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
 
     private void showViewLoading() {
-        this.mRoomBookingView.showLoadingData("Booking...");
+        this.mRoomBookingView.showLoadingData(mRoomBookingView.context().getString(R.string.booking) + "...");
     }
 
     private void dismissViewLoading() {this.mRoomBookingView.dismissLoadingData();}

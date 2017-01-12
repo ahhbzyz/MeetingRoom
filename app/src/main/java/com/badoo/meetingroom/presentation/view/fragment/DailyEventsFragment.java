@@ -147,7 +147,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
                 - mCurrentTimeLayout.getMeasuredHeight() / 2f
                 + numOfExpiredEvents * getActivity().getApplicationContext().getResources().getDimension(R.dimen.daily_events_divider_height);
 
-            mCurrentTimeLayout.setY(Math.round(mTimelineMarkOffset) - mScrollOffset);
+            mCurrentTimeLayout.setY(mTimelineMarkOffset - mScrollOffset);
             mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
             // Update recycler view
             if (mAdapter != null) {
@@ -155,7 +155,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             }
         }
     }
-
 
     @Override
     public void showLoadingData(String message) {

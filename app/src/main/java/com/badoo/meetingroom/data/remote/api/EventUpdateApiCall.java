@@ -1,10 +1,7 @@
 package com.badoo.meetingroom.data.remote.api;
 
-import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
-import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
 
 import java.util.concurrent.Callable;
 
@@ -33,7 +30,9 @@ public class EventUpdateApiCall implements Callable<Event>{
     }
 
     private void connectToApi() throws Exception {
-        mResponse = mServices.events().update("primary", mEventParams.getId(), mEventParams).execute();
+        Event event = mServices.events().get("primary", mEventParams.getId()).execute();
+        event.setEnd(mEventParams.getEnd());
+        mResponse = mServices.events().update("primary", mEventParams.getId(), event).execute();
     }
 
     @Override

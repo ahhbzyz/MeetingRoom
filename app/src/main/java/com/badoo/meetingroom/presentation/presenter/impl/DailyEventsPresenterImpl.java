@@ -67,6 +67,8 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         }
     }
 
+
+    // TODO efficient way
     private int getNumOfExpiredEvents() {
         int numOfExpiredEvents = 0;
         for (RoomEventModel event: mEventList) {

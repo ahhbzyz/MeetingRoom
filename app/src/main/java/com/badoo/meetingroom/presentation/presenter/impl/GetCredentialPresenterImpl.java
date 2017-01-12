@@ -57,30 +57,9 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         this.mRoomEventModelMapper = roomEventModelMapper;
     }
 
-
+    @Override
     public void init() {
         loadGoogleAccount();
-    }
-
-    private void getModifyCalendarAuth() {
-
-        Event event = new Event();
-        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
-        EventDateTime start = new EventDateTime()
-            .setDateTime(startDateTime)
-            .setTimeZone("Europe/London");
-        event.setStart(start);
-
-        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
-        EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime)
-            .setTimeZone("Europe/London");
-        event.setEnd(end);
-
-        mRoomEventModelMapper.setEventStartTime(startDateTime.getValue());
-        mRoomEventModelMapper.setEventEndTime(endDateTime.getValue());
-
-        this.mGetEventsUseCase.init(event).execute(new RoomEventListSubscriber());
     }
 
     private void loadGoogleAccount() {
@@ -112,27 +91,9 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         mGetCredentialView.showChooseAccountDialog();
     }
 
-
     @Override
     public void setView(@NonNull GetCredentialView getCredentialView) {
         this.mGetCredentialView = getCredentialView;
-    }
-
-    @Override
-    public void Resume() {
-
-    }
-
-    @Override
-    public void Pause() {
-
-    }
-
-    @Override
-    public void destroy() {
-        mGetGoogleAccountUseCase.unSubscribe();
-        mPutGoogleAccountUseCase.unSubscribe();
-        mGetEventsUseCase.unSubscribe();
     }
 
     @Override
@@ -143,6 +104,27 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
     @Override
     public void storeGoogleAccountName(String accountName) {
         mPutGoogleAccountUseCase.init(accountName).execute(new PutGoogleAccountSubscriber());
+    }
+
+    private void getModifyCalendarAuth() {
+
+        Event event = new Event();
+        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
+        EventDateTime start = new EventDateTime()
+            .setDateTime(startDateTime)
+            .setTimeZone("Europe/London");
+        event.setStart(start);
+
+        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
+        EventDateTime end = new EventDateTime()
+            .setDateTime(endDateTime)
+            .setTimeZone("Europe/London");
+        event.setEnd(end);
+
+        mRoomEventModelMapper.setEventStartTime(startDateTime.getValue());
+        mRoomEventModelMapper.setEventEndTime(endDateTime.getValue());
+
+        mGetEventsUseCase.init(event).execute(new GetEventsSubscriber());
     }
 
     private final class GetGoogleAccountSubscriber extends DefaultSubscriber<GoogleAccount> {
@@ -230,7 +212,7 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
         }
     }
 
-    private final class RoomEventListSubscriber extends DefaultSubscriber<List<RoomEvent>> {
+    private final class GetEventsSubscriber extends DefaultSubscriber<List<RoomEvent>> {
 
         @Override
         public void onStart() {
@@ -265,5 +247,22 @@ public class GetCredentialPresenterImpl implements GetCredentialPresenter {
             }
 
         }
+    }
+
+    @Override
+    public void Resume() {
+
+    }
+
+    @Override
+    public void Pause() {
+
+    }
+
+    @Override
+    public void destroy() {
+        mGetGoogleAccountUseCase.unSubscribe();
+        mPutGoogleAccountUseCase.unSubscribe();
+        mGetEventsUseCase.unSubscribe();
     }
 }

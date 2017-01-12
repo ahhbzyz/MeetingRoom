@@ -24,7 +24,6 @@
             android:src="@drawable/ic_badoo_logo" />
 
         <TextView
-            android:text="Wednesday, 11, July"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/tv_current_date"
@@ -57,7 +56,7 @@
     </android.support.v7.widget.Toolbar>
 
     <TextView
-        android:text="Today"
+        android:text="@string/today"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_booking_date"
@@ -67,7 +66,7 @@
         android:layout_marginTop="64dp" />
 
     <TextView
-        android:text="11:45 - 12:30"
+        android:text="@string/no_slots_selected_alert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_booking_period"
@@ -114,7 +113,7 @@
             android:textAlignment="center" />
 
         <Button
-            android:text="BOOK"
+            android:text="@string/book"
             android:background="@drawable/btn_rounded_book"
             android:stateListAnimator="@null"
             android:textColor="@android:color/white"

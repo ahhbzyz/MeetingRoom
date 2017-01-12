@@ -25,13 +25,13 @@
             android:src="@drawable/ic_badoo_logo" />
 
         <TextView
-            android:text="Wednesday, 11, July"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/tv_current_date"
             android:textColor="@android:color/black"
             android:layout_marginEnd="16dp"
             android:gravity="center_vertical|center_horizontal"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true" />
 
     </RelativeLayout>

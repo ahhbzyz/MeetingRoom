@@ -95,7 +95,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void onCountDownFinished() {
-        if (!mCurrentEvent.isConfirmed() && TimeHelper.getCurrentTimeInMillis() < mCurrentEvent.getEndTime()) {
+        if (mCurrentEvent.isProcessing() && mCurrentEvent.isBusy() && !mCurrentEvent.isConfirmed() && !mCurrentEvent.isOnHold()) {
             deleteEvent();
         } else {
             removeFirstEventFromQueue();
@@ -273,12 +273,15 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                 long extendedTime = mEventQueue.get(1).getDuration() >= TimeHelper.min2Millis(15) ? TimeHelper.min2Millis(15) : mEventQueue.get(1).getDuration();
                 // Extent
                 Event event = new Event();
+
                 event.setId(mCurrentEvent.getId());
+
                 DateTime endDateTime = new DateTime(mCurrentEvent.getEndTime() + extendedTime);
                 EventDateTime end = new EventDateTime()
                     .setDateTime(endDateTime)
                     .setTimeZone("Europe/London");
                 event.setEnd(end);
+
                 mUpdateEventUseCase.init(event).execute(new UpdateEventSubscriber());
             }
         }
@@ -482,5 +485,8 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     @Override
     public void destroy() {
         mGetEventsUseCase.unSubscribe();
+        mInsertEventUseCase.unSubscribe();
+        mUpdateEventUseCase.unSubscribe();
+        mDeleteEventUseCase.unSubscribe();
     }
 }

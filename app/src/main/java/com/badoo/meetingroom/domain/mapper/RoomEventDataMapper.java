@@ -27,6 +27,7 @@ public class RoomEventDataMapper {
                           && event.getEnd().getDateTime() != null) {
 
             String organizer = event.getOrganizer().getEmail();
+
             long startTime = event.getStart().getDateTime().getValue();
             long endTime = event.getEnd().getDateTime().getValue();
 

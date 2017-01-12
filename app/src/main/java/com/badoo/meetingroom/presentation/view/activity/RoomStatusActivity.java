@@ -280,7 +280,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
             + (numOfExpiredEvents + 1) * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width)
             - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
-        params.setMargins(Math.round(-leftMargin), params.topMargin, params.rightMargin, params.bottomMargin);
+        params.setMargins((int) -leftMargin, params.topMargin, params.rightMargin, params.bottomMargin);
         mHorizontalTimelineRv.setLayoutParams(params);
         mAdapter.notifyDataSetChanged();
     }

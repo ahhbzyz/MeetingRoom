@@ -2,8 +2,10 @@ package com.badoo.meetingroom.presentation.view.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -32,19 +34,25 @@ import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RoomBookingActivity extends BaseActivity implements RoomBookingView{
+public class RoomBookingActivity extends BaseActivity implements RoomBookingView {
 
     private static final int REQUEST_AUTHORIZATION = 1001;
-    @Inject
-    RoomBookingPresenter mPresenter;
-    @Inject TimeSlotsAdapter mAdapter;
 
+    @Inject RoomBookingPresenter mPresenter;
+    @Inject TimeSlotsAdapter mAdapter;
+    @Inject @Named("stolzl_regular") Typeface mStolzlRegularTypeface;
+    @Inject @Named("stolzl_medium") Typeface mStolzMediumTypeface;
+
+    @BindView(R.id.tv_current_date) TextView mCurrentDateTv;
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.tv_booking_date) TextView mBookingDateTv;
     @BindView(R.id.tv_booking_period) TextView mBookingPeriodTv;
+
     @BindView(R.id.et_email) ExtendedEditText mEmailEt;
     @BindView(R.id.rv_time_slots) RecyclerView mTimeSlotsRv;
     @BindView(R.id.btn_book) Button mBookBtn;
@@ -57,41 +65,42 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_booking);
         ButterKnife.bind(this);
-
         this.getComponent().inject(this);
-
-        setUpToolbar();
-        setUpTextViews();
-        setUpEditText();
-        setUpRecyclerView();
-        setUpBookButton();
-        setUpLoadingDataDialog();
-
         mPresenter.setView(this);
         mPresenter.init();
+
+        initViews();
+        setUpEditText();
     }
 
 
-    private void setUpToolbar() {
+    private void initViews() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-
-        Typeface stolzlMedium = Typeface.createFromAsset(getAssets(),"fonts/stolzl_medium.otf");
-        mRoomNameTv.setTypeface(stolzlMedium);
+        mRoomNameTv.setTypeface(mStolzMediumTypeface);
 
         // add back arrow to toolbar
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-    }
 
-    private void setUpTextViews() {
-        Typeface stolzlRegular = Typeface.createFromAsset(getAssets(),"fonts/stolzl_regular.otf");
-        mBookingDateTv.setTypeface(stolzlRegular);
-        mBookingPeriodTv.setTypeface(stolzlRegular);
-        mEmailEt.setTypeface(stolzlRegular);
+        mBookingDateTv.setTypeface(mStolzlRegularTypeface);
+        mBookingPeriodTv.setTypeface(mStolzlRegularTypeface);
+        mEmailEt.setTypeface(mStolzlRegularTypeface);
+
+        mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mEmailEt.getText().toString().trim()));
+        mBookBtn.setClickable(false);
+        mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
+
+        mLoadingDataDialog = new ProgressDialog(this);
+        mLoadingDataDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mLoadingDataDialog.setMessage(getString(R.string.booking) + "...");
+        mLoadingDataDialog.setCanceledOnTouchOutside(false);
+
+        mTimeSlotsRv.setLayoutManager(new LinearLayoutManager(context(), LinearLayoutManager.HORIZONTAL, false));
+        mTimeSlotsRv.setAdapter(mAdapter);
     }
 
     private void setUpEditText() {
@@ -123,27 +132,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         });
     }
 
-    private void setUpRecyclerView() {
-        mTimeSlotsRv.setLayoutManager(new LinearLayoutManager(
-            context(),
-            LinearLayoutManager.HORIZONTAL,
-            false));
-        mTimeSlotsRv.setAdapter(mAdapter);
-    }
-
-    private void setUpBookButton() {
-        mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mEmailEt.getText().toString().trim()));
-        mBookBtn.setClickable(false);
-        mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
-    }
-
-    private void setUpLoadingDataDialog(){
-        mLoadingDataDialog = new ProgressDialog(this);
-        mLoadingDataDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mLoadingDataDialog.setMessage("Booking room...");
-        mLoadingDataDialog.setCanceledOnTouchOutside(false);
-    }
-
     @Override
     public void setTimeSlotsInView() {
         Bundle bundle = getIntent().getBundleExtra("timePeriod");
@@ -154,12 +142,12 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         long endTime = bundle.getLong("endTime");
 
         if (startTime < TimeHelper.getMidNightTimeOfDay(1)) {
-            mBookingDateTv.setText("Today");
-        } else {
+            mBookingDateTv.setText(getString(R.string.today));
+        }
+        else {
             mBookingDateTv.setText(TimeHelper.formatDate(startTime));
         }
 
-        mBookingPeriodTv.setText("No slots selected");
         mAdapter.setTimeSlots(startTime, endTime);
 
         // Set left padding
@@ -171,7 +159,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
             if (availableSlotLength >= width - 2 * getResources().getDimension(R.dimen.room_booking_view_margin)) {
                 leftPadding = (int) getResources().getDimension(R.dimen.room_booking_view_margin);
-            } else {
+            }
+            else {
                 leftPadding = (width - availableSlotLength) / 2;
             }
             mTimeSlotsRv.setPadding(leftPadding, 0, 0, 0);
@@ -188,24 +177,26 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         if (startTime != -1 && endTime != -1) {
             if (TimeHelper.isMidNight(endTime)) {
                 mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + "24:00");
-            } else {
-                mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " +TimeHelper.formatTime(endTime));
+            }
+            else {
+                mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + TimeHelper.formatTime(endTime));
             }
             hasSlots = true;
-        } else {
-            mBookingPeriodTv.setText("No slots selected");
+        }
+        else {
+            mBookingPeriodTv.setText(getString(R.string.no_slots_selected_alert));
             hasSlots = false;
         }
 
         validateBookingParameters();
-
     }
 
     private void validateBookingParameters() {
         if (hasSlots && isValidEmailAddress(mEmailEt.getText().toString().trim())) {
             mBookBtn.setClickable(true);
             mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book));
-        } else {
+        }
+        else {
             mBookBtn.setClickable(false);
             mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
         }
@@ -219,7 +210,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Override
     public void showBookingSuccessful() {
         Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_OK,returnIntent);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
@@ -249,7 +240,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
 
-
     @Override
     public void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -259,7 +249,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
                     mPresenter.bookRoom(mEmailEt.getText().toString().trim());
@@ -274,10 +264,33 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         return getApplicationContext();
     }
 
-    public boolean isValidEmailAddress(String email) {
+    private boolean isValidEmailAddress(String email) {
         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
         java.util.regex.Matcher m = p.matcher(email);
         return m.matches();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mTimeRefreshReceiver != null) {
+            unregisterReceiver(mTimeRefreshReceiver);
+        }
+    }
+
+    private BroadcastReceiver mTimeRefreshReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
+                mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomBookingActivity.this));
+            }
+        }
+    };
 }
