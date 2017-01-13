@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,9 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,9 +29,6 @@ import com.badoo.meetingroom.presentation.view.adapter.HorizontalTimelineAdapter
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView;
-import com.badoo.meetingroom.presentation.view.component.button.LongPressButton;
-import com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton;
-import com.badoo.meetingroom.presentation.view.viewutils.ViewHelper;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.List;
@@ -51,7 +45,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
  * Created by zhangyaozhong on 22/12/2016.
  */
 
-public class RoomStatusActivity extends BaseActivity implements RoomEventsView, CircleTimerView.OnCountDownListener, HorizontalTimelineAdapter.OnItemClickListener {
+public class RoomStatusActivity extends BaseActivity implements RoomEventsView, View.OnClickListener, CircleTimerView.OnCountDownListener, HorizontalTimelineAdapter.OnItemClickListener {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
@@ -73,7 +67,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     @BindView(R.id.img_room) ImageView mRoomImg;
 
     // Circle time view
-    @BindView(R.id.ctv_status) CircleTimerView mCircleTimeView;
+    @BindView(R.id.circle_time_view) CircleTimerView mCircleTimeView;
     @BindView(R.id.img_book) ImageButton mCircleTimeViewBtn;
 
     // Horizontal timeline view
@@ -92,12 +86,12 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     // Dialogs
     private ProgressDialog mProgressDialog;
     private Handler mLoadingDataDialogHandler;
-
     private AlertDialog mEventOrganizerDialog;
 
-    private int mCircleBtnDiameter;
-    private int mCircleBtnLeftMargin;
-    private int mCircleBtnNameTopMargin;
+    final long SCROLL_BACK_WAIT_TIME = 3000;
+    final long SHOW_LOADING_DIALOG_WAIT_TIME = 1000;
+
+    private RoomStatusHandler mRoomStatusHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +105,8 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         setUpCircleTimeView();
         setUpHorizontalTimelineView();
 
+        mRoomStatusHandler = new RoomStatusHandler(this);
+
         mPresenter.getEvents();
     }
 
@@ -120,11 +116,13 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-
         // TextViews
         mRoomNameTv.setTypeface(mStolzMediumTypeface);
         mFastBookTv.setTypeface(mStolzlRegularTypeface);
         mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(this));
+        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
+        mCalendarImg.setOnClickListener(this);
+        mRoomImg.setOnClickListener(this);
 
         // Dialog
         mLoadingDataDialogHandler = new Handler();
@@ -134,22 +132,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         View content = View.inflate(this, R.layout.dialog_event_organizer, null);
         mEventOrganizerDialog = new AlertDialog.Builder(this, R.style.MyEventOrganizerDialog).setView(content).create();
         ((TextView) content.findViewById(R.id.tv_event_period)).setTypeface(mStolzlRegularTypeface);
-
-        // Calendar Image
-        mCalendarImg.setOnClickListener(v -> {
-            Intent intent = new Intent(RoomStatusActivity.this, EventsCalendarActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityForResult(intent, REQUEST_BOOK_ROOM);
-        });
-
-        mRoomImg.setOnClickListener(v -> {
-            Intent intent = new Intent(RoomStatusActivity.this, AllRoomsActivity.class);
-            startActivity(intent);
-        });
-
-        mCircleBtnDiameter = (int) getResources().getDimension(R.dimen.circle_button_diameter);
-        mCircleBtnLeftMargin = (int) getResources().getDimension(R.dimen.circle_button_left_margin);
-        mCircleBtnNameTopMargin = (int) getResources().getDimension(R.dimen.circle_button_name_top_margin);
     }
 
     private void setUpCircleTimeView() {
@@ -157,7 +139,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mCircleTimeView.setCircleBtnIconDrawable(R.drawable.btn_oval_confirm);
         mCircleTimeView.setAlertIconDrawable(R.drawable.ic_alert_white);
         mCircleTimeView.setOnCountDownListener(this);
-        mCircleTimeView.setOnClickListener(v -> mPresenter.setDoNotDisturb(false));
+        mCircleTimeView.setOnClickListener(this);
 
         // Circle time view button
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mCircleTimeViewBtn.getLayoutParams();
@@ -185,15 +167,19 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == SCROLL_STATE_IDLE) {
+                    if (mHorizontalTimelineRv.computeHorizontalScrollOffset() == 0) {
+                        mPresenter.updateHorizontalTimelineView();
+                    }
                     scrollBackHandler.postDelayed(() -> {
-                        mHorizontalTimelineRv.smoothScrollToPosition(0);
-                    }, 3000);
+                        if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
+                            mHorizontalTimelineRv.smoothScrollToPosition(0);
+                        }
+                    }, SCROLL_BACK_WAIT_TIME);
                 }
             }
         });
 
         // Adjust current time text
-        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
         mCurrentTimeTv.measure(0, 0);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mCurrentTimeTv.getLayoutParams();
         params.setMargins((int) (-mCurrentTimeTv.getMeasuredWidth() / 2f), params.topMargin, params.rightMargin, params.bottomMargin);
@@ -201,22 +187,22 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     }
 
     @Override
-    public void renderRoomEvent(RoomEventModel nextEvent) {
-        updateCircleTimeViewStatus(nextEvent);
-        if (nextEvent.isOnHold()) {
-            mCircleTimeView.startCountDownTimer(nextEvent.getStartTime(), nextEvent.getStartTime() + nextEvent.getOnHoldTime());
+    public void renderRoomEvent(RoomEventModel currentEvent) {
+        updateCircleTimeViewStatus(currentEvent);
+        if (currentEvent.isOnHold()) {
+            mCircleTimeView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getStartTime() + currentEvent.getOnHoldTime());
         } else {
-            mCircleTimeView.startCountDownTimer(nextEvent.getStartTime(), nextEvent.getEndTime());
+            mCircleTimeView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getEndTime());
         }
     }
 
     @Override
-    public void renderRoomEvents(List<RoomEventModel> roomEventModelList) {
+    public void renderRoomEventList(List<RoomEventModel> roomEventModelList) {
         mAdapter.setEventList(roomEventModelList);
     }
 
     @Override
-    public void updateCircleTimeViewTimeText(String text) {
+    public void updateCircleTimeViewTime(String text) {
         mCircleTimeView.setTimerTimeText(text);
     }
 
@@ -305,176 +291,28 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     }
 
     @Override
+    public void showButtonGroupForAvailableStatus() {
+        mRoomStatusHandler.showButtonGroupForAvailableStatus();
+    }
+
+    @Override
+    public void showButtonGroupForOnHoldStatus() {
+        mRoomStatusHandler.showButtonGroupForOnHoldStatus();
+    }
+
+    @Override
+    public void showButtonGroupForBusyStatus() {
+        mRoomStatusHandler.showButtonGroupForBusyStatus();
+    }
+
+    @Override
+    public void showButtonGroupForDoNotDisturbStatus(String endTimeInText) {
+        mRoomStatusHandler.showButtonGroupForDoNotDisturbStatus(endTimeInText);
+    }
+
+    @Override
     public void onEventItemClicked(int position) {
         mPresenter.onEventClicked(position);
-    }
-
-    @Override
-    public void showButtonsForAvailableStatus() {
-
-        mFastBookTv.setVisibility(View.VISIBLE);
-
-        // Update button group layout
-        mButtonsLayout.removeAllViews();
-        mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
-        mButtonsLayout.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-
-        // Circle time view button
-        int btnImgWidth = (int) getResources().getDimension(R.dimen.circle_time_view_btn_available_img_width);
-        int btnImgHeight = (int) getResources().getDimension(R.dimen.circle_time_view_btn_available_img_height);
-        mCircleTimeViewBtn.setVisibility(View.VISIBLE);
-        mCircleTimeViewBtn.setImageDrawable(ViewHelper.createScaleDrawable(this, R.drawable.ic_add_black, btnImgWidth, btnImgHeight));
-
-        TwoLineTextButton[] buttons = new TwoLineTextButton[3];
-        final int min = 5;
-        for (int i = 0; i < 3; i++) {
-            buttons[i] = new TwoLineTextButton(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mCircleBtnDiameter, mCircleBtnDiameter);
-            buttons[i].setLayoutParams(params);
-            if (i == 1) {
-                params.setMargins(mCircleBtnLeftMargin, 0, mCircleBtnLeftMargin, 0);
-                buttons[1].setLayoutParams(params);
-            }
-            buttons[i].setTopText(min * (i + 1) + "");
-            buttons[i].setBottomText("min");
-            buttons[i].setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_time));
-            mButtonsLayout.addView(buttons[i]);
-            final int temp = i;
-            buttons[i].setOnClickListener(v -> mPresenter.insertEvent(min * (temp + 1)));
-        }
-    }
-
-    @Override
-    public void showButtonsForOnHoldStatus() {
-
-        mFastBookTv.setVisibility(View.GONE);
-
-        // Update button group layout
-        mButtonsLayout.removeAllViews();
-        mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
-        mButtonsLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        mCircleTimeViewBtn.setVisibility(View.INVISIBLE);
-
-        // Confirm button
-        ImageButton mConfirmBtn = new ImageButton(this);
-        mConfirmBtn.setLayoutParams(new LinearLayout.LayoutParams(mCircleBtnDiameter, mCircleBtnDiameter));
-        mConfirmBtn.setScaleType(ImageView.ScaleType.CENTER);
-        mConfirmBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_oval_confirm));
-        int confirmBtnImgWidth = (int) getResources().getDimension(R.dimen.confirm_btn_img_width);
-        int confirmBtnImgHeight = (int) getResources().getDimension(R.dimen.confirm_btn_img_height);
-        mConfirmBtn.setImageDrawable(ViewHelper.createScaleDrawable(this, R.drawable.ic_done_white, confirmBtnImgWidth, confirmBtnImgHeight));
-        LinearLayout mConfirmBtnWithText = ViewHelper.addTextUnderBtn(this, mConfirmBtn, getString(R.string.confirm), mCircleBtnNameTopMargin);
-        mButtonsLayout.addView(mConfirmBtnWithText);
-        mConfirmBtn.setOnClickListener(v -> mPresenter.setEventConfirmed());
-
-        // Fake button
-        ImageButton mFakeBtn = new ImageButton(this);
-        mFakeBtn.setLayoutParams(new LinearLayout.LayoutParams(mCircleBtnDiameter, mCircleBtnDiameter));
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(mCircleBtnLeftMargin, 0, mCircleBtnLeftMargin, 0);
-        mFakeBtn.setLayoutParams(params);
-        mFakeBtn.setVisibility(View.INVISIBLE);
-        mButtonsLayout.addView(mFakeBtn);
-
-        // Dismiss button
-        ImageButton mDismissBtn = new ImageButton(this);
-        mDismissBtn.setLayoutParams(new LinearLayout.LayoutParams(mCircleBtnDiameter, mCircleBtnDiameter));
-        mDismissBtn.setScaleType(ImageView.ScaleType.CENTER);
-        mDismissBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_dismiss));
-        int dismissBtnImgWidth = (int) getResources().getDimension(R.dimen.dismiss_btn_img_width);
-        int dismissBtnImgHeight = (int) getResources().getDimension(R.dimen.dismiss_btn_img_height);
-        mDismissBtn.setImageDrawable(ViewHelper.createScaleDrawable(this, R.drawable.ic_clear_black, dismissBtnImgWidth, dismissBtnImgHeight));
-        LinearLayout mDismissBtnWithText = ViewHelper.addTextUnderBtn(this, mDismissBtn, getString(R.string.dismiss), mCircleBtnNameTopMargin);
-        mButtonsLayout.addView(mDismissBtnWithText);
-        mDismissBtn.setOnClickListener(v -> mPresenter.deleteEvent());
-    }
-
-    @Override
-    public void showButtonsForBusyStatus() {
-
-        mFastBookTv.setVisibility(View.GONE);
-
-        // Update button group layout
-        mButtonsLayout.removeAllViews();
-        mButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
-        mButtonsLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-
-        int ctvBtnImgWidth = (int) getResources().getDimension(R.dimen.circle_time_view_btn_busy_img_width);
-        int ctvBtnImgHeight = (int) getResources().getDimension(R.dimen.circle_time_view_btn_busy_img_height);
-        mCircleTimeViewBtn.setVisibility(View.VISIBLE);
-        mCircleTimeViewBtn.setImageDrawable(ViewHelper.createScaleDrawable(this, R.drawable.ic_info_black, ctvBtnImgWidth, ctvBtnImgHeight));
-
-        // Hold to end btn
-        LongPressButton mEndBtn = new LongPressButton(this);
-        int diameter = (int) (mCircleBtnDiameter + mEndBtn.getCountDownCircleWidth() * 4);
-        mEndBtn.setLayoutParams(new LinearLayout.LayoutParams(diameter, diameter));
-        mEndBtn.setScaleType(ImageView.ScaleType.CENTER);
-        int endBtnImgWidth = (int) getResources().getDimension(R.dimen.end_btn_img_width);
-        int endBtnImgHeight = (int) getResources().getDimension(R.dimen.end_btn_img_height);
-        mEndBtn.setImageDrawable(ViewHelper.createScaleDrawable(this, R.drawable.ic_clear_white, endBtnImgWidth, endBtnImgHeight));
-        LinearLayout mEndBtnWithText = ViewHelper.addTextUnderBtn(this, mEndBtn, getString(R.string.hold_to_end), (int) (mCircleBtnNameTopMargin - 2 * mEndBtn.getCountDownCircleWidth()));
-        mEndBtnWithText.getChildAt(mEndBtnWithText.getChildCount() - 1).setPadding(0, 0, 0, (int) (2 * mEndBtn.getCountDownCircleWidth()));
-        mButtonsLayout.addView(mEndBtnWithText);
-        mEndBtn.setOnCountDownListener(() -> mPresenter.deleteEvent());
-
-        // Do not disturb btn
-        ImageButton mDNDBtn = new ImageButton(this);
-        mDNDBtn.setLayoutParams(new LinearLayout.LayoutParams(mCircleBtnDiameter, mCircleBtnDiameter));
-        mDNDBtn.setScaleType(ImageView.ScaleType.CENTER);
-        mDNDBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_busy));
-        int dndBtnImgWidth = (int) getResources().getDimension(R.dimen.dnd_btn_img_width);
-        int dndBtnImgHeight = (int) getResources().getDimension(R.dimen.dnd_btn_img_height);
-        mDNDBtn.setImageDrawable(ViewHelper.createScaleDrawable(this, R.drawable.ic_donotdisturb_black, dndBtnImgWidth, dndBtnImgHeight));
-        LinearLayout mDNDBtnWithText = ViewHelper.addTextUnderBtn(this, mDNDBtn, getString(R.string.do_not_disturb), mCircleBtnNameTopMargin);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(mCircleBtnLeftMargin, 0, mCircleBtnLeftMargin, 0);
-        mDNDBtnWithText.setLayoutParams(params);
-        mButtonsLayout.addView(mDNDBtnWithText);
-        mDNDBtn.setOnClickListener(v -> {
-            mPresenter.setDoNotDisturb(true);
-        });
-
-        ImageButton mExtendBtn = new ImageButton(this);
-        mExtendBtn.setLayoutParams(new LinearLayout.LayoutParams(mCircleBtnDiameter, mCircleBtnDiameter));
-        mExtendBtn.setScaleType(ImageView.ScaleType.CENTER);
-        mExtendBtn.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_circle_busy));
-        int extendBtnImgWidth = (int) getResources().getDimension(R.dimen.extend_btn_img_width);
-        int extendBtnImgHeight = (int) getResources().getDimension(R.dimen.extend_btn_img_height);
-        mExtendBtn.setImageDrawable(ViewHelper.createScaleDrawable(this, R.drawable.ic_add_black, extendBtnImgWidth, extendBtnImgHeight));
-        LinearLayout mExtendBtnWithText = ViewHelper.addTextUnderBtn(this, mExtendBtn, getString(R.string.extend), mCircleBtnNameTopMargin);
-        mButtonsLayout.addView(mExtendBtnWithText);
-        mExtendBtn.setOnClickListener(v -> mPresenter.updateEvent());
-    }
-
-    @Override
-    public void showButtonsForDoNotDisturbStatus(String eventEndTime) {
-        mFastBookTv.setVisibility(View.GONE);
-
-        mButtonsLayout.removeAllViews();
-        mButtonsLayout.setOrientation(LinearLayout.VERTICAL);
-        mButtonsLayout.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-
-        mCircleTimeViewBtn.setVisibility(View.INVISIBLE);
-
-        TextView busyUntilTv = new TextView(this);
-        busyUntilTv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        busyUntilTv.setText(getString(R.string.busy_until_upper_case));
-        busyUntilTv.setTextSize(getResources().getDimension(R.dimen.dnd_status_busy_until_text_size));
-        busyUntilTv.setTextColor(Color.BLACK);
-        busyUntilTv.setTypeface(mStolzlRegularTypeface);
-        busyUntilTv.setIncludeFontPadding(false);
-        mButtonsLayout.addView(busyUntilTv);
-
-        TextView mEventEndTimeTv = new TextView(this);
-        mEventEndTimeTv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        mEventEndTimeTv.setText(eventEndTime);
-        mEventEndTimeTv.setTextColor(Color.BLACK);
-        mEventEndTimeTv.setTextSize(getResources().getDimension(R.dimen.dnd_status_current_time_text_size));
-        mEventEndTimeTv.setIncludeFontPadding(false);
-        mEventEndTimeTv.setTypeface(mStolzMediumTypeface);
-        mButtonsLayout.addView(mEventEndTimeTv);
     }
 
     @Override
@@ -504,7 +342,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mLoadingDataDialogHandler.postDelayed(() -> {
             mProgressDialog.setMessage(message);
             mProgressDialog.show();
-        }, 2000);
+        }, SHOW_LOADING_DIALOG_WAIT_TIME);
     }
 
     @Override
@@ -528,7 +366,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         this.startActivityForResult(e.getIntent(), 1000);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -547,7 +384,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
                 break;
         }
     }
-
 
     @Override
     protected void onResume() {
@@ -573,4 +409,24 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
             }
         }
     };
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.img_calendar:
+                Intent calendarIntent = new Intent(RoomStatusActivity.this, EventsCalendarActivity.class);
+                calendarIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM);
+                break;
+            case R.id.img_room:
+                Intent roomListIntent = new Intent(RoomStatusActivity.this, AllRoomsActivity.class);
+                startActivity(roomListIntent);
+                break;
+            case R.id.circle_time_view:
+                mPresenter.setDoNotDisturb(false);
+                break;
+            default:
+                break;
+        }
+    }
 }

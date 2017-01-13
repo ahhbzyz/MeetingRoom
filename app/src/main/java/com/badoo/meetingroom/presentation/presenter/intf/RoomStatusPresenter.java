@@ -14,10 +14,10 @@ public interface RoomStatusPresenter extends Presenter {
     void onCountDownTicking(long millisUntilFinished);
     void onCountDownFinished();
 
+    void updateHorizontalTimelineView();
     void circleTimeViewBtnClick();
     void setEventConfirmed();
     void setDoNotDisturb(boolean isDoNotDisturb);
-
     void onEventClicked(int position);
 
     void getEvents();

@@ -13,9 +13,9 @@ public interface RoomEventsView extends LoadDataView {
 
     void renderRoomEvent(RoomEventModel nextEvent);
 
-    void renderRoomEvents(List<RoomEventModel> roomEvents);
+    void renderRoomEventList(List<RoomEventModel> roomEvents);
 
-    void updateCircleTimeViewTimeText(String text);
+    void updateCircleTimeViewTime(String text);
 
     void updateCircleTimeViewStatus(RoomEventModel mCurrentEvent);
 
@@ -27,13 +27,13 @@ public interface RoomEventsView extends LoadDataView {
 
     void showEventOrganizerDialog(RoomEventModel mCurrentEvent);
 
-    void showButtonsForAvailableStatus();
+    void showButtonGroupForAvailableStatus();
 
-    void showButtonsForOnHoldStatus();
+    void showButtonGroupForOnHoldStatus();
 
-    void showButtonsForBusyStatus();
+    void showButtonGroupForBusyStatus();
 
-    void showButtonsForDoNotDisturbStatus(String endTimeInText);
+    void showButtonGroupForDoNotDisturbStatus(String endTimeInText);
 
     void handleRecoverableAuthException(UserRecoverableAuthIOException e);
 

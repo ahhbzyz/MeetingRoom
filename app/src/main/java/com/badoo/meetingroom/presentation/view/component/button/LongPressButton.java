@@ -115,7 +115,7 @@ public class LongPressButton extends ImageButton {
         super.setPressed(pressed);
         if (pressed) {
             mAnimator = ValueAnimator.ofFloat(360f, 0f);
-            mAnimator.setDuration(1000);
+            mAnimator.setDuration(800);
             mAnimator.addUpdateListener(valueAnimator -> updateRotateDegree((Float) valueAnimator.getAnimatedValue()));
 
             mAnimator.addListener(new Animator.AnimatorListener() {

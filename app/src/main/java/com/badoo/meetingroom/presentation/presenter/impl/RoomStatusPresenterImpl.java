@@ -82,16 +82,16 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     public void onCountDownTicking(long millisUntilFinished) {
         if (mCurrentEvent.isBusy()) {
             if (mCurrentEvent.isOnHold()) {
-                mRoomEventsView.updateCircleTimeViewTimeText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
+                mRoomEventsView.updateCircleTimeViewTime(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
             } else {
-                mRoomEventsView.updateCircleTimeViewTimeText(mCurrentEvent.getEndTimeInText());
+                mRoomEventsView.updateCircleTimeViewTime(mCurrentEvent.getEndTimeInText());
             }
         } else {
             long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTime());
             if (hours >= 2) {
-                mRoomEventsView.updateCircleTimeViewTimeText("2H+");
+                mRoomEventsView.updateCircleTimeViewTime("2H+");
             } else {
-                mRoomEventsView.updateCircleTimeViewTimeText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
+                mRoomEventsView.updateCircleTimeViewTime(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
             }
         }
     }
@@ -105,6 +105,11 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             showCurrentEventOnCircleTimeView();
             mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
         }
+    }
+
+    @Override
+    public void updateHorizontalTimelineView() {
+        mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
     }
 
     @Override
@@ -162,15 +167,15 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     private void showButtonsForEvent() {
         switch (mCurrentEvent.getStatus()) {
             case RoomEventModelImpl.AVAILABLE:
-                mRoomEventsView.showButtonsForAvailableStatus();
+                mRoomEventsView.showButtonGroupForAvailableStatus();
                 break;
             case RoomEventModelImpl.BUSY:
                 if (mCurrentEvent.isOnHold()) {
-                    mRoomEventsView.showButtonsForOnHoldStatus();
+                    mRoomEventsView.showButtonGroupForOnHoldStatus();
                 } else if (mCurrentEvent.isDoNotDisturb()) {
-                    mRoomEventsView.showButtonsForDoNotDisturbStatus(mCurrentEvent.getEndTimeInText());
+                    mRoomEventsView.showButtonGroupForDoNotDisturbStatus(mCurrentEvent.getEndTimeInText());
                 } else {
-                    mRoomEventsView.showButtonsForBusyStatus();
+                    mRoomEventsView.showButtonGroupForBusyStatus();
                 }
                 break;
             default:
@@ -200,7 +205,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     private void showEventsOnHorizontalTimelineView() {
         if (mEventList != null && !mEventList.isEmpty()) {
-            mRoomEventsView.renderRoomEvents(mEventList);
+            mRoomEventsView.renderRoomEventList(mEventList);
             mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
         }
     }
