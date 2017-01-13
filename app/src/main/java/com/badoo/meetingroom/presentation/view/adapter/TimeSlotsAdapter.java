@@ -30,7 +30,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
     private Context mContext;
     private List<TimeSlot> mTimeSlotList;
-    private final long mDefaultSlotLength = 15 * 60 * 1000;
+    private final long mDefaultSlotLength = TimeHelper.min2Millis(15);
     private int mRecyclerViewWidth = -1;
     private int mLeftPadding = -1;
     private final int [] timestamps = new int[]{15, 30, 45, 60};
@@ -59,13 +59,12 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
             throw new IllegalArgumentException("End time cannot less than or equal to start time");
         }
 
-        startTime = TimeHelper.dropSeconds(startTime);
-        endTime = TimeHelper.dropSeconds(endTime);
+//        endTime = TimeHelper.dropSeconds(endTime);
 
         long newStartTime = startTime;
         for (int t : timestamps) {
             if (TimeHelper.getMin(startTime) <= t) {
-                newStartTime = startTime + TimeHelper.min2Millis(t - TimeHelper.getMin(startTime));
+                newStartTime = TimeHelper.dropSeconds(startTime + TimeHelper.min2Millis(t - TimeHelper.getMin(startTime)));
                 break;
             }
         }
@@ -148,6 +147,8 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                 }
             }
         }
+        holder.mTimeSlotImg.setLayoutParams(new LinearLayout.LayoutParams((int) mContext.getResources().getDimension(R.dimen.room_booking_time_slot_width),
+            (int) mContext.getResources().getDimension(R.dimen.room_booking_time_slot_height)));
 
         if (position == getItemCount() - 1) {
             if (mRecyclerViewWidth != - 1 && mLeftPadding != -1 && mLeftPadding > mContext.getResources().getDimension(R.dimen.room_booking_view_margin)) {
@@ -166,9 +167,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                 holder.mTimeSlotImg.setLayoutParams(params);
             }
             holder.mDivider.setVisibility(View.GONE);
-            if (TimeHelper.isMidNight(slot.getStartTime())) {
-                holder.mStartTimeTv.setText("24:00");
-            }
+
         } else {
             holder.mDivider.setVisibility(View.INVISIBLE);
 
@@ -202,8 +201,6 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                         mTimeSlotList.get(i).setSelected(true);
                     }
                 }
-
-
 
                 notifyDataSetChanged();
                 if (this.mOnItemClickListener != null) {

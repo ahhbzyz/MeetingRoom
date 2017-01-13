@@ -115,7 +115,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             mRoomEventsView.showTopBottomContent();
         }
         mRoomEventsView.updateCircleTimeViewStatus(mCurrentEvent);
-        mRoomEventsView.updateHorizontalTimelinePosition(getNumOfExpiredEvents());
         showButtonsForEvent();
     }
 
@@ -146,6 +145,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
         showCurrentEventOnCircleTimeView();
         mRoomEventsView.updateHorizontalTimelinePosition(getNumOfExpiredEvents());
+        mRoomEventsView.updateRecyclerView();
     }
 
     @Override
