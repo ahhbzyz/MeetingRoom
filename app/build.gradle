@@ -44,6 +44,9 @@ dependencies {
     compile "com.android.support:appcompat-v7:${rootProject.ext.appcompatVersion}"
     compile "com.android.support:recyclerview-v7:${rootProject.recyclerViewVersion}"
 
+    compile "com.android.support:design:${rootProject.ext.designVersion}"
+    compile "com.android.support:support-v4:${rootProject.ext.supportV4Version}"
+
     compile "com.jakewharton:butterknife:${rootProject.ext.butterKnifeVersion}"
     apt "com.jakewharton:butterknife-compiler:${rootProject.ext.butterKnifeVersion}"
 
@@ -63,8 +66,14 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
 
+    compile ("com.google.oauth-client:google-oauth-client-jetty:${rootProject.ext.googleOauthClientJettyVersion}") {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    compile ("com.google.apis:google-api-services-people:${rootProject.ext.googleApiServicesPeople}") {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
     // Test dependencies
     testCompile "junit:junit:${rootProject.ext.junitVersion}"
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
+
 }

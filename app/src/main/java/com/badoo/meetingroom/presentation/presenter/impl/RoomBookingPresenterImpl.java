@@ -1,8 +1,12 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.domain.entity.intf.BadooPerson;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
+import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.domain.interactor.InsertEvent;
+import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
+import com.badoo.meetingroom.presentation.model.BadooPersonModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
@@ -29,14 +33,22 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     private long selectedStartTime;
     private long selectedEndTime;
     private final InsertEvent mInsertEventUseCase;
+    private final GetPersons mGetPersonsUseCase;
+    private final BadooPersonModelMapper mMapper;
+    private List<BadooPersonModel> mBadooPersonModelList;
 
     @Inject
-    RoomBookingPresenterImpl(@Named(InsertEvent.NAME) InsertEvent insertEvent) {
+    RoomBookingPresenterImpl(@Named(InsertEvent.NAME) InsertEvent insertEvent,
+                             @Named(GetPersons.NAME) GetPersons getPersons,
+                             BadooPersonModelMapper mapper) {
         this.mInsertEventUseCase = insertEvent;
+        this.mGetPersonsUseCase = getPersons;
+        this.mMapper = mapper;
     }
 
     public void init() {
         setTimeSlotsInView();
+        mGetPersonsUseCase.execute(new GetPersonsSubscriber());
     }
 
     private void setTimeSlotsInView() {
@@ -67,7 +79,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         eventAttendees.add(new EventAttendee().setEmail(organizer));
         event.setAttendees(eventAttendees);
 
-        this.mInsertEventUseCase.init(event).execute(new InsertEventSubscriber());
+        mInsertEventUseCase.init(event).execute(new InsertEventSubscriber());
     }
 
     @Override
@@ -110,7 +122,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading();
+            mRoomBookingView.showLoadingData(mRoomBookingView.context().getString(R.string.booking) + "...");
         }
 
         @Override
@@ -146,8 +158,42 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     }
 
 
-    private void showViewLoading() {
-        this.mRoomBookingView.showLoadingData(mRoomBookingView.context().getString(R.string.booking) + "...");
+    private final class GetPersonsSubscriber extends DefaultSubscriber<List<BadooPerson>> {
+        @Override
+        public void onStart() {
+            super.onStart();
+            mRoomBookingView.showLoadingData(mRoomBookingView.context().getString(R.string.loading) + "...");
+        }
+
+        @Override
+        public void onNext(List<BadooPerson> badooPersonList) {
+            super.onNext(badooPersonList);
+            mBadooPersonModelList = mMapper.map(badooPersonList);
+            mRoomBookingView.setUpAutoCompleteTextView(mBadooPersonModelList);
+        }
+
+        @Override
+        public void onCompleted() {
+            super.onCompleted();
+            dismissViewLoading();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            super.onError(e);
+            dismissViewLoading();
+            try {
+                throw e;
+            } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
+                mRoomBookingView.showRecoverableAuth(userRecoverableAuthIOException);
+            } catch (GoogleJsonResponseException googleJsonResponseException) {
+                mRoomBookingView.showError(googleJsonResponseException.getDetails().getMessage());
+            } catch (Exception exception) {
+                mRoomBookingView.showError(exception.getMessage());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        }
     }
 
     private void dismissViewLoading() {this.mRoomBookingView.dismissLoadingData();}
@@ -166,5 +212,6 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     @Override
     public void destroy() {
         mInsertEventUseCase.unSubscribe();
+        mGetPersonsUseCase.unSubscribe();
     }
 }

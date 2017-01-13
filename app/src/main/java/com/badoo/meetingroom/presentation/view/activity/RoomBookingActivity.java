@@ -20,18 +20,24 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.model.BadooPersonModel;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
+import com.badoo.meetingroom.presentation.view.adapter.BadooEmailAutoCompleteAdapter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -54,6 +60,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @BindView(R.id.tv_booking_period) TextView mBookingPeriodTv;
 
     @BindView(R.id.et_email) ExtendedEditText mEmailEt;
+    @BindView(R.id.autocomplete_email_address)
+    AutoCompleteTextView mAutoCompleteTv;
     @BindView(R.id.rv_time_slots) RecyclerView mTimeSlotsRv;
     @BindView(R.id.btn_book) Button mBookBtn;
 
@@ -67,10 +75,12 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         ButterKnife.bind(this);
         this.getComponent().inject(this);
         mPresenter.setView(this);
-        mPresenter.init();
+
 
         initViews();
         setUpEditText();
+
+        mPresenter.init();
     }
 
 
@@ -101,6 +111,13 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
         mTimeSlotsRv.setLayoutManager(new LinearLayoutManager(context(), LinearLayoutManager.HORIZONTAL, false));
         mTimeSlotsRv.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void setUpAutoCompleteTextView(List<BadooPersonModel> badooPersonModelList) {
+        BadooEmailAutoCompleteAdapter adapter = new BadooEmailAutoCompleteAdapter(this, R.layout.item_badoo_person, badooPersonModelList);
+        mAutoCompleteTv.setAdapter(adapter);
+        //mAutoCompleteTv.setThreshold(1);
     }
 
     private void setUpEditText() {

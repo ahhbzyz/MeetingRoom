@@ -1,12 +1,11 @@
 package com.badoo.meetingroom.di.components;
 
 import android.content.Context;
-import android.graphics.Typeface;
 
 import com.badoo.meetingroom.di.modules.ApplicationModule;
-import com.badoo.meetingroom.di.modules.FontAssetModule;
-import com.badoo.meetingroom.domain.repository.GoogleAccountRepository;
-import com.badoo.meetingroom.domain.repository.RoomEventRepository;
+import com.badoo.meetingroom.domain.repository.BadooPersonDataRepo;
+import com.badoo.meetingroom.domain.repository.RoomEventDataRepo;
+import com.badoo.meetingroom.domain.repository.GoogleAccountDataRepo;
 import com.badoo.meetingroom.presentation.view.activity.BaseActivity;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.services.calendar.Calendar;
@@ -25,6 +24,7 @@ public interface ApplicationComponent {
   Context context();
   GoogleAccountCredential googleAccountCredential();
   Calendar services();
-  RoomEventRepository roomEventRepository();
-  GoogleAccountRepository googleAccountRepository();
+  RoomEventDataRepo roomEventRepository();
+  BadooPersonDataRepo badooPersonReository();
+  GoogleAccountDataRepo googleAccountRepository();
 }

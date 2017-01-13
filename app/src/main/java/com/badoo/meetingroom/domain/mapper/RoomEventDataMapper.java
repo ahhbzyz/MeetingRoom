@@ -21,7 +21,7 @@ public class RoomEventDataMapper {
     RoomEventDataMapper() {
 
     }
-    private RoomEvent transform(Event event) {
+    private RoomEvent map(Event event) {
         RoomEvent roomEvent = null;
         if (event != null && event.getStart().getDateTime() != null
                           && event.getEnd().getDateTime() != null) {
@@ -50,7 +50,7 @@ public class RoomEventDataMapper {
 
         for (Event event : eventList) {
 
-            final RoomEvent roomEvent = transform(event);
+            final RoomEvent roomEvent = map(event);
 
             if (roomEvent != null) {
                 roomEventList.add(roomEvent);

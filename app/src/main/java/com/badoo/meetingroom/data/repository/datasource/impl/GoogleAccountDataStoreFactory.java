@@ -29,6 +29,6 @@ public class GoogleAccountDataStoreFactory {
 
     public GoogleAccountDataStore createLocalGoogleAccountNameStore() {
         GoogleAccountCache googleAccountCache = new GoogleAccountCacheImpl(this.mContext, mFileManager, mConnector);
-        return new LocalGoogleAccountDataStore(googleAccountCache);
+        return new GoogleAccountDataStoreImpl(googleAccountCache);
     }
 }

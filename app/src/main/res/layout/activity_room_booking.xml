@@ -101,6 +101,12 @@
         android:paddingStart="@dimen/room_booking_view_margin"
         android:paddingEnd="@dimen/room_booking_view_margin">
 
+        <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/autocomplete_email_address"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+
         <com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.domain.interactor;
 
-import com.badoo.meetingroom.domain.repository.RoomEventRepository;
+import com.badoo.meetingroom.domain.repository.RoomEventDataRepo;
 import com.google.api.services.calendar.model.Event;
 
 import javax.inject.Inject;
@@ -15,11 +15,11 @@ public class UpdateEvent extends UseCase<Event> {
 
     public static final String NAME = "updateEvent";
 
-    private final RoomEventRepository mRoomEventRepository;
+    private final RoomEventDataRepo mRoomEventRepository;
     private Event mEventParams;
 
     @Inject
-    UpdateEvent(RoomEventRepository mRoomEventRepository) {
+    UpdateEvent(RoomEventDataRepo mRoomEventRepository) {
         this.mRoomEventRepository = mRoomEventRepository;
     }
 

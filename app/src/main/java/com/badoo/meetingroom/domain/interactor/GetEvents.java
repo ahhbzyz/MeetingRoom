@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.domain.interactor;
 
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
-import com.badoo.meetingroom.domain.repository.RoomEventRepository;
+import com.badoo.meetingroom.domain.repository.RoomEventDataRepo;
 import com.google.api.services.calendar.model.Event;
 
 
@@ -17,13 +17,13 @@ import rx.Observable;
 
 public class GetEvents extends UseCase<List<RoomEvent>> {
 
-    public static final String NAME = "getRoomEventList";
+    public static final String NAME = "getEvents";
 
-    private final RoomEventRepository mRoomEventRepository;
+    private final RoomEventDataRepo mRoomEventRepository;
     private Event mEventParams;
 
     @Inject
-    GetEvents(RoomEventRepository roomEventRepository) {
+    GetEvents(RoomEventDataRepo roomEventRepository) {
         this.mRoomEventRepository = roomEventRepository;
 
     }

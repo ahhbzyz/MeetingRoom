@@ -35,6 +35,8 @@ ext {
     appcompatVersion = '25.0.1'
     recyclerViewVersion = '25.0.1'
     butterKnifeVersion = '8.4.0'
+    designVersion = '25.1.0'
+    supportV4Version = '25.1.0'
 
     // Data dependencies
     rxJavaVersion = '1.2.4'
@@ -50,6 +52,8 @@ ext {
     googleApiClientAndroidVersion = '1.22.0'
     googleApiServicesCalendarVersion = 'v3-rev225-1.22.0'
 
+    googleOauthClientJettyVersion = '1.22.0'
+    googleApiServicesPeople = 'v1-rev5-1.22.0'
 
     // Test dependencies
     junitVersion = '4.12'

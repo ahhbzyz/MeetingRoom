@@ -3,6 +3,7 @@ package com.badoo.meetingroom.di.modules;
 import com.badoo.meetingroom.domain.interactor.DeleteEvent;
 import com.badoo.meetingroom.domain.interactor.GetEvents;
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
+import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.domain.interactor.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.UpdateEvent;
@@ -57,4 +58,10 @@ public class UseCaseModule {
         return updateEvent;
     }
 
+
+    @Provides
+    @Named(GetPersons.NAME)
+    GetPersons provideGetPersonsUseCase(GetPersons getPersons) {
+        return getPersons;
+    }
 }
