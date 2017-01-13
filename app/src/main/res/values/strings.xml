@@ -28,4 +28,6 @@
     <string name="book">book</string>
     <string name="fast_booking">Fast booking</string>
     <string name="fake_date">Thursday, 12 Jan</string>
+    <string name="fake_time">00:00</string>
+    <string name="available">Available</string>
 </resources>

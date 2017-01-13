@@ -98,14 +98,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
                 mCurrentTimeLayout.setY(startY - dy);
                 mScrollOffset += dy;
             }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == SCROLL_STATE_IDLE) {
-                    mPresenter.updateCurrentTimeLayout();
-                }
-            }
         });
     }
 
@@ -138,7 +130,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void updateCurrentTimeLayout(int numOfExpiredEvents) {
+    public void updateCurrentTimeLayoutPosition(int numOfExpiredEvents) {
         if (mPage == 0) {
             mTimelineMarkOffset = (TimeHelper.getCurrentTimeInMillis() - Badoo.getStartTimeOfDay(mPage)) * mAdapter.getHeightPerMillis()
                 - mCurrentTimeLayout.getMeasuredHeight() / 2f
@@ -146,12 +138,14 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
             mCurrentTimeLayout.setY(mTimelineMarkOffset - mScrollOffset);
             mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-            // Update recycler view
-            if (mAdapter != null) {
-                mAdapter.notifyDataSetChanged();
-            }
         }
     }
+
+    @Override
+    public void updateRecyclerView() {
+        mAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void showLoadingData(String message) {

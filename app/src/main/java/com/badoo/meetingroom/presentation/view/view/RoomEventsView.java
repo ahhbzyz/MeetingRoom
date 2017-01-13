@@ -17,11 +17,15 @@ public interface RoomEventsView extends LoadDataView {
 
     void updateCircleTimeViewTime(String text);
 
-    void updateCircleTimeViewStatus(RoomEventModel mCurrentEvent);
+    void updateCircleTimeViewStatus(RoomEventModel currentEvent);
 
-    void updateHorizontalTimelineView(int numOfExpiredEvents);
+    void updateHorizontalTimelinePosition(int numOfExpiredEvents);
+
+    void updateRecyclerView();
 
     void updateHorizontalTimelineCurrentTime();
+
+    void restartCountDownTimer(RoomEventModel currentEvent);
 
     void bookRoom(long startTime, long endTime);
 
@@ -40,4 +44,5 @@ public interface RoomEventsView extends LoadDataView {
     void hideTopBottomContent();
 
     void showTopBottomContent();
+
 }

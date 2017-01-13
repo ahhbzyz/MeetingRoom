@@ -167,9 +167,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == SCROLL_STATE_IDLE) {
-                    if (mHorizontalTimelineRv.computeHorizontalScrollOffset() == 0) {
-                        mPresenter.updateHorizontalTimelineView();
-                    }
                     scrollBackHandler.postDelayed(() -> {
                         if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
                             mHorizontalTimelineRv.smoothScrollToPosition(0);
@@ -258,7 +255,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     }
 
     @Override
-    public void updateHorizontalTimelineView(int numOfExpiredEvents) {
+    public void updateHorizontalTimelinePosition(int numOfExpiredEvents) {
 
         float leftMargin = (TimeHelper.getCurrentTimeSinceMidNight()) * mAdapter.getWidthPerMillis()
             + (numOfExpiredEvents + 1) * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width)
@@ -266,6 +263,19 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
         params.setMargins((int) -leftMargin, params.topMargin, params.rightMargin, params.bottomMargin);
         mHorizontalTimelineRv.setLayoutParams(params);
+    }
+
+    @Override
+    public void restartCountDownTimer(RoomEventModel currentEvent) {
+        if (currentEvent != null && currentEvent.isOnHold()) {
+            mCircleTimeView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getStartTime() + currentEvent.getOnHoldTime());
+        } else {
+            mCircleTimeView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getEndTime());
+        }
+    }
+
+    @Override
+    public void updateRecyclerView() {
         mAdapter.notifyDataSetChanged();
     }
 
@@ -392,9 +402,19 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (mPresenter != null) {
+            mPresenter.restartCountDown();
+            mPresenter.onSystemTimeUpdate();
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         if (mTimeRefreshReceiver != null) {
+            mCircleTimeView.stopCountDown();
             unregisterReceiver(mTimeRefreshReceiver);
         }
     }
@@ -405,7 +425,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
             if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
                 mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
                 mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomStatusActivity.this));
-                mPresenter.systemTimeUpdate();
+                mPresenter.onSystemTimeUpdate();
             }
         }
     };

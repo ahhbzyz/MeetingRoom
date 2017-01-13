@@ -47,10 +47,13 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     }
 
+
     @Override
-    public void updateCurrentTimeLayout() {
-        mDailyEventsView.updateCurrentTimeLayout(getNumOfExpiredEvents());
+    public void onSystemTimeUpdate() {
+        mDailyEventsView.updateRecyclerView();
+        mDailyEventsView.updateCurrentTimeLayoutPosition(getNumOfExpiredEvents());
     }
+
 
     @Override
     public void setView(DailyEventsView dailyEventsView) {
@@ -113,7 +116,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         @Override
         public void onNext(List<RoomEvent> roomEvents) {
             mEventList = mMapper.map(roomEvents);
-            updateCurrentTimeLayout();
+            mDailyEventsView.updateCurrentTimeLayoutPosition(getNumOfExpiredEvents());
             showDailyEventsInView(mEventList);
         }
 

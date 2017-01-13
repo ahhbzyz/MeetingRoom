@@ -8,7 +8,7 @@ import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 
 public interface DailyEventsPresenter extends Presenter {
 
-    void updateCurrentTimeLayout();
+    void onSystemTimeUpdate();
 
     void setView(DailyEventsView dailyEventsView);
 

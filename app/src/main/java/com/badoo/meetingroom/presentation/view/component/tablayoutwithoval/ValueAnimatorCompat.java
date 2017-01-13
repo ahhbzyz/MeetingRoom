@@ -24,7 +24,7 @@ import android.view.animation.Interpolator;
  * <p>
  * You shouldn't not instantiate this directly. Instead use {@code ViewUtils.createAnimator()}.
  */
-class ValueAnimatorCompat {
+public class ValueAnimatorCompat {
 
     interface AnimatorUpdateListener {
         /**

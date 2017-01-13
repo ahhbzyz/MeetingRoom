@@ -13,8 +13,10 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -256,6 +258,8 @@ public class CircleTimerView extends View {
 
     private Context mContext;
 
+    private Thread mAnimatorThread;
+
     public CircleTimerView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -347,6 +351,7 @@ public class CircleTimerView extends View {
         // Circle button
         mCircleBtnPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mCircleBtnPaint.setColor(mCircleBtnColor);
+
     }
 
     @Override
@@ -618,21 +623,27 @@ public class CircleTimerView extends View {
     public void startCountDownTimer(long startTime, long endTime) {
 
 
-        if (mAnimator != null) {
+        if (mAnimator != null && mAnimator.isRunning()) {
             mAnimator.removeAllListeners();
             mAnimator.cancel();
         }
 
         float currentProgress = ((TimeHelper.getCurrentTimeInMillis() - startTime) / (float)(endTime - startTime));
 
-        mAnimator = ValueAnimator.ofFloat(currentProgress * 100, getMaxProgress());
+        rotateDegree = 360f * ((getMaxProgress() - currentProgress * 100) / getMaxProgress());
+
+        mAnimator = ValueAnimator.ofFloat(rotateDegree, 0f);
+
         long remainingTime = endTime - TimeHelper.getCurrentTimeInMillis();
         long animatorDuration = remainingTime > 0 ? remainingTime : 0;
+
+
         mAnimator.setDuration(animatorDuration);
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.addUpdateListener(valueAnimator -> {
-            setProgress((float) valueAnimator.getAnimatedValue());
-            setLeftCountDownTime(valueAnimator.getDuration() - valueAnimator.getCurrentPlayTime());
+            rotateDegree = (float) valueAnimator.getAnimatedValue();
+            //System.out.println(rotateDegree);
+            ViewCompat.postInvalidateOnAnimation(this);
             // 1000 for correcting showing time
             mCountDownListener.onCountDownTicking(valueAnimator.getDuration() - valueAnimator.getCurrentPlayTime() + 1000);
         });
@@ -645,10 +656,7 @@ public class CircleTimerView extends View {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                isTimerRunning = false;
-                setProgress(getMaxProgress());
-                setLeftCountDownTime(0);
-                mCountDownListener.onCountDownTicking(getLeftCountDownTime());
+                mCountDownListener.onCountDownTicking(0);
                 mCountDownListener.onCountDownFinished();
             }
 
@@ -661,10 +669,15 @@ public class CircleTimerView extends View {
             public void onAnimationRepeat(Animator animator) {
             }
         });
-
         mAnimator.start();
+    }
 
-        isTimerRunning = true;
+
+    public void stopCountDown() {
+        if (mAnimator != null && mAnimator.isRunning()) {
+            mAnimator.removeAllListeners();
+            mAnimator.cancel();
+        }
     }
 
     /**
@@ -739,10 +752,11 @@ public class CircleTimerView extends View {
      */
     private void setProgress(float progress) {
         if (progress >= 0 && progress <= getMaxProgress()) {
-            mCurrentProgress = progress;
-            rotateDegree = 360f * ((getMaxProgress() - getProgress()) / getMaxProgress());
-            invalidate();
+            //mCurrentProgress = progress;
+            //rotateDegree = 360f * ((getMaxProgress() - getProgress()) / getMaxProgress());
+
         }
+       // ViewCompat.postInvalidateOnAnimation(this);
     }
 
     /**
@@ -970,6 +984,7 @@ public class CircleTimerView extends View {
     public void setDNDVisibility(boolean visibility) {
         this.mDNDVisibility = visibility;
     }
+
 
     /**
      * Created by zhangyaozhong on 14/12/2016.

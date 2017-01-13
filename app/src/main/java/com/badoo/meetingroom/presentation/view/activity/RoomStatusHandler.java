@@ -1,8 +1,10 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -25,6 +27,7 @@ class RoomStatusHandler {
     private int mCircleBtnDiameter;
     private int mCircleBtnLeftMargin;
     private int mCircleBtnNameTopMargin;
+    private boolean hasRequested;
 
     RoomStatusHandler(RoomStatusActivity activity) {
         this.activity = activity;
@@ -63,7 +66,40 @@ class RoomStatusHandler {
             buttons[i].setBackground(ContextCompat.getDrawable(activity, R.drawable.btn_circle_time));
             activity.mButtonsLayout.addView(buttons[i]);
             final int temp = i;
-            buttons[i].setOnClickListener(v -> activity.mPresenter.insertEvent(min * (temp + 1)));
+            int finalI = i;
+            buttons[i].setOnTouchListener((v, event) -> {
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        for (int j = 0; j< 3; j++) {
+                            if (finalI != j) {
+                                buttons[j].setEnabled(false);
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        for (int j = 0; j< 3; j++) {
+                            if (finalI != j) {
+                                buttons[j].setEnabled(true);
+                            }
+                        }
+                        break;
+                }
+                return false;
+            });
+            buttons[i].setOnClickListener(v -> {
+
+                if (hasRequested) {
+                    return;
+                }
+
+                hasRequested = true;
+                activity.mPresenter.insertEvent(min * (temp + 1));
+                Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    hasRequested = false;
+                }, 1000);
+            });
         }
     }
 

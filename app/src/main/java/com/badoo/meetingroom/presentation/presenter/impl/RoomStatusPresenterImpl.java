@@ -55,7 +55,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     private RoomEventModel mCurrentEvent;
     private HashSet<String> mConfirmedIds;
 
-    private boolean hasRequested;
 
     @Inject
     RoomStatusPresenterImpl(@Named(GetEvents.NAME) GetEvents getEventsUseCase,
@@ -103,13 +102,8 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         } else {
             removeFirstEventFromQueue();
             showCurrentEventOnCircleTimeView();
-            mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
+            mRoomEventsView.updateHorizontalTimelinePosition(getNumOfExpiredEvents());
         }
-    }
-
-    @Override
-    public void updateHorizontalTimelineView() {
-        mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
     }
 
     @Override
@@ -121,7 +115,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             mRoomEventsView.showTopBottomContent();
         }
         mRoomEventsView.updateCircleTimeViewStatus(mCurrentEvent);
-        mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
+        mRoomEventsView.updateHorizontalTimelinePosition(getNumOfExpiredEvents());
         showButtonsForEvent();
     }
 
@@ -140,19 +134,25 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     @Override
+    public void restartCountDown() {
+        mRoomEventsView.restartCountDownTimer(mCurrentEvent);
+    }
+
+    @Override
     public void setEventConfirmed() {
         mCurrentEvent.setConfirmed(true);
         if (!mConfirmedIds.contains(mCurrentEvent.getId())) {
             mConfirmedIds.add(mCurrentEvent.getId());
         }
         showCurrentEventOnCircleTimeView();
-        mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
+        mRoomEventsView.updateHorizontalTimelinePosition(getNumOfExpiredEvents());
     }
 
     @Override
-    public void systemTimeUpdate() {
+    public void onSystemTimeUpdate() {
         mRoomEventsView.updateHorizontalTimelineCurrentTime();
-        mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
+        mRoomEventsView.updateHorizontalTimelinePosition(getNumOfExpiredEvents());
+        mRoomEventsView.updateRecyclerView();
     }
 
     @Override
@@ -206,7 +206,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     private void showEventsOnHorizontalTimelineView() {
         if (mEventList != null && !mEventList.isEmpty()) {
             mRoomEventsView.renderRoomEventList(mEventList);
-            mRoomEventsView.updateHorizontalTimelineView(getNumOfExpiredEvents());
+            mRoomEventsView.updateHorizontalTimelinePosition(getNumOfExpiredEvents());
         }
     }
 
@@ -243,9 +243,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     
     @Override
     public void insertEvent(int bookingPeriod) {
-        if (hasRequested) {
-            return;
-        }
 
         long startTime = TimeHelper.getCurrentTimeInMillis();
         long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.min2Millis(bookingPeriod);
@@ -267,9 +264,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             event.setDescription("fast_book");
 
             mInsertEventUseCase.init(event).execute(new InsertEventSubscriber());
-            hasRequested = true;
-            Handler handler = new Handler();
-            handler.postDelayed(() -> hasRequested = false, 1000);
         }
     }
     

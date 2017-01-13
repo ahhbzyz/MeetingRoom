@@ -16,10 +16,11 @@ import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.Badoo;
+import com.badoo.meetingroom.presentation.model.Room;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
 import com.badoo.meetingroom.presentation.view.component.drawable.BusyBgDrawable;
 import com.badoo.meetingroom.presentation.view.component.drawable.TimelineBarDrawable;
-import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     }
 
     @Inject
-    public DailyEventsAdapter(Context context) {
+    DailyEventsAdapter(Context context) {
         mContext = context;
         mEvents = new ArrayList<>();
         mBottomTimelineBarHeights = new SparseIntArray();
@@ -72,6 +73,13 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             throw new IllegalArgumentException("Room event list cannot be null");
         }
         this.mEvents = roomEventModelList;
+        if (!mEvents.isEmpty()) {
+            RoomEventModel fakeEvent = new RoomEventModelImpl();
+            fakeEvent.setStatus(RoomEventModel.AVAILABLE);
+            fakeEvent.setStartTime(mEvents.get(mEvents.size() - 1).getEndTime());
+            fakeEvent.setEndTime(fakeEvent.getStartTime() + TimeHelper.min2Millis(10));
+            mEvents.add(fakeEvent);
+        }
         this.notifyDataSetChanged();
     }
 
@@ -86,97 +94,37 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         return new ViewHolder(v);
     }
 
-    private List<Long> getAllTimeStampsInView(RoomEventModel event){
-
-        List<Long> result = new ArrayList<>();
-
-        float hour = TimeHelper.getHour(event.getStartTime());
-
-        while (true) {
-            long timestamp = TimeHelper.getMidNightTimeOfDay(mPage) + TimeHelper.min2Millis((int) (hour * 30));
-            hour += 0.5f;
-            if ((timestamp > event.getStartTime() || TimeHelper.isSameTimeIgnoreSec(timestamp, event.getStartTime())) &&
-                (timestamp < event.getEndTime()) && !TimeHelper.isSameTimeIgnoreSec(timestamp, event.getEndTime())) {
-                result.add(timestamp);
-            }
-            if (timestamp > event.getEndTime()) {
-                break;
-            }
-        }
-
-        return result;
-    }
-
     @Override
     public void onBindViewHolder(ViewHolder holder,  int position) {
 
-        // Current position
-        position = holder.getAdapterPosition();
+
 
         // Current event
         RoomEventModel event = mEvents.get(position);
 
         // Remaining progress of event
-        float restProgress = event.getRemainingTime() / (float)event.getDuration();
+        float remainingProgress
+            = event.getRemainingTime() / (float)event.getDuration();
 
         // Calculate item height
         float viewHeight =  event.getDuration() * HEIGHT_PER_MILLIS + mContext.getResources().getDimension(R.dimen.daily_events_divider_height);
-
-        RelativeLayout.LayoutParams params = new
-            RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, Math.round(viewHeight));
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, (int) viewHeight);
         holder.itemView.setLayoutParams(params);
 
-        List<Long> timestamps = getAllTimeStampsInView(event);
 
+        // Add timestamps to item view
         holder.mTimestampLayout.removeAllViews();
+        List<Long> timestamps = calcTimeStampsInItemView(event);
+        addTimestampsToView(holder, position, timestamps, event, viewHeight, remainingProgress);
 
 
-        TextView fakeTv = new TextView(mContext);
-        fakeTv.setText("00:00");
-        fakeTv.setPadding(0, 0, 32, 0);
-        fakeTv.setVisibility(View.INVISIBLE);
-        holder.mTimestampLayout.addView(fakeTv);
-
-        int topTimelineBarHeight = (int) (viewHeight * (1 - restProgress));
-        int mBottomTimelineBarHeight = (int) (viewHeight * restProgress);
-        mBottomTimelineBarHeights.put(position, mBottomTimelineBarHeight);
-
-        for (int i = 0; i < timestamps.size(); i++) {
-            long ts = timestamps.get(i);
-            TextView timestampTv = new TextView(mContext);
-            timestampTv.setText(TimeHelper.formatTime(ts));
-            timestampTv.setPadding(0, 0, 32, 0);
-            RelativeLayout.LayoutParams textViewParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            timestampTv.measure(0, 0);
-            float textOffset;
-            float textViewHeight = timestampTv.getMeasuredHeight();
-            if (ts == Badoo.getStartTimeOfDay(mPage)) {
-                textOffset = 0;
-            } else if (ts == Badoo.getEndTimeOfDay(mPage)) {
-                textOffset = textViewHeight;
-            } else {
-                textOffset = textViewHeight / 2f;
-            }
-            float topMargin = (ts - event.getStartTime()) * HEIGHT_PER_MILLIS - textOffset;
-            textViewParams.setMargins(0, (int) topMargin, 0, 0);
-            timestampTv.setLayoutParams(textViewParams);
-
-            float hideOffset = textViewHeight / 4f;
-
-            if (event.isProcessing() && topTimelineBarHeight >= (topMargin - hideOffset) &&
-                topTimelineBarHeight <= (topMargin + textViewHeight + hideOffset)) {
-                continue;
-            }
-
-            if (position > 0 && mEvents.get(position - 1).isProcessing() &&
-                mBottomTimelineBarHeights.get(position - 1) > 0 &&
-                mBottomTimelineBarHeights.get(position - 1) <= textViewHeight / 2f + hideOffset
-                && topMargin <= textViewHeight/2f) {
-                continue;
-            }
-            holder.mTimestampLayout.addView(timestampTv);
+        if (position == getItemCount() - 1) {
+            holder.mEventPeriodTv.setText("");
+            holder.mEventInfoTv.setText("");
+            holder.mTimelineBar.setBackground(null);
+            holder.mEventContentLayout.setBackground(null);
+            return;
         }
-
 
         holder.mEventPeriodTv.measure(0, 0);
         holder.mEventInfoTv.measure(0, 0);
@@ -218,36 +166,38 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         // Event in processing
         if (event.isProcessing()) {
             if (event.isBusy()) {
-                TimelineBarDrawable barDrawable
-                    = new TimelineBarDrawable(event.getEventExpiredColor(), event.getBusyColor(), restProgress);
+                TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getBusyColor(), remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
                 holder.mEventInfoTv.setText(event.getOrganizer());
                 holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
-                BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE, restProgress);
+                BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE, remainingProgress);
                 holder.mEventContentLayout.setBackground(bg);
                 holder.mEventPeriodTv.setText(event.getDurationInText());
             } else {
 
-                if (mBottomTimelineBarHeight < holder.mEventPeriodTv.getMeasuredHeight()) {
+                if (mBottomTimelineBarHeights.get(position) < holder.mEventPeriodTv.getMeasuredHeight()) {
+
                     holder.mEventPeriodTv.setVisibility(View.INVISIBLE);
                     holder.mEventInfoTv.setVisibility(View.INVISIBLE);
-                } else if (mBottomTimelineBarHeight < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
+
+                } else if (mBottomTimelineBarHeights.get(position) < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
+
                     holder.mEventInfoTv.setVisibility(View.INVISIBLE);
-                } else {
 
                 }
 
+                int topTimelineBarHeight = (int) (viewHeight * (1 - remainingProgress));
                 offsetParams.setMargins(0, topTimelineBarHeight, 0, 0);
                 holder.mEventPeriodTv.setLayoutParams(offsetParams);
 
-                TimelineBarDrawable barDrawable
-                    = new TimelineBarDrawable(event.getEventExpiredColor(), event.getAvailableColor(), restProgress);
+                TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getAvailableColor(), remainingProgress);
 
                 holder.mTimelineBar.setBackground(barDrawable);
-                holder.mEventInfoTv.setText("Available");
+                holder.mEventInfoTv.setText(mContext.getString(R.string.available));
                 holder.mEventInfoTv.setTextColor(event.getAvailableColor());
                 holder.mEventPeriodTv.setText(TimeHelper.getCurrentTimeInMillisInText() + " - " + event.getEndTimeInText());
-                BusyBgDrawable bg = new BusyBgDrawable(Color.TRANSPARENT, Color.TRANSPARENT, restProgress);
+                BusyBgDrawable bg = new BusyBgDrawable(Color.TRANSPARENT, Color.TRANSPARENT, remainingProgress
+                );
                 holder.mEventContentLayout.setBackground(bg);
             }
         }
@@ -257,7 +207,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
             if (event.isAvailable()) {
                 holder.mTimelineBar.setBackgroundColor(event.getAvailableColor());
-                holder.mEventInfoTv.setText("Available");
+                holder.mEventInfoTv.setText(mContext.getString(R.string.available));
                 holder.mEventInfoTv.setTextColor(event.getAvailableColor());
                 holder.mEventContentLayout.setBackground(null);
             } else {
@@ -296,5 +246,68 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
     public interface OnItemClickListener {
         void onEventItemClicked(int position);
+    }
+
+    private void addTimestampsToView(ViewHolder holder, int position, List<Long> timestamps, RoomEventModel event, float viewHeight, float remainingProgress) {
+        TextView fakeTv = new TextView(mContext);
+        fakeTv.setText(mContext.getString(R.string.fake_time));
+        fakeTv.setPadding(0, 0, 32, 0);
+        fakeTv.setVisibility(View.INVISIBLE);
+        holder.mTimestampLayout.addView(fakeTv);
+
+        int bottomTimelineBarHeight = (int) (viewHeight * remainingProgress);
+        mBottomTimelineBarHeights.put(position, bottomTimelineBarHeight);
+
+        for (int i = 0; i < timestamps.size(); i++) {
+
+            long ts = timestamps.get(i);
+
+            TextView timestampTv = new TextView(mContext);
+            timestampTv.setText(TimeHelper.formatTime(ts));
+            timestampTv.setPadding(0, 0, 32, 0);
+            timestampTv.measure(0, 0);
+
+            float textOffset;
+            float textViewHeight = timestampTv.getMeasuredHeight();
+
+            if (ts == Badoo.getStartTimeOfDay(mPage)) {
+
+                textOffset = 0;
+
+            } else {
+
+                textOffset = textViewHeight / 2f;
+            }
+
+            float topMargin = (ts - event.getStartTime()) * HEIGHT_PER_MILLIS - textOffset;
+            timestampTv.setY(topMargin);
+
+            if (TimeHelper.getCurrentTimeInMillis() >= ts - TimeHelper.min2Millis(3) &&
+                TimeHelper.getCurrentTimeInMillis() <= ts + TimeHelper.min2Millis(3)) {
+                continue;
+            }
+
+            holder.mTimestampLayout.addView(timestampTv);
+        }
+    }
+
+
+    private List<Long> calcTimeStampsInItemView(RoomEventModel event){
+
+        List<Long> result = new ArrayList<>();
+
+        float hour = TimeHelper.getHour(event.getStartTime());
+
+        while (true) {
+            long timestamp = TimeHelper.getMidNightTimeOfDay(mPage) + TimeHelper.min2Millis((int) (hour * 30));
+            hour += 0.5f;
+            if (timestamp >= event.getStartTime() && timestamp < event.getEndTime()) {
+                result.add(timestamp);
+            }
+            if (timestamp > event.getEndTime()) {
+                break;
+            }
+        }
+        return result;
     }
 }

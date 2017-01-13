@@ -100,7 +100,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
             if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
                 if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
                     mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(EventsCalendarActivity.this));
-                    mAdapter.getRegisteredFragment(0).getPresenter().updateCurrentTimeLayout();
+                    mAdapter.getRegisteredFragment(0).getPresenter().onSystemTimeUpdate();
                 }
             }
         }
