@@ -12,15 +12,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-java6/1.22.0/6cbd19cd33d55bcaac2d842a57f5ade9260bed99/google-oauth-client-java6-1.22.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="6cbd19cd33d55bcaac2d842a57f5ade9260bed99">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-oauth-client-java6-1.22.0_966937806383587dcf4494909eab264845b4c932/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.apis/google-api-services-people/v1-rev5-1.22.0/337b700ae68851146f46b2b0a35d96ffa9963406/google-api-services-people-v1-rev5-1.22.0.jar"
         jumboMode="true"
         optimize="true"
@@ -30,21 +21,30 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="a71e1067dfe951d6648bcdddb2a7503a3dbcf2aa">
+        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_a0b40c527c4e8e3b3ee57eb1dff30f9048aab349/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-java6/1.22.0/6cbd19cd33d55bcaac2d842a57f5ade9260bed99/google-oauth-client-java6-1.22.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="6cbd19cd33d55bcaac2d842a57f5ade9260bed99">
+        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-oauth-client-java6-1.22.0_966937806383587dcf4494909eab264845b4c932/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.0.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
         sha1="756f6297eef79784f5e356dcd4f39865028b2bd0">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-10.0.1_be98d334b0451efe0396d0b713ae8b77f722a96e/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="b3c0a97a84886f832af3e5af3ffe42b39a2cde20">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_a0b40c527c4e8e3b3ee57eb1dff30f9048aab349/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -90,6 +90,15 @@
         revision="25.0.1"
         sha1="e79aa3d9a16f8c9f16377c0608de70a8f31e5d80">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-25.1.0_2702e02929c10dafdcdec2ca637472ebe8369f43/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.7.0/9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4/glide-3.7.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
+        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/glide-3.7.0_f2c02e259cc98297461b17de90a417066b97ca70/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -156,15 +165,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="6addaba208e21c6da776d0ca75b6b23a6ccd5499">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-10.0.1_a8f60a485e3518bdd71393fb4a59ea5c3bce6288/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-android/1.22.0/6d1e1a76a16a244ab2f41775791be1dd0ec2878a/google-http-client-android-1.22.0.jar"
         jumboMode="true"
         optimize="true"
@@ -180,6 +180,15 @@
         revision="25.0.1"
         sha1="0244350c0c845c583717ade13f5666a452fd0cfa">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-api-client-1.22.0_655928ad2f5c9f0cb220ad2b5894d24c4523d34c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="6addaba208e21c6da776d0ca75b6b23a6ccd5499">
+        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-10.0.1_a8f60a485e3518bdd71393fb4a59ea5c3bce6288/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -322,7 +331,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
-        sha1="634fce02dac9bc3fe4ca1f7abc90f528ef3849b4">
+        sha1="35484ac0925807e5e4d59ba2c0841305a558829c">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_893acbad770968085fe11731a65510521c8a1794/classes.dex" />
     </item>
     <item

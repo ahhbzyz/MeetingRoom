@@ -49,8 +49,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     private final RoomEventModelMapper mMapper;
 
-    private LinkedList<RoomEventModel> mEventQueue;
+    //private LinkedList<RoomEventModel> mEventQueue;
     private List<RoomEventModel> mEventList;
+    private int mCurrentEventPos;
 
     private RoomEventModel mCurrentEvent;
     private HashSet<String> mConfirmedIds;
@@ -68,7 +69,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         mUpdateEventUseCase = updateEventUseCase;
         mMapper = mapper;
         mConfirmedIds = new HashSet<>();
-        mEventQueue = new LinkedList<>();
+//        mEventQueue = new LinkedList<>();
         mEventList = new ArrayList<>();
     }
 
@@ -184,8 +185,8 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     private void showCurrentEventOnCircleTimeView() {
-        if (mEventQueue != null && !mEventQueue.isEmpty()) {
-            mCurrentEvent = mEventQueue.peek();
+        if (mEventList != null && mEventList.get(mCurrentEventPos) != null) {
+            mCurrentEvent = mEventList.get(mCurrentEventPos);
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mCurrentEvent.setConfirmed(true);
             }
@@ -195,11 +196,11 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     private void removeFirstEventFromQueue(){
-        if (mEventQueue != null && !mEventQueue.isEmpty()) {
+        if (mEventList != null && !mEventList.isEmpty()) {
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mConfirmedIds.remove(mCurrentEvent.getId());
             }
-            mEventQueue.remove();
+            mCurrentEventPos ++;
         }
     }
 
@@ -211,13 +212,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     private int getNumOfExpiredEvents(){
-        int mNumOfExpiredEvents = 0;
-        for (RoomEventModel event : mEventList) {
-            if (event.isExpired()) {
-                mNumOfExpiredEvents ++;
-            }
-        }
-        return mNumOfExpiredEvents;
+        return mCurrentEventPos;
     }
 
     @Override
@@ -278,9 +273,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     
     @Override
     public void updateEvent() {
-        if (mEventQueue != null && mEventQueue.size() >= 1) {
-            if (mEventQueue.get(1).isAvailable()) {
-                long extendedTime = mEventQueue.get(1).getDuration() >= TimeHelper.min2Millis(15) ? TimeHelper.min2Millis(15) : mEventQueue.get(1).getDuration();
+        if (mEventList != null && mEventList.get(mCurrentEventPos + 1) != null) {
+            if (mEventList.get(mCurrentEventPos + 1).isAvailable()) {
+                long extendedTime = mEventList.get(mCurrentEventPos + 1).getDuration() >= TimeHelper.min2Millis(15) ? TimeHelper.min2Millis(15) : mEventList.get(mCurrentEventPos + 1).getDuration();
                 // Extent
                 Event event = new Event();
 
@@ -308,13 +303,12 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         @Override
         public void onNext(List<RoomEvent> roomEvents) {
             Collection<RoomEventModel> mEventModelList = mMapper.map(roomEvents);
-            mEventQueue.clear();
+            mCurrentEventPos = 0;
             mEventList.clear();
-            mEventQueue.addAll(mEventModelList);
-            mEventList.addAll(mEventQueue);
-            while (!mEventQueue.isEmpty()) {
-                if (mEventQueue.peek().isExpired()) {
-                    mEventQueue.remove();
+            mEventList.addAll(mEventModelList);
+            for (RoomEventModel eventModel : mEventList) {
+                if (eventModel.isExpired()) {
+                    mCurrentEventPos++;
                 } else {
                     break;
                 }

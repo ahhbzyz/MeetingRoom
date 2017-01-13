@@ -39,6 +39,8 @@ ext {
     supportV4Version = '25.1.0'
 
     // Data dependencies
+    glideVersion = '3.7.0'
+
     rxJavaVersion = '1.2.4'
     rxAndroidVersion = '1.2.1'
 

@@ -103,21 +103,11 @@
 
         <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/autocomplete_email_address"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-
-
-        <com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/et_email"
-            android:layout_marginTop="16dp"
-            android:textSize="20sp"
-            android:imeOptions="actionDone"
-            android:text="@string/badoo_mail_suffix"
-            android:textAlignment="center" />
+            android:text="@string/badoo_mail_suffix" />
+
 
         <Button
             android:text="@string/book"

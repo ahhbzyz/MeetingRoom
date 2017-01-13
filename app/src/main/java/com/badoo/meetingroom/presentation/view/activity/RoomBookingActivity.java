@@ -59,9 +59,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @BindView(R.id.tv_booking_date) TextView mBookingDateTv;
     @BindView(R.id.tv_booking_period) TextView mBookingPeriodTv;
 
-    @BindView(R.id.et_email) ExtendedEditText mEmailEt;
-    @BindView(R.id.autocomplete_email_address)
-    AutoCompleteTextView mAutoCompleteTv;
+    @BindView(R.id.autocomplete_email_address) AutoCompleteTextView mAutoCompleteTv;
     @BindView(R.id.rv_time_slots) RecyclerView mTimeSlotsRv;
     @BindView(R.id.btn_book) Button mBookBtn;
 
@@ -78,7 +76,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
 
         initViews();
-        setUpEditText();
 
         mPresenter.init();
     }
@@ -98,9 +95,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
         mBookingDateTv.setTypeface(mStolzlRegularTypeface);
         mBookingPeriodTv.setTypeface(mStolzlRegularTypeface);
-        mEmailEt.setTypeface(mStolzlRegularTypeface);
 
-        mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mEmailEt.getText().toString().trim()));
+        mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mAutoCompleteTv.getText().toString().trim()));
         mBookBtn.setClickable(false);
         mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
 
@@ -116,21 +112,9 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Override
     public void setUpAutoCompleteTextView(List<BadooPersonModel> badooPersonModelList) {
         BadooEmailAutoCompleteAdapter adapter = new BadooEmailAutoCompleteAdapter(this, R.layout.item_badoo_person, badooPersonModelList);
+        mAutoCompleteTv.setTypeface(mStolzlRegularTypeface);
         mAutoCompleteTv.setAdapter(adapter);
-        //mAutoCompleteTv.setThreshold(1);
-    }
-
-    private void setUpEditText() {
-
-        mEmailEt.setOnEditorActionListener((v, actionId, event) -> {
-
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                mEmailEt.clearFocus();
-            }
-            return false;
-        });
-
-        mEmailEt.addTextChangedListener(new TextWatcher() {
+        mAutoCompleteTv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -139,15 +123,17 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                validateBookingParameters();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (s.toString().isEmpty()) {
+                    s.append(getString(R.string.badoo_mail_suffix));
+                }
             }
         });
     }
+
 
     @Override
     public void setTimeSlotsInView() {
@@ -209,7 +195,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     private void validateBookingParameters() {
-        if (hasSlots && isValidEmailAddress(mEmailEt.getText().toString().trim())) {
+        if (hasSlots && isValidEmailAddress(mAutoCompleteTv.getText().toString().trim())) {
             mBookBtn.setClickable(true);
             mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book));
         }
@@ -269,7 +255,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         switch (requestCode) {
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
-                    mPresenter.bookRoom(mEmailEt.getText().toString().trim());
+                    mPresenter.bookRoom(mAutoCompleteTv.getText().toString().trim());
                 }
                 break;
         }

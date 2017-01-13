@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.BadooPersonModel;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,11 @@ public class BadooEmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel
     private List<BadooPersonModel> itemsAll;
     private List<BadooPersonModel> suggestions;
     private int viewResourceId;
+    private Context mContext;
 
     public BadooEmailAutoCompleteAdapter(Context context, int viewResourceId, List<BadooPersonModel> items) {
         super(context, viewResourceId, items);
-
+        this.mContext = context;
         this.viewResourceId = viewResourceId;
         this.items = items;
         this.itemsAll = new ArrayList<>();
@@ -47,6 +49,20 @@ public class BadooEmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel
         BadooPersonModel badooPersonModel = items.get(position);
 
         if (badooPersonModel != null) {
+
+            ImageView avatarImgView = (ImageView)v.findViewById(R.id.img_avatar);
+
+            if (badooPersonModel.getAvatarUrl() != null) {
+                int width = (int) mContext.getResources().getDimension(R.dimen.auto_complete_avatar_width);
+                int height = (int) mContext.getResources().getDimension(R.dimen.auto_complete_avatar_height);
+                Glide
+                    .with(mContext)
+                    .load(badooPersonModel.getAvatarUrl())
+                    .centerCrop()
+                    .override(width, height)
+                    .into(avatarImgView);
+            }
+
 
             TextView nameTv = (TextView) v.findViewById(R.id.tv_name);
             if (badooPersonModel.getDisplayName() != null) {
@@ -70,35 +86,52 @@ public class BadooEmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel
     private Filter nameFilter = new Filter() {
         @Override
         public String convertResultToString(Object resultValue) {
-            return ((BadooPersonModel)(resultValue)).getDisplayName();
+            return ((BadooPersonModel)(resultValue)).getEmailAddress();
         }
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             if(constraint != null) {
                 suggestions.clear();
+                constraint = constraint.toString().split("@")[0];
+                if (constraint.length() == 0) {
+                    return new FilterResults();
+                }
                 for (BadooPersonModel badooPersonModel : itemsAll) {
                     if(badooPersonModel.getDisplayName() != null && badooPersonModel.getDisplayName().toLowerCase().contains(constraint.toString().toLowerCase())){
                         suggestions.add(badooPersonModel);
                     }
 
                     if (constraint.length() == 2) {
-                        if (badooPersonModel.getGivenName() != null && badooPersonModel.getGivenName().length() >= 0 && Character.toLowerCase(constraint.charAt(0)) == Character.toLowerCase(badooPersonModel.getGivenName().charAt(0)) &&
-                            badooPersonModel.getFamilyName() != null && badooPersonModel.getFamilyName().length() >= 0 && Character.toLowerCase(constraint.charAt(1)) == Character.toLowerCase(badooPersonModel.getFamilyName().charAt(0))) {
+                        if (badooPersonModel.getGivenName() != null &&
+                            badooPersonModel.getGivenName().length() >= 0 &&
+                            Character.toLowerCase(constraint.charAt(0)) == Character.toLowerCase(badooPersonModel.getGivenName().charAt(0)) &&
+                            badooPersonModel.getFamilyName() != null &&
+                            badooPersonModel.getFamilyName().length() >= 0 &&
+                            Character.toLowerCase(constraint.charAt(1)) == Character.toLowerCase(badooPersonModel.getFamilyName().charAt(0))) {
                             suggestions.add(badooPersonModel);
                         }
                     }
 
                     if (constraint.length() == 2) {
-                        if (badooPersonModel.getGivenName() != null && badooPersonModel.getGivenName().length() >= 0 && Character.toLowerCase(constraint.charAt(0)) == Character.toLowerCase(badooPersonModel.getGivenName().charAt(0)) &&
-                            badooPersonModel.getMiddleName() != null && badooPersonModel.getMiddleName().length() >= 0 && Character.toLowerCase(constraint.charAt(1)) == Character.toLowerCase(badooPersonModel.getMiddleName().charAt(0))) {
+                        if (badooPersonModel.getGivenName() != null &&
+                            badooPersonModel.getGivenName().length() >= 0 &&
+                            Character.toLowerCase(constraint.charAt(0)) == Character.toLowerCase(badooPersonModel.getGivenName().charAt(0)) &&
+                            badooPersonModel.getMiddleName() != null &&
+                            badooPersonModel.getMiddleName().length() >= 0 &&
+                            Character.toLowerCase(constraint.charAt(1)) == Character.toLowerCase(badooPersonModel.getMiddleName().charAt(0))) {
                             suggestions.add(badooPersonModel);
                         }
                     }
 
                     if (constraint.length() == 3) {
-                        if (badooPersonModel.getGivenName() != null && badooPersonModel.getGivenName().length() >= 0 && Character.toLowerCase(constraint.charAt(0)) == Character.toLowerCase(badooPersonModel.getGivenName().charAt(0)) &&
-                            badooPersonModel.getMiddleName() != null && badooPersonModel.getMiddleName().length() >= 0 && Character.toLowerCase(constraint.charAt(1)) == Character.toLowerCase(badooPersonModel.getMiddleName().charAt(0)) &&
-                            badooPersonModel.getFamilyName() != null && badooPersonModel.getFamilyName().length() >= 0 && Character.toLowerCase(constraint.charAt(2)) == Character.toLowerCase(badooPersonModel.getFamilyName().charAt(0))) {
+                        if (badooPersonModel.getGivenName() != null &&
+                            badooPersonModel.getGivenName().length() >= 0 &&
+                            Character.toLowerCase(constraint.charAt(0)) == Character.toLowerCase(badooPersonModel.getGivenName().charAt(0)) &&
+                            badooPersonModel.getMiddleName() != null &&
+                            badooPersonModel.getMiddleName().length() >= 0 &&
+                            Character.toLowerCase(constraint.charAt(1)) == Character.toLowerCase(badooPersonModel.getMiddleName().charAt(0)) &&
+                            badooPersonModel.getFamilyName() != null &&
+                            badooPersonModel.getFamilyName().length() >= 0 && Character.toLowerCase(constraint.charAt(2)) == Character.toLowerCase(badooPersonModel.getFamilyName().charAt(0))) {
                             suggestions.add(badooPersonModel);
                         }
                     }

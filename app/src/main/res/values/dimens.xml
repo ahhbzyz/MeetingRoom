@@ -57,4 +57,7 @@
     <dimen name="dnd_status_busy_until_text_size">16sp</dimen>
     <dimen name="dnd_status_current_time_text_size">38sp</dimen>
 
+    <dimen name="auto_complete_avatar_width">64dp</dimen>
+    <dimen name="auto_complete_avatar_height">64dp</dimen>
+
 </resources>
