@@ -25,6 +25,6 @@ public interface ApplicationComponent {
   GoogleAccountCredential googleAccountCredential();
   Calendar services();
   RoomEventDataRepo roomEventRepository();
-  BadooPersonDataRepo badooPersonReository();
+  BadooPersonDataRepo badooPersonRepository();
   GoogleAccountDataRepo googleAccountRepository();
 }

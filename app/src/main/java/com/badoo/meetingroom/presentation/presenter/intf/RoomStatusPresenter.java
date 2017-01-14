@@ -17,7 +17,7 @@ public interface RoomStatusPresenter extends Presenter {
     void setEventConfirmed();
     void setDoNotDisturb(boolean isDoNotDisturb);
     void onEventClicked(int position);
-    void restartCountDown();
+    void onRestart();
 
     void getEvents();
     void deleteEvent();

@@ -38,6 +38,8 @@ public interface RoomEventModel {
 
     boolean isOnHold();
 
+    long getRemainingOnHoldTime();
+
     long getOnHoldTime();
 
     boolean isConfirmed();

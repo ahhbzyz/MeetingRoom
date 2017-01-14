@@ -105,6 +105,11 @@ public class RoomEventModelImpl implements RoomEventModel {
     }
 
     @Override
+    public long getRemainingOnHoldTime() {
+        return isOnHold() ? getStartTime() + getOnHoldTime() - TimeHelper.getCurrentTimeInMillis() : 0;
+    }
+
+    @Override
     public long getOnHoldTime() {
         return ON_HOLD_TIME;
     }

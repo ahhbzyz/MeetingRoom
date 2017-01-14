@@ -1,6 +1,8 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
@@ -13,22 +15,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.view.component.button.LongPressButton;
 import com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.viewutils.ViewHelper;
+
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 /**
  * Created by zhangyaozhong on 13/01/2017.
  */
 
-class RoomStatusHandler {
+public class RoomStatusHandler {
 
     private final RoomStatusActivity activity;
     private int mCircleBtnDiameter;
     private int mCircleBtnLeftMargin;
     private int mCircleBtnNameTopMargin;
     private boolean hasRequested;
+    private CountDownTimer mCountDownTimer;
 
+    @Inject
     RoomStatusHandler(RoomStatusActivity activity) {
         this.activity = activity;
         mCircleBtnDiameter = (int) activity.getResources().getDimension(R.dimen.circle_button_diameter);
@@ -228,7 +238,69 @@ class RoomStatusHandler {
         mEventEndTimeTv.setTextColor(Color.BLACK);
         mEventEndTimeTv.setTextSize(activity.getResources().getDimension(R.dimen.dnd_status_current_time_text_size));
         mEventEndTimeTv.setIncludeFontPadding(false);
-        mEventEndTimeTv.setTypeface(activity.mStolzMediumTypeface);
+        mEventEndTimeTv.setTypeface(activity.mStolzlMediumTypeface);
         activity.mButtonsLayout.addView(mEventEndTimeTv);
+    }
+
+    void updateCircleTimeViewStatus(RoomEventModel event) {
+        if (event == null) {
+            return;
+        }
+        activity.mCircleView.setAlertIconVisibility(event.isDoNotDisturb());
+        activity.mCircleView.setTailIconVisibility(!event.isAvailable() && !event.isDoNotDisturb());
+
+        activity.mCircleView.setColorTheme(
+            event.getEventColor(),
+            event.getEventBgColor()
+        );
+        activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.STROKE);
+        switch (event.getStatus()) {
+            case RoomEventModel.AVAILABLE:
+                activity.mRoomStatusTv.setText(activity.getString(R.string.available_for_upper_case));
+                long hours = TimeUnit.MILLISECONDS.toHours(event.getRemainingTime());
+                if (hours >= 2) {
+                    activity.mTimerTimeTv.setText("2H+");
+                } else {
+                    startCountDownTime(event.getRemainingTime(), 1000);
+                }
+                break;
+            case RoomEventModel.BUSY:
+                if (event.isOnHold() && !event.isConfirmed()) {
+                    activity.mRoomStatusTv.setText(activity.getString(R.string.on_hold_for_upper_case));
+                    startCountDownTime(event.getRemainingOnHoldTime(), 1000);
+                } else if (event.isDoNotDisturb()) {
+                    activity.mCircleView.setColorTheme(event.getEventColor(), event.getEventColor());
+                    activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.FILL_AND_STROKE);
+                } else {
+                    activity.mTimerTimeTv.setText(event.getEndTimeInText());
+                    activity.mRoomStatusTv.setText(activity.getString(R.string.available_for_upper_case));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    void stopCountDownTimer() {
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+    }
+
+    void startCountDownTime(long millisInFuture, long countDownInterval) {
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+        mCountDownTimer = new CountDownTimer(millisInFuture, countDownInterval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                activity.mTimerTimeTv.setText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
     }
 }

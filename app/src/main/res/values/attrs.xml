@@ -11,7 +11,7 @@
 
     <attr name="timelineStrokeWidth" format="float"/>
 
-    <declare-styleable name="CircleTimerView">
+    <declare-styleable name="CircleView">
 
         <attr name="bgCircleRadius" format="float"/>
         <attr name="bgCircleStrokeWidth" format="float"/>

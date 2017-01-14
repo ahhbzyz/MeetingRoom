@@ -1,6 +1,5 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.badoo.meetingroom.R;
@@ -26,9 +25,7 @@ import com.google.api.services.calendar.model.EventDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -49,7 +46,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     private final RoomEventModelMapper mMapper;
 
-    //private LinkedList<RoomEventModel> mEventQueue;
     private List<RoomEventModel> mEventList;
     private int mCurrentEventPos;
 
@@ -69,7 +65,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         mUpdateEventUseCase = updateEventUseCase;
         mMapper = mapper;
         mConfirmedIds = new HashSet<>();
-//        mEventQueue = new LinkedList<>();
         mEventList = new ArrayList<>();
     }
 
@@ -80,20 +75,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void onCountDownTicking(long millisUntilFinished) {
-        if (mCurrentEvent.isBusy()) {
-            if (mCurrentEvent.isOnHold()) {
-                mRoomEventsView.updateCircleTimeViewTime(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
-            } else {
-                mRoomEventsView.updateCircleTimeViewTime(mCurrentEvent.getEndTimeInText());
-            }
-        } else {
-            long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTime());
-            if (hours >= 2) {
-                mRoomEventsView.updateCircleTimeViewTime("2H+");
-            } else {
-                mRoomEventsView.updateCircleTimeViewTime(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
-            }
-        }
+
     }
 
     @Override
@@ -134,8 +116,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     @Override
-    public void restartCountDown() {
-        mRoomEventsView.restartCountDownTimer(mCurrentEvent);
+    public void onRestart() {
+        mRoomEventsView.renderRoomEvent(mCurrentEvent);
+        onSystemTimeUpdate();
     }
 
     @Override

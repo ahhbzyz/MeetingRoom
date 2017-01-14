@@ -27,6 +27,11 @@
     <color name="unselectedTimeSlotDark">#D8D8D8</color>
 
     <color name="roomListDividerColor">#EDF0F2</color>
+
+    <color name="circleTimerStatusTextColor">#000000</color>
+    <color name="circleTimerTimeTextColor">#000000</color>
+
+
     <color name="ctv_info_text_color_normal">#000000</color>
     <color name="ctv_info_text_color_dnd">#ffffff</color>
 

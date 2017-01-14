@@ -110,19 +110,42 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3">
 
-                <com.badoo.meetingroom.presentation.view.component.circletimerview.CircleTimerView
+                <TextView
+                    android:text="@string/available_for_upper_case"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_room_status"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="28sp"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/circleTimerStatusTextColor" />
+
+                <TextView
+                    android:text="@string/fake_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_timer_time"
+                    android:layout_below="@+id/tv_room_status"
+                    android:textSize="64sp"
+                    android:layout_centerHorizontal="true"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/circleTimerTimeTextColor" />
+
+                <com.badoo.meetingroom.presentation.view.component.circletimerview.CircleView
                     android:id="@+id/circle_time_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
 
                 <ImageButton
                     android:id="@+id/img_book"
                     android:background="@drawable/btn_oval_grey"
                     android:layout_width="@dimen/circle_time_view_btn_diameter"
                     android:layout_height="@dimen/circle_time_view_btn_diameter"
+                    android:visibility="invisible"
                     android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:visibility="invisible" />
+                    android:layout_centerHorizontal="true" />
 
             </RelativeLayout>
 

@@ -16,11 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,11 +23,9 @@ import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.BadooPersonModel;
-import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.BadooEmailAutoCompleteAdapter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
-import com.badoo.meetingroom.presentation.view.component.edittext.ExtendedEditText;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
@@ -52,7 +45,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Inject RoomBookingPresenter mPresenter;
     @Inject TimeSlotsAdapter mAdapter;
     @Inject @Named("stolzl_regular") Typeface mStolzlRegularTypeface;
-    @Inject @Named("stolzl_medium") Typeface mStolzMediumTypeface;
+    @Inject @Named("stolzl_medium") Typeface mStolzlMediumTypeface;
 
     @BindView(R.id.tv_current_date) TextView mCurrentDateTv;
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
@@ -84,7 +77,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     private void initViews() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        mRoomNameTv.setTypeface(mStolzMediumTypeface);
+        mRoomNameTv.setTypeface(mStolzlMediumTypeface);
         mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomBookingActivity.this));
         // add back arrow to toolbar
         if (getSupportActionBar() != null) {
@@ -122,7 +115,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                validateBookingParameters();
             }
 
             @Override
