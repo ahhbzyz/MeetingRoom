@@ -53,6 +53,12 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     @Override
     public void onSystemTimeUpdate() {
         mDailyEventsView.updateRecyclerView();
+        updateCurrentTimeLayoutPosition();
+    }
+
+
+    @Override
+    public void updateCurrentTimeLayoutPosition() {
         mDailyEventsView.updateCurrentTimeLayoutPosition(getNumOfExpiredEvents());
     }
 
@@ -106,6 +112,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         mMapper.setEventEndTime(endDateTime.getValue());
         mGetEventsUseCase.init(event).execute(new GetEventsSubscriber());
     }
+
 
     private final class GetEventsSubscriber extends DefaultSubscriber<List<RoomEvent>> {
 

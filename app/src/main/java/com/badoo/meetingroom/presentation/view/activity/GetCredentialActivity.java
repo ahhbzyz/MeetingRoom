@@ -52,7 +52,7 @@ public class GetCredentialActivity extends BaseActivity implements GetCredential
         setContentView(R.layout.activity_get_credential);
         ButterKnife.bind(this);
 
-        this.getComponent().inject(this);
+        getComponent().inject(this);
         mGetCredentialPresenter.setView(this);
         mGetCredentialPresenter.init();
 

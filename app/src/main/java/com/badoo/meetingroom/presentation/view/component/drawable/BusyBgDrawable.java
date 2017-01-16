@@ -48,6 +48,7 @@ public class BusyBgDrawable extends Drawable {
         mDividerPaint = new Paint();
         mDividerPaint.setColor(dividerColor);
         mDividerPaint.setStrokeWidth(3);
+
     }
 
 

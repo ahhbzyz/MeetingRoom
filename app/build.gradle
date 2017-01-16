@@ -69,12 +69,12 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
 
-    compile ("com.google.oauth-client:google-oauth-client-jetty:${rootProject.ext.googleOauthClientJettyVersion}") {
-        exclude group: 'org.apache.httpcomponents'
-    }
+
     compile ("com.google.apis:google-api-services-people:${rootProject.ext.googleApiServicesPeople}") {
         exclude group: 'org.apache.httpcomponents'
     }
+
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 
     // Test dependencies
     testCompile "junit:junit:${rootProject.ext.junitVersion}"

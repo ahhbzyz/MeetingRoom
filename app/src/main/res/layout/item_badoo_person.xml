@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:gravity="center_vertical"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="@dimen/auto_complete_avatar_width"
+        android:layout_height="@dimen/auto_complete_avatar_height"
         android:id="@+id/img_avatar"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:scaleType="fitXY" />
+        android:layout_marginEnd="16dp" />
 
     <LinearLayout
         android:orientation="vertical"

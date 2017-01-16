@@ -2,7 +2,7 @@ package com.badoo.meetingroom.domain.interactor;
 
 import android.support.annotation.NonNull;
 
-import com.badoo.meetingroom.domain.repository.GoogleAccountDataRepo;
+import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
 
 import javax.inject.Inject;
 
@@ -16,11 +16,11 @@ public class PutGoogleAccount extends UseCase<Void> {
 
     public static final String NAME = "putGoogleAccount";
 
-    private final GoogleAccountDataRepo googleAccountRepository;
+    private final GoogleAccountRepo googleAccountRepository;
     private String accountName;
 
     @Inject
-    PutGoogleAccount(GoogleAccountDataRepo googleAccountRepository) {
+    PutGoogleAccount(GoogleAccountRepo googleAccountRepository) {
         this.googleAccountRepository = googleAccountRepository;
     }
 

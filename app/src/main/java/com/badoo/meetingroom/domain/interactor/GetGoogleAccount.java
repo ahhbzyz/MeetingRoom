@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.domain.interactor;
 
 import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
-import com.badoo.meetingroom.domain.repository.GoogleAccountDataRepo;
+import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
 
 
 import javax.inject.Inject;
@@ -18,11 +18,11 @@ public class GetGoogleAccount extends UseCase<GoogleAccount> {
 
     public static final String NAME = "getGoogleAccount";
 
-    private final GoogleAccountDataRepo googleAccountRepository;
+    private final GoogleAccountRepo googleAccountRepository;
     private Subscription subscription = Subscriptions.empty();
 
     @Inject
-    GetGoogleAccount(GoogleAccountDataRepo googleAccountRepository) {
+    GetGoogleAccount(GoogleAccountRepo googleAccountRepository) {
         this.googleAccountRepository = googleAccountRepository;
     }
 

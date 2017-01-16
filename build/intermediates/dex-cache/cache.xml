@@ -21,30 +21,30 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="332b370fe4cb6b65e25245caddaecb91b05c4bfb">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_a0b40c527c4e8e3b3ee57eb1dff30f9048aab349/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-java6/1.22.0/6cbd19cd33d55bcaac2d842a57f5ade9260bed99/google-oauth-client-java6-1.22.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="6cbd19cd33d55bcaac2d842a57f5ade9260bed99">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-oauth-client-java6-1.22.0_966937806383587dcf4494909eab264845b4c932/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/10.0.1/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
         sha1="756f6297eef79784f5e356dcd4f39865028b2bd0">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-10.0.1_be98d334b0451efe0396d0b713ae8b77f722a96e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="2521a2a7970a7f8607520eee5d7cb461359ef3d6">
+        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_a0b40c527c4e8e3b3ee57eb1dff30f9048aab349/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/2.1.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="a2af9c72ccaa4c5c049b500ca6ea664a4ce1f7d4">
+        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/de.hdodenhof-circleimageview-2.1.0_fe9822f1eae85625c5474277ed5f788209417a33/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -84,15 +84,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.1.0/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="e79aa3d9a16f8c9f16377c0608de70a8f31e5d80">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-25.1.0_2702e02929c10dafdcdec2ca637472ebe8369f43/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.7.0/9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4/glide-3.7.0.jar"
         jumboMode="true"
         optimize="true"
@@ -102,12 +93,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/org.mortbay.jetty/servlet-api/2.5-20081211/22bff70037e1e6fa7e6413149489552ee2064702/servlet-api-2.5-20081211.jar"
+        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.1.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
-        sha1="22bff70037e1e6fa7e6413149489552ee2064702">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/servlet-api-2.5-20081211_5a32f6a7046e1788a59a0e5f06fa527b66e04493/classes.dex" />
+        sha1="e79aa3d9a16f8c9f16377c0608de70a8f31e5d80">
+        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-25.1.0_2702e02929c10dafdcdec2ca637472ebe8369f43/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -117,15 +108,6 @@
         revision="25.0.1"
         sha1="7a0fe12b7d8189a821934d6f9d6586d00180e461">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-api-client-android-1.22.0_85292bd0146f87ad64688a492b42d3782ac8d5e2/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/org.mortbay.jetty/jetty-util/6.1.26/e5642fe0399814e1687d55a3862aa5a3417226a9/jetty-util-6.1.26.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="e5642fe0399814e1687d55a3862aa5a3417226a9">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/jetty-util-6.1.26_410914f5b0b1d79f5a1c0de8e6311736247049a4/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -165,6 +147,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="6addaba208e21c6da776d0ca75b6b23a6ccd5499">
+        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-10.0.1_a8f60a485e3518bdd71393fb4a59ea5c3bce6288/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.http-client/google-http-client-android/1.22.0/6d1e1a76a16a244ab2f41775791be1dd0ec2878a/google-http-client-android-1.22.0.jar"
         jumboMode="true"
         optimize="true"
@@ -180,15 +171,6 @@
         revision="25.0.1"
         sha1="0244350c0c845c583717ade13f5666a452fd0cfa">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-api-client-1.22.0_655928ad2f5c9f0cb220ad2b5894d24c4523d34c/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/10.0.1/jars/classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="6addaba208e21c6da776d0ca75b6b23a6ccd5499">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-tasks-10.0.1_a8f60a485e3518bdd71393fb4a59ea5c3bce6288/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -219,15 +201,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-jetty/1.22.0/b94c1e7d6c73cb1c15e2e5569cc6fda08cc80099/google-oauth-client-jetty-1.22.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="b94c1e7d6c73cb1c15e2e5569cc6fda08cc80099">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/google-oauth-client-jetty-1.22.0_30cf9324bc918c240c2abe3433599c83e709123a/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/exploded-aar/com.android.support/transition/25.1.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -252,15 +225,6 @@
         revision="25.0.1"
         sha1="c62423966e97071131e9c16d89ffaa003fe6a5d1">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/pub.devrel-easypermissions-0.2.1_8625afa7173abe8f5074327c020ff30fb91aab2a/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/zhangyaozhong/.gradle/caches/modules-2/files-2.1/org.mortbay.jetty/jetty/6.1.26/2f546e289fddd5b1fab1d4199fbb6e9ef43ee4b0/jetty-6.1.26.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.1"
-        sha1="2f546e289fddd5b1fab1d4199fbb6e9ef43ee4b0">
-        <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/jetty-6.1.26_d6d6effd5bf8f255bf10abfaa98bcdc1147f0efb/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -331,7 +295,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.1"
-        sha1="19a7cf285ca2132d70013983a83c1f1a0a6d72af">
+        sha1="f4eceef8db1735dde5e949916966149656379954">
         <dex dex="/Users/zhangyaozhong/Badoo/MeetingRoom/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_893acbad770968085fe11731a65510521c8a1794/classes.dex" />
     </item>
     <item

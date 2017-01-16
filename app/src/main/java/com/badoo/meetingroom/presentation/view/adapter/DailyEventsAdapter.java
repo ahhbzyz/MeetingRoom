@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.model.Room;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
 import com.badoo.meetingroom.presentation.view.component.drawable.BusyBgDrawable;
@@ -155,7 +154,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             if (event.isAvailable()) {
                 holder.mEventInfoTv.setText("");
             } else {
-                holder.mEventInfoTv.setText(event.getOrganizer());
+                holder.mEventInfoTv.setText(event.getCreatorEmailAddress());
             }
 
             holder.mTimelineBar.setBackgroundColor(event.getEventExpiredColor());
@@ -168,7 +167,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             if (event.isBusy()) {
                 TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getBusyColor(), remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
-                holder.mEventInfoTv.setText(event.getOrganizer());
+                holder.mEventInfoTv.setText(event.getCreatorEmailAddress());
                 holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
                 BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE, remainingProgress);
                 holder.mEventContentLayout.setBackground(bg);
@@ -212,7 +211,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 holder.mEventContentLayout.setBackground(null);
             } else {
                 holder.mTimelineBar.setBackgroundColor(event.getBusyColor());
-                holder.mEventInfoTv.setText(event.getOrganizer());
+                holder.mEventInfoTv.setText(event.getCreatorEmailAddress());
                 holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
                 BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE);
                 holder.mEventContentLayout.setBackground(bg);

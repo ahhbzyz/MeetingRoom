@@ -22,11 +22,11 @@ import android.widget.Toast;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
-import com.badoo.meetingroom.presentation.view.Dialog.ImmersiveDialogFragment;
-import com.badoo.meetingroom.presentation.view.Dialog.ImmersiveProgressDialogFragment;
+import com.badoo.meetingroom.presentation.view.fragment.EventCreatorDialogFragment;
+import com.badoo.meetingroom.presentation.view.fragment.ImmersiveProgressDialogFragment;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalTimelineAdapter;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
-import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
+import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
@@ -44,7 +44,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
  * Created by zhangyaozhong on 22/12/2016.
  */
 
-public class RoomStatusActivity extends BaseActivity implements RoomEventsView, View.OnClickListener, CircleView.OnCountDownListener, HorizontalTimelineAdapter.OnItemClickListener {
+public class RoomStatusActivity extends BaseActivity implements RoomStatusView, View.OnClickListener, CircleView.OnCountDownListener, HorizontalTimelineAdapter.OnItemClickListener {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
@@ -97,7 +97,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
 
     // Dialogs
     private ImmersiveProgressDialogFragment mProgressDialog;
-    private ImmersiveDialogFragment mEventOrganizerDialog;
+    private EventCreatorDialogFragment mEventOrganizerDialog;
     private Handler mLoadingDataDialogHandler;
 
     final long SCROLL_BACK_WAIT_TIME = 3000;
@@ -138,7 +138,8 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         // Dialog
         mProgressDialog = ImmersiveProgressDialogFragment.newInstance();
 
-        mEventOrganizerDialog = ImmersiveDialogFragment.newInstance();
+        mEventOrganizerDialog = EventCreatorDialogFragment.newInstance();
+        mEventOrganizerDialog.setView(this);
 
         mLoadingDataDialogHandler = new Handler();
 
@@ -183,6 +184,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == SCROLL_STATE_IDLE) {
+                    mPresenter.updateHorizontalTimeline();
                     scrollBackHandler.postDelayed(() -> {
                         if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
                             mHorizontalTimelineRv.smoothScrollToPosition(0);
@@ -254,19 +256,14 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     }
 
     @Override
-    public void updateHorizontalTimelineCurrentTime() {
-        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-    }
-
-    @Override
-    public void updateHorizontalTimelinePosition(int numOfExpiredEvents) {
-
+    public void updateHorizontalTimeline(int numOfExpiredEvents) {
         float leftMargin = (TimeHelper.getCurrentTimeSinceMidNight()) * mAdapter.getWidthPerMillis()
             + (numOfExpiredEvents + 1) * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width)
             - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
         params.setMargins((int) -leftMargin, params.topMargin, params.rightMargin, params.bottomMargin);
         mHorizontalTimelineRv.setLayoutParams(params);
+        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
     }
 
     @Override
@@ -287,8 +284,9 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     }
 
     @Override
-    public void showEventOrganizerDialog(RoomEventModel mCurrentEvent) {
+    public void showEventOrganizerDialog(RoomEventModel event) {
         if (mEventOrganizerDialog != null) {
+            mEventOrganizerDialog.setEvent(event);
             mEventOrganizerDialog.show(this);
         }
     }

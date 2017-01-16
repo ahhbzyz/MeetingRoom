@@ -14,7 +14,8 @@ public class RoomEventModelImpl implements RoomEventModel {
     private int status;
     private long startTime;
     private long endTime;
-    private String organizer;
+    private String creatorId;
+    private String creatorEmailAddress;
     private boolean isConfirmed;
     private boolean doNotDisturb;
     private final long ON_HOLD_TIME = TimeHelper.min2Millis(5);
@@ -32,13 +33,21 @@ public class RoomEventModelImpl implements RoomEventModel {
     }
 
     @Override
-    public String getOrganizer() {
-        return organizer;
+    public String getCreatorId() {
+        return creatorId;
     }
 
     @Override
-    public void setOrganizer(String organizer) {
-        this.organizer = organizer;
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public String getCreatorEmailAddress() {
+        return creatorEmailAddress;
+    }
+
+    public void setCreatorEmailAddress(String creatorEmailAddress) {
+        this.creatorEmailAddress = creatorEmailAddress;
     }
 
     @Override

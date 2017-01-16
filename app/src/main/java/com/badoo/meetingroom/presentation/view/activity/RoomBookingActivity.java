@@ -20,10 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.presentation.model.BadooPersonModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
-import com.badoo.meetingroom.presentation.view.Dialog.ImmersiveProgressDialogFragment;
-import com.badoo.meetingroom.presentation.view.adapter.BadooEmailAutoCompleteAdapter;
+import com.badoo.meetingroom.presentation.view.adapter.EmailAutoCompleteAdapter;
+import com.badoo.meetingroom.presentation.view.fragment.ImmersiveProgressDialogFragment;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -46,6 +47,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Inject TimeSlotsAdapter mAdapter;
     @Inject @Named("stolzl_regular") Typeface mStolzlRegularTypeface;
     @Inject @Named("stolzl_medium") Typeface mStolzlMediumTypeface;
+    @Inject @Named(GetAvatar.NAME) GetAvatar mGetAvatarUseCase;
 
     @BindView(R.id.tv_current_date) TextView mCurrentDateTv;
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
@@ -102,9 +104,10 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     public void setUpAutoCompleteTextView(List<BadooPersonModel> badooPersonModelList) {
-        BadooEmailAutoCompleteAdapter adapter = new BadooEmailAutoCompleteAdapter(this, R.layout.item_badoo_person, badooPersonModelList);
-        mAutoCompleteTv.setAdapter(adapter);
 
+        EmailAutoCompleteAdapter adapter = new EmailAutoCompleteAdapter(this, R.layout.item_badoo_person, badooPersonModelList);
+        mAutoCompleteTv.setAdapter(adapter);
+        mAutoCompleteTv.setThreshold(getString(R.string.badoo_mail_suffix).length() + 2);
         mAutoCompleteTv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -127,6 +130,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         mAutoCompleteTv.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 RoomBookingActivity.this.setImmersiveMode();
+            } else {
             }
         });
     }

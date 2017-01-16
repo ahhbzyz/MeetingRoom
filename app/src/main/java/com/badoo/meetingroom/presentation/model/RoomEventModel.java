@@ -12,9 +12,13 @@ public interface RoomEventModel {
 
     void setId(String id);
 
-    String getOrganizer();
+    String getCreatorId();
 
-    void setOrganizer(String organizer);
+    void setCreatorId(String creatorId);
+
+    String getCreatorEmailAddress();
+
+    void setCreatorEmailAddress(String creatorEmailAddress);
 
     int getStatus();
 

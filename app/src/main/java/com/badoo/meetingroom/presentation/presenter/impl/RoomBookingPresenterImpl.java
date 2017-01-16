@@ -3,6 +3,7 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.domain.entity.intf.BadooPerson;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
+import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.domain.interactor.InsertEvent;
 import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
@@ -34,6 +35,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     private long selectedEndTime;
     private final InsertEvent mInsertEventUseCase;
     private final GetPersons mGetPersonsUseCase;
+
     private final BadooPersonModelMapper mMapper;
     private List<BadooPersonModel> mBadooPersonModelList;
 

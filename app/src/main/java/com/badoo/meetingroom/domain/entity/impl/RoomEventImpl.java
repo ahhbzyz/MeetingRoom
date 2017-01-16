@@ -13,7 +13,10 @@ public class RoomEventImpl implements RoomEvent {
     private int status;
     private long startTime;
     private long endTime;
-    private String organizer;
+
+    private String creatorId;
+    private String creatorEmailAddress;
+
     private boolean isFastBook;
 
     public RoomEventImpl() {
@@ -60,13 +63,23 @@ public class RoomEventImpl implements RoomEvent {
     }
 
     @Override
-    public String getOrganizer() {
-        return organizer;
+    public String getCreatorId() {
+        return creatorId;
     }
 
     @Override
-    public void setOrganizer(String organizer) {
-        this.organizer = organizer;
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    @Override
+    public String getCreatorEmailAddress() {
+        return creatorEmailAddress;
+    }
+
+    @Override
+    public void setCreatorEmailAddress(String creatorEmailAddress) {
+        this.creatorEmailAddress = creatorEmailAddress;
     }
 
     @Override

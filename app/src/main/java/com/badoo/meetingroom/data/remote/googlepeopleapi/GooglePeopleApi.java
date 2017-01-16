@@ -12,4 +12,5 @@ import rx.Observable;
 
 public interface GooglePeopleApi {
     Observable<List<Person>> getPersonList();
+    Observable<Person> getPerson(String personId);
 }

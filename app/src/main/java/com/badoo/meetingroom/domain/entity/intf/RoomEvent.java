@@ -23,9 +23,13 @@ public interface RoomEvent extends Entity {
 
     void setEndTime(long endTime);
 
-    String getOrganizer();
+    String getCreatorId();
 
-    void setOrganizer(String organizer);
+    void setCreatorId(String creatorId);
+
+    String getCreatorEmailAddress();
+
+    void setCreatorEmailAddress(String creatorEmailAddress);
 
     boolean isFastBook();
 

@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.domain.interactor;
 
 import com.badoo.meetingroom.domain.entity.intf.BadooPerson;
-import com.badoo.meetingroom.domain.repository.BadooPersonDataRepo;
+import com.badoo.meetingroom.domain.repository.BadooPersonRepo;
 
 import java.util.List;
 
@@ -17,10 +17,10 @@ public class GetPersons extends UseCase<List<BadooPerson>> {
 
     public static final String NAME = "getPersons";
 
-    private final BadooPersonDataRepo mBadooPersonDataRepo;
+    private final BadooPersonRepo mBadooPersonDataRepo;
 
     @Inject
-    GetPersons(BadooPersonDataRepo badooPersonDataRepo) {
+    GetPersons(BadooPersonRepo badooPersonDataRepo) {
         this.mBadooPersonDataRepo = badooPersonDataRepo;
 
     }

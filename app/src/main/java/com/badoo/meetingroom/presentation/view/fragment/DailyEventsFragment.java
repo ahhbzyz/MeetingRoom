@@ -99,6 +99,14 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
                 mCurrentTimeLayout.setY(startY - dy);
                 mScrollOffset += dy;
             }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == SCROLL_STATE_IDLE) {
+                    mPresenter.updateCurrentTimeLayoutPosition();
+                }
+            }
         });
     }
 

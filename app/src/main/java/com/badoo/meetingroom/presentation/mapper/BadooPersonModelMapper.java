@@ -20,7 +20,7 @@ public class BadooPersonModelMapper {
 
     }
 
-    private BadooPersonModel map(BadooPerson badooPerson) {
+    public BadooPersonModel map(BadooPerson badooPerson) {
         BadooPersonModel badooPersonModel = null;
         if (badooPerson != null) {
 

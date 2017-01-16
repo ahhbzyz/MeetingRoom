@@ -34,7 +34,8 @@ public class RoomEventModelMapper {
 
         final RoomEventModel roomEventModel = new RoomEventModelImpl();
         roomEventModel.setId(roomEvent.getId());
-        roomEventModel.setOrganizer(roomEvent.getOrganizer());
+        roomEventModel.setCreatorId(roomEvent.getCreatorId());
+        roomEventModel.setCreatorEmailAddress(roomEvent.getCreatorEmailAddress());
         roomEventModel.setStatus(roomEvent.getStatus());
 
         roomEventModel.setStartTime(roomEvent.getStartTime());
@@ -112,7 +113,7 @@ public class RoomEventModelMapper {
         RoomEventModel roomEvent = new RoomEventModelImpl();
         roomEvent.setStartTime(startTime);
         roomEvent.setEndTime(endTime);
-        roomEvent.setOrganizer("None");
+        roomEvent.setCreatorEmailAddress("None");
         roomEvent.setStatus(RoomEventImpl.AVAILABLE);
         return roomEvent;
     }

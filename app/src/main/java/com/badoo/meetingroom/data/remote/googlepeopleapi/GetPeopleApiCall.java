@@ -32,7 +32,7 @@ public class GetPeopleApiCall implements Callable<List<Person>>{
         ListConnectionsResponse response = mServices.people().connections()
             .list("people/me")
             .setRequestMaskIncludeField("person.names,person.email_addresses,person.photos")
-            .setPageSize(20)
+            .setPageSize(500)
             .execute();
         return response.getConnections();
     }
@@ -41,6 +41,5 @@ public class GetPeopleApiCall implements Callable<List<Person>>{
     public List<Person> call() throws Exception {
         return requestSyncCall();
     }
-
 }
 

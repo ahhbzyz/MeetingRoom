@@ -11,6 +11,7 @@ import com.badoo.meetingroom.presentation.view.activity.GetCredentialActivity;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.activity.RoomStatusActivity;
 import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
+import com.badoo.meetingroom.presentation.view.fragment.EventCreatorDialogFragment;
 import com.badoo.meetingroom.presentation.view.fragment.RoomListFragment;
 
 
@@ -43,4 +44,5 @@ public interface MeetingRoomBookingComponent extends ActivityComponent {
     // Fragments
     void inject(DailyEventsFragment fragment);
     void inject(RoomListFragment fragment);
+    void inject(EventCreatorDialogFragment fragment);
 }

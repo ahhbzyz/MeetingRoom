@@ -2,14 +2,16 @@ package com.badoo.meetingroom.di.modules;
 
 import android.content.Context;
 
-import com.badoo.meetingroom.data.repository.BadooPersonDataRepoImpl;
-import com.badoo.meetingroom.data.repository.RoomEventDataRepoImpl;
-import com.badoo.meetingroom.data.repository.GoogleAccountDataRepoImpl;
+import com.badoo.meetingroom.data.repository.BadooPersonRepoImpl;
+import com.badoo.meetingroom.data.repository.GoogleAccountRepoImpl;
+import com.badoo.meetingroom.data.repository.RemoteImageRepoImpl;
+import com.badoo.meetingroom.data.repository.RoomEventRepoImpl;
 import com.badoo.meetingroom.di.AndroidApplication;
-import com.badoo.meetingroom.domain.entity.intf.BadooPerson;
-import com.badoo.meetingroom.domain.repository.BadooPersonDataRepo;
-import com.badoo.meetingroom.domain.repository.RoomEventDataRepo;
-import com.badoo.meetingroom.domain.repository.GoogleAccountDataRepo;
+import com.badoo.meetingroom.domain.repository.BadooPersonRepo;
+import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
+import com.badoo.meetingroom.domain.repository.RemoteImageRepo;
+import com.badoo.meetingroom.domain.repository.RoomEventRepo;
+import com.bumptech.glide.request.FutureTarget;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpTransport;
@@ -92,19 +94,25 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    RoomEventDataRepo provideRoomEventRepository(RoomEventDataRepoImpl roomEventDataRepository) {
+    RoomEventRepo provideRoomEventRepository(RoomEventRepoImpl roomEventDataRepository) {
         return roomEventDataRepository;
     }
 
     @Provides
     @Singleton
-    GoogleAccountDataRepo provideGoogleAccountRepository(GoogleAccountDataRepoImpl googleAccountDataRepository) {
+    GoogleAccountRepo provideGoogleAccountRepository(GoogleAccountRepoImpl googleAccountDataRepository) {
         return googleAccountDataRepository;
     }
 
     @Provides
     @Singleton
-    BadooPersonDataRepo provideBadooPersonDataRepository(BadooPersonDataRepoImpl badooPersonDataRepository) {
+    BadooPersonRepo provideBadooPersonDataRepository(BadooPersonRepoImpl badooPersonDataRepository) {
         return badooPersonDataRepository;
+    }
+
+    @Provides
+    @Singleton
+    RemoteImageRepo provideRemoteImageRepository(RemoteImageRepoImpl remoteImageRepository) {
+        return remoteImageRepository;
     }
 }

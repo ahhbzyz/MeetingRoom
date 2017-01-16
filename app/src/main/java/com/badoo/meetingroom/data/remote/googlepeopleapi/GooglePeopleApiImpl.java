@@ -52,8 +52,34 @@ public class GooglePeopleApiImpl implements GooglePeopleApi {
         });
     }
 
+    @Override
+    public Observable<Person> getPerson(String personId) {
+        return Observable.create(subscriber -> {
+            if(hasInternetConnection()) {
+                try {
+                    Person result = getPersonFromApi(mServices, personId);
+                    if (result != null) {
+                        subscriber.onNext(result);
+                        subscriber.onCompleted();
+                    } else {
+                        subscriber.onError(new NetworkConnectionException());
+                    }
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                }
+
+            } else {
+                subscriber.onError(new NetworkConnectionException());
+            }
+        });
+    }
+
     private List<Person> getPersonListFromApi(People services) throws Exception {
         return GetPeopleApiCall.createGET(services).requestSyncCall();
+    }
+
+    private Person getPersonFromApi(People services, String personId) throws Exception {
+        return GetPersonApiCall.createGET(services, personId).requestSyncCall();
     }
 
     private boolean hasInternetConnection() {
