@@ -223,7 +223,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             int finalPosition = position;
             holder.mClickableLayout.setOnClickListener(v -> {
                 if (this.mOnItemClickListener != null) {
-                    this.mOnItemClickListener.onEventItemClicked(finalPosition);
+                    this.mOnItemClickListener.onEventItemClicked(holder.itemView, finalPosition);
                 }
             });
         } else {
@@ -245,7 +245,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     }
 
     public interface OnItemClickListener {
-        void onEventItemClicked(int position);
+        void onEventItemClicked(View view, int position);
     }
 
     private void addTimestampsToView(ViewHolder holder, int position, List<Long> timestamps, RoomEventModel event, float viewHeight, float remainingProgress) {

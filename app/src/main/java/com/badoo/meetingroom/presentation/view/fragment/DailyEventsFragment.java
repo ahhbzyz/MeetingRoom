@@ -1,6 +1,7 @@
 package com.badoo.meetingroom.presentation.view.fragment;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -112,14 +113,14 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void onEventItemClicked(int position) {
+    public void onEventItemClicked(View view, int position) {
         if (mPresenter != null) {
-            mPresenter.onEventClicked(position);
+            mPresenter.onEventClicked(view, position);
         }
     }
 
     @Override
-    public void bookRoom(long startTime, long endTime) {
+    public void bookRoom(View view, long startTime, long endTime) {
         Intent intent = new Intent(this.getActivity(), RoomBookingActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong("startTime", startTime);
@@ -178,9 +179,10 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
                 break;
             case REQUEST_BOOK_ROOM:
                 if (resultCode == RESULT_OK) {
+                    long startTime = data.getLongExtra("startTime", 0);
                     mPresenter.getEvents();
                     Intent returnIntent = new Intent();
-                    this.getActivity().setResult(Activity.RESULT_OK, returnIntent);
+                    getActivity().setResult(Activity.RESULT_OK, returnIntent);
                 }
                 break;
         }

@@ -31,7 +31,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
     @Inject EventsCalendarPresenter mPresenter;
     // Typeface
-    @Inject @Named("stolzl_medium") Typeface mStolzMediumTypeface;
+    @Inject @Named("stolzl_medium") Typeface mStolzlMediumTypeface;
     DailyEventsFragmentPagerAdapter mAdapter;
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
@@ -55,7 +55,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     public void initViews() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        mRoomNameTv.setTypeface(mStolzMediumTypeface);
+        mRoomNameTv.setTypeface(mStolzlMediumTypeface);
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -83,15 +83,10 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            finishAfterTransition();
+            return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
     }
 
     private BroadcastReceiver mTimeRefreshReceiver = new BroadcastReceiver() {

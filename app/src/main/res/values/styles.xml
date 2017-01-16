@@ -3,12 +3,13 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">@android:color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:overScrollMode">never</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
-
 
     <style name="MyCalendarTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/roomStatusBusy</item>
@@ -26,6 +27,7 @@
     </style>
 
     <style name="MyEventOrganizerDialog" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 

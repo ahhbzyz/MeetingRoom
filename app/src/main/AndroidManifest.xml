@@ -26,7 +26,7 @@
         </activity>
         <activity android:name=".presentation.view.activity.RoomStatusActivity"
             android:windowSoftInputMode="adjustNothing"/>
-        <activity android:name=".presentation.view.activity.EventsCalendarActivity" />
+        <activity android:name=".presentation.view.activity.EventsCalendarActivity"/>
         <activity android:name=".presentation.view.activity.RoomBookingActivity"/>
         <activity android:name=".presentation.view.activity.AllRoomsActivity"/>
     </application>

@@ -83,9 +83,10 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         if (mCurrentEvent.isProcessing() && mCurrentEvent.isBusy() && !mCurrentEvent.isConfirmed() && !mCurrentEvent.isOnHold()) {
             deleteEvent();
         } else {
-            removeFirstEventFromQueue();
+            moveToNextEvent();
             showCurrentEventOnCircleTimeView();
             mRoomEventsView.updateHorizontalTimelinePosition(getNumOfExpiredEvents());
+            onSystemTimeUpdate();
         }
     }
 
@@ -117,7 +118,8 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void onRestart() {
-        mRoomEventsView.renderRoomEvent(mCurrentEvent);
+        mCurrentEventPos = getCurrentEventPosition(mEventList);
+        showCurrentEventOnCircleTimeView();
         onSystemTimeUpdate();
     }
 
@@ -168,17 +170,18 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     private void showCurrentEventOnCircleTimeView() {
-        if (mEventList != null && mEventList.get(mCurrentEventPos) != null) {
+        // TODO BUG index 1 size1
+        if (mEventList != null && mEventList.get(mCurrentEventPos) != null && mCurrentEventPos < mEventList.size()) {
             mCurrentEvent = mEventList.get(mCurrentEventPos);
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mCurrentEvent.setConfirmed(true);
             }
-            this.mRoomEventsView.renderRoomEvent(mCurrentEvent);
+            mRoomEventsView.renderRoomEvent(mCurrentEvent);
             showButtonsForEvent();
         }
     }
 
-    private void removeFirstEventFromQueue(){
+    private void moveToNextEvent(){
         if (mEventList != null && !mEventList.isEmpty()) {
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mConfirmedIds.remove(mCurrentEvent.getId());
@@ -221,7 +224,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     
     @Override
     public void insertEvent(int bookingPeriod) {
-
+        bookingPeriod = 1;
         long startTime = TimeHelper.getCurrentTimeInMillis();
         long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.min2Millis(bookingPeriod);
 
@@ -275,6 +278,18 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
+    private int getCurrentEventPosition(List<RoomEventModel> roomEventModelList) {
+        int currentEventPos = 0;
+        for (RoomEventModel eventModel : roomEventModelList) {
+            if (eventModel.isExpired()) {
+                currentEventPos++;
+            } else {
+                break;
+            }
+        }
+        return currentEventPos;
+    }
+
     private final class GetEventsSubscriber extends DefaultSubscriber<List<RoomEvent>> {
 
         @Override
@@ -286,16 +301,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         @Override
         public void onNext(List<RoomEvent> roomEvents) {
             Collection<RoomEventModel> mEventModelList = mMapper.map(roomEvents);
-            mCurrentEventPos = 0;
             mEventList.clear();
             mEventList.addAll(mEventModelList);
-            for (RoomEventModel eventModel : mEventList) {
-                if (eventModel.isExpired()) {
-                    mCurrentEventPos++;
-                } else {
-                    break;
-                }
-            }
+            mCurrentEventPos = getCurrentEventPosition(mEventList);
             showCurrentEventOnCircleTimeView();
             showEventsOnHorizontalTimelineView();
         }

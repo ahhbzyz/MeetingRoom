@@ -76,7 +76,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         holder.itemView.setLayoutParams(params);
         holder.mStartTimeTv.setText(event.getStartTimeInText());
         holder.mStartTimeTv.measure(0, 0);
-        if (viewWidth >= holder.mStartTimeTv.getMeasuredWidth()) {
+        if (viewWidth >= holder.mStartTimeTv.getMeasuredWidth() + 5) {
             holder.mStartTimeTv.setVisibility(View.VISIBLE);
         } else {
             holder.mStartTimeTv.setVisibility(View.INVISIBLE);

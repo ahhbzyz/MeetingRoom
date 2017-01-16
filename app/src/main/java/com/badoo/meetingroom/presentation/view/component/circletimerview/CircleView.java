@@ -36,8 +36,8 @@ public class CircleView extends View {
      * Default attributes
      */
     // Circle attributes
-    final float DEFAULT_CIRCLE_RADIUS = dp2px(110);
-    final float DEFAULT_CIRCLE_STROKE_WIDTH = dp2px(40);
+    final float DEFAULT_CIRCLE_RADIUS = dp2px(200);
+    final float DEFAULT_CIRCLE_STROKE_WIDTH = dp2px(42);
 
     final int DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.parseColor("#69E27E");
     final int DEFAULT_CIRCLE_COLOR = Color.parseColor("#69E27E");
@@ -87,13 +87,6 @@ public class CircleView extends View {
      * Show tail Icon or not
      */
     private boolean mTailIconVisibility = false;
-
-    /**
-     * Alert icon
-     */
-    private Drawable mAlertIconDrawable;
-    private boolean mAlertIconVisibility;
-
 
     /**
      * Count down listener
@@ -179,21 +172,6 @@ public class CircleView extends View {
                     (int) (iconX + mCircleStrokeWidth / 4f), (int) (iconY + mCircleStrokeWidth / 4f));
             mTailIconDrawable.draw(canvas);
             canvas.restore();
-        }
-
-        // Draw alert icon
-        if (mAlertIconVisibility && mAlertIconDrawable != null) {
-            float originalWidth = mAlertIconDrawable.getIntrinsicWidth();
-            float originalHeight = mAlertIconDrawable.getIntrinsicHeight();
-
-            float ratio = originalWidth / originalHeight;
-
-            float iconWidth = mCircleRadius / 2f;
-            float iconHeight = iconWidth / ratio;
-
-            mAlertIconDrawable.setBounds((int) (mCircleCx - iconWidth / 2f), (int) (mCircleCy - iconHeight),
-                (int) (mCircleCx + iconWidth / 2f), (int) (mCircleCy));
-            mAlertIconDrawable.draw(canvas);
         }
     }
 
@@ -370,15 +348,6 @@ public class CircleView extends View {
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
-
-    public void setAlertIconDrawable(int id) {
-        mAlertIconDrawable = ContextCompat.getDrawable(getContext(), id);
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-
-    public void setAlertIconVisibility(boolean visibility) {
-        this.mAlertIconVisibility = visibility;
-    }
 
     /**
      * Set tail icon visibility

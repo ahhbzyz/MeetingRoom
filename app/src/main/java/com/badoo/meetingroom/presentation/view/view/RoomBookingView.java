@@ -16,5 +16,5 @@ public interface RoomBookingView extends LoadDataView {
     void setTimeSlotsInView();
     void updateTimePeriodTextView(long selectedEndTime, long selectedEndTime1);
     void showRecoverableAuth(UserRecoverableAuthIOException e);
-    void showBookingSuccessful();
+    void showBookingSuccessful(long value);
 }

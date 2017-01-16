@@ -129,7 +129,9 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         public void onNext(Event event) {
             super.onNext(event);
             if (event.getStatus().equals("confirmed")){
-               mRoomBookingView.showBookingSuccessful();
+                if (event.getStart().getDateTime() != null) {
+                    mRoomBookingView.showBookingSuccessful(event.getStart().getDateTime().getValue());
+                }
             }
         }
 

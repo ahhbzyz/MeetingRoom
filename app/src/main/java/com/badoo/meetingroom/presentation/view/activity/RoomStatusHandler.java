@@ -246,25 +246,34 @@ public class RoomStatusHandler {
         if (event == null) {
             return;
         }
-        activity.mCircleView.setAlertIconVisibility(event.isDoNotDisturb());
+        clearTimerTimeText();
         activity.mCircleView.setTailIconVisibility(!event.isAvailable() && !event.isDoNotDisturb());
-
+        activity.mCircleTimerInfoLayout.setVisibility(event.isDoNotDisturb() ? View.GONE : View.VISIBLE);
+        activity.mDndLayout.setVisibility(event.isDoNotDisturb() ? View.VISIBLE : View.GONE);
         activity.mCircleView.setColorTheme(
             event.getEventColor(),
             event.getEventBgColor()
         );
         activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.STROKE);
+
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+
         switch (event.getStatus()) {
+
             case RoomEventModel.AVAILABLE:
                 activity.mRoomStatusTv.setText(activity.getString(R.string.available_for_upper_case));
+
                 long hours = TimeUnit.MILLISECONDS.toHours(event.getRemainingTime());
                 if (hours >= 2) {
-                    activity.mTimerTimeTv.setText("2H+");
+                    setTimerText(activity.getString(R.string.two_hour_plus));
                 } else {
                     startCountDownTime(event.getRemainingTime(), 1000);
                 }
                 break;
             case RoomEventModel.BUSY:
+
                 if (event.isOnHold() && !event.isConfirmed()) {
                     activity.mRoomStatusTv.setText(activity.getString(R.string.on_hold_for_upper_case));
                     startCountDownTime(event.getRemainingOnHoldTime(), 1000);
@@ -272,8 +281,8 @@ public class RoomStatusHandler {
                     activity.mCircleView.setColorTheme(event.getEventColor(), event.getEventColor());
                     activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.FILL_AND_STROKE);
                 } else {
-                    activity.mTimerTimeTv.setText(event.getEndTimeInText());
-                    activity.mRoomStatusTv.setText(activity.getString(R.string.available_for_upper_case));
+                    setTimerText(event.getEndTimeInText());
+                    activity.mRoomStatusTv.setText(activity.getString(R.string.busy_until_upper_case));
                 }
                 break;
             default:
@@ -294,7 +303,7 @@ public class RoomStatusHandler {
         mCountDownTimer = new CountDownTimer(millisInFuture, countDownInterval) {
             @Override
             public void onTick(long millisUntilFinished) {
-                activity.mTimerTimeTv.setText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
+                setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
             }
 
             @Override
@@ -302,5 +311,29 @@ public class RoomStatusHandler {
 
             }
         }.start();
+    }
+
+    private void setTimerText(String text) {
+        if (text.length() == 5) {
+            activity.mTimerOneTv.setText(String.valueOf(text.charAt(0)));
+            activity.mTimerTwoTv.setText(String.valueOf(text.charAt(1)));
+            activity.mTimerColonTv.setText(":");
+            activity.mTimerThreeTv.setText(String.valueOf(text.charAt(3)));
+            activity.mTimerFourTv.setText(String.valueOf(text.charAt(4)));
+        } else if (text.length() == 3) {
+            activity.mTimerOneTv.setText(null);
+            activity.mTimerTwoTv.setText(null);
+            activity.mTimerColonTv.setText(text);
+            activity.mTimerThreeTv.setText(null);
+            activity.mTimerFourTv.setText(null);
+        }
+    }
+
+    private void clearTimerTimeText() {
+        activity.mTimerOneTv.setText("0");
+        activity.mTimerTwoTv.setText("0");
+        activity.mTimerColonTv.setText(":");
+        activity.mTimerThreeTv.setText("0");
+        activity.mTimerFourTv.setText("0");
     }
 }

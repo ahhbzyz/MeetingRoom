@@ -1,5 +1,7 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
+import android.view.View;
+
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetEvents;
@@ -62,11 +64,11 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     }
 
     @Override
-    public void onEventClicked(int position) {
+    public void onEventClicked(View view, int position) {
         if (mEventList != null && mEventList.get(position).isAvailable()) {
             RoomEventModel event = mEventList.get(position);
             long startTime = event.isProcessing() ? TimeHelper.getCurrentTimeInMillis() : event.getStartTime();
-            mDailyEventsView.bookRoom(startTime, event.getEndTime());
+            mDailyEventsView.bookRoom(view, startTime, event.getEndTime());
         }
     }
 

@@ -33,7 +33,7 @@ public class EventsGetApiCall implements Callable<List<Event>>{
 
     private void connectToApi() throws Exception {
         Events events;
-        events = mServices.events().list("primary")
+        events = mServices.events().list("corp.badoo.com_37313432373937392d3336@resource.calendar.google.com")
             .setTimeMin(mEventParams.getStart().getDateTime())
             .setTimeMax(mEventParams.getEnd().getDateTime())
             .setOrderBy("startTime")

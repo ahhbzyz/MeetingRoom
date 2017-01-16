@@ -76,6 +76,11 @@ public class RoomEventModelMapper {
                 final RoomEventModel roomEventModel = map(roomEvent);
 
                 if (roomEventModel != null) {
+
+                    if (roomEvent.getStartTime() < endTime) {
+                        continue;
+                    }
+
                     startTime = roomEvent.getStartTime();
                     endTime = roomEvent.getEndTime();
 

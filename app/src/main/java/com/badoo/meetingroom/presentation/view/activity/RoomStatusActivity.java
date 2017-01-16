@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
-import android.app.ProgressDialog;
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +22,8 @@ import android.widget.Toast;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
+import com.badoo.meetingroom.presentation.view.Dialog.ImmersiveDialogFragment;
+import com.badoo.meetingroom.presentation.view.Dialog.ImmersiveProgressDialogFragment;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalTimelineAdapter;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomEventsView;
@@ -65,9 +66,20 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     @BindView(R.id.img_room) ImageView mRoomImg;
 
     // Circle time view
-    @BindView(R.id.circle_time_view) CircleView mCircleView;
+    @BindView(R.id.circle_view) CircleView mCircleView;
+
+    @BindView(R.id.layout_circle_timer_info) LinearLayout mCircleTimerInfoLayout;
     @BindView(R.id.tv_room_status) TextView mRoomStatusTv;
-    @BindView(R.id.tv_timer_time) TextView mTimerTimeTv;
+    @BindView(R.id.tv_timer_one) TextView mTimerOneTv;
+    @BindView(R.id.tv_timer_two) TextView mTimerTwoTv;
+    @BindView(R.id.tv_timer_three) TextView mTimerThreeTv;
+    @BindView(R.id.tv_timer_four) TextView mTimerFourTv;
+    @BindView(R.id.tv_timer_colon) TextView mTimerColonTv;
+
+    @BindView(R.id.layout_dnd) LinearLayout mDndLayout;
+    @BindView(R.id.tv_dnd) TextView mDndTv;
+
+
     @BindView(R.id.img_book) ImageButton mCircleTimeViewBtn;
 
     // Horizontal timeline view
@@ -84,9 +96,9 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     @BindView(R.id.layout_bottom_content) RelativeLayout mBottomContentLayout;
 
     // Dialogs
-    private ProgressDialog mProgressDialog;
+    private ImmersiveProgressDialogFragment mProgressDialog;
+    private ImmersiveDialogFragment mEventOrganizerDialog;
     private Handler mLoadingDataDialogHandler;
-    private AlertDialog mEventOrganizerDialog;
 
     final long SCROLL_BACK_WAIT_TIME = 3000;
     final long SHOW_LOADING_DIALOG_WAIT_TIME = 1000;
@@ -124,36 +136,32 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mRoomImg.setOnClickListener(this);
 
         // Dialog
+        mProgressDialog = ImmersiveProgressDialogFragment.newInstance();
+
+        mEventOrganizerDialog = ImmersiveDialogFragment.newInstance();
+
         mLoadingDataDialogHandler = new Handler();
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        View content = View.inflate(this, R.layout.dialog_event_organizer, null);
-        mEventOrganizerDialog = new AlertDialog.Builder(this, R.style.MyEventOrganizerDialog).setView(content).create();
-        ((TextView) content.findViewById(R.id.tv_event_period)).setTypeface(mStolzlRegularTypeface);
 
         mRoomStatusHandler = new RoomStatusHandler(this);
+
+
     }
 
     private void setUptCircleTimeTextViews() {
         mRoomStatusTv.setTypeface(mStolzlRegularTypeface);
-        mTimerTimeTv.setTypeface(mStolzlMediumTypeface);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mRoomStatusTv.getLayoutParams();
-        mCircleView.measure(0, 0);
-        params.setMargins(0, (int) (mCircleView.getMeasuredHeight() / 2f), 0, 0);
-        mRoomStatusTv.setLayoutParams(params);
+        mTimerOneTv.setTypeface(mStolzlMediumTypeface);
+        mTimerTwoTv.setTypeface(mStolzlMediumTypeface);
+        mTimerThreeTv.setTypeface(mStolzlMediumTypeface);
+        mTimerFourTv.setTypeface(mStolzlMediumTypeface);
+        mTimerColonTv.setTypeface(mStolzlMediumTypeface);
+        mDndTv.setTypeface(mStolzlRegularTypeface);
     }
 
     private void setUpCircleView() {
         mCircleView.setTailIconDrawable(R.drawable.ic_arrow_left_white);
-        mCircleView.setAlertIconDrawable(R.drawable.ic_alert_white);
         mCircleView.setOnCountDownListener(this);
         mCircleView.setOnClickListener(this);
 
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mCircleTimeViewBtn.getLayoutParams();
-        mCircleView.measure(0, 0);
-        params.setMargins(0, 0, 0, (int) (mCircleView.getMeasuredHeight() / 4f + mCircleTimeViewBtn.getLayoutParams().width / 2f));
-        mCircleTimeViewBtn.setLayoutParams(params);
         mCircleTimeViewBtn.setOnClickListener(this);
     }
 
@@ -192,18 +200,24 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     }
 
     @Override
+    public void onEventItemClicked(int position) {
+        mPresenter.onEventClicked(position);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.img_calendar:
                 Intent calendarIntent = new Intent(RoomStatusActivity.this, EventsCalendarActivity.class);
-                calendarIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM);
+                ActivityOptions options = ActivityOptions
+                    .makeSceneTransitionAnimation(this, mRoomNameTv, "roomName");
+                startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM, options.toBundle());
                 break;
             case R.id.img_room:
                 Intent roomListIntent = new Intent(RoomStatusActivity.this, AllRoomsActivity.class);
                 startActivity(roomListIntent);
                 break;
-            case R.id.circle_time_view:
+            case R.id.circle_view:
                 mPresenter.setDoNotDisturb(false);
                 break;
             case R.id.img_book:
@@ -267,17 +281,15 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         bundle.putLong("startTime", startTime);
         bundle.putLong("endTime", endTime);
         intent.putExtra("timePeriod", bundle);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivityForResult(intent, REQUEST_BOOK_ROOM);
+        ActivityOptions options = ActivityOptions
+            .makeSceneTransitionAnimation(this, mRoomNameTv, "roomName");
+        startActivityForResult(intent, REQUEST_BOOK_ROOM, options.toBundle());
     }
 
     @Override
     public void showEventOrganizerDialog(RoomEventModel mCurrentEvent) {
         if (mEventOrganizerDialog != null) {
-            mEventOrganizerDialog.show();
-            if (mEventOrganizerDialog.getWindow() != null) {
-                mEventOrganizerDialog.getWindow().setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            }
+            mEventOrganizerDialog.show(this);
         }
     }
 
@@ -301,10 +313,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
         mRoomStatusHandler.showButtonGroupForDoNotDisturbStatus(endTimeInText);
     }
 
-    @Override
-    public void onEventItemClicked(int position) {
-        mPresenter.onEventClicked(position);
-    }
+
 
     @Override
     public void hideTopBottomContent() {
@@ -332,14 +341,16 @@ public class RoomStatusActivity extends BaseActivity implements RoomEventsView, 
     public void showLoadingData(String message) {
         mLoadingDataDialogHandler.postDelayed(() -> {
             mProgressDialog.setMessage(message);
-            mProgressDialog.show();
+            mProgressDialog.show(this);
         }, SHOW_LOADING_DIALOG_WAIT_TIME);
     }
 
     @Override
     public void dismissLoadingData() {
         mLoadingDataDialogHandler.removeCallbacksAndMessages(null);
-        mProgressDialog.dismiss();
+        if (mProgressDialog != null && mProgressDialog.getDialog() != null) {
+            mProgressDialog.dismiss();
+        }
     }
 
     @Override
