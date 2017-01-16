@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
  * Created by zhangyaozhong on 04/01/2017.
  */
 
-public class EventDeleteApiCall implements Callable<Void>{
+class EventDeleteApiCall implements Callable<Void>{
 
     private Calendar mServices = null;
     private Event mEventParams;
@@ -20,7 +20,7 @@ public class EventDeleteApiCall implements Callable<Void>{
         this.mServices = services;
     }
 
-    public static EventDeleteApiCall createDelete(Calendar services, Event eventParams) {
+    static EventDeleteApiCall createDelete(Calendar services, Event eventParams) {
         return new EventDeleteApiCall(services, eventParams);
     }
 

@@ -47,6 +47,8 @@ dependencies {
     compile "com.android.support:design:${rootProject.ext.designVersion}"
     compile "com.android.support:support-v4:${rootProject.ext.supportV4Version}"
 
+    compile "de.hdodenhof:circleimageview:${rootProject.ext.circleImageViewVersion}"
+
     compile "com.jakewharton:butterknife:${rootProject.ext.butterKnifeVersion}"
     apt "com.jakewharton:butterknife-compiler:${rootProject.ext.butterKnifeVersion}"
 
@@ -73,8 +75,6 @@ dependencies {
     compile ("com.google.apis:google-api-services-people:${rootProject.ext.googleApiServicesPeople}") {
         exclude group: 'org.apache.httpcomponents'
     }
-
-    compile 'de.hdodenhof:circleimageview:2.1.0'
 
     // Test dependencies
     testCompile "junit:junit:${rootProject.ext.junitVersion}"

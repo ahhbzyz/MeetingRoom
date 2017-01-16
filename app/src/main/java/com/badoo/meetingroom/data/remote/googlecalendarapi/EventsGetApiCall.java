@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
  * Created by zhangyaozhong on 20/12/2016.
  */
 
-public class EventsGetApiCall implements Callable<List<Event>>{
+class EventsGetApiCall implements Callable<List<Event>>{
 
     private Calendar mServices = null;
     private List<Event> mResponse;
@@ -22,7 +22,7 @@ public class EventsGetApiCall implements Callable<List<Event>>{
         this.mEventParams = eventParams;
     }
 
-    public static EventsGetApiCall createGET(Calendar services, Event eventParams) {
+    static EventsGetApiCall createGET(Calendar services, Event eventParams) {
         return new EventsGetApiCall(services, eventParams);
     }
 

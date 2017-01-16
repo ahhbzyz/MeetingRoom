@@ -144,8 +144,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         mLoadingDataDialogHandler = new Handler();
 
         mRoomStatusHandler = new RoomStatusHandler(this);
-
-
     }
 
     private void setUptCircleTimeTextViews() {

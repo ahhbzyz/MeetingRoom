@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 
 import com.badoo.meetingroom.data.exception.NetworkConnectionException;
 import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
 
 import java.util.List;
@@ -34,9 +35,9 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
         return Observable.create(subscriber -> {
             if(hasInternetConnection()) {
                 try {
-                    List<Event> responseEvents = getEventsFromApi(mServices, event);
-                    if (responseEvents != null) {
-                        subscriber.onNext(responseEvents);
+                    List<Event> result = getEventsFromApi(mServices, event);
+                    if (result != null) {
+                        subscriber.onNext(result);
                         subscriber.onCompleted();
                     } else {
                         subscriber.onError(new NetworkConnectionException());
@@ -109,6 +110,27 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
         });
     }
 
+    @Override
+    public Observable<List<CalendarListEntry>> getCalendarList() {
+        return Observable.create(subscriber -> {
+            if(hasInternetConnection()) {
+                try {
+                    List<CalendarListEntry> result = getCalendarListFromApi(mServices);
+                    if (result != null) {
+                        subscriber.onNext(result);
+                        subscriber.onCompleted();
+                    } else {
+                        subscriber.onError(new NetworkConnectionException());
+                    }
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                }
+
+            } else {
+                subscriber.onError(new NetworkConnectionException());
+            }
+        });
+    }
 
     private List<Event> getEventsFromApi(Calendar services, Event event) throws Exception {
         return EventsGetApiCall.createGET(services, event).requestSyncCall();
@@ -126,6 +148,9 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
         return EventUpdateApiCall.createUpdate(service, event).requestSyncCall();
     }
 
+    private List<CalendarListEntry> getCalendarListFromApi(Calendar service) throws Exception {
+        return GetCalendarListApiCall.createGET(service).requestSyncCall();
+    }
 
     private boolean hasInternetConnection() {
         boolean isConnected;

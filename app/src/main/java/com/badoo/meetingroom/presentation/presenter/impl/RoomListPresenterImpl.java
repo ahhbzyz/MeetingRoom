@@ -1,6 +1,7 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
 import com.badoo.meetingroom.presentation.model.Room;
+import com.badoo.meetingroom.presentation.model.RoomImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
 import com.badoo.meetingroom.presentation.view.view.RoomListView;
 
@@ -37,7 +38,7 @@ public class RoomListPresenterImpl implements RoomListPresenter {
 
     private void loadRoomList() {
         for (int i = 0; i < 8; i++) {
-            Room room = new Room();
+            Room room = new RoomImpl();
             mRoomList.add(room);
         }
         mRoomListView.renderRoomListInView(mRoomList);

@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.view.adapter.AllRoomsFragmentPagerAdapter;
+import com.badoo.meetingroom.presentation.view.adapter.RoomListFragmentPagerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +48,7 @@ public class AllRoomsActivity extends BaseActivity {
     }
 
     public void setUpViewPager() {
-        AllRoomsFragmentPagerAdapter mAdapter = new AllRoomsFragmentPagerAdapter(getSupportFragmentManager());
+        RoomListFragmentPagerAdapter mAdapter = new RoomListFragmentPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mAdapter);
         mFloorsTabLayout.setupWithViewPager(mViewPager);
     }

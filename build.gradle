@@ -37,6 +37,7 @@ ext {
     butterKnifeVersion = '8.4.0'
     designVersion = '25.1.0'
     supportV4Version = '25.1.0'
+    circleImageViewVersion = '2.1.0'
 
     // Data dependencies
     glideVersion = '3.7.0'

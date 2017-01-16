@@ -7,7 +7,7 @@ import com.badoo.meetingroom.di.modules.PresentationModule;
 import com.badoo.meetingroom.di.modules.UseCaseModule;
 import com.badoo.meetingroom.presentation.view.activity.AllRoomsActivity;
 import com.badoo.meetingroom.presentation.view.activity.EventsCalendarActivity;
-import com.badoo.meetingroom.presentation.view.activity.GetCredentialActivity;
+import com.badoo.meetingroom.presentation.view.activity.MainActivity;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.activity.RoomStatusActivity;
 import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
@@ -36,7 +36,7 @@ import dagger.Component;
 
 public interface MeetingRoomBookingComponent extends ActivityComponent {
     // Activities
-    void inject(GetCredentialActivity activity);
+    void inject(MainActivity activity);
     void inject(RoomStatusActivity activity);
     void inject(EventsCalendarActivity activity);
     void inject(RoomBookingActivity activity);

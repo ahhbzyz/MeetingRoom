@@ -1,94 +1,42 @@
 package com.badoo.meetingroom.presentation.model;
 
 /**
- * Created by zhangyaozhong on 05/01/2017.
+ * Created by zhangyaozhong on 16/01/2017.
  */
+public interface Room {
+    String getName();
 
-public class Room {
+    void setName(String name);
 
-    private String name;
-    private int floor;
-    private int status;
-    private RoomEventModel currentEvent;
-    private int capacity;
-    private boolean isTvSupported;
-    private boolean isVideoConferenceSupported;
-    private boolean isBeverageSupported;
-    private boolean isStationerySupported;
+    int getFloor();
 
-    public Room() {
+    void setFloor(int floor);
 
-    }
+    int getStatus();
 
-    public String getName() {
-        return name;
-    }
+    void setStatus(int status);
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    RoomEventModel getCurrentEvent();
 
-    public int getFloor() {
-        return floor;
-    }
+    void setCurrentEvent(RoomEventModel currentEvent);
 
-    public void setFloor(int floor) {
-        this.floor = floor;
-    }
+    int getCapacity();
 
-    public int getStatus() {
-        return status;
-    }
+    void setCapacity(int capacity);
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
+    boolean isTvSupported();
 
-    public RoomEventModel getCurrentEvent() {
-        return currentEvent;
-    }
+    void setTvSupported(boolean tvSupported);
 
-    public void setCurrentEvent(RoomEventModel currentEvent) {
-        this.currentEvent = currentEvent;
-    }
+    boolean isVideoConferenceSupported();
 
-    public int getCapacity() {
-        return capacity;
-    }
+    void setVideoConferenceSupported(boolean videoConferenceSupported);
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
+    boolean isBeverageSupported();
 
-    public boolean isTvSupported() {
-        return isTvSupported;
-    }
+    void setBeverageSupported(boolean beverageSupported);
 
-    public void setTvSupported(boolean tvSupported) {
-        isTvSupported = tvSupported;
-    }
+    boolean isStationerySupported();
 
-    public boolean isVideoConferenceSupported() {
-        return isVideoConferenceSupported;
-    }
-
-    public void setVideoConferenceSupported(boolean videoConferenceSupported) {
-        isVideoConferenceSupported = videoConferenceSupported;
-    }
-
-    public boolean isBeverageSupported() {
-        return isBeverageSupported;
-    }
-
-    public void setBeverageSupported(boolean beverageSupported) {
-        isBeverageSupported = beverageSupported;
-    }
-
-    public boolean isStationerySupported() {
-        return isStationerySupported;
-    }
-
-    public void setStationerySupported(boolean stationerySupported) {
-        isStationerySupported = stationerySupported;
-    }
+    void setStationerySupported(boolean stationerySupported);
 }

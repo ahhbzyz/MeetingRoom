@@ -22,7 +22,7 @@ public class EventStoreFactory {
     
     @Inject
     EventStoreFactory(@NonNull Context context, @NonNull Calendar services) {
-        this.mContext = context.getApplicationContext();
+        mContext = context.getApplicationContext();
         mServices = services;
     }
 

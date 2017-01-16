@@ -9,7 +9,7 @@ import java.util.concurrent.Callable;
  * Created by zhangyaozhong on 20/12/2016.
  */
 
-public class EventUpdateApiCall implements Callable<Event>{
+class EventUpdateApiCall implements Callable<Event>{
 
     private Calendar mServices = null;
     private Event mResponse;
@@ -20,7 +20,7 @@ public class EventUpdateApiCall implements Callable<Event>{
         this.mServices = services;
     }
 
-    public static EventUpdateApiCall createUpdate(Calendar services, Event eventParams) {
+    static EventUpdateApiCall createUpdate(Calendar services, Event eventParams) {
         return new EventUpdateApiCall(services, eventParams);
     }
 
