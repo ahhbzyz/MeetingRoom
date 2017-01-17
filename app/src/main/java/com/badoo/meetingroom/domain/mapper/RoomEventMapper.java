@@ -19,10 +19,12 @@ import javax.inject.Singleton;
 public class RoomEventMapper {
 
     @Inject
-    RoomEventMapper() {
-    }
+    RoomEventMapper() {}
+
     private RoomEvent map(Event event) {
+
         RoomEvent roomEvent = null;
+
         if (event != null && event.getStart().getDateTime() != null
                           && event.getEnd().getDateTime() != null) {
 

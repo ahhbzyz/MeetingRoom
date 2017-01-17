@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -36,7 +35,7 @@ public class CircleView extends View {
      * Default attributes
      */
     // Circle attributes
-    final float DEFAULT_CIRCLE_RADIUS = dp2px(200);
+    final float DEFAULT_CIRCLE_RADIUS = dp2px(180);
     final float DEFAULT_CIRCLE_STROKE_WIDTH = dp2px(42);
 
     final int DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.parseColor("#69E27E");
@@ -96,6 +95,7 @@ public class CircleView extends View {
     private ValueAnimator mRotateAnimator;
 
     private Context mContext;
+    private OnColorAnimateListener mOnColorAnimateListener;
 
     public CircleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -265,7 +265,6 @@ public class CircleView extends View {
 
             @Override
             public void onAnimationCancel(Animator animator) {
-
             }
 
             @Override
@@ -281,7 +280,7 @@ public class CircleView extends View {
         ViewCompat.postInvalidateOnAnimation(this);
     }
 
-    public void stopCountDown() {
+    public void stopCircleViewCountDown() {
         if (mRotateAnimator != null && mRotateAnimator.isRunning()) {
             mRotateAnimator.removeAllListeners();
             mRotateAnimator.cancel();
@@ -307,12 +306,21 @@ public class CircleView extends View {
     }
 
     public void setColorTheme(int circleColor, int circleBackgroundColor) {
-        mCircleColor = circleColor;
-        mTailCirclePaint.setColor(mCircleColor);
-        mCirclePaint.setColor(mCircleColor);
-        mCircleBackgroundColor = circleBackgroundColor;
-        mCircleBackgroundPaint.setColor(mCircleBackgroundColor);
-        ViewCompat.postInvalidateOnAnimation(this);
+
+        setCircleColor(circleColor);
+        setCircleBackgroundColor(circleBackgroundColor);
+
+//        ValueAnimator colorAnimator = new ValueAnimator();
+//        colorAnimator.setIntValues(mCircleColor, circleColor);
+//        colorAnimator.setEvaluator(new ArgbEvaluator());
+//        colorAnimator.setDuration(1200);
+//        colorAnimator.start();
+//
+//        ValueAnimator bgColorAnimator = new ValueAnimator();
+//        bgColorAnimator.setIntValues(mCircleBackgroundColor, circleBackgroundColor);
+//        bgColorAnimator.setEvaluator(new ArgbEvaluator());
+//        bgColorAnimator.setDuration(1200);
+//        bgColorAnimator.start();
     }
 
     /**
@@ -323,7 +331,7 @@ public class CircleView extends View {
     public void setCircleBackgroundColor(int color) {
         mCircleBackgroundColor = color;
         mCircleBackgroundPaint.setColor(mCircleBackgroundColor);
-        invalidate();
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 
     /**
@@ -386,6 +394,10 @@ public class CircleView extends View {
         return dp * scale + 0.5f;
     }
 
+    public void setCircleBackgroundPaintStyle(Paint.Style style) {
+        this.mCircleBackgroundPaint.setStyle(style);
+        ViewCompat.postInvalidateOnAnimation(this);
+    }
 
     /**
      * Set count down listener
@@ -395,16 +407,19 @@ public class CircleView extends View {
         this.mCountDownListener = listener;
     }
 
-    public void setCircleBackgroundPaintStyle(Paint.Style style) {
-        this.mCircleBackgroundPaint.setStyle(style);
-        ViewCompat.postInvalidateOnAnimation(this);
-    }
-
     /**
      * Created by zhangyaozhong on 08/12/2016.
      */
     public interface OnCountDownListener {
         void onCountDownTicking(long millisUntilFinished);
         void onCountDownFinished();
+    }
+
+    public void setOnColorAnimateListener (OnColorAnimateListener listener) {
+        this.mOnColorAnimateListener = listener;
+    }
+
+    public interface OnColorAnimateListener {
+        void onAnimationEnd();
     }
 }

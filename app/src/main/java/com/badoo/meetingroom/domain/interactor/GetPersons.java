@@ -22,7 +22,6 @@ public class GetPersons extends UseCase<List<BadooPerson>> {
     @Inject
     GetPersons(BadooPersonRepo badooPersonDataRepo) {
         this.mBadooPersonDataRepo = badooPersonDataRepo;
-
     }
 
     @Override

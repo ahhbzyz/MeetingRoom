@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -89,7 +90,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     // Button group
     @BindView(R.id.tv_fast_book) TextView mFastBookTv;
-    @BindView(R.id.layout_btns) LinearLayout mButtonsLayout;
+    @BindView(R.id.layout_btns) FrameLayout mButtonsLayout;
 
     // Top and bottom content
     @BindView(R.id.layout_top_content) LinearLayout mTopContentLayout;
@@ -206,16 +207,16 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     @Override
     public void onClick(View v) {
+        ActivityOptions options = ActivityOptions
+            .makeSceneTransitionAnimation(this, mRoomNameTv, "roomName");
         switch (v.getId()) {
             case R.id.img_calendar:
                 Intent calendarIntent = new Intent(RoomStatusActivity.this, EventsCalendarActivity.class);
-                ActivityOptions options = ActivityOptions
-                    .makeSceneTransitionAnimation(this, mRoomNameTv, "roomName");
                 startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM, options.toBundle());
                 break;
             case R.id.img_room:
-                Intent roomListIntent = new Intent(RoomStatusActivity.this, AllRoomsActivity.class);
-                startActivity(roomListIntent);
+                Intent roomListIntent = new Intent(RoomStatusActivity.this, AllRoomActivity.class);
+                startActivityForResult(roomListIntent, REQUEST_BOOK_ROOM, options.toBundle());
                 break;
             case R.id.circle_view:
                 mPresenter.setDoNotDisturb(false);
@@ -324,6 +325,12 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     }
 
     @Override
+    public void stopCountDown() {
+        mCircleView.stopCircleViewCountDown();
+        mRoomStatusHandler.stopTextViewsCountDown();
+    }
+
+    @Override
     public void onCountDownTicking(long millisUntilFinished) {
         mPresenter.onCountDownTicking(millisUntilFinished);
     }
@@ -384,12 +391,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
-    }
-
-    @Override
     protected void onRestart() {
         super.onRestart();
         if (mPresenter != null) {
@@ -400,21 +401,14 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mTimeRefreshReceiver != null) {
-            mCircleView.stopCountDown();
-            mRoomStatusHandler.stopCountDownTimer();
-            unregisterReceiver(mTimeRefreshReceiver);
-        }
+        stopCountDown();
     }
 
-    private BroadcastReceiver mTimeRefreshReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
-                mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-                mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomStatusActivity.this));
-                mPresenter.onSystemTimeUpdate();
-            }
-        }
-    };
+    @Override
+    protected void onSystemTimeRefresh() {
+        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
+        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomStatusActivity.this));
+        mPresenter.onSystemTimeUpdate();
+    }
+
 }

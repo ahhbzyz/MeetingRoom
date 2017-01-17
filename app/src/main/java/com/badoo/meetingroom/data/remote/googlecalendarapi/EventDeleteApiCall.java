@@ -13,15 +13,15 @@ import java.util.concurrent.Callable;
 class EventDeleteApiCall implements Callable<Void>{
 
     private Calendar mServices = null;
-    private Event mEventParams;
+    private CalendarApiParams mParams;
 
-    private EventDeleteApiCall(Calendar services, Event eventParams) {
-        this.mEventParams = eventParams;
-        this.mServices = services;
+    private EventDeleteApiCall(Calendar services, CalendarApiParams params) {
+        mServices = services;
+        mParams = params;
     }
 
-    static EventDeleteApiCall createDelete(Calendar services, Event eventParams) {
-        return new EventDeleteApiCall(services, eventParams);
+    static EventDeleteApiCall createDelete(Calendar services, CalendarApiParams params) {
+        return new EventDeleteApiCall(services, params);
     }
 
     public Void requestSyncCall() throws Exception {
@@ -29,7 +29,7 @@ class EventDeleteApiCall implements Callable<Void>{
     }
 
     private Void connectToApi() throws Exception {
-        return mServices.events().delete("primary", mEventParams.getId()).execute();
+        return mServices.events().delete(mParams.getCalendarId(), mParams.getEventParams().getId()).execute();
     }
 
     @Override

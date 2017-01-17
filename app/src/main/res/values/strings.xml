@@ -31,4 +31,6 @@
     <string name="fake_time">00:00</string>
     <string name="available">Available</string>
     <string name="two_hour_plus">2H+</string>
+    <string name="available_for">Available for</string>
+    <string name="busy_until">Busy until</string>
 </resources>

@@ -1,9 +1,7 @@
 package com.badoo.meetingroom.presentation.view.adapter;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
@@ -25,19 +23,17 @@ import javax.inject.Inject;
 
 public class DailyEventsFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+    private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    private Context mContext;
     private final int numOfDays = 10;
-    private List<String>tabTitles = new ArrayList<>(numOfDays);
-    private FragmentManager mFragmentManager;
+    private List<String> mTabTitles = new ArrayList<>(numOfDays);
 
     @Inject
-    public DailyEventsFragmentPagerAdapter(FragmentManager fm, Context context) {
+    public DailyEventsFragmentPagerAdapter(FragmentManager fm) {
+
         super(fm);
-        this.mFragmentManager = fm;
-        this.mContext = context;
-        tabTitles.add("Today");
+
+        mTabTitles.add("Today");
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
         Date date = new Date();
@@ -46,7 +42,7 @@ public class DailyEventsFragmentPagerAdapter extends FragmentStatePagerAdapter {
             c.setTime(date);
             c.add(Calendar.DATE, 1);
             date = c.getTime();
-            tabTitles.add(sdf.format(date));
+            mTabTitles.add(sdf.format(date));
         }
     }
 
@@ -57,12 +53,12 @@ public class DailyEventsFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return tabTitles.size();
+        return mTabTitles.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return tabTitles.get(position);
+        return mTabTitles.get(position);
     }
 
     @Override

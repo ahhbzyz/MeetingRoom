@@ -28,12 +28,9 @@ class GetPersonApiCall implements Callable<Person> {
     }
 
     private Person connectToApi() throws Exception {
-        System.out.println(mPersonId);
-
-        Person person = mServices.people()
+        return mServices.people()
             .get(mPersonId)
             .execute();
-        return person;
     }
 
     @Override

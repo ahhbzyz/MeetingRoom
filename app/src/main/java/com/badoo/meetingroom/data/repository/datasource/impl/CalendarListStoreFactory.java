@@ -26,7 +26,7 @@ public class CalendarListStoreFactory {
         mServices = services;
     }
 
-    public CalendarListStore createRemoteEventDataStore() {
+    public CalendarListStore createCalendarListStore() {
         GoogleCalendarApi googleApi = new GoogleCalendarApiImpl(this.mContext, this.mServices);
         return new CalendarListStoreImpl(googleApi);
     }

@@ -1,5 +1,6 @@
 package com.badoo.meetingroom.domain.interactor.event;
 
+import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.UseCase;
 import com.badoo.meetingroom.domain.repository.RoomEventRepo;
@@ -21,25 +22,23 @@ public class GetEvents extends UseCase<List<RoomEvent>> {
     public static final String NAME = "getEvents";
 
     private final RoomEventRepo mRoomEventRepository;
-    private Event mEventParams;
-    private String mRoomId;
+    private CalendarApiParams mParams;
 
     @Inject
     GetEvents(RoomEventRepo roomEventRepository) {
         this.mRoomEventRepository = roomEventRepository;
     }
 
-    public GetEvents init(String roomId, Event event) {
-        this.mRoomId = roomId;
-        this.mEventParams = event;
+    public GetEvents init(CalendarApiParams params) {
+        mParams = params;
         return this;
     }
 
     @Override
     protected Observable<List<RoomEvent>> buildUseCaseObservable() {
-        if (this.mEventParams == null) {
-            throw new IllegalArgumentException("init(EventsGetParams) not called, or called with null argument");
+        if (mParams == null) {
+            throw new IllegalArgumentException("init(CalendarApiParams) not called, or called with null argument");
         }
-        return mRoomEventRepository.getRoomEventList(mRoomId, mEventParams);
+        return mRoomEventRepository.getRoomEventList(mParams);
     }
 }

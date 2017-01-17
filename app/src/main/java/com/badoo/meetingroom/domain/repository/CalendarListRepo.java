@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.domain.repository;
 
-import com.google.api.services.calendar.model.CalendarListEntry;
+import com.badoo.meetingroom.domain.entity.intf.Room;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ import rx.Observable;
  */
 
 public interface CalendarListRepo {
-    Observable<List<CalendarListEntry>> getCalendarList();890-
+    Observable<List<Room>> getCalendarList();
 }

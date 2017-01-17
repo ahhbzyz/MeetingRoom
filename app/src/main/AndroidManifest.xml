@@ -28,6 +28,6 @@
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".presentation.view.activity.EventsCalendarActivity"/>
         <activity android:name=".presentation.view.activity.RoomBookingActivity"/>
-        <activity android:name=".presentation.view.activity.AllRoomsActivity"/>
+        <activity android:name=".presentation.view.activity.AllRoomActivity"/>
     </application>
 </manifest>

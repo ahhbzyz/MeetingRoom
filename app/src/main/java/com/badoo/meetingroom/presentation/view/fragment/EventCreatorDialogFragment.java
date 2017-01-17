@@ -143,8 +143,6 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
                     break;
                 }
             }
-
-
         }
 
         @Override
@@ -174,30 +172,6 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
         }
     }
 
-
-    private final class GetAvatarSubscriber extends DefaultSubscriber<FutureTarget<File>> {
-        @Override
-        public void onStart() {
-            super.onStart();
-        }
-
-        @Override
-        public void onNext(FutureTarget<File> fileFutureTarget) {
-            super.onNext(fileFutureTarget);
-
-        }
-
-        @Override
-        public void onCompleted() {
-            super.onCompleted();
-            mImgLoadingPb.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            super.onError(e);
-        }
-    }
 
     @Override
     public void onDestroy() {

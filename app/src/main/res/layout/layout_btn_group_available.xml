@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top|center_horizontal">
+
+    <com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton
+        android:layout_width="@dimen/circle_button_diameter"
+        android:layout_height="@dimen/circle_button_diameter"
+        android:background="@drawable/btn_circle_available"
+        app:topText="5"
+        app:bottomText="min"
+        android:id="@+id/btn_five_min" />
+
+    <com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton
+        android:layout_width="@dimen/circle_button_diameter"
+        android:layout_height="@dimen/circle_button_diameter"
+        android:background="@drawable/btn_circle_available"
+        app:topText="10"
+        app:bottomText="min"
+        android:layout_marginStart="@dimen/circle_button_left_margin"
+        android:layout_marginEnd="@dimen/circle_button_left_margin"
+        android:id="@+id/btn_ten_min" />
+
+    <com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton
+        android:layout_width="@dimen/circle_button_diameter"
+        android:layout_height="@dimen/circle_button_diameter"
+        android:background="@drawable/btn_circle_available"
+        app:topText="15"
+        app:bottomText="min"
+        android:id="@+id/btn_fifteen_min" />
+
+</LinearLayout>

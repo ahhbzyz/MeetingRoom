@@ -88,8 +88,6 @@ public class TwoLineTextButton extends ImageButton {
         mBottomTextPaint.setTextSize(mBottomTextSize);
         mBottomTextPaint.setTextAlign(Paint.Align.CENTER);
         mBottomTextPaint.setTypeface(stolzlRegularFont);
-
-        setBackground(null);
     }
 
     @Override

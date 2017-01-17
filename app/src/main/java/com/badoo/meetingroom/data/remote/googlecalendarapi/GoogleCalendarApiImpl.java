@@ -31,11 +31,11 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
     }
 
     @Override
-    public Observable<List<Event>> getEventList(Event event) {
+    public Observable<List<Event>> getEventList(CalendarApiParams params) {
         return Observable.create(subscriber -> {
             if(hasInternetConnection()) {
                 try {
-                    List<Event> result = getEventsFromApi(mServices, event);
+                    List<Event> result = getEventsFromApi(mServices, params);
                     if (result != null) {
                         subscriber.onNext(result);
                         subscriber.onCompleted();
@@ -53,12 +53,12 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
     }
 
     @Override
-    public Observable<Event> insertEvent(Event event) {
+    public Observable<Event> insertEvent(CalendarApiParams params) {
         return Observable.create(subscriber -> {
             if (hasInternetConnection()) {
                 try {
-                    Event result = insertEventFromApi(mServices, event);
-                    if (event != null) {
+                    Event result = insertEventFromApi(mServices, params);
+                    if (result != null) {
                         subscriber.onNext(result);
                         subscriber.onCompleted();
                     } else {
@@ -74,11 +74,11 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
     }
 
     @Override
-    public Observable<Void> deleteEvent(Event event) {
+    public Observable<Void> deleteEvent(CalendarApiParams params) {
         return Observable.create(subscriber -> {
             if (hasInternetConnection()) {
                 try {
-                    subscriber.onNext(deleteEventFromApi(mServices, event));
+                    subscriber.onNext(deleteEventFromApi(mServices, params));
                     subscriber.onCompleted();
                 } catch (Exception e) {
                     subscriber.onError(e);
@@ -90,12 +90,12 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
     }
 
     @Override
-    public Observable<Event> updateEvent(Event event) {
+    public Observable<Event> updateEvent(CalendarApiParams params) {
         return Observable.create(subscriber -> {
             if (hasInternetConnection()) {
                 try {
-                    Event result = updateEventFromApi(mServices, event);
-                    if (event != null) {
+                    Event result = updateEventFromApi(mServices, params);
+                    if (result != null) {
                         subscriber.onNext(result);
                         subscriber.onCompleted();
                     } else {
@@ -132,20 +132,20 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
         });
     }
 
-    private List<Event> getEventsFromApi(Calendar services, Event event) throws Exception {
-        return EventsGetApiCall.createGET(services, event).requestSyncCall();
+    private List<Event> getEventsFromApi(Calendar services, CalendarApiParams params) throws Exception {
+        return EventsGetApiCall.createGET(services, params).requestSyncCall();
     }
 
-    private Event insertEventFromApi(Calendar services, Event event) throws Exception {
-        return EventInsertApiCall.createINSERT(services, event).requestSyncCall();
+    private Event insertEventFromApi(Calendar services, CalendarApiParams params) throws Exception {
+        return EventInsertApiCall.createINSERT(services, params).requestSyncCall();
     }
 
-    private Void deleteEventFromApi(Calendar services, Event event) throws Exception {
-        return EventDeleteApiCall.createDelete(services, event).requestSyncCall();
+    private Void deleteEventFromApi(Calendar services, CalendarApiParams params) throws Exception {
+        return EventDeleteApiCall.createDelete(services, params).requestSyncCall();
     }
 
-    private Event updateEventFromApi(Calendar service, Event event) throws Exception {
-        return EventUpdateApiCall.createUpdate(service, event).requestSyncCall();
+    private Event updateEventFromApi(Calendar service, CalendarApiParams params) throws Exception {
+        return EventUpdateApiCall.createUpdate(service, params).requestSyncCall();
     }
 
     private List<CalendarListEntry> getCalendarListFromApi(Calendar service) throws Exception {

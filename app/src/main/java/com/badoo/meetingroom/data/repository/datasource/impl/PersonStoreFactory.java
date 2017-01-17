@@ -27,7 +27,7 @@ public class PersonStoreFactory {
         mServices = services;
     }
 
-    public PersonStore createRemotePersonDataStore() {
+    public PersonStore createRemotePersonStore() {
         GooglePeopleApi googleApi = new GooglePeopleApiImpl(this.mContext, this.mServices);
         return new PersonStoreImpl(googleApi);
     }

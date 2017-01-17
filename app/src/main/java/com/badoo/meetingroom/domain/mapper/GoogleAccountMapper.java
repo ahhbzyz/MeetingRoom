@@ -14,9 +14,9 @@ import javax.inject.Singleton;
 public class GoogleAccountMapper {
 
     @Inject
-    public GoogleAccountMapper() {}
+    GoogleAccountMapper() {}
 
-    public GoogleAccount transform(String accountName) {
+    public GoogleAccount map(String accountName) {
         GoogleAccount account = null;
         if (accountName != null) {
             account = new GoogleAccountImpl(accountName);

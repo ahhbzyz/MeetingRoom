@@ -6,25 +6,19 @@ import com.badoo.meetingroom.data.exception.GooglePlayServicesAvailabilityExcept
 import com.badoo.meetingroom.data.exception.NoAccountNameFoundInCacheException;
 import com.badoo.meetingroom.data.exception.NoPermissionToAccessContactsException;
 import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
-import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
+import com.badoo.meetingroom.domain.entity.intf.Room;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
+import com.badoo.meetingroom.domain.interactor.GetCalendarList;
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
-import com.badoo.meetingroom.domain.interactor.GetEvents;
 import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
 import com.badoo.meetingroom.presentation.mapper.GoogleAccountModelMapper;
-import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
+import com.badoo.meetingroom.presentation.mapper.RoomModelMapper;
 import com.badoo.meetingroom.presentation.model.GoogleAccountModel;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.MainPresenter;
-import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
-import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.badoo.meetingroom.presentation.view.view.MainView;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,25 +30,25 @@ import javax.inject.Named;
 
 public class MainPresenterImpl implements MainPresenter {
 
-    private GetCredentialView mGetCredentialView;
+    private MainView mMainView;
 
     private final GetGoogleAccount mGetGoogleAccountUseCase;
     private final PutGoogleAccount mPutGoogleAccountUseCase;
-    private final GetEvents mGetEventsUseCase;
+    private final GetCalendarList mGetCalendarListUseCase;
     private final GoogleAccountModelMapper mGoogleAccountMapper;
-    private final RoomEventModelMapper mRoomEventModelMapper;
+    private final RoomModelMapper mRoomModelMapper;
 
     @Inject
     MainPresenterImpl(@Named(GetGoogleAccount.NAME) GetGoogleAccount getGoogleAccountUseCase,
                       @Named(PutGoogleAccount.NAME) PutGoogleAccount putGoogleAccountUseCase,
-                      @Named(GetEvents.NAME) GetEvents getEventsUseCase,
+                      GetCalendarList getCalendarListUseCase,
                       GoogleAccountModelMapper googleAccountModelMapper,
-                      RoomEventModelMapper roomEventModelMapper) {
+                      RoomModelMapper roomModelMapper) {
         this.mGetGoogleAccountUseCase = getGoogleAccountUseCase;
         this.mPutGoogleAccountUseCase = putGoogleAccountUseCase;
-        this.mGetEventsUseCase = getEventsUseCase;
+        this.mGetCalendarListUseCase = getCalendarListUseCase;
         this.mGoogleAccountMapper = googleAccountModelMapper;
-        this.mRoomEventModelMapper = roomEventModelMapper;
+        this.mRoomModelMapper = roomModelMapper;
     }
 
     @Override
@@ -67,64 +61,43 @@ public class MainPresenterImpl implements MainPresenter {
     }
 
     private void showViewLoading() {
-        this.mGetCredentialView.showLoadingData("");
+        this.mMainView.showLoadingData("");
     }
 
     private void dismissViewLoading() {
-        this.mGetCredentialView.dismissLoadingData();
+        this.mMainView.dismissLoadingData();
     }
 
     private void showAccountNameOnSnackBar(GoogleAccount account) {
         GoogleAccountModel googleAccountModel = this.mGoogleAccountMapper.map(account);
-        mGetCredentialView.showAccountNameOnSnackBar(googleAccountModel.getAccountName());
+        mMainView.showAccountNameOnSnackBar(googleAccountModel.getAccountName());
     }
 
     private void showGooglePlayServicesAvailabilityErrorDialog(final int code){
-        mGetCredentialView.showGooglePlayServicesAvailabilityErrorDialog(code);
+        mMainView.showGooglePlayServicesAvailabilityErrorDialog(code);
     }
 
     private void showRequestPermissionsDialog() {
-        mGetCredentialView.showRequestPermissionsDialog();
+        mMainView.showRequestPermissionsDialog();
     }
 
     private void showChooseAccountDialog() {
-        mGetCredentialView.showChooseAccountDialog();
+        mMainView.showChooseAccountDialog();
     }
 
     @Override
-    public void setView(@NonNull GetCredentialView getCredentialView) {
-        this.mGetCredentialView = getCredentialView;
+    public void setView(@NonNull MainView mainView) {
+        this.mMainView = mainView;
     }
 
     @Override
     public void onNoGooglePlayServicesError() {
-        mGetCredentialView.showNoGooglePlayServicesOnSnackBar();
+        mMainView.showNoGooglePlayServicesOnSnackBar();
     }
 
     @Override
     public void storeGoogleAccountName(String accountName) {
         mPutGoogleAccountUseCase.init(accountName).execute(new PutGoogleAccountSubscriber());
-    }
-
-    private void getModifyCalendarAuth() {
-
-        Event event = new Event();
-        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
-        EventDateTime start = new EventDateTime()
-            .setDateTime(startDateTime)
-            .setTimeZone("Europe/London");
-        event.setStart(start);
-
-        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
-        EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime)
-            .setTimeZone("Europe/London");
-        event.setEnd(end);
-
-        mRoomEventModelMapper.setEventStartTime(startDateTime.getValue());
-        mRoomEventModelMapper.setEventEndTime(endDateTime.getValue());
-
-        mGetEventsUseCase.init(event).execute(new GetEventsSubscriber());
     }
 
     private final class GetGoogleAccountSubscriber extends DefaultSubscriber<GoogleAccount> {
@@ -138,11 +111,8 @@ public class MainPresenterImpl implements MainPresenter {
         @Override
         public void onNext(GoogleAccount googleAccount) {
             super.onNext(googleAccount);
-            if (googleAccount.getAccountName() == null) {
-                //TODO
-            }
             showAccountNameOnSnackBar(googleAccount);
-            getModifyCalendarAuth();
+            mGetCalendarListUseCase.execute(new GetCalendarListSubscriber());
         }
 
         @Override
@@ -172,11 +142,11 @@ public class MainPresenterImpl implements MainPresenter {
 
             } catch (GoogleJsonResponseException googleJsonResponseException) {
 
-                mGetCredentialView.showError(googleJsonResponseException.getDetails().getMessage());
+                mMainView.showError(googleJsonResponseException.getDetails().getMessage());
 
             } catch (Exception exception) {
 
-                mGetCredentialView.showError(exception.getMessage());
+                mMainView.showError(exception.getMessage());
 
             } catch (Throwable throwable) {
 
@@ -212,40 +182,27 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
-    private final class GetEventsSubscriber extends DefaultSubscriber<List<RoomEvent>> {
-
+    private final class GetCalendarListSubscriber extends DefaultSubscriber<List<Room>> {
         @Override
         public void onStart() {
             super.onStart();
-            showViewLoading();
         }
 
         @Override
-        public void onNext(List<RoomEvent> roomEvents) {
-            Collection<RoomEventModel> mEventModelList = mRoomEventModelMapper.map(roomEvents);
-            if (mEventModelList != null) {
-                mGetCredentialView.showConnectGoogleCalendarSuccessful();
-            }
+        public void onNext(List<Room> roomList) {
+            super.onNext(roomList);
+            List<RoomModel> roomModelList = mRoomModelMapper.map(roomList);
+            mMainView.setUpRoomListSpinner(roomModelList);
         }
 
         @Override
         public void onCompleted() {
             super.onCompleted();
-            dismissViewLoading();
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            dismissViewLoading();
-            try {
-                throw e;
-            } catch (UserRecoverableAuthIOException e1) {
-                mGetCredentialView.showRecoverableAuth(e1);
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
-
         }
     }
 
@@ -263,6 +220,6 @@ public class MainPresenterImpl implements MainPresenter {
     public void destroy() {
         mGetGoogleAccountUseCase.unSubscribe();
         mPutGoogleAccountUseCase.unSubscribe();
-        mGetEventsUseCase.unSubscribe();
+        mGetCalendarListUseCase.unSubscribe();
     }
 }

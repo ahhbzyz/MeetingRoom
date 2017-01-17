@@ -1,14 +1,15 @@
 package com.badoo.meetingroom.di.modules;
 
-import com.badoo.meetingroom.domain.interactor.DeleteEvent;
+import com.badoo.meetingroom.domain.interactor.event.DeleteEvent;
 import com.badoo.meetingroom.domain.interactor.GetAvatar;
-import com.badoo.meetingroom.domain.interactor.GetEvents;
+import com.badoo.meetingroom.domain.interactor.GetCalendarList;
+import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.GetPerson;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
-import com.badoo.meetingroom.domain.interactor.InsertEvent;
+import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
-import com.badoo.meetingroom.domain.interactor.UpdateEvent;
+import com.badoo.meetingroom.domain.interactor.event.UpdateEvent;
 
 import javax.inject.Named;
 
@@ -60,7 +61,6 @@ public class UseCaseModule {
         return updateEvent;
     }
 
-
     @Provides
     @Named(GetPersons.NAME)
     GetPersons provideGetPersonsUseCase(GetPersons getPersons) {
@@ -77,5 +77,11 @@ public class UseCaseModule {
     @Named(GetAvatar.NAME)
     GetAvatar provideGetAvatarUseCase(GetAvatar getAvatar) {
         return getAvatar;
+    }
+
+    @Provides
+    @Named(GetCalendarList.NAME)
+    GetCalendarList provideGetCalendarListUseCase(GetCalendarList getCalendarList) {
+        return getCalendarList;
     }
 }

@@ -41,4 +41,5 @@ public interface RoomStatusView extends LoadDataView {
 
     void showTopBottomContent();
 
+    void stopCountDown();
 }

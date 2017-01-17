@@ -91,7 +91,7 @@ public class LongPressButton extends ImageButton {
         int diameter = Math.min(getWidth(), getHeight());
         mCircleCx = diameter / 2f;
         mCircleCy = diameter / 2f;
-        mCircleRadius = diameter / 2f - 2 * dp2px(mCountDownCircleWidth);
+        mCircleRadius = diameter / 2f;
 
         canvas.drawCircle(mCircleCx, mCircleCy, mCircleRadius, mCirclePaint);
 

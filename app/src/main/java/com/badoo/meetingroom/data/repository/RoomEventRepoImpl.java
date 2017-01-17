@@ -1,5 +1,6 @@
 package com.badoo.meetingroom.data.repository;
 
+import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.data.repository.datasource.impl.EventStoreFactory;
 import com.badoo.meetingroom.domain.mapper.RoomEventMapper;
 import com.badoo.meetingroom.data.repository.datasource.intf.EventStore;
@@ -28,26 +29,26 @@ public class RoomEventRepoImpl implements RoomEventRepo {
     RoomEventRepoImpl(EventStoreFactory roomEventDataStoreFactory,
                       RoomEventMapper roomEventDataMapper) {
         this.mRoomEventDataMapper = roomEventDataMapper;
-        this.mRoomEventDataStore = roomEventDataStoreFactory.createRemoteEventDataStore();
+        this.mRoomEventDataStore = roomEventDataStoreFactory.createEventStore();
     }
 
     @Override
-    public Observable<List<RoomEvent>> getRoomEventList(Event event) {
-        return mRoomEventDataStore.getEventList(event).map(this.mRoomEventDataMapper::map);
+    public Observable<List<RoomEvent>> getRoomEventList(CalendarApiParams params) {
+        return mRoomEventDataStore.getEventList(params).map(this.mRoomEventDataMapper::map);
     }
 
     @Override
-    public Observable<Event> insertEvent(Event event) {
-        return mRoomEventDataStore.insertEvent(event);
+    public Observable<Event> insertEvent(CalendarApiParams params) {
+        return mRoomEventDataStore.insertEvent(params);
     }
 
     @Override
-    public Observable<Void> deleteEvent(Event event) {
-        return mRoomEventDataStore.deleteEvent(event);
+    public Observable<Void> deleteEvent(CalendarApiParams params) {
+        return mRoomEventDataStore.deleteEvent(params);
     }
 
     @Override
-    public Observable<Event> updateEvent(Event event) {
-        return mRoomEventDataStore.updateEvent(event);
+    public Observable<Event> updateEvent(CalendarApiParams params) {
+        return mRoomEventDataStore.updateEvent(params);
     }
 }

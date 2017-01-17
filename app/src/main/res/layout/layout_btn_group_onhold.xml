@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical|center_horizontal">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:layout_width="@dimen/circle_button_diameter"
+            android:layout_height="@dimen/circle_button_diameter"
+            android:background="@drawable/btn_oval_confirm"
+            android:id="@+id/btn_confirm" />
+
+        <TextView
+            android:text="@string/confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/circle_button_name_top_margin"
+            android:textColor="@color/textColorBlack"
+            android:id="@+id/tv_confirm" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/circle_button_left_margin"
+        android:layout_marginEnd="@dimen/circle_button_left_margin">
+
+        <ImageButton
+            android:layout_width="@dimen/circle_button_diameter"
+            android:layout_height="@dimen/circle_button_diameter"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:layout_width="@dimen/circle_button_diameter"
+            android:layout_height="@dimen/circle_button_diameter"
+            android:background="@drawable/btn_circle_dismiss"
+            android:id="@+id/btn_dismiss" />
+
+        <TextView
+            android:text="@string/dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/circle_button_name_top_margin"
+            android:textColor="@color/textColorBlack"
+            android:id="@+id/tv_dismiss" />
+    </LinearLayout>
+
+</LinearLayout>

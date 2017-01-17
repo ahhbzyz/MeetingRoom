@@ -13,9 +13,9 @@ import rx.Observable;
  */
 
 public interface GoogleCalendarApi {
-    Observable<List<Event>> getEventList(Event event);
-    Observable<Event> insertEvent(Event event);
-    Observable<Void> deleteEvent(Event event);
-    Observable<Event> updateEvent(Event event);
+    Observable<List<Event>> getEventList(CalendarApiParams params);
+    Observable<Event> insertEvent(CalendarApiParams params);
+    Observable<Void> deleteEvent(CalendarApiParams params);
+    Observable<Event> updateEvent(CalendarApiParams params);
     Observable<List<CalendarListEntry>> getCalendarList();
 }

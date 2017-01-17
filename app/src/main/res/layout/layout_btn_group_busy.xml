@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:gravity="center_vertical|center_horizontal">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:clipChildren="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.badoo.meetingroom.presentation.view.component.button.LongPressButton
+            android:layout_width="@dimen/circle_button_diameter"
+            android:layout_height="@dimen/circle_button_diameter"
+            android:id="@+id/btn_end" />
+
+        <TextView
+            android:text="@string/hold_to_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/circle_button_name_top_margin"
+            android:textColor="@color/textColorBlack"
+            android:id="@+id/tv_hold_to_end"
+            android:textSize="@dimen/circle_button_name_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/circle_button_left_margin"
+        android:layout_marginEnd="@dimen/circle_button_left_margin">
+
+        <ImageButton
+            android:layout_width="@dimen/circle_button_diameter"
+            android:layout_height="@dimen/circle_button_diameter"
+            android:background="@drawable/btn_circle_busy"
+            android:id="@+id/btn_dnd" />
+
+        <TextView
+            android:text="@string/do_not_disturb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/circle_button_name_top_margin"
+            android:textColor="@color/textColorBlack"
+            android:id="@+id/tv_dnd"
+            android:textSize="@dimen/circle_button_name_text_size"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:layout_width="@dimen/circle_button_diameter"
+            android:layout_height="@dimen/circle_button_diameter"
+            android:background="@drawable/btn_circle_busy"
+            android:id="@+id/btn_extend"
+            android:textStyle="bold"
+            android:textSize="@dimen/circle_button_name_text_size"/>
+
+        <TextView
+            android:text="@string/extend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/circle_button_name_top_margin"
+            android:textColor="@color/textColorBlack"
+            android:id="@+id/tv_extend"
+            android:textSize="@dimen/circle_button_name_text_size"/>
+    </LinearLayout>
+
+</LinearLayout>

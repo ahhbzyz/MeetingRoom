@@ -34,16 +34,6 @@ public class PutGoogleAccount extends UseCase<Void> {
         if (this.accountName == null) {
             throw new IllegalArgumentException("init(accountName) not called, or called with null argument");
         }
-        return Observable.concat(validate(), googleAccountRepository.putAccountName(accountName));
-    }
-
-    private Observable<Void> validate() {
-        return Observable.create(subscriber -> {
-            if (PutGoogleAccount.this.accountName.isEmpty()) {
-
-            } else {
-                subscriber.onCompleted();
-            }
-        });
+        return googleAccountRepository.putAccountName(accountName);
     }
 }

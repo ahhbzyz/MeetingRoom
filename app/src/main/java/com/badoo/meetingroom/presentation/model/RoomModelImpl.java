@@ -4,7 +4,7 @@ package com.badoo.meetingroom.presentation.model;
  * Created by zhangyaozhong on 16/01/2017.
  */
 
-public class RoomModelImpl implements RoomModelImpl {
+public class RoomModelImpl implements RoomModel {
 
     private String id;
     private String name;
@@ -15,6 +15,7 @@ public class RoomModelImpl implements RoomModelImpl {
     private boolean isVideoConferenceSupported;
     private boolean isBeverageAllowed;
     private boolean isStationerySupported;
+    private RoomEventModel currentEvent;
 
     public RoomModelImpl() {
 
@@ -28,6 +29,14 @@ public class RoomModelImpl implements RoomModelImpl {
     @Override
     public void setId(String id) {
         this.id = id;
+    }
+
+    public RoomEventModel getCurrentEvent() {
+        return currentEvent;
+    }
+
+    public void setCurrentEvent(RoomEventModel currentEvent) {
+        this.currentEvent = currentEvent;
     }
 
     @Override

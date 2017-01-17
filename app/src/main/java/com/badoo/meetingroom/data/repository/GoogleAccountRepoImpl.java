@@ -25,13 +25,13 @@ public class GoogleAccountRepoImpl implements GoogleAccountRepo {
     GoogleAccountRepoImpl(GoogleAccountStoreFactory googleAccountDataStoreFactory,
                           GoogleAccountMapper googleAccountDataMapper) {
         this.mGoogleAccountDataMapper = googleAccountDataMapper;
-        this.googleAccountDataStore = googleAccountDataStoreFactory.createLocalGoogleAccountNameStore();
+        this.googleAccountDataStore = googleAccountDataStoreFactory.createGoogleAccountNameStore();
     }
 
 
     @Override
     public Observable<GoogleAccount> getAccountName() {
-        return googleAccountDataStore.getAccountName().map(this.mGoogleAccountDataMapper::transform);
+        return googleAccountDataStore.getAccountName().map(this.mGoogleAccountDataMapper::map);
     }
 
     @Override

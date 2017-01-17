@@ -13,15 +13,15 @@ class EventInsertApiCall implements Callable<Event>{
 
     private Calendar mServices = null;
     private Event mResponse;
-    private Event mEventParams;
+    private CalendarApiParams mParams;
 
-    private EventInsertApiCall(Calendar services, Event eventParams) {
-        this.mEventParams = eventParams;
-        this.mServices = services;
+    private EventInsertApiCall(Calendar services, CalendarApiParams params) {
+        mServices = services;
+        mParams = params;
     }
 
-    static EventInsertApiCall createINSERT(Calendar services, Event eventParams) {
-        return new EventInsertApiCall(services, eventParams);
+    static EventInsertApiCall createINSERT(Calendar services, CalendarApiParams params) {
+        return new EventInsertApiCall(services, params);
     }
 
     public Event requestSyncCall() throws Exception {
@@ -30,7 +30,7 @@ class EventInsertApiCall implements Callable<Event>{
     }
 
     private void connectToApi() throws Exception {
-        mResponse = mServices.events().insert("primary", mEventParams).execute();
+        mResponse = mServices.events().insert(mParams.getCalendarId(), mParams.getEventParams()).execute();
     }
 
     @Override

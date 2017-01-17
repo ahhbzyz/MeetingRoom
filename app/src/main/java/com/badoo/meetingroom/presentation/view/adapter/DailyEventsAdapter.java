@@ -40,10 +40,11 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     private static final float HEIGHT_PER_MILLIS =  38f / TimeHelper.min2Millis(MIN_SLOT_TIME);
 
     private final Context mContext;
-    private List<RoomEventModel> mEvents;
+    private List<RoomEventModel> mRoomEventModelList;
     private OnItemClickListener mOnItemClickListener;
     private SparseIntArray mBottomTimelineBarHeights;
     private int mPage = 0;
+    private OnCurrentEventUpdateListener mOnCurrentEventUpdateListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -63,7 +64,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     @Inject
     DailyEventsAdapter(Context context) {
         mContext = context;
-        mEvents = new ArrayList<>();
+        mRoomEventModelList = new ArrayList<>();
         mBottomTimelineBarHeights = new SparseIntArray();
     }
 
@@ -71,13 +72,13 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         if (roomEventModelList == null) {
             throw new IllegalArgumentException("Room event list cannot be null");
         }
-        this.mEvents = roomEventModelList;
-        if (!mEvents.isEmpty()) {
+        this.mRoomEventModelList = roomEventModelList;
+        if (!mRoomEventModelList.isEmpty()) {
             RoomEventModel fakeEvent = new RoomEventModelImpl();
             fakeEvent.setStatus(RoomEventModel.AVAILABLE);
-            fakeEvent.setStartTime(mEvents.get(mEvents.size() - 1).getEndTime());
+            fakeEvent.setStartTime(mRoomEventModelList.get(mRoomEventModelList.size() - 1).getEndTime());
             fakeEvent.setEndTime(fakeEvent.getStartTime() + TimeHelper.min2Millis(10));
-            mEvents.add(fakeEvent);
+            mRoomEventModelList.add(fakeEvent);
         }
         this.notifyDataSetChanged();
     }
@@ -99,7 +100,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
 
         // Current event
-        RoomEventModel event = mEvents.get(position);
+        RoomEventModel event = mRoomEventModelList.get(position);
 
         // Remaining progress of event
         float remainingProgress
@@ -164,6 +165,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
         // Event in processing
         if (event.isProcessing()) {
+            mOnCurrentEventUpdateListener.onCurrentEventUpdate();
             if (event.isBusy()) {
                 TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getBusyColor(), remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
@@ -232,7 +234,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
     @Override
     public int getItemCount() {
-        return mEvents.size();
+        return mRoomEventModelList.size();
     }
 
     public float getHeightPerMillis() {
@@ -245,6 +247,14 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
     public interface OnItemClickListener {
         void onEventItemClicked(View view, int position);
+    }
+
+    public void setOnCurrentEventUpdateListener(OnCurrentEventUpdateListener listener) {
+        mOnCurrentEventUpdateListener = listener;
+    }
+
+    public interface OnCurrentEventUpdateListener {
+        void onCurrentEventUpdate();
     }
 
     private void addTimestampsToView(ViewHolder holder, int position, List<Long> timestamps, RoomEventModel event, float viewHeight, float remainingProgress) {

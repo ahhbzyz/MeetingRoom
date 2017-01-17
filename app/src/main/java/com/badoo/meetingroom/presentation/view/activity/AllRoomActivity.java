@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.view.adapter.RoomListFragmentPagerAdapter;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,16 +18,19 @@ import butterknife.ButterKnife;
 public class AllRoomActivity extends BaseActivity {
 
 
+    @BindView(R.id.tv_current_date) TextView mCurrentDateTv;
     @BindView(R.id.tv_all_rooms) TextView mAllRoomsTv;
     @BindView(R.id.tab_layout_floors) TabLayout mFloorsTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
 
+    private RoomListFragmentPagerAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room_list);
+        setContentView(R.layout.activity_all_room);
         ButterKnife.bind(this);
-        this.getComponent().inject(this);
+        getComponent().inject(this);
 
         setUpToolbar();
         setUpViewPager();
@@ -45,10 +49,11 @@ public class AllRoomActivity extends BaseActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
+        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(this));
     }
 
     public void setUpViewPager() {
-        RoomListFragmentPagerAdapter mAdapter = new RoomListFragmentPagerAdapter(getSupportFragmentManager());
+        mAdapter = new RoomListFragmentPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mAdapter);
         mFloorsTabLayout.setupWithViewPager(mViewPager);
     }
@@ -56,8 +61,18 @@ public class AllRoomActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            mAllRoomsTv.setText("Bahamas");
+            finishAfterTransition();
+            overridePendingTransition(0, 0);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onSystemTimeRefresh() {
+        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(this));
+        if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
+            mAdapter.getRegisteredFragment(mViewPager.getCurrentItem()).updateRoomList();
+        }
     }
 }

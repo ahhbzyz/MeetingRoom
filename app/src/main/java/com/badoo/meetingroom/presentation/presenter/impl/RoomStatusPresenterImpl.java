@@ -3,13 +3,15 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 import android.support.annotation.NonNull;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.di.PerActivity;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
-import com.badoo.meetingroom.domain.interactor.DeleteEvent;
-import com.badoo.meetingroom.domain.interactor.GetEvents;
-import com.badoo.meetingroom.domain.interactor.InsertEvent;
-import com.badoo.meetingroom.domain.interactor.UpdateEvent;
+import com.badoo.meetingroom.domain.interactor.event.DeleteEvent;
+import com.badoo.meetingroom.domain.interactor.event.GetEvents;
+import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
+import com.badoo.meetingroom.domain.interactor.event.UpdateEvent;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
@@ -55,10 +57,10 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Inject
     RoomStatusPresenterImpl(@Named(GetEvents.NAME) GetEvents getEventsUseCase,
-                                   @Named(InsertEvent.NAME) InsertEvent insertEventUseCase,
-                                   @Named(DeleteEvent.NAME) DeleteEvent deleteEventUseCase,
-                                   @Named(UpdateEvent.NAME) UpdateEvent updateEventUseCase,
-                                   RoomEventModelMapper mapper) {
+                            @Named(InsertEvent.NAME) InsertEvent insertEventUseCase,
+                            @Named(DeleteEvent.NAME) DeleteEvent deleteEventUseCase,
+                            @Named(UpdateEvent.NAME) UpdateEvent updateEventUseCase,
+                            RoomEventModelMapper mapper) {
         mGetEventsUseCase = getEventsUseCase;
         mInsertEventUseCase = insertEventUseCase;
         mDeleteEventUseCase = deleteEventUseCase;
@@ -150,7 +152,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     public void circleTimeViewBtnClick() {
         if (mCurrentEvent.isAvailable()) {
             mRoomEventsView.bookRoom(TimeHelper.getCurrentTimeInMillis(), mCurrentEvent.getEndTime());
-        } else if (mCurrentEvent.isConfirmed()) {
+        } else {
             mRoomEventsView.showEventOrganizerDialog(mCurrentEvent);
         }
     }
@@ -224,12 +226,13 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         mMapper.setEventStartTime(startDateTime.getValue());
         mMapper.setEventEndTime(endDateTime.getValue());
 
-        mGetEventsUseCase.init(event).execute(new GetEventsSubscriber());
+        CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
+        params.setEventParams(event);
+        mGetEventsUseCase.init(params).execute(new GetEventsSubscriber());
     }
     
     @Override
     public void insertEvent(int bookingPeriod) {
-        bookingPeriod = 1;
         long startTime = TimeHelper.getCurrentTimeInMillis();
         long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.min2Millis(bookingPeriod);
 
@@ -249,16 +252,21 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
             event.setDescription("fast_book");
 
-            mInsertEventUseCase.init(event).execute(new InsertEventSubscriber());
+            CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
+            params.setEventParams(event);
+            mInsertEventUseCase.init(params).execute(new InsertEventSubscriber());
         }
     }
     
     @Override
     public void deleteEvent() {
         if (mCurrentEvent.getId() != null) {
+            mRoomEventsView.stopCountDown();
             Event event = new Event();
             event.setId(mCurrentEvent.getId());
-            mDeleteEventUseCase.init(event).execute(new DeleteEventSubscriber());
+            CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
+            params.setEventParams(event);
+            mDeleteEventUseCase.init(params).execute(new DeleteEventSubscriber());
         }
     }
     
@@ -278,7 +286,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                     .setTimeZone("Europe/London");
                 event.setEnd(end);
 
-                mUpdateEventUseCase.init(event).execute(new UpdateEventSubscriber());
+                CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
+                params.setEventParams(event);
+                mUpdateEventUseCase.init(params).execute(new UpdateEventSubscriber());
             }
         }
     }

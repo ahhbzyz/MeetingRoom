@@ -1,10 +1,8 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -15,7 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +24,6 @@ import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.presentation.model.BadooPersonModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.EmailAutoCompleteAdapter;
-import com.badoo.meetingroom.presentation.view.fragment.ImmersiveProgressDialogFragment;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -57,8 +56,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @BindView(R.id.autocomplete_email_address) MyAutoCompleteTextView mAutoCompleteTv;
     @BindView(R.id.rv_time_slots) RecyclerView mTimeSlotsRv;
     @BindView(R.id.btn_book) Button mBookBtn;
+    @BindView(R.id.pb_loading_contacts) ProgressBar mLoadingContactsPb;
 
-    private ImmersiveProgressDialogFragment mLoadingDataDialog;
     private boolean hasSlots;
 
     @Override
@@ -94,7 +93,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         mBookBtn.setClickable(false);
         mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
 
-        mLoadingDataDialog = ImmersiveProgressDialogFragment.newInstance();
+
 
         mTimeSlotsRv.setLayoutManager(new LinearLayoutManager(context(), LinearLayoutManager.HORIZONTAL, false));
         mTimeSlotsRv.setAdapter(mAdapter);
@@ -220,19 +219,19 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finishAfterTransition();
+            overridePendingTransition(0, 0);
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void showLoadingData(String message) {
-        mLoadingDataDialog.setMessage(message);
-        mLoadingDataDialog.show(this);
+        mLoadingContactsPb.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void dismissLoadingData() {
-        mLoadingDataDialog.dismiss();
+        mLoadingContactsPb.setVisibility(View.GONE);
     }
 
 
@@ -268,25 +267,9 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+    protected void onSystemTimeRefresh() {
+        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomBookingActivity.this));
+
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mTimeRefreshReceiver != null) {
-            unregisterReceiver(mTimeRefreshReceiver);
-        }
-    }
-
-    private BroadcastReceiver mTimeRefreshReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
-                mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomBookingActivity.this));
-            }
-        }
-    };
 }

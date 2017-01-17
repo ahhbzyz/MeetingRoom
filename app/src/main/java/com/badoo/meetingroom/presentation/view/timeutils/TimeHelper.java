@@ -61,6 +61,13 @@ public class TimeHelper {
         return String.format(Locale.getDefault(), "%02d:%02d", hours, minutes);
     }
 
+
+    public static String formatMillisInMin(long millis) {
+        return String.format(Locale.getDefault(), "%02d",
+            TimeUnit.MILLISECONDS.toMinutes(millis));
+    }
+
+
     public static long getCurrentTimeSinceMidNight() {
         Calendar now = Calendar.getInstance();
         Calendar midnight = Calendar.getInstance();

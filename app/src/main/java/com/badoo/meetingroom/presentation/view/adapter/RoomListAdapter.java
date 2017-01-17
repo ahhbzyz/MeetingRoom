@@ -1,14 +1,26 @@
 package com.badoo.meetingroom.presentation.view.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.Room;
+import com.badoo.meetingroom.domain.entity.intf.Room;
+import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.RoomModel;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by zhangyaozhong on 05/01/2017.
@@ -16,22 +28,30 @@ import java.util.List;
 
 public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHolder> {
 
-    private List<Room> mRoomList;
+
+    private List<RoomModel> mRoomList;
+    private Context mContext;
+
+    public void setRoomList(List<RoomModel> roomList) {
+        mRoomList = roomList;
+        notifyDataSetChanged();
+    }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(View itemView) {
+        @BindView(R.id.tv_remaining_time) TextView mRemainingTimeTv;
+        @BindView(R.id.tv_room_name) TextView mRoomNameTv;
+        @BindView(R.id.tv_room_info) TextView mRoomInfo;
+
+        ViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
-    public RoomListAdapter() {
-
-    }
-
-    public void setRoomList(List<Room> roomList) {
-        this.mRoomList = roomList;
-        notifyDataSetChanged();
+    @Inject
+    public RoomListAdapter(Context context) {
+        mContext = context;
     }
 
     @Override
@@ -43,13 +63,39 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        RoomModel roomModel = mRoomList.get(position);
+        holder.mRoomNameTv.setText(roomModel.getName());
 
+        if (roomModel.getCurrentEvent() != null) {
+
+            RoomEventModel currentEvent = roomModel.getCurrentEvent();
+            long remainingHours = TimeUnit.MILLISECONDS.toHours(currentEvent.getRemainingTime());
+            if (remainingHours >= 2) {
+                holder.mRemainingTimeTv.setText(mContext.getString(R.string.two_hour_plus));
+            } else {
+                holder.mRemainingTimeTv.setText(TimeHelper.formatMillisInMin(currentEvent.getRemainingTime()));
+            }
+            if (currentEvent.isAvailable()) {
+
+                holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_available));
+
+                if (remainingHours >= 2) {
+                    holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + mContext.getString(R.string.two_hour_plus));
+                } else {
+                    holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + TimeHelper.formatMillisInMin(currentEvent.getRemainingTime()) + " min");
+                }
+            } else {
+
+
+
+                holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_busy));
+                holder.mRoomInfo.setText(mContext.getString(R.string.busy_until) + " " + currentEvent.getEndTimeInText());
+            }
+        }
     }
-
-
 
     @Override
     public int getItemCount() {
-        return mRoomList.size();
+        return mRoomList == null ? 0 : mRoomList.size();
     }
 }

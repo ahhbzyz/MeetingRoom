@@ -6,6 +6,10 @@ import com.badoo.meetingroom.presentation.model.RoomEventModel;
  * Created by zhangyaozhong on 16/01/2017.
  */
 public interface Room {
+    String getId();
+
+    void setId(String id);
+
     String getName();
 
     void setName(String name);
@@ -17,10 +21,6 @@ public interface Room {
     int getStatus();
 
     void setStatus(int status);
-
-    RoomEventModel getCurrentEvent();
-
-    void setCurrentEvent(RoomEventModel currentEvent);
 
     int getCapacity();
 
@@ -34,9 +34,9 @@ public interface Room {
 
     void setVideoConferenceSupported(boolean videoConferenceSupported);
 
-    boolean isBeverageSupported();
+    boolean isBeverageAllowed();
 
-    void setBeverageSupported(boolean beverageSupported);
+    void setBeverageAllowed(boolean beverageAllowed);
 
     boolean isStationerySupported();
 

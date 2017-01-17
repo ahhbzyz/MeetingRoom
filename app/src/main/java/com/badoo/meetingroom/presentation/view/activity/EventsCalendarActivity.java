@@ -1,9 +1,6 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -30,7 +27,6 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
 
     @Inject EventsCalendarPresenter mPresenter;
-    // Typeface
     @Inject @Named("stolzl_medium") Typeface mStolzlMediumTypeface;
     DailyEventsFragmentPagerAdapter mAdapter;
 
@@ -43,6 +39,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_events_calendar);
         ButterKnife.bind(this);
         getComponent().inject(this);
@@ -63,7 +60,8 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
         }
 
         mRoomImg.setOnClickListener(v -> {
-            Intent intent = new Intent(EventsCalendarActivity.this, AllRoomsActivity.class);
+            Intent intent = new Intent(EventsCalendarActivity.this, AllRoomActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         });
 
@@ -72,7 +70,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
 
     private void setUpViewPager() {
-        mAdapter = new DailyEventsFragmentPagerAdapter(getSupportFragmentManager(), this);
+        mAdapter = new DailyEventsFragmentPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mAdapter);
         // Center tab layout
         float width = Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -89,27 +87,11 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
         return super.onOptionsItemSelected(item);
     }
 
-    private BroadcastReceiver mTimeRefreshReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Intent.ACTION_TIME_TICK.equals(intent.getAction())) {
-                if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
-                    mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(EventsCalendarActivity.this));
-                    mAdapter.getRegisteredFragment(0).getPresenter().onSystemTimeUpdate();
-                }
-            }
+    @Override
+    protected void onSystemTimeRefresh() {
+        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(EventsCalendarActivity.this));
+        if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
+            mAdapter.getRegisteredFragment(0).getPresenter().onSystemTimeUpdate();
         }
-    };
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mTimeRefreshReceiver);
     }
 }

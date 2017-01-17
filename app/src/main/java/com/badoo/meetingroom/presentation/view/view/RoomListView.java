@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.presentation.view.view;
 
-import com.badoo.meetingroom.presentation.model.Room;
+import com.badoo.meetingroom.presentation.model.RoomModel;
 
 import java.util.List;
 
@@ -10,5 +10,7 @@ import java.util.List;
 
 public interface RoomListView extends LoadDataView {
     int getPage();
-    void renderRoomListInView(List<Room> mRoomList);
+    void renderRoomListInView(List<RoomModel> mRoomList);
+
+    void updateRoomList();
 }

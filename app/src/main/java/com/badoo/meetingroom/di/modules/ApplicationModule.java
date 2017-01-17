@@ -2,16 +2,19 @@ package com.badoo.meetingroom.di.modules;
 
 import android.content.Context;
 
+import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.data.repository.BadooPersonRepoImpl;
+import com.badoo.meetingroom.data.repository.CalendarListRepoImpl;
 import com.badoo.meetingroom.data.repository.GoogleAccountRepoImpl;
 import com.badoo.meetingroom.data.repository.RemoteImageRepoImpl;
 import com.badoo.meetingroom.data.repository.RoomEventRepoImpl;
 import com.badoo.meetingroom.di.AndroidApplication;
 import com.badoo.meetingroom.domain.repository.BadooPersonRepo;
+import com.badoo.meetingroom.domain.repository.CalendarListRepo;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
 import com.badoo.meetingroom.domain.repository.RemoteImageRepo;
 import com.badoo.meetingroom.domain.repository.RoomEventRepo;
-import com.bumptech.glide.request.FutureTarget;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpTransport;
@@ -27,6 +30,7 @@ import com.google.api.services.people.v1.PeopleScopes;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -37,15 +41,12 @@ import dagger.Provides;
  */
 @Module
 public class ApplicationModule {
-
+    private static final List<String> SCOPES =
+        Arrays.asList(CalendarScopes.CALENDAR, PeopleScopes.CONTACTS_READONLY);
     private final AndroidApplication application;
     private GoogleAccountCredential mCredential;
     private Calendar mCalendarServices;
-    private static final List<String> SCOPES =
-        Arrays.asList(CalendarScopes.CALENDAR, PeopleScopes.CONTACTS_READONLY);
-
     private People mPeopleServices;
-
 
     public ApplicationModule(AndroidApplication application) {
         this.application = application;
@@ -72,6 +73,12 @@ public class ApplicationModule {
     @Singleton
     Context provideApplicationContext() {
         return application;
+    }
+
+    @Provides
+    @Named("currentRoomCalendar")
+    CalendarApiParams provideCalendarApiParams() {
+        return new CalendarApiParams(Badoo.getCurrentRoom().getId());
     }
 
     @Provides
@@ -114,5 +121,11 @@ public class ApplicationModule {
     @Singleton
     RemoteImageRepo provideRemoteImageRepository(RemoteImageRepoImpl remoteImageRepository) {
         return remoteImageRepository;
+    }
+
+    @Provides
+    @Singleton
+    CalendarListRepo provideCalendarListRepository(CalendarListRepoImpl calendarListRepository) {
+        return calendarListRepository;
     }
 }

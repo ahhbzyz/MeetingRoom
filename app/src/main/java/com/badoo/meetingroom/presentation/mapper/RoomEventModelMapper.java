@@ -29,7 +29,7 @@ public class RoomEventModelMapper {
 
     private RoomEventModel map(RoomEvent roomEvent) {
         if (roomEvent == null) {
-            throw new IllegalArgumentException("Cannot transform a null value");
+            throw new IllegalArgumentException("Cannot map a null value");
         }
 
         final RoomEventModel roomEventModel = new RoomEventModelImpl();

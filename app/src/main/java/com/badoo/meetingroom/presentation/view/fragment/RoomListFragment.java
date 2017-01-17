@@ -7,10 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.Room;
-import com.badoo.meetingroom.presentation.presenter.impl.RoomListPresenterImpl;
+import com.badoo.meetingroom.presentation.model.RoomModel;
+import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.RoomListAdapter;
 import com.badoo.meetingroom.presentation.view.view.RoomListView;
@@ -25,22 +26,21 @@ import butterknife.ButterKnife;
 
 public class RoomListFragment extends BaseFragment implements RoomListView{
 
+    @Inject RoomListAdapter mAdapter;
+    @Inject RoomListPresenter mPresenter;
+
     @BindView(R.id.rv_room_list) RecyclerView mRecyclerView;
+    @BindView(R.id.pb_loading_room_list) ProgressBar mLoadingRoomListPb;
 
     private static final String ARG_PAGE = "page";
     private int mPage;
-    private RoomListAdapter mAdapter;
 
-    @Inject
-    RoomListPresenter mPresenter;
 
     public RoomListFragment() {
         // Required empty public constructor
         setRetainInstance(true);
     }
 
-
-    // TODO: Rename and change types and number of parameters
     public static RoomListFragment newInstance(int page) {
         RoomListFragment fragment = new RoomListFragment();
         Bundle args = new Bundle();
@@ -67,13 +67,12 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
 
         setUpRecyclerView();
         mPresenter.setView(this);
-        mPresenter.init();
+        mPresenter.getRoomList();
 
         return view;
     }
 
     private void setUpRecyclerView() {
-        mAdapter = new RoomListAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -84,18 +83,18 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
     }
 
     @Override
-    public void renderRoomListInView(List<Room> roomList) {
-        mAdapter.setRoomList(roomList);
+    public void renderRoomListInView(List<RoomModel> roomModelList) {
+        mAdapter.setRoomList(roomModelList);
     }
 
     @Override
     public void showLoadingData(String message) {
-
+        mLoadingRoomListPb.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void dismissLoadingData() {
-
+        mLoadingRoomListPb.setVisibility(View.GONE);
     }
 
     @Override
@@ -106,5 +105,12 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
     @Override
     public Context context() {
         return null;
+    }
+
+    @Override
+    public void updateRoomList() {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

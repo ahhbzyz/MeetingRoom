@@ -23,7 +23,7 @@ public class RemoteImageStoreFactory {
         this.mContext = context.getApplicationContext();
     }
 
-    public RemoteImageStore createLocalRemoteImageStore() {
+    public RemoteImageStore createRemoteImageStore() {
         GoogleGlideApi googleGlideApi = new GoogleGlideApiImpl(mContext);
         return new RemoteImageStoreImpl(googleGlideApi);
     }

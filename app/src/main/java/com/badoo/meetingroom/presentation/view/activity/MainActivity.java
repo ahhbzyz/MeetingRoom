@@ -10,12 +10,17 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.Badoo;
+import com.badoo.meetingroom.presentation.model.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.MainPresenter;
-import com.badoo.meetingroom.presentation.view.view.GetCredentialView;
+import com.badoo.meetingroom.presentation.view.view.MainView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
@@ -28,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends BaseActivity implements GetCredentialView, EasyPermissions.PermissionCallbacks {
+public class MainActivity extends BaseActivity implements MainView, EasyPermissions.PermissionCallbacks {
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -41,9 +46,9 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
     @Inject
     GoogleAccountCredential mCredential;
 
-    @BindView(R.id.layout_google_services_info)
-    CoordinatorLayout mGoogleServicesInfoLayout;
+    @BindView(R.id.layout_google_services_info) CoordinatorLayout mGoogleServicesInfoLayout;
     @BindView(R.id.pb_loading_data) ProgressBar mLoadingDataBar;
+    @BindView(R.id.spinner_room_list) Spinner mRoomListSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,20 +64,29 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
             Intent intent = new Intent(MainActivity.this, RoomStatusActivity.class);
             startActivity(intent);
         });
+    }
 
-        findViewById(R.id.btn_cal).setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, EventsCalendarActivity.class);
-            startActivity(intent);
-        });
 
-        findViewById(R.id.btn_booking).setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, RoomBookingActivity.class);
-            startActivity(intent);
-        });
 
-        findViewById(R.id.btn_all_room).setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AllRoomsActivity.class);
-            startActivity(intent);
+    @Override
+    public void setUpRoomListSpinner(List<RoomModel> roomModelList) {
+        String [] roomNameArray = new String[roomModelList.size()];
+        for (int i = 0; i < roomModelList.size(); i++) {
+            roomNameArray[i] = roomModelList.get(i).getName();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, roomNameArray);
+        mRoomListSpinner.setAdapter(adapter);
+        mRoomListSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Badoo.setCurrentRoom(roomModelList.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Badoo.setCurrentRoom(roomModelList.get(0));
+
+            }
         });
     }
 
@@ -111,7 +125,6 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
     public void showConnectGoogleCalendarSuccessful() {
         Toast.makeText(this, "Connected with Google Calendar", Toast.LENGTH_SHORT).show();
     }
-
 
     @Override
     public void showChooseAccountDialog() {
@@ -156,7 +169,6 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -183,8 +195,6 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
         this.mLoadingDataBar.setVisibility(View.INVISIBLE);
     }
 
-
-
     @Override
     public void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -193,5 +203,10 @@ public class MainActivity extends BaseActivity implements GetCredentialView, Eas
     @Override
     public Context context() {
         return this.getApplicationContext();
+    }
+
+    @Override
+    protected void onSystemTimeRefresh() {
+
     }
 }

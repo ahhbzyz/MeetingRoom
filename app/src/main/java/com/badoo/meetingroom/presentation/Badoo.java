@@ -1,7 +1,6 @@
 package com.badoo.meetingroom.presentation;
 
-import com.badoo.meetingroom.presentation.model.Room;
-import com.badoo.meetingroom.presentation.model.RoomImpl;
+import com.badoo.meetingroom.presentation.model.RoomModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 /**
@@ -10,13 +9,17 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 public class Badoo {
     private static final int START_TIME = 8;
-    private static final int END_TIME = 20;
+    private static final int END_TIME = 22;
 
-    private final static Room ROOM = new RoomImpl();
+    private static RoomModel ROOM;
 
     // default public constructor
-    public static Room getCurrentRoom() {
+    public static RoomModel getCurrentRoom() {
         return ROOM;
+    }
+
+    public static void setCurrentRoom(RoomModel roomModel) {
+        ROOM = roomModel;
     }
 
     public static long getStartTimeOfDay(int day) {

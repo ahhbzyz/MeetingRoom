@@ -2,9 +2,10 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import android.view.View;
 
+import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
-import com.badoo.meetingroom.domain.interactor.GetEvents;
+import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
@@ -62,7 +63,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         mDailyEventsView.updateCurrentTimeLayoutPosition(getNumOfExpiredEvents());
     }
 
-
     @Override
     public void setView(DailyEventsView dailyEventsView) {
         mDailyEventsView = dailyEventsView;
@@ -110,7 +110,10 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
         mMapper.setEventStartTime(startDateTime.getValue());
         mMapper.setEventEndTime(endDateTime.getValue());
-        mGetEventsUseCase.init(event).execute(new GetEventsSubscriber());
+
+        CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
+        params.setEventParams(event);
+        mGetEventsUseCase.init(params).execute(new GetEventsSubscriber());
     }
 
 

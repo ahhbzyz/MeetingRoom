@@ -1,11 +1,12 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.domain.entity.intf.BadooPerson;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
-import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
-import com.badoo.meetingroom.domain.interactor.InsertEvent;
+import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
 import com.badoo.meetingroom.presentation.model.BadooPersonModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
@@ -81,7 +82,9 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         eventAttendees.add(new EventAttendee().setEmail(organizer));
         event.setAttendees(eventAttendees);
 
-        mInsertEventUseCase.init(event).execute(new InsertEventSubscriber());
+        CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
+        params.setEventParams(event);
+        mInsertEventUseCase.init(params).execute(new InsertEventSubscriber());
     }
 
     @Override

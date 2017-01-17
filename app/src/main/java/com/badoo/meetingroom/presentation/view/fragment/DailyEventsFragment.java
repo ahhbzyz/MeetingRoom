@@ -1,7 +1,6 @@
 package com.badoo.meetingroom.presentation.view.fragment;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +35,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 
-public class DailyEventsFragment extends BaseFragment implements DailyEventsView, DailyEventsAdapter.OnItemClickListener {
+public class DailyEventsFragment extends BaseFragment implements DailyEventsView, DailyEventsAdapter.OnItemClickListener, DailyEventsAdapter.OnCurrentEventUpdateListener {
 
     private static final int REQUEST_AUTHORIZATION = 1001;
     private static final int REQUEST_BOOK_ROOM = 1000;
@@ -89,8 +88,10 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     private void setUpEventsRecyclerView() {
         mAdapter.setPage(mPage);
         mAdapter.setOnItemClickListener(this);
+        mAdapter.setOnCurrentEventUpdateListener(this);
         mDailyEventsRv.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext()));
         mDailyEventsRv.setAdapter(mAdapter);
+        mDailyEventsRv.setItemAnimator(null);
         mDailyEventsRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -104,7 +105,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == SCROLL_STATE_IDLE) {
-                    mPresenter.updateCurrentTimeLayoutPosition();
                 }
             }
         });
@@ -144,7 +144,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             mTimelineMarkOffset = (TimeHelper.getCurrentTimeInMillis() - Badoo.getStartTimeOfDay(mPage)) * mAdapter.getHeightPerMillis()
                 - mCurrentTimeLayout.getMeasuredHeight() / 2f
                 + numOfExpiredEvents * getActivity().getApplicationContext().getResources().getDimension(R.dimen.daily_events_divider_height);
-
             mCurrentTimeLayout.setY(mTimelineMarkOffset - mScrollOffset);
             mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
         }
@@ -154,7 +153,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public void updateRecyclerView() {
         mAdapter.notifyDataSetChanged();
     }
-
 
     @Override
     public void showLoadingData(String message) {
@@ -208,5 +206,10 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @Override
     public int getCurrentPage() {
         return this.mPage;
+    }
+
+    @Override
+    public void onCurrentEventUpdate() {
+        mPresenter.updateCurrentTimeLayoutPosition();
     }
 }

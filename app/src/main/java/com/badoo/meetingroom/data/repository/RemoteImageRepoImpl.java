@@ -23,7 +23,7 @@ public class RemoteImageRepoImpl implements RemoteImageRepo {
 
     @Inject
     RemoteImageRepoImpl(RemoteImageStoreFactory remoteImageStoreFactory) {
-        this.mRemoteImageStore = remoteImageStoreFactory.createLocalRemoteImageStore();
+        this.mRemoteImageStore = remoteImageStoreFactory.createRemoteImageStore();
     }
 
     @Override

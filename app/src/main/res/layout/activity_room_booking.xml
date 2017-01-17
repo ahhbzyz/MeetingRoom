@@ -102,13 +102,26 @@
         android:paddingStart="@dimen/room_booking_view_margin"
         android:paddingEnd="@dimen/room_booking_view_margin">
 
-        <com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/autocomplete_email_address"
-            android:gravity="center"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/badoo_mail_suffix" />
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pb_loading_contacts"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+
+            <com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView
+                android:id="@+id/autocomplete_email_address"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/badoo_mail_suffix" />
+        </RelativeLayout>
 
 
         <Button

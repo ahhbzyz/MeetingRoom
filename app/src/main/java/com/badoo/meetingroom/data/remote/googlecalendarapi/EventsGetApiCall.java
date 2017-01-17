@@ -15,15 +15,15 @@ class EventsGetApiCall implements Callable<List<Event>>{
 
     private Calendar mServices = null;
     private List<Event> mResponse;
-    private Event mEventParams;
+    private CalendarApiParams mParams;
 
-    private EventsGetApiCall(Calendar services, Event eventParams) {
-        this.mServices = services;
-        this.mEventParams = eventParams;
+    private EventsGetApiCall(Calendar services, CalendarApiParams params) {
+        mServices = services;
+        mParams = params;
     }
 
-    static EventsGetApiCall createGET(Calendar services, Event eventParams) {
-        return new EventsGetApiCall(services, eventParams);
+    static EventsGetApiCall createGET(Calendar services, CalendarApiParams params) {
+        return new EventsGetApiCall(services, params);
     }
 
     public List<Event> requestSyncCall() throws Exception {
@@ -33,11 +33,12 @@ class EventsGetApiCall implements Callable<List<Event>>{
 
     private void connectToApi() throws Exception {
         Events events;
-        events = mServices.events().list("corp.badoo.com_37313432373937392d3336@resource.calendar.google.com")
-            .setTimeMin(mEventParams.getStart().getDateTime())
-            .setTimeMax(mEventParams.getEnd().getDateTime())
+        events = mServices.events().list(mParams.getCalendarId())
+            .setTimeMin(mParams.getEventParams().getStart().getDateTime())
+            .setTimeMax(mParams.getEventParams().getEnd().getDateTime())
             .setOrderBy("startTime")
             .setSingleEvents(true)
+            .setMaxResults(mParams.getNumOfResult())
             .execute();
         mResponse = events.getItems();
     }

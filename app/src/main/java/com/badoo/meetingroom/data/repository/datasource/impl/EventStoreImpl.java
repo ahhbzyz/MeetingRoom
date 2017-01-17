@@ -1,5 +1,6 @@
 package com.badoo.meetingroom.data.repository.datasource.impl;
 
+import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.data.remote.googlecalendarapi.GoogleCalendarApi;
 import com.badoo.meetingroom.data.repository.datasource.intf.EventStore;
 import com.google.api.services.calendar.model.Event;
@@ -20,22 +21,22 @@ class EventStoreImpl implements EventStore {
     }
 
     @Override
-    public Observable<List<Event>> getEventList(Event event) {
-        return this.mGoogleApi.getEventList(event);
+    public Observable<List<Event>> getEventList(CalendarApiParams params) {
+        return this.mGoogleApi.getEventList(params);
     }
 
     @Override
-    public Observable<Event> insertEvent(Event event) {
-        return this.mGoogleApi.insertEvent(event);
+    public Observable<Event> insertEvent(CalendarApiParams params) {
+        return this.mGoogleApi.insertEvent(params);
     }
 
     @Override
-    public Observable<Void> deleteEvent(Event event) {
-        return this.mGoogleApi.deleteEvent(event);
+    public Observable<Void> deleteEvent(CalendarApiParams params) {
+        return this.mGoogleApi.deleteEvent(params);
     }
 
     @Override
-    public Observable<Event> updateEvent(Event event) {
-        return this.mGoogleApi.updateEvent(event);
+    public Observable<Event> updateEvent(CalendarApiParams params) {
+        return this.mGoogleApi.updateEvent(params);
     }
 }

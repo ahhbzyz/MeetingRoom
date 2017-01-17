@@ -17,7 +17,6 @@ public class GetPerson extends UseCase<BadooPerson> {
     private String mPersonId;
     private final BadooPersonRepo mBadooPersonDataRepo;
 
-
     public GetPerson init(String personId) {
 
         this.mPersonId = personId;
