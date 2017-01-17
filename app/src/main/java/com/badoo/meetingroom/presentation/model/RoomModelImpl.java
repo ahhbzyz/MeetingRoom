@@ -1,23 +1,33 @@
 package com.badoo.meetingroom.presentation.model;
 
 /**
- * Created by zhangyaozhong on 05/01/2017.
+ * Created by zhangyaozhong on 16/01/2017.
  */
 
-public class RoomImpl implements Room {
+public class RoomModelImpl implements RoomModelImpl {
 
+    private String id;
     private String name;
     private int floor;
     private int status;
-    private RoomEventModel currentEvent;
     private int capacity;
     private boolean isTvSupported;
     private boolean isVideoConferenceSupported;
-    private boolean isBeverageSupported;
+    private boolean isBeverageAllowed;
     private boolean isStationerySupported;
 
-    public RoomImpl() {
+    public RoomModelImpl() {
 
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
@@ -51,16 +61,6 @@ public class RoomImpl implements Room {
     }
 
     @Override
-    public RoomEventModel getCurrentEvent() {
-        return currentEvent;
-    }
-
-    @Override
-    public void setCurrentEvent(RoomEventModel currentEvent) {
-        this.currentEvent = currentEvent;
-    }
-
-    @Override
     public int getCapacity() {
         return capacity;
     }
@@ -90,14 +90,12 @@ public class RoomImpl implements Room {
         isVideoConferenceSupported = videoConferenceSupported;
     }
 
-    @Override
-    public boolean isBeverageSupported() {
-        return isBeverageSupported;
+    public boolean isBeverageAllowed() {
+        return isBeverageAllowed;
     }
 
-    @Override
-    public void setBeverageSupported(boolean beverageSupported) {
-        isBeverageSupported = beverageSupported;
+    public void setBeverageAllowed(boolean beverageAllowed) {
+        isBeverageAllowed = beverageAllowed;
     }
 
     @Override

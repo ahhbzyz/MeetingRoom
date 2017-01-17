@@ -1,12 +1,15 @@
 package com.badoo.meetingroom.presentation.view.view;
 
+import com.badoo.meetingroom.presentation.model.RoomModel;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+
+import java.util.List;
 
 /**
  * Created by zhangyaozhong on 23/12/2016.
  */
 
-public interface GetCredentialView extends LoadDataView {
+public interface MainView extends LoadDataView {
     void showChooseAccountDialog();
     void showRequestPermissionsDialog();
     void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode);
@@ -14,4 +17,5 @@ public interface GetCredentialView extends LoadDataView {
     void showNoGooglePlayServicesOnSnackBar();
     void showRecoverableAuth(UserRecoverableAuthIOException e);
     void showConnectGoogleCalendarSuccessful();
+    void setUpRoomListSpinner(List<RoomModel> roomModelList);
 }

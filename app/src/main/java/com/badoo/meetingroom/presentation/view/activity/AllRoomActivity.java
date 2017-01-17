@@ -14,7 +14,7 @@ import com.badoo.meetingroom.presentation.view.adapter.RoomListFragmentPagerAdap
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AllRoomsActivity extends BaseActivity {
+public class AllRoomActivity extends BaseActivity {
 
 
     @BindView(R.id.tv_all_rooms) TextView mAllRoomsTv;
@@ -24,7 +24,7 @@ public class AllRoomsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_rooms);
+        setContentView(R.layout.activity_room_list);
         ButterKnife.bind(this);
         this.getComponent().inject(this);
 
