@@ -17,6 +17,4 @@ public interface DailyEventsPresenter extends Presenter {
     void onEventClicked(View view, int position);
 
     void getEvents();
-
-    void updateCurrentTimeLayoutPosition();
 }

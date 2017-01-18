@@ -1,10 +1,8 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
 import android.app.ActivityOptions;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,7 +43,11 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
  * Created by zhangyaozhong on 22/12/2016.
  */
 
-public class RoomStatusActivity extends BaseActivity implements RoomStatusView, View.OnClickListener, CircleView.OnCountDownListener, HorizontalTimelineAdapter.OnItemClickListener {
+public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
+                                                                View.OnClickListener,
+                                                                CircleView.OnCountDownListener,
+                                                                HorizontalTimelineAdapter.OnItemClickListener,
+                                                                HorizontalTimelineAdapter.OnCurrentEventItemViewUpdateListener {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
@@ -167,6 +169,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     private void setUpHorizontalTimelineView() {
         mAdapter.setOnItemClickListener(this);
+        mAdapter.setOnCurrentEventItemViewUpdateListener(this);
         mHorizontalTimelineRv.setAdapter(mAdapter);
         mHorizontalTimelineRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         Handler scrollBackHandler = new Handler();
@@ -183,7 +186,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == SCROLL_STATE_IDLE) {
-                    mPresenter.updateHorizontalTimeline();
                     scrollBackHandler.postDelayed(() -> {
                         if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
                             mHorizontalTimelineRv.smoothScrollToPosition(0);
@@ -237,7 +239,10 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     @Override
     public void startCircleViewAnimator(RoomEventModel currentEvent) {
-        if (currentEvent != null && currentEvent.isOnHold()) {
+        if (currentEvent == null) {
+            return;
+        }
+        if (currentEvent.isOnHold()) {
             mCircleView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getStartTime() + currentEvent.getOnHoldTime());
         } else {
             mCircleView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getEndTime());
@@ -332,7 +337,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     @Override
     public void onCountDownTicking(long millisUntilFinished) {
-        mPresenter.onCountDownTicking(millisUntilFinished);
+        mRoomStatusHandler.onCountDownTicking(millisUntilFinished);
     }
 
     @Override
@@ -408,7 +413,11 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     protected void onSystemTimeRefresh() {
         mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
         mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomStatusActivity.this));
-        mPresenter.onSystemTimeUpdate();
+        mPresenter.onSystemTimeRefresh();
     }
 
+    @Override
+    public void onCurrentEventItemViewUpdate() {
+        mPresenter.updateHorizontalTimeline();
+    }
 }

@@ -23,11 +23,12 @@ import javax.inject.Inject;
  * Created by zhangyaozhong on 13/01/2017.
  */
 
-public class RoomStatusHandler {
+class RoomStatusHandler {
 
     private final RoomStatusActivity activity;
     private boolean hasRequested;
     private CountDownTimer mCountDownTimer;
+    private RoomEventModel mCurrentEvent;
 
     @Inject
     RoomStatusHandler(RoomStatusActivity activity) {
@@ -91,7 +92,7 @@ public class RoomStatusHandler {
 
         activity.mButtonsLayout.removeAllViews();
 
-        View btnGroup = View.inflate(activity.getApplicationContext(), R.layout.layout_btn_group_busy, null);
+        View btnGroup = View.inflate(activity.getApplicationContext(), R.layout.layout_btn_group_onhold, null);
         activity.mButtonsLayout.addView(btnGroup);
 
         ImageButton confirmBtn = (ImageButton) btnGroup.findViewById(R.id.btn_confirm);
@@ -143,8 +144,13 @@ public class RoomStatusHandler {
         if (event == null) {
             return;
         }
+
+        mCurrentEvent = event;
+
         activity.mCircleView.setTailIconVisibility(!event.isAvailable() && !event.isDoNotDisturb());
         activity.mCircleTimerInfoLayout.setVisibility(event.isDoNotDisturb() ? View.INVISIBLE : View.VISIBLE);
+        activity.mCircleTimeViewBtn.setVisibility(View.VISIBLE);
+
         activity.mDndLayout.setVisibility(event.isDoNotDisturb() ? View.VISIBLE : View.INVISIBLE);
         activity.mCircleView.setColorTheme(
             event.getEventColor(),
@@ -159,26 +165,50 @@ public class RoomStatusHandler {
         switch (event.getStatus()) {
 
             case RoomEventModel.AVAILABLE:
+
+                activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_add_black_24px));
+
                 activity.mRoomStatusTv.setText(activity.getString(R.string.available_for_upper_case));
 
-                long hours = TimeUnit.MILLISECONDS.toHours(event.getRemainingTime());
+                long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTime());
+
                 if (hours >= 2) {
                     setTimerText(activity.getString(R.string.two_hour_plus));
-                } else {
-                    startCountDownTime(event.getRemainingTime(), 1000);
                 }
+
                 break;
             case RoomEventModel.BUSY:
 
+                activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_info_black_24px));
+
                 if (event.isOnHold() && !event.isConfirmed()) {
                     activity.mRoomStatusTv.setText(activity.getString(R.string.on_hold_for_upper_case));
-                    startCountDownTime(event.getRemainingOnHoldTime(), 1000);
                 } else if (event.isDoNotDisturb()) {
                     activity.mCircleView.setColorTheme(event.getEventColor(), event.getEventColor());
                     activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.FILL_AND_STROKE);
                 } else {
-                    setTimerText(event.getEndTimeInText());
                     activity.mRoomStatusTv.setText(activity.getString(R.string.busy_until_upper_case));
+                    setTimerText(mCurrentEvent.getEndTimeInText());
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    void onCountDownTicking(long millisUntilFinished) {
+        switch (mCurrentEvent.getStatus()) {
+            case RoomEventModel.AVAILABLE:
+                long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTime());
+                if (hours < 2) {
+                    setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
+                }
+                break;
+            case RoomEventModel.BUSY:
+                if (mCurrentEvent.isOnHold() && !mCurrentEvent.isConfirmed()) {
+                    setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
+                } else {
+                    setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
                 }
                 break;
             default:
@@ -190,23 +220,6 @@ public class RoomStatusHandler {
         if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
         }
-    }
-
-    void startCountDownTime(long millisInFuture, long countDownInterval) {
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel();
-        }
-        mCountDownTimer = new CountDownTimer(millisInFuture, countDownInterval) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-        }.start();
     }
 
     private void setTimerText(String text) {

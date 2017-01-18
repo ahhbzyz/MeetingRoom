@@ -105,7 +105,7 @@ public class RoomEventModelImpl implements RoomEventModel {
 
     @Override
     public boolean isOnHold() {
-        if (isProcessing() && !isConfirmed() && getDuration() > ON_HOLD_TIME) {
+        if (isProcessing() && isBusy() && !isConfirmed() && getDuration() > ON_HOLD_TIME) {
             if (TimeHelper.getCurrentTimeInMillis() <= getStartTime() + ON_HOLD_TIME) {
                 return true;
             }

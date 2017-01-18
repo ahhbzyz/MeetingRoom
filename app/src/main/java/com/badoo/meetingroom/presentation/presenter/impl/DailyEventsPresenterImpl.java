@@ -50,17 +50,9 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     }
 
-
     @Override
     public void onSystemTimeUpdate() {
         mDailyEventsView.updateRecyclerView();
-        updateCurrentTimeLayoutPosition();
-    }
-
-
-    @Override
-    public void updateCurrentTimeLayoutPosition() {
-        mDailyEventsView.updateCurrentTimeLayoutPosition(getNumOfExpiredEvents());
     }
 
     @Override
@@ -76,20 +68,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
             long startTime = event.isProcessing() ? TimeHelper.getCurrentTimeInMillis() : event.getStartTime();
             mDailyEventsView.bookRoom(view, startTime, event.getEndTime());
         }
-    }
-
-
-    // TODO efficient way
-    private int getNumOfExpiredEvents() {
-        int numOfExpiredEvents = 0;
-        for (RoomEventModel event: mEventList) {
-            if(event.isExpired()) {
-                numOfExpiredEvents++;
-            } else {
-                break;
-            }
-        }
-        return numOfExpiredEvents;
     }
 
     @Override
@@ -116,7 +94,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         mGetEventsUseCase.init(params).execute(new GetEventsSubscriber());
     }
 
-
     private final class GetEventsSubscriber extends DefaultSubscriber<List<RoomEvent>> {
 
         @Override
@@ -128,7 +105,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         @Override
         public void onNext(List<RoomEvent> roomEvents) {
             mEventList = mMapper.map(roomEvents);
-            mDailyEventsView.updateCurrentTimeLayoutPosition(getNumOfExpiredEvents());
             showDailyEventsInView(mEventList);
         }
 

@@ -23,6 +23,6 @@ public interface RoomStatusPresenter extends Presenter {
     void deleteEvent();
     void updateEvent();
     void insertEvent(int bookingPeriod);
-    void onSystemTimeUpdate();
+    void onSystemTimeRefresh();
 
 }

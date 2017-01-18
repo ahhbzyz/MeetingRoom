@@ -174,7 +174,7 @@
                             android:textColor="@color/textColorBlack"
                             android:gravity="center_vertical|center_horizontal"
                             android:includeFontPadding="false"
-                            android:layout_weight="1.1" />
+                            android:layout_weight="1.2" />
 
                         <TextView
                             android:text="0"
@@ -205,7 +205,8 @@
                         android:background="@drawable/btn_oval_grey"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:layout_marginTop="16dp" />
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/ic_info_black_24px" />
                 </LinearLayout>
 
                 <LinearLayout

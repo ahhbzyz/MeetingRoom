@@ -21,9 +21,12 @@ import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
 import com.badoo.meetingroom.presentation.view.component.drawable.BusyBgDrawable;
 import com.badoo.meetingroom.presentation.view.component.drawable.TimelineBarDrawable;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
+import com.google.api.services.calendar.model.Event;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -44,7 +47,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     private OnItemClickListener mOnItemClickListener;
     private SparseIntArray mBottomTimelineBarHeights;
     private int mPage = 0;
-    private OnCurrentEventUpdateListener mOnCurrentEventUpdateListener;
+    private OnCurrentEventItemViewUpdateListener mOnCurrentEventItemViewUpdateListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -54,6 +57,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         @BindView(R.id.layout_event_content) LinearLayout mEventContentLayout;
         @BindView(R.id.layout_timestamp) RelativeLayout mTimestampLayout;
         @BindView(R.id.layout_clickable) FrameLayout mClickableLayout;
+        @BindView(R.id.layout_current_time) LinearLayout mCurrentTimeLayout;
+        @BindView(R.id.tv_current_time) TextView mCurrentTimeTv;
 
         private ViewHolder(View view) {
             super(view);
@@ -97,8 +102,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder,  int position) {
 
-
-
         // Current event
         RoomEventModel event = mRoomEventModelList.get(position);
 
@@ -110,7 +113,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         float viewHeight =  event.getDuration() * HEIGHT_PER_MILLIS + mContext.getResources().getDimension(R.dimen.daily_events_divider_height);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, (int) viewHeight);
         holder.itemView.setLayoutParams(params);
-
 
         // Add timestamps to item view
         holder.mTimestampLayout.removeAllViews();
@@ -163,9 +165,20 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mEventContentLayout.setBackground(null);
         }
 
+        int topTimelineBarHeight = (int) (viewHeight * (1 - remainingProgress));
+
+        if (event.isProcessing()) {
+            holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
+            holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
+            holder.mCurrentTimeLayout.measure(0, 0);
+            holder.mCurrentTimeLayout.setY(topTimelineBarHeight - holder.mCurrentTimeLayout.getMeasuredHeight() / 2f);
+        } else {
+            holder.mCurrentTimeLayout.setVisibility(View.GONE);
+        }
+
         // Event in processing
         if (event.isProcessing()) {
-            mOnCurrentEventUpdateListener.onCurrentEventUpdate();
+            mOnCurrentEventItemViewUpdateListener.onCurrentEventItemViewUpdate();
             if (event.isBusy()) {
                 TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getBusyColor(), remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
@@ -182,12 +195,9 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                     holder.mEventInfoTv.setVisibility(View.INVISIBLE);
 
                 } else if (mBottomTimelineBarHeights.get(position) < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
-
                     holder.mEventInfoTv.setVisibility(View.INVISIBLE);
-
                 }
 
-                int topTimelineBarHeight = (int) (viewHeight * (1 - remainingProgress));
                 offsetParams.setMargins(0, topTimelineBarHeight, 0, 0);
                 holder.mEventPeriodTv.setLayoutParams(offsetParams);
 
@@ -249,12 +259,12 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         void onEventItemClicked(View view, int position);
     }
 
-    public void setOnCurrentEventUpdateListener(OnCurrentEventUpdateListener listener) {
-        mOnCurrentEventUpdateListener = listener;
+    public void setOnCurrentEventItemViewUpdateListener(OnCurrentEventItemViewUpdateListener listener) {
+        mOnCurrentEventItemViewUpdateListener = listener;
     }
 
-    public interface OnCurrentEventUpdateListener {
-        void onCurrentEventUpdate();
+    public interface OnCurrentEventItemViewUpdateListener {
+        void onCurrentEventItemViewUpdate();
     }
 
     private void addTimestampsToView(ViewHolder holder, int position, List<Long> timestamps, RoomEventModel event, float viewHeight, float remainingProgress) {

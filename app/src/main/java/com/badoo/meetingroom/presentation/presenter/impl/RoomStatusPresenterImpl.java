@@ -88,7 +88,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             moveToNextEvent();
             showCurrentEventOnCircleTimeView();
             mRoomEventsView.updateHorizontalTimeline(getNumOfExpiredEvents());
-            onSystemTimeUpdate();
+            onSystemTimeRefresh();
         }
     }
 
@@ -122,13 +122,12 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     public void onRestart() {
         mCurrentEventPos = getCurrentEventPosition(mEventList);
         showCurrentEventOnCircleTimeView();
-        onSystemTimeUpdate();
+        onSystemTimeRefresh();
     }
 
     @Override
     public void updateHorizontalTimeline() {
         mRoomEventsView.updateHorizontalTimeline(getNumOfExpiredEvents());
-
     }
 
     @Override
@@ -143,7 +142,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     @Override
-    public void onSystemTimeUpdate() {
+    public void onSystemTimeRefresh() {
         updateHorizontalTimeline();
         mRoomEventsView.updateRecyclerView();
     }
@@ -177,15 +176,16 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     private void showCurrentEventOnCircleTimeView() {
-        // TODO BUG index 1 size1
-        if (mEventList != null && mEventList.get(mCurrentEventPos) != null && mCurrentEventPos < mEventList.size()) {
+        if (mEventList != null && mCurrentEventPos < mEventList.size() && mEventList.get(mCurrentEventPos) != null) {
             mCurrentEvent = mEventList.get(mCurrentEventPos);
-            if (mConfirmedIds.contains(mCurrentEvent.getId())) {
-                mCurrentEvent.setConfirmed(true);
-            }
-            mRoomEventsView.renderRoomEvent(mCurrentEvent);
-            showButtonsForEvent();
         }
+
+        if (mConfirmedIds.contains(mCurrentEvent.getId())) {
+            mCurrentEvent.setConfirmed(true);
+        }
+
+        mRoomEventsView.renderRoomEvent(mCurrentEvent);
+        showButtonsForEvent();
     }
 
     private void moveToNextEvent(){
@@ -234,7 +234,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     @Override
     public void insertEvent(int bookingPeriod) {
         long startTime = TimeHelper.getCurrentTimeInMillis();
-        long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.min2Millis(bookingPeriod);
+        long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.sec2Millis(bookingPeriod);
 
         if (mCurrentEvent.isAvailable() && endTime <= mCurrentEvent.getEndTime()) {
             Event event = new Event();
@@ -343,7 +343,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                 mRoomEventsView.showError(googleJsonResponseException.getDetails().getMessage());
             }
             catch (Exception exception) {
-                mRoomEventsView.showError(exception.getMessage());
+                System.out.println(exception.getMessage());
             }
             catch (Throwable throwable) {
                 throwable.printStackTrace();

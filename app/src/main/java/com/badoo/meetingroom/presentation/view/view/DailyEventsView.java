@@ -1,6 +1,5 @@
 package com.badoo.meetingroom.presentation.view.view;
 
-import android.content.Intent;
 import android.view.View;
 
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
@@ -13,11 +12,12 @@ import java.util.List;
  */
 
 public interface DailyEventsView extends LoadDataView{
-    void renderDailyEvents(List<RoomEventModel> roomEventModelList);
-    int getCurrentPage();
-    void bookRoom(View view , long startTime, long endTime);
 
-    void updateCurrentTimeLayoutPosition(int numOfExpiredEvents);
+    void renderDailyEvents(List<RoomEventModel> roomEventModelList);
+
+    int getCurrentPage();
+
+    void bookRoom(View view , long startTime, long endTime);
 
     void updateRecyclerView();
 

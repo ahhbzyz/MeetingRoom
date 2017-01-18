@@ -9,16 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
-import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
@@ -32,10 +28,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
-import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 
-public class DailyEventsFragment extends BaseFragment implements DailyEventsView, DailyEventsAdapter.OnItemClickListener, DailyEventsAdapter.OnCurrentEventUpdateListener {
+public class DailyEventsFragment extends BaseFragment implements DailyEventsView, DailyEventsAdapter.OnItemClickListener {
 
     private static final int REQUEST_AUTHORIZATION = 1001;
     private static final int REQUEST_BOOK_ROOM = 1000;
@@ -44,14 +39,10 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @Inject DailyEventsAdapter mAdapter;
 
     @BindView(R.id.rv_daily_events) RecyclerView mDailyEventsRv;
-    @BindView(R.id.layout_current_time) LinearLayout mCurrentTimeLayout;
-    @BindView(R.id.tv_current_time) TextView mCurrentTimeTv;
     @BindView(R.id.pb_loading_data) ProgressBar mLoadingDataPb;
 
     private static final String ARG_PAGE = "page";
     private int mPage;
-    private int mScrollOffset = 0;
-    private float mTimelineMarkOffset = 0;
 
     public static DailyEventsFragment newInstance(int page) {
         DailyEventsFragment fragment = new DailyEventsFragment();
@@ -88,7 +79,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     private void setUpEventsRecyclerView() {
         mAdapter.setPage(mPage);
         mAdapter.setOnItemClickListener(this);
-        mAdapter.setOnCurrentEventUpdateListener(this);
         mDailyEventsRv.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext()));
         mDailyEventsRv.setAdapter(mAdapter);
         mDailyEventsRv.setItemAnimator(null);
@@ -96,16 +86,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                float startY = mCurrentTimeLayout.getY();
-                mCurrentTimeLayout.setY(startY - dy);
-                mScrollOffset += dy;
-            }
 
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == SCROLL_STATE_IDLE) {
-                }
             }
         });
     }
@@ -114,8 +95,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public void renderDailyEvents(List<RoomEventModel> roomEventModelList) {
         mAdapter.setDailyEventList(roomEventModelList);
         if (mPage == 0) {
-            mCurrentTimeLayout.setVisibility(View.VISIBLE);
-            mDailyEventsRv.smoothScrollBy(0, (int) (mTimelineMarkOffset - mScrollOffset));
+            //mDailyEventsRv.smoothScrollBy(0, (int) (mTimelineMarkOffset - mScrollOffset));
         }
 
     }
@@ -136,17 +116,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         intent.putExtra("timePeriod", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivityForResult(intent, REQUEST_BOOK_ROOM);
-    }
-
-    @Override
-    public void updateCurrentTimeLayoutPosition(int numOfExpiredEvents) {
-        if (mPage == 0) {
-            mTimelineMarkOffset = (TimeHelper.getCurrentTimeInMillis() - Badoo.getStartTimeOfDay(mPage)) * mAdapter.getHeightPerMillis()
-                - mCurrentTimeLayout.getMeasuredHeight() / 2f
-                + numOfExpiredEvents * getActivity().getApplicationContext().getResources().getDimension(R.dimen.daily_events_divider_height);
-            mCurrentTimeLayout.setY(mTimelineMarkOffset - mScrollOffset);
-            mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-        }
     }
 
     @Override
@@ -185,7 +154,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
                 break;
             case REQUEST_BOOK_ROOM:
                 if (resultCode == RESULT_OK) {
-                    long startTime = data.getLongExtra("startTime", 0);
                     mPresenter.getEvents();
                     Intent returnIntent = new Intent();
                     getActivity().setResult(Activity.RESULT_OK, returnIntent);
@@ -205,11 +173,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     @Override
     public int getCurrentPage() {
-        return this.mPage;
-    }
-
-    @Override
-    public void onCurrentEventUpdate() {
-        mPresenter.updateCurrentTimeLayoutPosition();
+        return mPage;
     }
 }

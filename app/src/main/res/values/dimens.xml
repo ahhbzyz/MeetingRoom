@@ -51,7 +51,7 @@
 
     <dimen name="room_list_tab_height">3dp</dimen>
 
-    <dimen name="daily_events_divider_height">0.5dp</dimen>
+    <dimen name="daily_events_divider_height">1dp</dimen>
 
     <dimen name="circle_time_view_btn_busy_img_width">6dp</dimen>
     <dimen name="circle_time_view_btn_busy_img_height">24dp</dimen>

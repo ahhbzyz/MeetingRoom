@@ -254,12 +254,11 @@ public class CircleView extends View {
         mRotateAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-
+                mCountDownListener.onCountDownTicking(remainingTime);
             }
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                mCountDownListener.onCountDownTicking(0);
                 mCountDownListener.onCountDownFinished();
             }
 
@@ -273,6 +272,7 @@ public class CircleView extends View {
         });
 
         mRotateAnimator.start();
+
     }
 
     public void setRotateDegree(float degree) {
