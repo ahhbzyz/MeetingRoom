@@ -9,8 +9,12 @@ import java.util.List;
  */
 
 public interface RoomListView extends LoadDataView {
+
     int getPage();
+
     void renderRoomListInView(List<RoomModel> mRoomList);
 
     void updateRoomList();
+
+    void notifyItemChange(int position);
 }

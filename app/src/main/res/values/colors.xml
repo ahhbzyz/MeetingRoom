@@ -32,5 +32,7 @@
 
 
     <color name="textColorWhite">#ffffff</color>
+    <color name="item_vertical_event_timestamp_color">#808080</color>
+    <color name="item_vertical_event_divider_color">#D4D4D4</color>
 
 </resources>

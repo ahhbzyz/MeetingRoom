@@ -25,7 +25,7 @@ public class DailyEventsFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    private final int numOfDays = 10;
+    private final int numOfDays = 7;
     private List<String> mTabTitles = new ArrayList<>(numOfDays);
 
     @Inject

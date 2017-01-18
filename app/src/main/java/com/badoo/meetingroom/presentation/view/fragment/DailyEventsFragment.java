@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
+import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
@@ -79,40 +79,35 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     private void setUpEventsRecyclerView() {
         mAdapter.setPage(mPage);
         mAdapter.setOnItemClickListener(this);
-        mDailyEventsRv.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext()));
+        mDailyEventsRv.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this.getActivity().getApplicationContext()));
         mDailyEventsRv.setAdapter(mAdapter);
-        mDailyEventsRv.setItemAnimator(null);
-        mDailyEventsRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-            }
-        });
     }
 
     @Override
     public void renderDailyEvents(List<RoomEventModel> roomEventModelList) {
         mAdapter.setDailyEventList(roomEventModelList);
+
+        int currentEventPosition = 0;
+
+        for (RoomEventModel roomEventModel : roomEventModelList) {
+            if (roomEventModel.isProcessing()) {
+                break;
+            }
+            currentEventPosition ++;
+        }
+
         if (mPage == 0) {
-            //mDailyEventsRv.smoothScrollBy(0, (int) (mTimelineMarkOffset - mScrollOffset));
+            mDailyEventsRv.smoothScrollToPosition(currentEventPosition);
         }
 
     }
 
     @Override
-    public void onEventItemClicked(View view, int position) {
-        if (mPresenter != null) {
-            mPresenter.onEventClicked(view, position);
-        }
-    }
-
-    @Override
-    public void bookRoom(View view, long startTime, long endTime) {
-        Intent intent = new Intent(this.getActivity(), RoomBookingActivity.class);
+    public void onEventItemClicked(View view, RoomEventModel roomEventModel) {
+        Intent intent = new Intent(getActivity(), RoomBookingActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putLong("startTime", startTime);
-        bundle.putLong("endTime", endTime);
+        bundle.putLong("startTime", roomEventModel.getStartTime());
+        bundle.putLong("endTime", roomEventModel.getEndTime());
         intent.putExtra("timePeriod", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivityForResult(intent, REQUEST_BOOK_ROOM);
@@ -140,7 +135,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     @Override
     public Context context() {
-        return this.getActivity().getApplicationContext();
+        return getActivity().getApplicationContext();
     }
 
     @Override

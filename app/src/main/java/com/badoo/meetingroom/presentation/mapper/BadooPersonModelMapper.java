@@ -23,32 +23,13 @@ public class BadooPersonModelMapper {
     public BadooPersonModel map(BadooPerson badooPerson) {
         BadooPersonModel badooPersonModel = null;
         if (badooPerson != null) {
-
             badooPersonModel = new BadooPersonModelImpl();
-
-            if (badooPerson.getFamilyName() != null) {
-                badooPersonModel.setFamilyName(badooPerson.getFamilyName());
-            }
-
-            if (badooPerson.getGivenName() != null) {
-                badooPersonModel.setGivenName(badooPerson.getGivenName());
-            }
-
-            if (badooPerson.getMiddleName() != null) {
-                badooPersonModel.setMiddleName(badooPerson.getMiddleName());
-            }
-
-            if (badooPerson.getDisplayName() != null) {
-                badooPersonModel.setDisplayName(badooPerson.getDisplayName());
-            }
-
-            if (badooPerson.getEmailAddress() != null) {
-                badooPersonModel.setEmailAddress(badooPerson.getEmailAddress());
-            }
-
-            if (badooPerson.getAvatarUrl() != null) {
-                badooPersonModel.setAvatarUrl(badooPerson.getAvatarUrl());
-            }
+            badooPersonModel.setFamilyName(badooPerson.getFamilyName());
+            badooPersonModel.setGivenName(badooPerson.getGivenName());
+            badooPersonModel.setMiddleName(badooPerson.getMiddleName());
+            badooPersonModel.setDisplayName(badooPerson.getDisplayName());
+            badooPersonModel.setEmailAddress(badooPerson.getEmailAddress());
+            badooPersonModel.setAvatarUrl(badooPerson.getAvatarUrl());
         }
         return badooPersonModel;
     }

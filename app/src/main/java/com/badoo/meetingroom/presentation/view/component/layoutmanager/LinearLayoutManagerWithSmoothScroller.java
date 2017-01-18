@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 public class LinearLayoutManagerWithSmoothScroller extends LinearLayoutManager {
 
     public LinearLayoutManagerWithSmoothScroller(Context context) {
-        super(context, HORIZONTAL, false);
+        super(context, VERTICAL, false);
     }
 
     public LinearLayoutManagerWithSmoothScroller(Context context, int orientation, boolean reverseLayout) {

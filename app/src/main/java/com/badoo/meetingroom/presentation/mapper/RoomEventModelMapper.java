@@ -33,14 +33,13 @@ public class RoomEventModelMapper {
         }
 
         final RoomEventModel roomEventModel = new RoomEventModelImpl();
+
         roomEventModel.setId(roomEvent.getId());
         roomEventModel.setCreatorId(roomEvent.getCreatorId());
         roomEventModel.setCreatorEmailAddress(roomEvent.getCreatorEmailAddress());
         roomEventModel.setStatus(roomEvent.getStatus());
-
         roomEventModel.setStartTime(roomEvent.getStartTime());
         roomEventModel.setEndTime(roomEvent.getEndTime());
-
         roomEventModel.setStatus(RoomEventModel.BUSY);
 
         if (roomEvent.isFastBook()) {
@@ -59,36 +58,23 @@ public class RoomEventModelMapper {
 
         if (roomEventList != null) {
 
-            long startTime = mEventStartTime;
-
-            long endTime = roomEventList.isEmpty() ? mEventEndTime : roomEventList.get(0).getStartTime();
-
-            if (endTime > mEventEndTime || endTime < mEventStartTime) {
-                return  roomEventModelList;
-            }
-
-
-            RoomEventModel firstEvent = generateAvailableEvent(startTime, endTime);
-            roomEventModelList.add(firstEvent);
-
-            long lastEventEndTime = roomEventModelList.get(0).getEndTime();
+            long firstEventStartTime = roomEventList.isEmpty() ? mEventStartTime : roomEventList.get(0).getStartTime();
+            long startTime, endTime;
+            long lastEventEndTime = endTime = firstEventStartTime < mEventStartTime ? firstEventStartTime : mEventStartTime;
 
             for (RoomEvent roomEvent : roomEventList) {
+
                 final RoomEventModel roomEventModel = map(roomEvent);
 
                 if (roomEventModel != null) {
 
+                    // Skip event start at same time
                     if (roomEvent.getStartTime() < endTime) {
                         continue;
                     }
 
                     startTime = roomEvent.getStartTime();
                     endTime = roomEvent.getEndTime();
-
-                    if (startTime < mEventStartTime || startTime > mEventEndTime ||
-                        endTime > mEventEndTime || endTime < mEventStartTime) {
-                        return roomEventModelList;
-                    }
 
                     if (startTime > lastEventEndTime) {
                         final RoomEventModel availableEvent = generateAvailableEvent(lastEventEndTime, startTime);
@@ -113,7 +99,6 @@ public class RoomEventModelMapper {
         RoomEventModel roomEvent = new RoomEventModelImpl();
         roomEvent.setStartTime(startTime);
         roomEvent.setEndTime(endTime);
-        roomEvent.setCreatorEmailAddress("None");
         roomEvent.setStatus(RoomEventImpl.AVAILABLE);
         return roomEvent;
     }

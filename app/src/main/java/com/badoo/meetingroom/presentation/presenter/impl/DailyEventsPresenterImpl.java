@@ -2,13 +2,16 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import android.view.View;
 
+import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
+import com.badoo.meetingroom.domain.entity.impl.RoomEventImpl;
 import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -62,32 +65,23 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     }
 
     @Override
-    public void onEventClicked(View view, int position) {
-        if (mEventList != null && mEventList.get(position).isAvailable()) {
-            RoomEventModel event = mEventList.get(position);
-            long startTime = event.isProcessing() ? TimeHelper.getCurrentTimeInMillis() : event.getStartTime();
-            mDailyEventsView.bookRoom(view, startTime, event.getEndTime());
-        }
-    }
-
-    @Override
     public void getEvents() {
         Event event = new Event();
 
-        DateTime startDateTime = new DateTime(Badoo.getStartTimeOfDay(mPage));
+        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage));
         EventDateTime start = new EventDateTime()
             .setDateTime(startDateTime)
             .setTimeZone("Europe/London");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime(Badoo.getEndTimeOfDay(mPage));
+        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
         EventDateTime end = new EventDateTime()
             .setDateTime(endDateTime)
             .setTimeZone("Europe/London");
         event.setEnd(end);
 
-        mMapper.setEventStartTime(startDateTime.getValue());
-        mMapper.setEventEndTime(endDateTime.getValue());
+        mMapper.setEventStartTime(Badoo.getStartTimeOfDay(mPage));
+        mMapper.setEventEndTime(Badoo.getEndTimeOfDay(mPage));
 
         CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
         params.setEventParams(event);

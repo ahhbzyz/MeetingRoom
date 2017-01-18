@@ -88,6 +88,7 @@ public class RoomListPresenterImpl implements RoomListPresenter {
                     mRoomModelList.add(roomModel);
                 }
             }
+            mRoomListView.renderRoomListInView(mRoomModelList);
 
             Event event = new Event();
             DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
@@ -168,7 +169,7 @@ public class RoomListPresenterImpl implements RoomListPresenter {
                     break;
                 }
             }
-            mRoomListView.renderRoomListInView(mRoomModelList);
+            mRoomListView.notifyItemChange(position);
         }
 
         @Override

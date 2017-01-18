@@ -5,16 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.domain.entity.intf.Room;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.model.RoomModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -31,6 +31,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
 
     private List<RoomModel> mRoomList;
     private Context mContext;
+    private int lastPosition = -1;
 
     public void setRoomList(List<RoomModel> roomList) {
         mRoomList = roomList;
@@ -50,7 +51,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     }
 
     @Inject
-    public RoomListAdapter(Context context) {
+    RoomListAdapter(Context context) {
         mContext = context;
     }
 
@@ -65,7 +66,6 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         RoomModel roomModel = mRoomList.get(position);
         holder.mRoomNameTv.setText(roomModel.getName());
-
         if (roomModel.getCurrentEvent() != null) {
 
             RoomEventModel currentEvent = roomModel.getCurrentEvent();
@@ -85,12 +85,21 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
                     holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + TimeHelper.formatMillisInMin(currentEvent.getRemainingTime()) + " min");
                 }
             } else {
-
-
-
                 holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_busy));
                 holder.mRoomInfo.setText(mContext.getString(R.string.busy_until) + " " + currentEvent.getEndTimeInText());
             }
+        }
+        //setAnimation(holder.itemView, position);
+    }
+
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
         }
     }
 

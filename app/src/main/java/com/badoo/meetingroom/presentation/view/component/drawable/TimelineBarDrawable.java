@@ -20,14 +20,14 @@ public class TimelineBarDrawable extends Drawable {
     private final Paint backgroundPaint;
     private int topColor;
     private int bottomColor;
-    private float leftProgress;
+    private float remainingProgress;
     private int orientation = VERTICAL;
 
 
-    public TimelineBarDrawable(int topColor, int bottomColor, float leftProgress) {
+    public TimelineBarDrawable(int topColor, int bottomColor, float remainingProgress) {
         this.topColor = topColor;
         this.bottomColor = bottomColor;
-        this.leftProgress = leftProgress;
+        this.remainingProgress = remainingProgress;
         this.backgroundPaint = new Paint();
     }
 
@@ -41,23 +41,23 @@ public class TimelineBarDrawable extends Drawable {
         float height = bounds.bottom - bounds.top;
 
         if (orientation == VERTICAL) {
-            float leftBarHeight = leftProgress * height;
-            float firstBarHeight = height - leftBarHeight;
+            float bottomBarHeight = remainingProgress * height;
+            float topBarHeight = height - bottomBarHeight;
 
             backgroundPaint.setColor(topColor);
-            canvas.drawRect(0, 0, width, firstBarHeight, backgroundPaint);
+            canvas.drawRect(0, 0, width, topBarHeight, backgroundPaint);
 
             backgroundPaint.setColor(bottomColor);
-            canvas.drawRect(0, firstBarHeight, width, height, backgroundPaint);
+            canvas.drawRect(0, topBarHeight, width, height, backgroundPaint);
         } else {
-            float leftBarWidth = leftProgress * width;
-            float firstBarWidth = width - leftBarWidth;
+            float rightBarWidth = remainingProgress * width;
+            float leftBarWidth = width - rightBarWidth;
 
             backgroundPaint.setColor(topColor);
-            canvas.drawRect(0, 0, firstBarWidth, height, backgroundPaint);
+            canvas.drawRect(0, 0, leftBarWidth, height, backgroundPaint);
 
             backgroundPaint.setColor(bottomColor);
-            canvas.drawRect(firstBarWidth, 0, width, height, backgroundPaint);
+            canvas.drawRect(leftBarWidth, 0, width, height, backgroundPaint);
         }
     }
 

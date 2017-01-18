@@ -113,4 +113,9 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
             mAdapter.notifyDataSetChanged();
         }
     }
+
+    @Override
+    public void notifyItemChange(int position) {
+        mAdapter.notifyItemChanged(position);
+    }
 }

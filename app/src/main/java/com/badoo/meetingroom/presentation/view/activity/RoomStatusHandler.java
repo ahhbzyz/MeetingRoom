@@ -207,8 +207,6 @@ class RoomStatusHandler {
             case RoomEventModel.BUSY:
                 if (mCurrentEvent.isOnHold() && !mCurrentEvent.isConfirmed()) {
                     setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
-                } else {
-                    setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
                 }
                 break;
             default:

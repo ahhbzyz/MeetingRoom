@@ -6,8 +6,10 @@
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
+
         <item name="android:overScrollMode">never</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="MyCalendarTabLayout" parent="Widget.Design.TabLayout">

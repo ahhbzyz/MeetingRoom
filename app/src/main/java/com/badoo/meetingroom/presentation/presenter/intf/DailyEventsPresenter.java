@@ -1,6 +1,5 @@
 package com.badoo.meetingroom.presentation.presenter.intf;
 
-import android.view.View;
 
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 
@@ -13,8 +12,6 @@ public interface DailyEventsPresenter extends Presenter {
     void onSystemTimeUpdate();
 
     void setView(DailyEventsView dailyEventsView);
-
-    void onEventClicked(View view, int position);
 
     void getEvents();
 }

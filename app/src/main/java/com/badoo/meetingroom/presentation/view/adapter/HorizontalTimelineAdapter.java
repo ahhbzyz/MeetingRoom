@@ -90,16 +90,20 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
             = new TimelineBarDrawable(event.getEventExpiredColor(), event.getEventColor(), remainingProgress);
         barDrawable.setOrientation(TimelineBarDrawable.HORIZONTAL);
         holder.mTimelineBarImg.setBackground(barDrawable);
+
         if (!event.isExpired()) {
             holder.itemView.setOnClickListener(v -> mOnItemClickListener.onEventItemClicked(position));
+        } else {
+            holder.itemView.setOnClickListener(null);
         }
 
-        float leftTimelineBarWidth = viewWidth * (1 - remainingProgress);
+        float leftTimelineBarWidth = event.getDuration() * WIDTH_PER_MILLIS * (1 - remainingProgress);
 
         if (event.isProcessing()) {
             holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
             holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
             holder.mCurrentTimeLayout.measure(0, 0);
+
             holder.mCurrentTimeLayout.setX(leftTimelineBarWidth
                 - holder.mCurrentTimeLayout.getMeasuredWidth() / 2f
                 + mContext.getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width));

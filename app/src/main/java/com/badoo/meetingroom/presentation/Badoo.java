@@ -8,7 +8,7 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
  */
 
 public class Badoo {
-    private static final int START_TIME = 0;
+    private static final int START_TIME = 8;
     private static final int END_TIME = 20;
 
     private static RoomModel ROOM;
