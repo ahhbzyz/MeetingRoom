@@ -14,10 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.domain.entity.impl.RoomEventImpl;
-import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
-import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
+import com.badoo.meetingroom.domain.entity.impl.LocalEventImpl;
+import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.EventModelImpl;
 import com.badoo.meetingroom.presentation.view.component.drawable.BusyBgDrawable;
 import com.badoo.meetingroom.presentation.view.component.drawable.TimelineBarDrawable;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -40,7 +39,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     private static final float HEIGHT_PER_MILLIS = 38f / TimeHelper.min2Millis(MIN_SLOT_TIME);
 
     private final Context mContext;
-    private List<RoomEventModel> mRoomEventModelList;
+    private List<EventModel> mRoomEventModelList;
     private OnItemClickListener mOnItemClickListener;
     private int mPage = 0;
 
@@ -64,7 +63,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         TextView mCurrentTimeTv;
         @BindView(R.id.layout_dividers)
         RelativeLayout mDividersLayout;
-        @BindView()
+        @BindView(R.id.view_item_divider_fill)
+        View mItemDividerFillView;
 
         private ViewHolder(View view) {
             super(view);
@@ -78,11 +78,11 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         mRoomEventModelList = new ArrayList<>();
     }
 
-    public void setDailyEventList(List<RoomEventModel> roomEventModelList) {
+    public void setDailyEventList(List<EventModel> roomEventModelList) {
         if (roomEventModelList == null) {
             throw new IllegalArgumentException("Room event list cannot be null");
         }
-        mRoomEventModelList = processEventList(roomEventModelList);
+        mRoomEventModelList = roomEventModelList;
         notifyDataSetChanged();
     }
 
@@ -100,20 +100,22 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        if (position == 0) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, (int) (mContext.getResources().getDimension(R.dimen.daily_event_list_top_margin)));
-            holder.itemView.setLayoutParams(params);
-            holder.itemView.setVisibility(View.INVISIBLE);
-            return;
-        } else if (position == getItemCount() - 1) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, (int) (mContext.getResources().getDimension(R.dimen.daily_event_list_bottom_margin)));
-            holder.itemView.setLayoutParams(params);
-            holder.itemView.setVisibility(View.INVISIBLE);
-            return;
-        }
+//        if (position == 0) {
+//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, (int) (mContext.getResources().getDimension(R.dimen.daily_event_list_top_margin)));
+//            holder.itemView.setLayoutParams(params);
+//            holder.itemView.setVisibility(View.INVISIBLE);
+//            return;
+//        } else if (position == getItemCount() - 1) {
+//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, (int) (mContext.getResources().getDimension(R.dimen.daily_event_list_bottom_margin)));
+//            holder.itemView.setLayoutParams(params);
+//            holder.itemView.setVisibility(View.INVISIBLE);
+//            return;
+//        }
         holder.itemView.setVisibility(View.VISIBLE);
+
         // Current event
-        RoomEventModel event = mRoomEventModelList.get(position);
+        EventModel event = mRoomEventModelList.get(position);
+
 
         // Remaining progress of event
         float remainingProgress
@@ -125,7 +127,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         holder.itemView.setLayoutParams(params);
 
         // Add timestamps to item view
-        List<Long> timestamps = calcTimeStampsInItemView(event);
+        List<Long> timestamps = calcTimeStampsInItemView(event, position);
         addTimestampsToView(holder, timestamps, event);
 
         holder.mEventPeriodTv.measure(0, 0);
@@ -147,7 +149,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         holder.mEventInfoTv.setText("");
 
 
-
+        holder.mItemDividerFillView.setBackgroundColor(event.getEventColor());
 
 
         // Reset view
@@ -169,10 +171,13 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mTimelineBar.setBackgroundColor(event.getEventExpiredColor());
             holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
             holder.mEventContentLayout.setBackground(null);
+            holder.mItemDividerFillView.setBackgroundColor(event.getEventExpiredColor());
+
         }
 
         float topTimelineBarHeight = event.getDuration() * HEIGHT_PER_MILLIS * (1 - remainingProgress);
         float bottomTimelineBarHeight = event.getDuration() * HEIGHT_PER_MILLIS * remainingProgress;
+
 
         if (event.isProcessing()) {
             holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
@@ -188,6 +193,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
         // Event in processing
         if (event.isProcessing()) {
+
+            holder.mItemDividerFillView.setBackgroundColor(event.getEventExpiredColor());
 
             if (event.isAvailable()) {
                 if (bottomTimelineBarHeight < holder.mEventPeriodTv.getMeasuredHeight()) {
@@ -256,10 +263,10 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     }
 
     public interface OnItemClickListener {
-        void onEventItemClicked(View view, RoomEventModel roomEventModel);
+        void onEventItemClicked(View view, EventModel roomEventModel);
     }
 
-    private void addTimestampsToView(ViewHolder holder, List<Long> timestamps, RoomEventModel event) {
+    private void addTimestampsToView(ViewHolder holder, List<Long> timestamps, EventModel event) {
 
         holder.mTimestampLayout.removeAllViews();
 
@@ -297,7 +304,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         }
     }
 
-    private List<Long> calcTimeStampsInItemView(RoomEventModel event) {
+    private List<Long> calcTimeStampsInItemView(EventModel event, int position) {
 
         List<Long> result = new ArrayList<>();
 
@@ -310,56 +317,13 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             if (timestamp >= event.getStartTime() && timestamp < event.getEndTime()) {
                 result.add(timestamp);
             }
+            if (timestamp == event.getEndTime() && position == getItemCount() - 2) {
+                result.add(timestamp);
+            }
             if (timestamp > event.getEndTime()) {
                 break;
             }
         }
         return result;
-    }
-
-    private List<RoomEventModel> processEventList(List<RoomEventModel> roomEventModelList) {
-
-        List<RoomEventModel> processedList = new ArrayList<>();
-
-        RoomEventModel topMarginEvent = new RoomEventModelImpl();
-        processedList.add(topMarginEvent);
-
-        for (RoomEventModel roomEventModel : roomEventModelList) {
-            if (roomEventModel.isAvailable()) {
-
-                long startTime = roomEventModel.getStartTime();
-                long endTime = roomEventModel.getEndTime();
-
-                float hour = TimeHelper.getHour(roomEventModel.getStartTime());
-                while (true) {
-                    long timestamp = TimeHelper.getMidNightTimeOfDay(mPage) + TimeHelper.min2Millis((int) (hour * 60));
-                    hour += 0.5f;
-                    if (timestamp > startTime && timestamp < endTime) {
-                        processedList.add(generateAvailableEvent(startTime, timestamp));
-                        startTime = timestamp;
-                    }
-                    if (timestamp > endTime) {
-                        processedList.add(generateAvailableEvent(startTime, endTime));
-                        break;
-                    }
-                }
-            }
-            else {
-                processedList.add(roomEventModel);
-            }
-        }
-
-        RoomEventModel bottomMarginEvent = new RoomEventModelImpl();
-        processedList.add(bottomMarginEvent);
-
-        return processedList;
-    }
-
-    private RoomEventModel generateAvailableEvent(long startTime, long endTime) {
-        RoomEventModel roomEvent = new RoomEventModelImpl();
-        roomEvent.setStartTime(startTime);
-        roomEvent.setEndTime(endTime);
-        roomEvent.setStatus(RoomEventImpl.AVAILABLE);
-        return roomEvent;
     }
 }

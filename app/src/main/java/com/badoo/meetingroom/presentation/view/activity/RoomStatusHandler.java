@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.view.component.button.LongPressButton;
 import com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -28,7 +28,7 @@ class RoomStatusHandler {
     private final RoomStatusActivity activity;
     private boolean hasRequested;
     private CountDownTimer mCountDownTimer;
-    private RoomEventModel mCurrentEvent;
+    private EventModel mCurrentEvent;
 
     @Inject
     RoomStatusHandler(RoomStatusActivity activity) {
@@ -140,7 +140,7 @@ class RoomStatusHandler {
         endTimeTv.setText(eventEndTime);
     }
 
-    void updateCircleTimeViewStatus(RoomEventModel event) {
+    void updateCircleTimeViewStatus(EventModel event) {
         if (event == null) {
             return;
         }
@@ -164,7 +164,7 @@ class RoomStatusHandler {
 
         switch (event.getStatus()) {
 
-            case RoomEventModel.AVAILABLE:
+            case EventModel.AVAILABLE:
 
                 activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_add_black_24px));
 
@@ -177,7 +177,7 @@ class RoomStatusHandler {
                 }
 
                 break;
-            case RoomEventModel.BUSY:
+            case EventModel.BUSY:
 
                 activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_info_black_24px));
 
@@ -198,13 +198,13 @@ class RoomStatusHandler {
 
     void onCountDownTicking(long millisUntilFinished) {
         switch (mCurrentEvent.getStatus()) {
-            case RoomEventModel.AVAILABLE:
+            case EventModel.AVAILABLE:
                 long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTime());
                 if (hours < 2) {
                     setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
                 }
                 break;
-            case RoomEventModel.BUSY:
+            case EventModel.BUSY:
                 if (mCurrentEvent.isOnHold() && !mCurrentEvent.isConfirmed()) {
                     setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
                 }

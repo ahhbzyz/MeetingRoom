@@ -6,14 +6,14 @@ import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.data.repository.BadooPersonRepoImpl;
 import com.badoo.meetingroom.data.repository.CalendarListRepoImpl;
 import com.badoo.meetingroom.data.repository.GoogleAccountRepoImpl;
+import com.badoo.meetingroom.data.repository.LocalEventRepoImpl;
 import com.badoo.meetingroom.data.repository.RemoteImageRepoImpl;
-import com.badoo.meetingroom.data.repository.RoomEventRepoImpl;
 import com.badoo.meetingroom.di.AndroidApplication;
 import com.badoo.meetingroom.domain.repository.BadooPersonRepo;
 import com.badoo.meetingroom.domain.repository.CalendarListRepo;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
+import com.badoo.meetingroom.domain.repository.LocalEventRepo;
 import com.badoo.meetingroom.domain.repository.RemoteImageRepo;
-import com.badoo.meetingroom.domain.repository.RoomEventRepo;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -101,7 +101,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    RoomEventRepo provideRoomEventRepository(RoomEventRepoImpl roomEventDataRepository) {
+    LocalEventRepo provideRoomEventRepository(LocalEventRepoImpl roomEventDataRepository) {
         return roomEventDataRepository;
     }
 

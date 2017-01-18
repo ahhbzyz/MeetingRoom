@@ -5,16 +5,16 @@ import android.support.annotation.NonNull;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.di.PerActivity;
-import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
+import com.badoo.meetingroom.domain.entity.intf.LocalEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.event.DeleteEvent;
-import com.badoo.meetingroom.domain.interactor.event.GetEvents;
+import com.badoo.meetingroom.domain.interactor.event.GetRoomEvents;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.event.UpdateEvent;
 import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
-import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
+import com.badoo.meetingroom.presentation.mapper.RoomEventsMapper;
+import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.EventModelImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -41,26 +41,26 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     private RoomStatusView mRoomEventsView;
 
-    private final GetEvents mGetEventsUseCase;
+    private final GetRoomEvents mGetEventsUseCase;
     private final InsertEvent mInsertEventUseCase;
     private final DeleteEvent mDeleteEventUseCase;
     private final UpdateEvent mUpdateEventUseCase;
 
-    private final RoomEventModelMapper mMapper;
+    private final RoomEventsMapper mMapper;
 
-    private List<RoomEventModel> mEventList;
+    private List<EventModel> mEventList;
     private int mCurrentEventPos;
 
-    private RoomEventModel mCurrentEvent;
+    private EventModel mCurrentEvent;
     private HashSet<String> mConfirmedIds;
 
 
     @Inject
-    RoomStatusPresenterImpl(@Named(GetEvents.NAME) GetEvents getEventsUseCase,
+    RoomStatusPresenterImpl(@Named(GetRoomEvents.NAME) GetRoomEvents getEventsUseCase,
                             @Named(InsertEvent.NAME) InsertEvent insertEventUseCase,
                             @Named(DeleteEvent.NAME) DeleteEvent deleteEventUseCase,
                             @Named(UpdateEvent.NAME) UpdateEvent updateEventUseCase,
-                            RoomEventModelMapper mapper) {
+                            RoomEventsMapper mapper) {
         mGetEventsUseCase = getEventsUseCase;
         mInsertEventUseCase = insertEventUseCase;
         mDeleteEventUseCase = deleteEventUseCase;
@@ -106,7 +106,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void onEventClicked(int position) {
-        RoomEventModel event = mEventList.get(position);
+        EventModel event = mEventList.get(position);
         if (event.isAvailable()) {
             if (event.isProcessing()) {
                 mRoomEventsView.bookRoom(TimeHelper.getCurrentTimeInMillis(), event.getEndTime());
@@ -158,10 +158,10 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     private void showButtonsForEvent() {
         switch (mCurrentEvent.getStatus()) {
-            case RoomEventModelImpl.AVAILABLE:
+            case EventModelImpl.AVAILABLE:
                 mRoomEventsView.showButtonGroupForAvailableStatus();
                 break;
-            case RoomEventModelImpl.BUSY:
+            case EventModelImpl.BUSY:
                 if (mCurrentEvent.isOnHold()) {
                     mRoomEventsView.showButtonGroupForOnHoldStatus();
                 } else if (mCurrentEvent.isDoNotDisturb()) {
@@ -293,9 +293,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
-    private int getCurrentEventPosition(List<RoomEventModel> roomEventModelList) {
+    private int getCurrentEventPosition(List<EventModel> roomEventModelList) {
         int currentEventPos = 0;
-        for (RoomEventModel eventModel : roomEventModelList) {
+        for (EventModel eventModel : roomEventModelList) {
             if (eventModel.isExpired()) {
                 currentEventPos++;
             } else {
@@ -305,7 +305,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         return currentEventPos;
     }
 
-    private final class GetEventsSubscriber extends DefaultSubscriber<List<RoomEvent>> {
+    private final class GetEventsSubscriber extends DefaultSubscriber<List<EventModel>> {
 
         @Override
         public void onStart() {
@@ -314,10 +314,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
 
         @Override
-        public void onNext(List<RoomEvent> roomEvents) {
-            Collection<RoomEventModel> mEventModelList = mMapper.map(roomEvents);
+        public void onNext(List<EventModel> roomEvents) {
             mEventList.clear();
-            mEventList.addAll(mEventModelList);
+            mEventList.addAll(roomEvents);
             mCurrentEventPos = getCurrentEventPosition(mEventList);
             showCurrentEventOnCircleTimeView();
             showEventsOnHorizontalTimelineView();

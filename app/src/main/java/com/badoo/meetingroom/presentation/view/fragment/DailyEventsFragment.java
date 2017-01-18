@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
@@ -84,12 +84,12 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void renderDailyEvents(List<RoomEventModel> roomEventModelList) {
+    public void renderDailyEvents(List<EventModel> roomEventModelList) {
         mAdapter.setDailyEventList(roomEventModelList);
 
         int currentEventPosition = 0;
 
-        for (RoomEventModel roomEventModel : roomEventModelList) {
+        for (EventModel roomEventModel : roomEventModelList) {
             if (roomEventModel.isProcessing()) {
                 break;
             }
@@ -103,7 +103,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void onEventItemClicked(View view, RoomEventModel roomEventModel) {
+    public void onEventItemClicked(View view, EventModel roomEventModel) {
         Intent intent = new Intent(getActivity(), RoomBookingActivity.class);
         Bundle bundle = new Bundle();
         bundle.putLong("startTime", roomEventModel.getStartTime());

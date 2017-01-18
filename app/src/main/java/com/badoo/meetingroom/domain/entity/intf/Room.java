@@ -1,7 +1,5 @@
 package com.badoo.meetingroom.domain.entity.intf;
 
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
-
 /**
  * Created by zhangyaozhong on 16/01/2017.
  */

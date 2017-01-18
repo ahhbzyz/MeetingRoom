@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.presentation.view.view;
 
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.List;
@@ -11,21 +11,21 @@ import java.util.List;
 
 public interface RoomStatusView extends LoadDataView {
 
-    void renderRoomEvent(RoomEventModel nextEvent);
+    void renderRoomEvent(EventModel nextEvent);
 
-    void renderRoomEventList(List<RoomEventModel> roomEvents);
+    void renderRoomEventList(List<EventModel> roomEvents);
 
-    void updateCircleTimeViewStatus(RoomEventModel currentEvent);
+    void updateCircleTimeViewStatus(EventModel currentEvent);
 
     void updateHorizontalTimeline(int numOfExpiredEvents);
 
     void updateRecyclerView();
 
-    void startCircleViewAnimator(RoomEventModel currentEvent);
+    void startCircleViewAnimator(EventModel currentEvent);
 
     void bookRoom(long startTime, long endTime);
 
-    void showEventOrganizerDialog(RoomEventModel mCurrentEvent);
+    void showEventOrganizerDialog(EventModel mCurrentEvent);
 
     void showButtonGroupForAvailableStatus();
 

@@ -15,7 +15,7 @@ public class RoomModelImpl implements RoomModel {
     private boolean isVideoConferenceSupported;
     private boolean isBeverageAllowed;
     private boolean isStationerySupported;
-    private RoomEventModel currentEvent;
+    private EventModel currentEvent;
 
     public RoomModelImpl() {
 
@@ -31,11 +31,11 @@ public class RoomModelImpl implements RoomModel {
         this.id = id;
     }
 
-    public RoomEventModel getCurrentEvent() {
+    public EventModel getCurrentEvent() {
         return currentEvent;
     }
 
-    public void setCurrentEvent(RoomEventModel currentEvent) {
+    public void setCurrentEvent(EventModel currentEvent) {
         this.currentEvent = currentEvent;
     }
 

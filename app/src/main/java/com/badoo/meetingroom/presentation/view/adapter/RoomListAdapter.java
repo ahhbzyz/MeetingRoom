@@ -10,7 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.model.RoomModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
@@ -68,7 +68,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         holder.mRoomNameTv.setText(roomModel.getName());
         if (roomModel.getCurrentEvent() != null) {
 
-            RoomEventModel currentEvent = roomModel.getCurrentEvent();
+            EventModel currentEvent = roomModel.getCurrentEvent();
             long remainingHours = TimeUnit.MILLISECONDS.toHours(currentEvent.getRemainingTime());
             if (remainingHours >= 2) {
                 holder.mRemainingTimeTv.setText(mContext.getString(R.string.two_hour_plus));

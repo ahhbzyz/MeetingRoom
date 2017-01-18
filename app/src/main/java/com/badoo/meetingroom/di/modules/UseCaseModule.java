@@ -3,7 +3,8 @@ package com.badoo.meetingroom.di.modules;
 import com.badoo.meetingroom.domain.interactor.event.DeleteEvent;
 import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.domain.interactor.GetCalendarList;
-import com.badoo.meetingroom.domain.interactor.event.GetEvents;
+import com.badoo.meetingroom.domain.interactor.event.GetCalendarEvents;
+import com.badoo.meetingroom.domain.interactor.event.GetRoomEvents;
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.GetPerson;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
@@ -38,8 +39,14 @@ public class UseCaseModule {
     }
 
     @Provides
-    @Named(GetEvents.NAME)
-    GetEvents provideGetRoomEventListUseCase(GetEvents getEvents) {
+    @Named(GetRoomEvents.NAME)
+    GetRoomEvents provideGetRoomEventListUseCase(GetRoomEvents getEvents) {
+        return getEvents;
+    }
+
+    @Provides
+    @Named(GetCalendarEvents.NAME)
+    GetCalendarEvents provideGetCalendarEventListUseCase(GetCalendarEvents getEvents) {
         return getEvents;
     }
 

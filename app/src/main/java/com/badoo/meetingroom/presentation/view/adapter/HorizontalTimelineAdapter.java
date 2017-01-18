@@ -11,9 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.view.component.drawable.TimelineBarDrawable;
-import com.badoo.meetingroom.presentation.view.fragment.DailyEventsFragment;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;
@@ -31,7 +30,7 @@ import butterknife.ButterKnife;
 public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTimelineAdapter.ViewHolder>{
     private static final int MIN_SLOT_TIME = 5;
     private static float WIDTH_PER_MILLIS = (70 + 10) / (float)TimeHelper.min2Millis(MIN_SLOT_TIME);
-    private List<RoomEventModel> mEvents;
+    private List<EventModel> mEvents;
     private float mDividerWidth;
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
@@ -56,7 +55,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         mDividerWidth = context.getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width);
     }
 
-    public void setEventList(List<RoomEventModel> roomEventModelList) {
+    public void setEventList(List<EventModel> roomEventModelList) {
         if (roomEventModelList == null) {
             throw new IllegalArgumentException("Room event list cannot be null");
         }
@@ -73,7 +72,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        RoomEventModel event = mEvents.get(position);
+        EventModel event = mEvents.get(position);
         float remainingProgress = event.getRemainingTime() / (float)event.getDuration();
         float viewWidth = event.getDuration() * WIDTH_PER_MILLIS + mDividerWidth;
         RelativeLayout.LayoutParams params = new

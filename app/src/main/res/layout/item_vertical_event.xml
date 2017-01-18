@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:background="@android:color/black"
             android:id="@+id/view_current_time_mark"
-            android:layout_height="@dimen/events_calendar_current_time_mark_height" />
+            android:layout_height="1.5dp" />
     </LinearLayout>
 
 </RelativeLayout>

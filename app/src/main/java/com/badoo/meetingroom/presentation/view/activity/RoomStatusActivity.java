@@ -19,9 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
-import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.fragment.EventCreatorDialogFragment;
 import com.badoo.meetingroom.presentation.view.fragment.ImmersiveProgressDialogFragment;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalTimelineAdapter;
@@ -227,13 +226,13 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     }
 
     @Override
-    public void renderRoomEvent(RoomEventModel currentEvent) {
+    public void renderRoomEvent(EventModel currentEvent) {
         updateCircleTimeViewStatus(currentEvent);
         startCircleViewAnimator(currentEvent);
     }
 
     @Override
-    public void startCircleViewAnimator(RoomEventModel currentEvent) {
+    public void startCircleViewAnimator(EventModel currentEvent) {
         if (currentEvent == null) {
             return;
         }
@@ -245,12 +244,12 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     }
 
     @Override
-    public void renderRoomEventList(List<RoomEventModel> roomEventModelList) {
+    public void renderRoomEventList(List<EventModel> roomEventModelList) {
         mAdapter.setEventList(roomEventModelList);
     }
 
     @Override
-    public void updateCircleTimeViewStatus(RoomEventModel currentEvent) {
+    public void updateCircleTimeViewStatus(EventModel currentEvent) {
         mRoomStatusHandler.updateCircleTimeViewStatus(currentEvent);
     }
 
@@ -282,7 +281,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     }
 
     @Override
-    public void showEventOrganizerDialog(RoomEventModel event) {
+    public void showEventOrganizerDialog(EventModel event) {
         if (mEventOrganizerDialog != null) {
             mEventOrganizerDialog.setEvent(event);
             mEventOrganizerDialog.show(this);

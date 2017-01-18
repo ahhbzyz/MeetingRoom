@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.OverScroller;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.LinkedList;
@@ -109,8 +109,8 @@ public class HorizontalTimelineView extends View {
     /**
      * Time slot list
      */
-    private LinkedList<RoomEventModel> mEvents;
-    private ListIterator<RoomEventModel> mListIterator;
+    private LinkedList<EventModel> mEvents;
+    private ListIterator<EventModel> mListIterator;
 
     /**
      * Interval slot
@@ -264,7 +264,7 @@ public class HorizontalTimelineView extends View {
         canvas.drawLine(mTimelineMarkCx, timeTextHeight + mTimelineOffset, mTimelineMarkCx, canvas.getHeight(), mTimelineMarkPaint);
     }
 
-    private void drawSlot(Canvas canvas, RoomEventModel event) {
+    private void drawSlot(Canvas canvas, EventModel event) {
 
 
 
@@ -353,12 +353,12 @@ public class HorizontalTimelineView extends View {
         return mCurrTimeTextWidth;
     }
 
-    public void setEventList(LinkedList<RoomEventModel> mEvents) {
+    public void setEventList(LinkedList<EventModel> mEvents) {
         this.mEvents = mEvents;
         invalidate();
     }
 
-    public LinkedList<RoomEventModel> getEventList() {
+    public LinkedList<EventModel> getEventList() {
         return this.mEvents;
     }
 

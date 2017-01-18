@@ -1,17 +1,10 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
-import android.view.View;
-
-import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
-import com.badoo.meetingroom.domain.entity.impl.RoomEventImpl;
-import com.badoo.meetingroom.domain.entity.intf.RoomEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
-import com.badoo.meetingroom.domain.interactor.event.GetEvents;
+import com.badoo.meetingroom.domain.interactor.event.GetCalendarEvents;
 import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.mapper.RoomEventModelMapper;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
-import com.badoo.meetingroom.presentation.model.RoomEventModelImpl;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -35,20 +28,17 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
 
     private DailyEventsView mDailyEventsView;
-    private final GetEvents mGetEventsUseCase;
-    private final RoomEventModelMapper mMapper;
-    private List<RoomEventModel> mEventList;
+    private final GetCalendarEvents mGetCalendarEventsUseCase;
+    private List<EventModel> mEventList;
     private int mPage = 0;
 
     @Inject
-    DailyEventsPresenterImpl(@Named(GetEvents.NAME)GetEvents getEventsUseCase,
-                                    RoomEventModelMapper mapper) {
-        mGetEventsUseCase = getEventsUseCase;
-        mMapper = mapper;
+    DailyEventsPresenterImpl(@Named(GetCalendarEvents.NAME)GetCalendarEvents getCalendarEventsUseCase) {
+        mGetCalendarEventsUseCase = getCalendarEventsUseCase;
         mEventList = new ArrayList<>();
     }
 
-    private void showDailyEventsInView(List<RoomEventModel> roomEventModelList) {
+    private void showDailyEventsInView(List<EventModel> roomEventModelList) {
         mDailyEventsView.renderDailyEvents(roomEventModelList);
 
     }
@@ -80,15 +70,12 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
             .setTimeZone("Europe/London");
         event.setEnd(end);
 
-        mMapper.setEventStartTime(Badoo.getStartTimeOfDay(mPage));
-        mMapper.setEventEndTime(Badoo.getEndTimeOfDay(mPage));
-
         CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
         params.setEventParams(event);
-        mGetEventsUseCase.init(params).execute(new GetEventsSubscriber());
+        mGetCalendarEventsUseCase.init(params, mPage).execute(new GetEventsSubscriber());
     }
 
-    private final class GetEventsSubscriber extends DefaultSubscriber<List<RoomEvent>> {
+    private final class GetEventsSubscriber extends DefaultSubscriber<List<EventModel>> {
 
         @Override
         public void onStart() {
@@ -97,8 +84,8 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
         }
 
         @Override
-        public void onNext(List<RoomEvent> roomEvents) {
-            mEventList = mMapper.map(roomEvents);
+        public void onNext(List<EventModel> roomEvents) {
+            mEventList = roomEvents;
             showDailyEventsInView(mEventList);
         }
 
@@ -138,6 +125,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     @Override
     public void destroy() {
-        mGetEventsUseCase.unSubscribe();
+        mGetCalendarEventsUseCase.unSubscribe();
     }
 }

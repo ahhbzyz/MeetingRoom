@@ -1,10 +1,8 @@
 package com.badoo.meetingroom.presentation.mapper;
 
-import com.badoo.meetingroom.domain.entity.impl.RoomImpl;
 import com.badoo.meetingroom.domain.entity.intf.Room;
 import com.badoo.meetingroom.presentation.model.RoomModel;
 import com.badoo.meetingroom.presentation.model.RoomModelImpl;
-import com.google.api.services.calendar.model.CalendarListEntry;
 
 import java.util.ArrayList;
 import java.util.List;

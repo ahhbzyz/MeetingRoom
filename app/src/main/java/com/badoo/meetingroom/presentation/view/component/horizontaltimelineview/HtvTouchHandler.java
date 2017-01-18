@@ -7,10 +7,9 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.OverScroller;
 
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by zhangyaozhong on 12/12/2016.
@@ -24,7 +23,7 @@ public class HtvTouchHandler implements GestureDetector.OnGestureListener {
     private boolean scrolled;
     private float touchX;
     private float touchY;
-    private RoomEventModel mSelectedEvent;
+    private EventModel mSelectedEvent;
 
     public HtvTouchHandler(HorizontalTimelineView view){
         this.view = view;
@@ -39,9 +38,9 @@ public class HtvTouchHandler implements GestureDetector.OnGestureListener {
                 touchX = event.getX();
                 touchY = event.getY();
 
-                LinkedList<RoomEventModel> mEvents = view.getEventList();
+                LinkedList<EventModel> mEvents = view.getEventList();
                 float startX = view.getMovedTimelineMarkCx();
-                for (RoomEventModel e : mEvents) {
+                for (EventModel e : mEvents) {
                     RectF slotBounds = new RectF();
                     slotBounds.set(startX, view.getTimelineCy() - view.getTimeLineStrokeWidth(), startX += e.getRemainingTime() * view.getWidthTimeRatio(), view.getTimelineCy() + view.getTimeLineStrokeWidth());
                     if (slotBounds.contains(touchX, touchY)) {

@@ -18,7 +18,7 @@ public abstract class UseCase<T> {
     protected abstract Observable<T> buildUseCaseObservable();
 
     public void execute(Subscriber<T> useCaseSubscriber) {
-        this.mSubscription = this.buildUseCaseObservable()
+        mSubscription = this.buildUseCaseObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);

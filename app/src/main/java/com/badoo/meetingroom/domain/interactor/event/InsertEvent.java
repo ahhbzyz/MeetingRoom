@@ -2,7 +2,7 @@ package com.badoo.meetingroom.domain.interactor.event;
 
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.UseCase;
-import com.badoo.meetingroom.domain.repository.RoomEventRepo;
+import com.badoo.meetingroom.domain.repository.LocalEventRepo;
 import com.google.api.services.calendar.model.Event;
 
 import javax.inject.Inject;
@@ -17,11 +17,11 @@ public class InsertEvent extends UseCase<Event> {
 
     public static final String NAME = "insertEvent";
 
-    private final RoomEventRepo mRoomEventRepository;
+    private final LocalEventRepo mRoomEventRepository;
     private CalendarApiParams mParams;
 
     @Inject
-    InsertEvent(RoomEventRepo mRoomEventRepository) {
+    InsertEvent(LocalEventRepo mRoomEventRepository) {
         this.mRoomEventRepository = mRoomEventRepository;
     }
 

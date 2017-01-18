@@ -18,7 +18,9 @@
         android:id="@+id/rv_daily_events"
         android:scrollbars="none"
         android:clipChildren="false"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/daily_event_list_top_margin"
+        android:paddingBottom="@dimen/daily_event_list_bottom_margin" />
 </RelativeLayout>

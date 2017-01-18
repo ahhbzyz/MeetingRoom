@@ -9,9 +9,9 @@ public interface RoomModel {
 
     void setId(String id);
 
-    RoomEventModel getCurrentEvent();
+    EventModel getCurrentEvent();
 
-    void setCurrentEvent(RoomEventModel currentEvent);
+    void setCurrentEvent(EventModel currentEvent);
 
     String getName();
 

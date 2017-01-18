@@ -22,16 +22,14 @@ import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
 import com.badoo.meetingroom.presentation.model.BadooPersonModel;
-import com.badoo.meetingroom.presentation.model.RoomEventModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
-import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -48,7 +46,7 @@ import butterknife.ButterKnife;
 public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
 
     private RoomStatusView mRoomStatusView;
-    private RoomEventModel mEvent;
+    private EventModel mEvent;
 
 
     @BindView(R.id.img_avatar) ImageView mAvatarImg;
@@ -107,7 +105,7 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
         return view;
     }
 
-    public void setEvent(RoomEventModel event) {
+    public void setEvent(EventModel event) {
         if (event != null) {
             mEvent = event;
         }
