@@ -234,7 +234,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     @Override
     public void insertEvent(int bookingPeriod) {
         long startTime = TimeHelper.getCurrentTimeInMillis();
-        long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.sec2Millis(bookingPeriod);
+        long endTime = TimeHelper.getCurrentTimeInMillis() + TimeHelper.min2Millis(bookingPeriod);
 
         if (mCurrentEvent.isAvailable() && endTime <= mCurrentEvent.getEndTime()) {
             Event event = new Event();

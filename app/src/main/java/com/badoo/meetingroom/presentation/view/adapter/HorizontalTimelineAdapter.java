@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,13 +33,15 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     private static float WIDTH_PER_MILLIS = (70 + 10) / (float)TimeHelper.min2Millis(MIN_SLOT_TIME);
     private List<RoomEventModel> mEvents;
     private float mDividerWidth;
+    private Context mContext;
     private OnItemClickListener mOnItemClickListener;
-    private OnCurrentEventItemViewUpdateListener mOnCurrentEventItemViewUpdateListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_start_time) TextView mStartTimeTv;
         @BindView(R.id.img_timeline_bar) ImageView mTimelineBarImg;
+        @BindView(R.id.layout_current_time) LinearLayout mCurrentTimeLayout;
+        @BindView(R.id.tv_current_time) TextView mCurrentTimeTv;
 
         ViewHolder(View view) {
             super(view);
@@ -48,6 +51,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
 
     @Inject
     HorizontalTimelineAdapter(Context context) {
+        mContext = context;
         mEvents = new ArrayList<>();
         mDividerWidth = context.getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width);
     }
@@ -70,7 +74,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         RoomEventModel event = mEvents.get(position);
-        float restProgress = event.getRemainingTime() / (float)event.getDuration();
+        float remainingProgress = event.getRemainingTime() / (float)event.getDuration();
         float viewWidth = event.getDuration() * WIDTH_PER_MILLIS + mDividerWidth;
         RelativeLayout.LayoutParams params = new
             RelativeLayout.LayoutParams(Math.round(viewWidth), RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -83,14 +87,24 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
             holder.mStartTimeTv.setVisibility(View.INVISIBLE);
         }
         TimelineBarDrawable barDrawable
-            = new TimelineBarDrawable(event.getEventExpiredColor(), event.getEventColor(), restProgress);
+            = new TimelineBarDrawable(event.getEventExpiredColor(), event.getEventColor(), remainingProgress);
         barDrawable.setOrientation(TimelineBarDrawable.HORIZONTAL);
         holder.mTimelineBarImg.setBackground(barDrawable);
         if (!event.isExpired()) {
             holder.itemView.setOnClickListener(v -> mOnItemClickListener.onEventItemClicked(position));
         }
+
+        float leftTimelineBarWidth = viewWidth * (1 - remainingProgress);
+
         if (event.isProcessing()) {
-            mOnCurrentEventItemViewUpdateListener.onCurrentEventItemViewUpdate();
+            holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
+            holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
+            holder.mCurrentTimeLayout.measure(0, 0);
+            holder.mCurrentTimeLayout.setX(leftTimelineBarWidth
+                - holder.mCurrentTimeLayout.getMeasuredWidth() / 2f
+                + mContext.getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width));
+        } else {
+            holder.mCurrentTimeLayout.setVisibility(View.GONE);
         }
     }
 
@@ -109,13 +123,5 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
 
     public interface OnItemClickListener {
         void onEventItemClicked(int position);
-    }
-
-    public interface OnCurrentEventItemViewUpdateListener {
-        void onCurrentEventItemViewUpdate();
-    }
-
-    public void setOnCurrentEventItemViewUpdateListener (OnCurrentEventItemViewUpdateListener onCurrentEventItemViewUpdateListener) {
-        mOnCurrentEventItemViewUpdateListener = onCurrentEventItemViewUpdateListener;
     }
 }

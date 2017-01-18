@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.RoomEventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
+import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.fragment.EventCreatorDialogFragment;
 import com.badoo.meetingroom.presentation.view.fragment.ImmersiveProgressDialogFragment;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalTimelineAdapter;
@@ -46,8 +47,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
                                                                 View.OnClickListener,
                                                                 CircleView.OnCountDownListener,
-                                                                HorizontalTimelineAdapter.OnItemClickListener,
-                                                                HorizontalTimelineAdapter.OnCurrentEventItemViewUpdateListener {
+                                                                HorizontalTimelineAdapter.OnItemClickListener {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
@@ -87,8 +87,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
 
     // Horizontal timeline view
     @BindView(R.id.rv_horizontal_timeline) RecyclerView mHorizontalTimelineRv;
-    @BindView(R.id.tv_current_time) TextView mCurrentTimeTv;
-    @BindView(R.id.layout_current_time) View mCurrentTimeLayout;
 
     // Button group
     @BindView(R.id.tv_fast_book) TextView mFastBookTv;
@@ -102,6 +100,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     private ImmersiveProgressDialogFragment mProgressDialog;
     private EventCreatorDialogFragment mEventOrganizerDialog;
     private Handler mLoadingDataDialogHandler;
+    private LinearLayoutManager mLayoutManager;
 
     final long SCROLL_BACK_WAIT_TIME = 3000;
     final long SHOW_LOADING_DIALOG_WAIT_TIME = 1000;
@@ -133,8 +132,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
         mRoomNameTv.setTypeface(mStolzlMediumTypeface);
         mFastBookTv.setTypeface(mStolzlRegularTypeface);
         mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(this));
-        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-        mCurrentTimeTv.setTypeface(mStolzlRegularTypeface);
         mCalendarImg.setOnClickListener(this);
         mRoomImg.setOnClickListener(this);
 
@@ -169,16 +166,14 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
 
     private void setUpHorizontalTimelineView() {
         mAdapter.setOnItemClickListener(this);
-        mAdapter.setOnCurrentEventItemViewUpdateListener(this);
         mHorizontalTimelineRv.setAdapter(mAdapter);
-        mHorizontalTimelineRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mHorizontalTimelineRv.setLayoutManager(mLayoutManager);
         Handler scrollBackHandler = new Handler();
         mHorizontalTimelineRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                float startX = mCurrentTimeLayout.getX();
-                mCurrentTimeLayout.setX((int) (startX - dx));
                 scrollBackHandler.removeCallbacksAndMessages(null);
             }
 
@@ -195,11 +190,11 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
             }
         });
 
-        // Adjust current time text
-        mCurrentTimeTv.measure(0, 0);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mCurrentTimeTv.getLayoutParams();
-        params.setMargins((int) (-mCurrentTimeTv.getMeasuredWidth() / 2f), params.topMargin, params.rightMargin, params.bottomMargin);
-        mCurrentTimeTv.setLayoutParams(params);
+//        // Adjust current time text
+//        mCurrentTimeTv.measure(0, 0);
+//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mCurrentTimeTv.getLayoutParams();
+//        params.setMargins((int) (-mCurrentTimeTv.getMeasuredWidth() / 2f), params.topMargin, params.rightMargin, params.bottomMargin);
+//        mCurrentTimeTv.setLayoutParams(params);
     }
 
     @Override
@@ -260,14 +255,13 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     }
 
     @Override
-    public void updateHorizontalTimeline(int numOfExpiredEvents) {
-        float leftMargin = (TimeHelper.getCurrentTimeSinceMidNight()) * mAdapter.getWidthPerMillis()
-            + (numOfExpiredEvents + 1) * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width)
-            - getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
+    public void updateHorizontalTimeline(int currentEventPosition) {
+        float leftMargin = -(TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis())
+            - currentEventPosition * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width)
+            + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
-        params.setMargins((int) -leftMargin, params.topMargin, params.rightMargin, params.bottomMargin);
+        params.setMargins((int)leftMargin, params.topMargin, params.rightMargin, params.bottomMargin);
         mHorizontalTimelineRv.setLayoutParams(params);
-        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
     }
 
     @Override
@@ -411,13 +405,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
 
     @Override
     protected void onSystemTimeRefresh() {
-        mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
         mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomStatusActivity.this));
         mPresenter.onSystemTimeRefresh();
-    }
-
-    @Override
-    public void onCurrentEventItemViewUpdate() {
-        mPresenter.updateHorizontalTimeline();
     }
 }

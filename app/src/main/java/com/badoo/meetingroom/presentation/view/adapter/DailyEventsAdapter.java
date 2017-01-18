@@ -47,7 +47,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     private OnItemClickListener mOnItemClickListener;
     private SparseIntArray mBottomTimelineBarHeights;
     private int mPage = 0;
-    private OnCurrentEventItemViewUpdateListener mOnCurrentEventItemViewUpdateListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -78,14 +77,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             throw new IllegalArgumentException("Room event list cannot be null");
         }
         this.mRoomEventModelList = roomEventModelList;
-        if (!mRoomEventModelList.isEmpty()) {
-            RoomEventModel fakeEvent = new RoomEventModelImpl();
-            fakeEvent.setStatus(RoomEventModel.AVAILABLE);
-            fakeEvent.setStartTime(mRoomEventModelList.get(mRoomEventModelList.size() - 1).getEndTime());
-            fakeEvent.setEndTime(fakeEvent.getStartTime() + TimeHelper.min2Millis(10));
-            mRoomEventModelList.add(fakeEvent);
-        }
-        this.notifyDataSetChanged();
+
+        notifyDataSetChanged();
     }
 
     public void setPage(int page) {
@@ -118,15 +111,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         holder.mTimestampLayout.removeAllViews();
         List<Long> timestamps = calcTimeStampsInItemView(event);
         addTimestampsToView(holder, position, timestamps, event, viewHeight, remainingProgress);
-
-
-        if (position == getItemCount() - 1) {
-            holder.mEventPeriodTv.setText("");
-            holder.mEventInfoTv.setText("");
-            holder.mTimelineBar.setBackground(null);
-            holder.mEventContentLayout.setBackground(null);
-            return;
-        }
 
         holder.mEventPeriodTv.measure(0, 0);
         holder.mEventInfoTv.measure(0, 0);
@@ -165,20 +149,22 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mEventContentLayout.setBackground(null);
         }
 
-        int topTimelineBarHeight = (int) (viewHeight * (1 - remainingProgress));
+        float topTimelineBarHeight = viewHeight * (1 - remainingProgress);
 
         if (event.isProcessing()) {
             holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
             holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
             holder.mCurrentTimeLayout.measure(0, 0);
-            holder.mCurrentTimeLayout.setY(topTimelineBarHeight - holder.mCurrentTimeLayout.getMeasuredHeight() / 2f);
+            holder.mCurrentTimeLayout.setY(topTimelineBarHeight
+                                           - holder.mCurrentTimeLayout.getMeasuredHeight() / 2f
+                                           + mContext.getResources().getDimension(R.dimen.daily_events_divider_height));
         } else {
             holder.mCurrentTimeLayout.setVisibility(View.GONE);
         }
 
         // Event in processing
         if (event.isProcessing()) {
-            mOnCurrentEventItemViewUpdateListener.onCurrentEventItemViewUpdate();
+
             if (event.isBusy()) {
                 TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getBusyColor(), remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
@@ -198,7 +184,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                     holder.mEventInfoTv.setVisibility(View.INVISIBLE);
                 }
 
-                offsetParams.setMargins(0, topTimelineBarHeight, 0, 0);
+                offsetParams.setMargins(0, (int) topTimelineBarHeight, 0, 0);
                 holder.mEventPeriodTv.setLayoutParams(offsetParams);
 
                 TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getAvailableColor(), remainingProgress);
@@ -207,8 +193,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 holder.mEventInfoTv.setText(mContext.getString(R.string.available));
                 holder.mEventInfoTv.setTextColor(event.getAvailableColor());
                 holder.mEventPeriodTv.setText(TimeHelper.getCurrentTimeInMillisInText() + " - " + event.getEndTimeInText());
-                BusyBgDrawable bg = new BusyBgDrawable(Color.TRANSPARENT, Color.TRANSPARENT, remainingProgress
-                );
+                BusyBgDrawable bg = new BusyBgDrawable(Color.TRANSPARENT, Color.TRANSPARENT, remainingProgress);
                 holder.mEventContentLayout.setBackground(bg);
             }
         }
@@ -231,10 +216,10 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         }
 
         if (event.isAvailable() && !event.isExpired()) {
-            int finalPosition = position;
+
             holder.mClickableLayout.setOnClickListener(v -> {
                 if (this.mOnItemClickListener != null) {
-                    this.mOnItemClickListener.onEventItemClicked(holder.itemView, finalPosition);
+                    this.mOnItemClickListener.onEventItemClicked(holder.itemView, position);
                 }
             });
         } else {
@@ -247,24 +232,12 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         return mRoomEventModelList.size();
     }
 
-    public float getHeightPerMillis() {
-        return HEIGHT_PER_MILLIS;
-    }
-
     public void setOnItemClickListener (OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
     }
 
     public interface OnItemClickListener {
         void onEventItemClicked(View view, int position);
-    }
-
-    public void setOnCurrentEventItemViewUpdateListener(OnCurrentEventItemViewUpdateListener listener) {
-        mOnCurrentEventItemViewUpdateListener = listener;
-    }
-
-    public interface OnCurrentEventItemViewUpdateListener {
-        void onCurrentEventItemViewUpdate();
     }
 
     private void addTimestampsToView(ViewHolder holder, int position, List<Long> timestamps, RoomEventModel event, float viewHeight, float remainingProgress) {
@@ -309,7 +282,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mTimestampLayout.addView(timestampTv);
         }
     }
-
 
     private List<Long> calcTimeStampsInItemView(RoomEventModel event){
 
