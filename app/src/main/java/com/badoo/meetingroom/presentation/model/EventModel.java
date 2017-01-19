@@ -1,9 +1,13 @@
 package com.badoo.meetingroom.presentation.model;
 
+import android.os.Parcelable;
+
+import java.util.List;
+
 /**
  * Created by zhangyaozhong on 04/01/2017.
  */
-public interface EventModel {
+public interface EventModel extends Parcelable {
 
     int AVAILABLE = 0;
     int BUSY = 1;
@@ -77,4 +81,8 @@ public interface EventModel {
     String getStartTimeInText();
 
     String getEndTimeInText();
+
+    void setTimeStamps(List<Long> timeStamps);
+
+    List<Long> getTimeStamps();
 }

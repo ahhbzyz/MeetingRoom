@@ -14,7 +14,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/layout_timestamp"
+            android:id="@+id/layout_timestamps"
             android:clipToPadding="false"
             android:paddingEnd="@dimen/item_vertical_event_start_margin">
 
@@ -23,7 +23,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/layout_dividers">
+            android:id="@+id/layout_no_timestamps">
 
             <View
                 android:layout_width="@dimen/item_vertical_event_timeline_bar_width"
@@ -63,12 +63,12 @@
                     android:paddingEnd="0dp">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_event_period" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_event_info" />
 

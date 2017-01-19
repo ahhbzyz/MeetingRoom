@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1006591582112",
+    "firebase_url": "https://meetingroombookingsystem-f61d1.firebaseio.com",
+    "project_id": "meetingroombookingsystem-f61d1",
+    "storage_bucket": "meetingroombookingsystem-f61d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006591582112:android:d668aae4e4b9738b",
+        "android_client_info": {
+          "package_name": "com.badoo.meetingroom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1006591582112-jur419jlb5ttl178tnaj0f8e3b736jrj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5EFMbQsHTDLvf1t8F7syDFioBVyS1IG8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by zhangyaozhong on 18/01/2017.
@@ -82,6 +81,7 @@ public class CalendarEventsMapper {
                         roomEventModelList.addAll(generateAvailableEvents(lastEventEndTime, startTime));
                     }
 
+                    addTimeStampsBetweenPeriod(roomEventModel);
                     roomEventModelList.add(roomEventModel);
                     lastEventEndTime = endTime;
                 }
@@ -89,8 +89,12 @@ public class CalendarEventsMapper {
 
             if (lastEventEndTime < mEventEndTime) {
                 roomEventModelList.addAll(generateAvailableEvents(lastEventEndTime, mEventEndTime));
+                roomEventModelList.get(roomEventModelList.size() - 1).getTimeStamps().add(mEventEndTime);
+            } else {
+                roomEventModelList.get(roomEventModelList.size() - 1).getTimeStamps().add(lastEventEndTime);
             }
         }
+
 
         return roomEventModelList;
     }
@@ -100,14 +104,12 @@ public class CalendarEventsMapper {
 
         List<EventModel> eventList = new ArrayList<>();
 
-        EventModel topMarginEvent = new EventModelImpl();
-        eventList.add(topMarginEvent);
+        long timestamp =  TimeHelper.dropMinutes(startTime);
 
-
-        float hour = TimeHelper.getHour(startTime);
         while (true) {
-            long timestamp = mEventStartTime + TimeHelper.min2Millis((int) (hour * 60));
-            hour += 0.5f;
+
+            timestamp += TimeHelper.min2Millis(15);
+
             if (timestamp > startTime && timestamp < endTime) {
                 eventList.add(generateAvailableEvent(startTime, timestamp));
                 startTime = timestamp;
@@ -118,10 +120,29 @@ public class CalendarEventsMapper {
             }
         }
 
-        EventModel bottomMarginEvent = new EventModelImpl();
-        eventList.add(bottomMarginEvent);
-
         return eventList;
+    }
+
+    private void addTimeStampsBetweenPeriod(EventModel eventModel) {
+
+        List<Long> result = new ArrayList<>();
+
+        long timestamp = TimeHelper.dropMinutes(eventModel.getStartTime());
+
+        while (true) {
+
+            if (timestamp >= eventModel.getStartTime() && timestamp < eventModel.getEndTime()) {
+                result.add(timestamp);
+            }
+            if (timestamp > eventModel.getEndTime()) {
+                break;
+            }
+
+
+            timestamp += TimeHelper.min2Millis(15);
+        }
+
+        eventModel.setTimeStamps(result);
     }
 
     private EventModel generateAvailableEvent(long startTime, long endTime) {
@@ -129,6 +150,7 @@ public class CalendarEventsMapper {
         roomEvent.setStartTime(startTime);
         roomEvent.setEndTime(endTime);
         roomEvent.setStatus(LocalEventImpl.AVAILABLE);
+        addTimeStampsBetweenPeriod(roomEvent);
         return roomEvent;
     }
 
@@ -136,13 +158,13 @@ public class CalendarEventsMapper {
         if (eventStartTime < TimeHelper.getMidNightTimeOfDay(0)) {
             throw new IllegalArgumentException("Event start time cannot less than today");
         }
-        this.mEventStartTime = eventStartTime;
+        mEventStartTime = eventStartTime;
     }
 
     public void setEventEndTime(long eventEndTime) {
         if (eventEndTime < TimeHelper.getMidNightTimeOfDay(0)) {
             throw new IllegalArgumentException("Event end time cannot less than today");
         }
-        this.mEventEndTime = eventEndTime;
+        mEventEndTime = eventEndTime;
     }
 }

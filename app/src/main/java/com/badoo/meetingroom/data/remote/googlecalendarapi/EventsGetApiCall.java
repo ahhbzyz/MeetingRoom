@@ -1,10 +1,14 @@
 package com.badoo.meetingroom.data.remote.googlecalendarapi;
 
+import com.badoo.meetingroom.presentation.Badoo;
 import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.Channel;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -27,11 +31,11 @@ class EventsGetApiCall implements Callable<List<Event>>{
     }
 
     public List<Event> requestSyncCall() throws Exception {
-        connectToApi();
-        return mResponse;
+        return connectToApi();
+
     }
 
-    private void connectToApi() throws Exception {
+    private List<Event>  connectToApi() throws Exception {
         Events events;
         events = mServices.events().list(mParams.getCalendarId())
             .setTimeMin(mParams.getEventParams().getStart().getDateTime())
@@ -40,7 +44,18 @@ class EventsGetApiCall implements Callable<List<Event>>{
             .setSingleEvents(true)
             .setMaxResults(mParams.getNumOfResult())
             .execute();
-        mResponse = events.getItems();
+       // mResponse =
+
+//        Map<String, String> params = new HashMap<>();
+//        Channel request = new Channel()
+//            .setId(Badoo.PUSH_NOTIFICATION_CHANNEL_ID)
+//            .setType("web_hook")
+//            .setAddress(String.format("https://meetingroombookingsystem-f61d1.firebaseapp.com/notifications/"));
+//        mServices.events().watch(Badoo.getCurrentRoom().getId(), request).execute();
+
+        //Events changes = mServices.events().list("zhang.yaozhong@corp.badoo.com").execute();
+
+        return events.getItems();
     }
 
     @Override

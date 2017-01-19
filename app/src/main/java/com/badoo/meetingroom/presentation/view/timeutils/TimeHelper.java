@@ -140,6 +140,15 @@ public class TimeHelper {
         return 1000 * (millis/ 1000);
     }
 
+    public static long dropMinutes(long millis) {
+        Calendar cal = Calendar.getInstance(); // locale-specific
+        cal.setTime(new Date(millis));
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTimeInMillis();
+    }
+
     public static long dropSeconds(long millis) {
         return 60 * 1000 * (millis / (60 * 1000));
     }

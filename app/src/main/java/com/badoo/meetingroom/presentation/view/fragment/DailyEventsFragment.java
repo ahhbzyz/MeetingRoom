@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
 import com.badoo.meetingroom.presentation.view.adapter.DailyEventsAdapter;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -77,7 +79,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     private void setUpEventsRecyclerView() {
-        mAdapter.setPage(mPage);
         mAdapter.setOnItemClickListener(this);
         mDailyEventsRv.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this.getActivity().getApplicationContext()));
         mDailyEventsRv.setAdapter(mAdapter);
@@ -85,6 +86,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     @Override
     public void renderDailyEvents(List<EventModel> roomEventModelList) {
+
         mAdapter.setDailyEventList(roomEventModelList);
 
         int currentEventPosition = 0;
@@ -103,12 +105,9 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void onEventItemClicked(View view, EventModel roomEventModel) {
+    public void onEventItemClicked(View view, ArrayList<EventModel> eventModelList) {
         Intent intent = new Intent(getActivity(), RoomBookingActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putLong("startTime", roomEventModel.getStartTime());
-        bundle.putLong("endTime", roomEventModel.getEndTime());
-        intent.putExtra("timePeriod", bundle);
+        intent.putParcelableArrayListExtra("eventModelList", eventModelList);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivityForResult(intent, REQUEST_BOOK_ROOM);
     }

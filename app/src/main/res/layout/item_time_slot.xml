@@ -20,7 +20,7 @@
             android:layout_width="@dimen/room_booking_time_slot_width"
             android:id="@+id/img_time_slot"
             android:layout_height="@dimen/room_booking_time_slot_height"
-            android:background="@drawable/bg_flat_selected_slot" />
+            android:background="@drawable/bg_normal_selected_slot" />
 
         <View
             android:id="@+id/divider"

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.MyFirebaseMessagingService;
 import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.fragment.EventCreatorDialogFragment;
@@ -28,6 +30,8 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.List;
 
@@ -143,6 +147,16 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
         mLoadingDataDialogHandler = new Handler();
 
         mRoomStatusHandler = new RoomStatusHandler(this);
+
+
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                Object value = getIntent().getExtras().get(key);
+                Log.d("DD", "Key: " + key + " Value: " + value);
+            }
+        }
+
+        startService(new Intent(this, MyFirebaseMessagingService.class));
     }
 
     private void setUptCircleTimeTextViews() {

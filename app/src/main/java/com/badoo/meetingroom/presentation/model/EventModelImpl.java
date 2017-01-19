@@ -1,14 +1,19 @@
 package com.badoo.meetingroom.presentation.model;
 
 import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zhangyaozhong on 17/12/2016.
  */
 
-public class EventModelImpl implements EventModel {
+public class EventModelImpl implements EventModel, Parcelable {
 
     private String id;
     private int status;
@@ -18,6 +23,7 @@ public class EventModelImpl implements EventModel {
     private String creatorEmailAddress;
     private boolean isConfirmed;
     private boolean doNotDisturb;
+    private List<Long> timeStamps;
     private final long ON_HOLD_TIME = TimeHelper.min2Millis(5);
 
     public EventModelImpl() {}
@@ -216,6 +222,60 @@ public class EventModelImpl implements EventModel {
     public String getEndTimeInText() {
         return TimeHelper.isMidNight(getEndTime()) ? "24:00" : TimeHelper.formatTime(getEndTime());
     }
+
+    @Override
+    public void setTimeStamps(List<Long> timeStamps) {
+        this.timeStamps = timeStamps;
+    }
+
+    @Override
+    public List<Long> getTimeStamps() {
+        return timeStamps;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(this.id);
+        out.writeInt(this.status);
+        out.writeLong(this.startTime);
+        out.writeLong(this.endTime);
+        out.writeString(this.creatorId);
+        out.writeString(this.creatorEmailAddress);
+        out.writeByte(this.isConfirmed ? (byte) 1 : (byte) 0);
+        out.writeByte(this.doNotDisturb ? (byte) 1 : (byte) 0);
+        out.writeList(this.timeStamps);
+    }
+
+    private EventModelImpl(Parcel in) {
+        this.id = in.readString();
+        this.status = in.readInt();
+        this.startTime = in.readLong();
+        this.endTime = in.readLong();
+        this.creatorId = in.readString();
+        this.creatorEmailAddress = in.readString();
+        this.isConfirmed = in.readByte() != 0;
+        this.doNotDisturb = in.readByte() != 0;
+        this.timeStamps = new ArrayList<>();
+        in.readList(this.timeStamps, Long.class.getClassLoader());
+    }
+
+    public static final Creator<EventModel> CREATOR = new Creator<EventModel>() {
+        @Override
+        public EventModelImpl createFromParcel(Parcel source) {
+            return new EventModelImpl(source);
+        }
+
+        @Override
+        public EventModelImpl[] newArray(int size) {
+            return new EventModelImpl[size];
+        }
+    };
+
 
     private static class RoomEventColor {
 

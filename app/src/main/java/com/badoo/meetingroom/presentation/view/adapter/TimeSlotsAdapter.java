@@ -11,9 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +29,19 @@ import butterknife.ButterKnife;
 public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.ViewHolder>{
 
     private Context mContext;
-    private List<TimeSlot> mTimeSlotList;
+    //private List<TimeSlot> mTimeSlotList;
     private final long mDefaultSlotLength = TimeHelper.min2Millis(15);
     private int mRecyclerViewWidth = -1;
     private int mLeftPadding = -1;
     private final int [] timestamps = new int[]{15, 30, 45, 60};
     private OnItemClickListener mOnItemClickListener;
+    private List<EventModel> mEventModelList;
+    private List<Boolean> mSelectedList;
+
+    public void setEventModelList(List<EventModel> eventModelList) {
+        mEventModelList = eventModelList;
+        mSelectedList = new ArrayList<>(mEventModelList.size());
+    }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -50,49 +57,48 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     @Inject
     TimeSlotsAdapter(Context context) {
         this.mContext = context;
-        mTimeSlotList = new ArrayList<>();
     }
 
-    public void setTimeSlots(long startTime, long endTime) {
-
-        if (endTime <= startTime) {
-            throw new IllegalArgumentException("End time cannot less than or equal to start time");
-        }
-
-//        endTime = TimeHelper.dropSeconds(endTime);
-
-        long newStartTime = startTime;
-        for (int t : timestamps) {
-            if (TimeHelper.getMin(startTime) <= t) {
-                newStartTime = TimeHelper.dropSeconds(startTime + TimeHelper.min2Millis(t - TimeHelper.getMin(startTime)));
-                break;
-            }
-        }
-        int numOfSlots = (int) ((endTime - newStartTime) / mDefaultSlotLength);
-
-
-        if (newStartTime != startTime) {
-            mTimeSlotList.add(new TimeSlot(startTime));
-        }
-        if (numOfSlots <= 0) {
-            mTimeSlotList.add(new TimeSlot(endTime));
-        } else {
-            for (int i = 0; i <= numOfSlots; i++) {
-                mTimeSlotList.add(new TimeSlot(newStartTime));
-                newStartTime += mDefaultSlotLength;
-            }
-            newStartTime -= mDefaultSlotLength;
-            if (!TimeHelper.isSameTimeIgnoreSec(newStartTime, endTime)) {
-                mTimeSlotList.add(new TimeSlot(endTime));
-            }
-        }
-        notifyDataSetChanged();
-    }
-
-    public void setRecyclerViewParams(int width, int leftPadding) {
-        this.mRecyclerViewWidth = width;
-        this.mLeftPadding = leftPadding;
-    }
+//    public void setTimeSlots(long startTime, long endTime) {
+//
+//        if (endTime <= startTime) {
+//            throw new IllegalArgumentException("End time cannot less than or equal to start time");
+//        }
+//
+////        endTime = TimeHelper.dropSeconds(endTime);
+//
+//        long newStartTime = startTime;
+//        for (int t : timestamps) {
+//            if (TimeHelper.getMin(startTime) <= t) {
+//                newStartTime = TimeHelper.dropSeconds(startTime + TimeHelper.min2Millis(t - TimeHelper.getMin(startTime)));
+//                break;
+//            }
+//        }
+//        int numOfSlots = (int) ((endTime - newStartTime) / mDefaultSlotLength);
+//
+//
+//        if (newStartTime != startTime) {
+//            mTimeSlotList.add(new TimeSlot(startTime));
+//        }
+//        if (numOfSlots <= 0) {
+//            mTimeSlotList.add(new TimeSlot(endTime));
+//        } else {
+//            for (int i = 0; i <= numOfSlots; i++) {
+//                mTimeSlotList.add(new TimeSlot(newStartTime));
+//                newStartTime += mDefaultSlotLength;
+//            }
+//            newStartTime -= mDefaultSlotLength;
+//            if (!TimeHelper.isSameTimeIgnoreSec(newStartTime, endTime)) {
+//                mTimeSlotList.add(new TimeSlot(endTime));
+//            }
+//        }
+//        notifyDataSetChanged();
+//    }
+//
+//    public void setRecyclerViewParams(int width, int leftPadding) {
+//        this.mRecyclerViewWidth = width;
+//        this.mLeftPadding = leftPadding;
+//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -104,10 +110,10 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        TimeSlot slot = mTimeSlotList.get(position);
-        holder.mStartTimeTv.setText(slot.getStartTimeInText());
+        EventModel eventModel = mEventModelList.get(position);
+        holder.mStartTimeTv.setText(eventModel.getStartTimeInText());
 
-        if (slot.isSelected) {
+        if (!mSelectedList.isEmpty() && mSelectedList.get(position)) {
 
             if (getItemCount() == 2) {
                 if (position == 0) {
@@ -123,7 +129,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                 } else if (position == getItemCount() - 1) {
                     holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_busy_slot));
                 } else {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_flat_selected_slot));
+                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_normal_selected_slot));
                 }
             }
 
@@ -143,7 +149,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                 } else if (position == getItemCount() - 1) {
                     holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_busy_slot));
                 } else {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_flat_unselected_slot));
+                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_normal_unselected_slot));
                 }
             }
         }
@@ -173,38 +179,38 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
             holder.itemView.setOnClickListener(v -> {
 
-                slot.setSelected(!slot.isSelected());
-
-                boolean meetFirstSelectedSlot = false;
-                for (int i = 0; i < position; i++) {
-                    if (!mTimeSlotList.get(i).isSelected() && !meetFirstSelectedSlot) {
-                        continue;
-                    }
-                    meetFirstSelectedSlot = true;
-                    mTimeSlotList.get(i).setSelected(true);
-                }
-
-                int firstSelectedSlotAfterPos = position;
-                for (int i = position + 1; i < mTimeSlotList.size(); i++) {
-                    if (mTimeSlotList.get(i).isSelected()) {
-                        firstSelectedSlotAfterPos = i;
-                        break;
-                    }
-                }
-
-                if (!slot.isSelected() && meetFirstSelectedSlot) {
-                    for (int i = position + 1; i < mTimeSlotList.size(); i++) {
-                        mTimeSlotList.get(i).setSelected(false);
-                    }
-                } else {
-                    for (int i = position + 1; i <= firstSelectedSlotAfterPos; i++) {
-                        mTimeSlotList.get(i).setSelected(true);
-                    }
-                }
+//                slot.setSelected(!slot.isSelected());
+//
+//                boolean meetFirstSelectedSlot = false;
+//                for (int i = 0; i < position; i++) {
+//                    if (!mTimeSlotList.get(i).isSelected() && !meetFirstSelectedSlot) {
+//                        continue;
+//                    }
+//                    meetFirstSelectedSlot = true;
+//                    mTimeSlotList.get(i).setSelected(true);
+//                }
+//
+//                int firstSelectedSlotAfterPos = position;
+//                for (int i = position + 1; i < mTimeSlotList.size(); i++) {
+//                    if (mTimeSlotList.get(i).isSelected()) {
+//                        firstSelectedSlotAfterPos = i;
+//                        break;
+//                    }
+//                }
+//
+//                if (!slot.isSelected() && meetFirstSelectedSlot) {
+//                    for (int i = position + 1; i < mTimeSlotList.size(); i++) {
+//                        mTimeSlotList.get(i).setSelected(false);
+//                    }
+//                } else {
+//                    for (int i = position + 1; i <= firstSelectedSlotAfterPos; i++) {
+//                        mTimeSlotList.get(i).setSelected(true);
+//                    }
+//                }
 
                 notifyDataSetChanged();
                 if (this.mOnItemClickListener != null) {
-                    this.mOnItemClickListener.onEventItemClicked(mTimeSlotList);
+                    //this.mOnItemClickListener.onEventItemClicked(mTimeSlotList);
                 }
             });
         }
@@ -212,7 +218,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
     @Override
     public int getItemCount() {
-        return mTimeSlotList.size();
+        return mEventModelList == null ? 0 : mEventModelList.size();
     }
 
     public class TimeSlot {

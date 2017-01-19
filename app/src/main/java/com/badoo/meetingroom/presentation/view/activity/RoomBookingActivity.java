@@ -3,7 +3,6 @@ package com.badoo.meetingroom.presentation.view.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +21,7 @@ import android.widget.Toast;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.presentation.model.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.EmailAutoCompleteAdapter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
@@ -30,6 +30,7 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -67,10 +68,11 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         ButterKnife.bind(this);
         this.getComponent().inject(this);
         mPresenter.setView(this);
-
         initViews();
 
-        mPresenter.init();
+        mPresenter.getContactList();
+        ArrayList<EventModel> eventModelList = getIntent().getParcelableArrayListExtra("eventModelList");
+        mPresenter.setTimeSlotList(eventModelList);
     }
 
 
@@ -135,41 +137,38 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     @Override
-    public void setTimeSlotsInView() {
-        Bundle bundle = getIntent().getBundleExtra("timePeriod");
-        if (bundle == null) {
-            return;
-        }
-        long startTime = bundle.getLong("startTime");
-        long endTime = bundle.getLong("endTime");
+    public void renderTimeSlotsInView(List<EventModel> availableEventList) {
 
-        if (startTime < TimeHelper.getMidNightTimeOfDay(1)) {
-            mBookingDateTv.setText(getString(R.string.today));
-        } else {
-            mBookingDateTv.setText(TimeHelper.formatDate(startTime));
-        }
 
-        mAdapter.setTimeSlots(startTime, endTime);
 
-        // Set left padding
-        if (mAdapter.getItemCount() >= 1) {
-            int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-            int availableSlotLength = (int) ((mAdapter.getItemCount() - 1) * getResources().getDimension(R.dimen.room_booking_time_slot_width));
+//        if (startTime < TimeHelper.getMidNightTimeOfDay(1)) {
+//            mBookingDateTv.setText(getString(R.string.today));
+//        } else {
+//            mBookingDateTv.setText(TimeHelper.formatDate(startTime));
+//        }
+//
+//        mAdapter.setTimeSlots(startTime, endTime);
+//
+//        // Set left padding
+//        if (mAdapter.getItemCount() >= 1) {
+//            int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+//            int availableSlotLength = (int) ((mAdapter.getItemCount() - 1) * getResources().getDimension(R.dimen.room_booking_time_slot_width));
+//
+//            int leftPadding;
+//
+//            if (availableSlotLength >= width - 2 * getResources().getDimension(R.dimen.room_booking_view_margin)) {
+//                leftPadding = (int) getResources().getDimension(R.dimen.room_booking_view_margin);
+//            }
+//            else {
+//                leftPadding = (width - availableSlotLength) / 2;
+//            }
+//            mTimeSlotsRv.setPadding(leftPadding, 0, 0, 0);
+//            mAdapter.setRecyclerViewParams(width, leftPadding);
+//        }
 
-            int leftPadding;
-
-            if (availableSlotLength >= width - 2 * getResources().getDimension(R.dimen.room_booking_view_margin)) {
-                leftPadding = (int) getResources().getDimension(R.dimen.room_booking_view_margin);
-            }
-            else {
-                leftPadding = (width - availableSlotLength) / 2;
-            }
-            mTimeSlotsRv.setPadding(leftPadding, 0, 0, 0);
-            mAdapter.setRecyclerViewParams(width, leftPadding);
-        }
-
+        mAdapter.setEventModelList(availableEventList);
         mAdapter.setOnItemClickListener(timeSlotList -> {
-            mPresenter.setTimeSlotList(timeSlotList);
+            //mPresenter.setTimeSlotList(timeSlotList);
         });
     }
 

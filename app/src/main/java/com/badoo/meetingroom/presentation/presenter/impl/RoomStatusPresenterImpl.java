@@ -226,9 +226,11 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         mMapper.setEventStartTime(startDateTime.getValue());
         mMapper.setEventEndTime(endDateTime.getValue());
 
-        CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
-        params.setEventParams(event);
-        mGetEventsUseCase.init(params).execute(new GetEventsSubscriber());
+        if (Badoo.getCurrentRoom() != null) {
+            CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
+            params.setEventParams(event);
+            mGetEventsUseCase.init(params).execute(new GetEventsSubscriber());
+        }
     }
     
     @Override
@@ -339,10 +341,11 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                 mRoomEventsView.handleRecoverableAuthException(userRecoverableAuthIOException);
             }
             catch (GoogleJsonResponseException googleJsonResponseException) {
+                System.out.println(googleJsonResponseException.toString());
                 mRoomEventsView.showError(googleJsonResponseException.getDetails().getMessage());
             }
             catch (Exception exception) {
-                System.out.println(exception.getMessage());
+                mRoomEventsView.showError(exception.getMessage());
             }
             catch (Throwable throwable) {
                 throwable.printStackTrace();

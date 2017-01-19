@@ -9,8 +9,8 @@ import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
 import com.badoo.meetingroom.presentation.model.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
-import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -36,9 +36,8 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     private long selectedEndTime;
     private final InsertEvent mInsertEventUseCase;
     private final GetPersons mGetPersonsUseCase;
-
     private final BadooPersonModelMapper mMapper;
-    private List<BadooPersonModel> mBadooPersonModelList;
+    private List<EventModel> mAvailableEventList;
 
     @Inject
     RoomBookingPresenterImpl(@Named(InsertEvent.NAME) InsertEvent insertEvent,
@@ -47,16 +46,15 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         this.mInsertEventUseCase = insertEvent;
         this.mGetPersonsUseCase = getPersons;
         this.mMapper = mapper;
+        mAvailableEventList = new ArrayList<>();
     }
 
-    public void init() {
-        setTimeSlotsInView();
+    @Override
+    public void getContactList() {
         mGetPersonsUseCase.execute(new GetPersonsSubscriber());
     }
 
-    private void setTimeSlotsInView() {
-        mRoomBookingView.setTimeSlotsInView();
-    }
+
 
     @Override
     public void setView(RoomBookingView roomBookingView) {
@@ -88,38 +86,48 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     }
 
     @Override
-    public void setTimeSlotList(List<TimeSlotsAdapter.TimeSlot> timeSlotList) {
-        boolean startTimeHasVal = false;
-        boolean isFirstSelectedSlot = false;
-        selectedStartTime = -1;
-        selectedEndTime = -1;
+    public void setTimeSlotList(List<EventModel> eventModelList) {
 
-        int numOfSelectedSlots = 0;
-
-        for (int i = 0; i < timeSlotList.size(); i++) {
-
-            TimeSlotsAdapter.TimeSlot slot = timeSlotList.get(i);
-
-            if (!slot.isSelected() && !isFirstSelectedSlot) {
+        for (EventModel eventModel: eventModelList) {
+            if (eventModel.isExpired()) {
                 continue;
             }
-            isFirstSelectedSlot = true;
-            if (!startTimeHasVal) {
-                selectedStartTime = slot.getStartTime();
-                startTimeHasVal = true;
-            }
-            numOfSelectedSlots++;
-            if (!slot.isSelected() || i == timeSlotList.size() - 1) {
-                selectedEndTime = slot.getStartTime();
-                break;
-            }
+            mAvailableEventList.add(eventModel);
         }
 
-        if (numOfSelectedSlots == 0) {
-            selectedStartTime = -1;
-            selectedEndTime = -1;
-        }
-        mRoomBookingView.updateTimePeriodTextView(selectedStartTime, selectedEndTime);
+        mRoomBookingView.renderTimeSlotsInView(mAvailableEventList);
+
+//        boolean startTimeHasVal = false;
+//        boolean isFirstSelectedSlot = false;
+//        selectedStartTime = -1;
+//        selectedEndTime = -1;
+//
+//        int numOfSelectedSlots = 0;
+//
+//        for (int i = 0; i < timeSlotList.size(); i++) {
+//
+//            TimeSlotsAdapter.TimeSlot slot = timeSlotList.get(i);
+//
+//            if (!slot.isSelected() && !isFirstSelectedSlot) {
+//                continue;
+//            }
+//            isFirstSelectedSlot = true;
+//            if (!startTimeHasVal) {
+//                selectedStartTime = slot.getStartTime();
+//                startTimeHasVal = true;
+//            }
+//            numOfSelectedSlots++;
+//            if (!slot.isSelected() || i == timeSlotList.size() - 1) {
+//                selectedEndTime = slot.getStartTime();
+//                break;
+//            }
+//        }
+//
+//        if (numOfSelectedSlots == 0) {
+//            selectedStartTime = -1;
+//            selectedEndTime = -1;
+//        }
+//        mRoomBookingView.updateTimePeriodTextView(selectedStartTime, selectedEndTime);
     }
 
     private final class InsertEventSubscriber extends DefaultSubscriber<Event> {
@@ -175,7 +183,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         @Override
         public void onNext(List<BadooPerson> badooPersonList) {
             super.onNext(badooPersonList);
-            mBadooPersonModelList = mMapper.map(badooPersonList);
+            List<BadooPersonModel> mBadooPersonModelList = mMapper.map(badooPersonList);
             mRoomBookingView.setUpAutoCompleteTextView(mBadooPersonModelList);
         }
 

@@ -43,17 +43,17 @@ import dagger.Provides;
 public class ApplicationModule {
     private static final List<String> SCOPES =
         Arrays.asList(CalendarScopes.CALENDAR, PeopleScopes.CONTACTS_READONLY);
-    private final AndroidApplication application;
+    private final AndroidApplication mApplication;
     private GoogleAccountCredential mCredential;
     private Calendar mCalendarServices;
     private People mPeopleServices;
 
     public ApplicationModule(AndroidApplication application) {
-        this.application = application;
+        mApplication = application;
 
         // Google account credential
-        this.mCredential = GoogleAccountCredential.usingOAuth2(
-            application.getApplicationContext(), SCOPES)
+        mCredential = GoogleAccountCredential.usingOAuth2(
+            mApplication.getApplicationContext(), SCOPES)
             .setBackOff(new ExponentialBackOff());
 
         // Calendar services
@@ -72,7 +72,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     Context provideApplicationContext() {
-        return application;
+        return mApplication;
     }
 
     @Provides

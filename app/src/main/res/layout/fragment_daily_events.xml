@@ -23,4 +23,5 @@
         android:layout_height="match_parent"
         android:paddingTop="@dimen/daily_event_list_top_margin"
         android:paddingBottom="@dimen/daily_event_list_bottom_margin" />
+
 </RelativeLayout>
