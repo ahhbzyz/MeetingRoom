@@ -67,7 +67,7 @@
                 android:layout_marginEnd="8dp">
                 <ImageView
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_tv_grey"
+                    app:srcCompat="@drawable/ic_tv_yes"
                     android:id="@+id/img_tv"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
@@ -76,7 +76,7 @@
                 <ImageView
                     android:layout_marginStart="32dp"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_video_grey"
+                    app:srcCompat="@drawable/ic_video_yes"
                     android:id="@+id/img_video"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
@@ -85,7 +85,7 @@
                 <ImageView
                     android:layout_marginStart="32dp"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_beverage_grey"
+                    app:srcCompat="@drawable/ic_beverage_yes"
                     android:id="@+id/img_beverage"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
@@ -94,7 +94,7 @@
                 <ImageView
                     android:layout_marginStart="32dp"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_pencil_grey"
+                    app:srcCompat="@drawable/ic_whiteboard_yes"
                     android:id="@+id/img_stationery"
                     android:layout_weight="1"
                     android:adjustViewBounds="true"
@@ -120,7 +120,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/ic_person_grey"
+                    app:srcCompat="@drawable/ic_room_size"
                     android:id="@+id/img_person"
                     android:layout_height="24dp"
                     android:adjustViewBounds="true"

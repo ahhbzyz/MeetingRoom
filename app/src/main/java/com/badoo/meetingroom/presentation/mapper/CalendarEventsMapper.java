@@ -26,25 +26,28 @@ public class CalendarEventsMapper {
         mEventEndTime = TimeHelper.getMidNightTimeOfDay(1);
     }
 
-    private EventModel map(LocalEvent roomEvent) {
-        if (roomEvent == null) {
+    private EventModel map(LocalEvent localEvent) {
+        if (localEvent == null) {
             throw new IllegalArgumentException("Cannot map a null value");
         }
 
-        final EventModel roomEventModel = new EventModelImpl();
+        final EventModel eventModel = new EventModelImpl();
 
-        roomEventModel.setId(roomEvent.getId());
-        roomEventModel.setCreatorId(roomEvent.getCreatorId());
-        roomEventModel.setCreatorEmailAddress(roomEvent.getCreatorEmailAddress());
-        roomEventModel.setStatus(roomEvent.getStatus());
-        roomEventModel.setStartTime(roomEvent.getStartTime());
-        roomEventModel.setEndTime(roomEvent.getEndTime());
-        roomEventModel.setStatus(EventModel.BUSY);
+        eventModel.setId(localEvent.getId());
+        eventModel.setCreatorId(localEvent.getCreatorId());
+        eventModel.setCreatorName(localEvent.getCreatorName());
+        eventModel.setCreatorEmailAddress(localEvent.getCreatorEmailAddress());
+        eventModel.setStatus(localEvent.getStatus());
+        eventModel.setStartTime(localEvent.getStartTime());
+        eventModel.setEndTime(localEvent.getEndTime());
+        eventModel.setEventTitle(localEvent.getEventTitle());
+        eventModel.setFastBooking(localEvent.isFastBooking());
+        eventModel.setStatus(EventModel.BUSY);
 
-        if (roomEvent.isFastBook()) {
-            roomEventModel.setConfirmed(true);
+        if (localEvent.isFastBooking()) {
+            eventModel.setConfirmed(true);
         }
-        return roomEventModel;
+        return eventModel;
     }
 
     public List<EventModel> map(List<LocalEvent> roomEventList) {

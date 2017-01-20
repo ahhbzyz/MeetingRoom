@@ -252,7 +252,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                 .setTimeZone("Europe/London");
             event.setEnd(end);
 
-            event.setDescription("fast_book");
+            event.setDescription(EventModel.FAST_BOOKING_DESCRIPTION);
 
             CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
             params.setEventParams(event);

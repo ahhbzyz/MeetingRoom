@@ -86,14 +86,14 @@
             android:layout_marginTop="32dp">
         </android.support.v7.widget.RecyclerView>
     <TextView
-        android:text="Enter your email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_tip"
         android:layout_marginTop="32dp"
         android:gravity="center_vertical|center_horizontal"
         android:textSize="16sp"
-        android:textColor="@color/textLightGray" />
+        android:textColor="@color/textLightGray"
+        android:text="@string/enter_your_name" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -119,8 +119,7 @@
                 android:id="@+id/autocomplete_email_address"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/badoo_mail_suffix" />
+                android:layout_height="wrap_content" />
         </RelativeLayout>
 
 

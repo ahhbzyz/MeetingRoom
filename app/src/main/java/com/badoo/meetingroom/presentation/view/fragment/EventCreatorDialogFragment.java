@@ -1,12 +1,15 @@
 package com.badoo.meetingroom.presentation.view.fragment;
 
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +55,9 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
     @BindView(R.id.img_avatar) ImageView mAvatarImg;
     @BindView(R.id.pb_img_loading) ProgressBar mImgLoadingPb;
     @BindView(R.id.tv_event_period) TextView mEventPeriodTv;
-    @BindView(R.id.tv_organizer_email) TextView mOrganizerEmail;
+    @BindView(R.id.tv_creator_email) TextView mCreatorEmailTv;
+    @BindView(R.id.tv_creator_name) TextView mCreatorNameTv;
+
 
     @Inject @Named(GetPersons.NAME) GetPersons getPersonsUseCase;
     @Inject @Named(GetAvatar.NAME) GetAvatar getAvatarUseCase;
@@ -74,35 +79,47 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
         mRoomStatusView = roomStatusView;
     }
 
-    @Nullable @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_event_creator, container, false);
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        View view = View.inflate(getActivity().getApplicationContext(),R.layout.dialog_event_creator, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyEventOrganizerDialog);
+        builder.setView(view);
         ButterKnife.bind(this, view);
-
         Typeface stolzlRegularTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/stolzl_regular.otf");
         mEventPeriodTv.setTypeface(stolzlRegularTypeface);
+        mCreatorNameTv.setTypeface(stolzlRegularTypeface);
 
         if (mEvent != null) {
             mEventPeriodTv.setText(mEvent.getDurationInText());
 
-            if (mEvent.getCreatorEmailAddress() != null) {
-                mOrganizerEmail.setText(mEvent.getCreatorEmailAddress());
-            } else {
-                mOrganizerEmail.setText(getActivity().getString(R.string.fast_booking));
+            if (mEvent.getCreatorEmailAddress() != null && mEvent.getCreatorName() != null) {
+                mCreatorNameTv.setText(mEvent.getCreatorName());
+                mCreatorEmailTv.setText(mEvent.getCreatorEmailAddress());
+            }
+
+            if (mEvent.isFastBooking()) {
+                mCreatorNameTv.setText(getActivity().getString(R.string.fast_booking));
+                mCreatorEmailTv.setText(getActivity().getString(R.string.no_name_available));
             }
 
             if (mEvent.getCreatorEmailAddress() != null) {
                 getPersonsUseCase.execute(new GetPersonsSubscriber());
+            } else {
+                mAvatarImg.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.ic_fast_booking));
             }
         }
 
-        if (getDialog().getWindow() != null) {
-            getDialog().getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-            getDialog().getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded_organizer);
+        Dialog dialog = builder.create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded_organizer);
         }
 
-        return view;
+
+        return dialog;
     }
 
     public void setEvent(EventModel event) {

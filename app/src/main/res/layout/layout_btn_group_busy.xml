@@ -8,40 +8,16 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:clipChildren="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <com.badoo.meetingroom.presentation.view.component.button.LongPressButton
-            android:layout_width="@dimen/circle_button_diameter"
-            android:layout_height="@dimen/circle_button_diameter"
-            android:id="@+id/btn_end"
-            android:src="@drawable/ic_end_white_36px" />
-
-        <TextView
-            android:text="@string/hold_to_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/circle_button_name_top_margin"
-            android:textColor="@color/textColorBlack"
-            android:id="@+id/tv_hold_to_end"
-            android:textSize="@dimen/circle_button_name_text_size" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/circle_button_left_margin"
-        android:layout_marginEnd="@dimen/circle_button_left_margin">
+        android:gravity="center_vertical|center_horizontal">
 
         <ImageButton
-            android:layout_width="@dimen/circle_button_diameter"
-            android:layout_height="@dimen/circle_button_diameter"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:background="@drawable/btn_circle_busy"
             android:id="@+id/btn_dnd"
-            android:src="@drawable/ic_stop_black_36px" />
+            android:src="@drawable/ic_do_not_disturb" />
 
         <TextView
             android:text="@string/do_not_disturb"
@@ -57,20 +33,47 @@
 
     <LinearLayout
         android:orientation="vertical"
+        android:clipChildren="false"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/circle_button_left_margin"
+        android:layout_marginStart="@dimen/circle_button_left_margin"
+        android:gravity="center_vertical|center_horizontal">
+
+        <com.badoo.meetingroom.presentation.view.component.button.LongPressButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/btn_end"
+            android:src="@drawable/ic_cross_white" />
+
+        <TextView
+            android:text="@string/hold_to_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/circle_button_name_top_margin"
+            android:textColor="@color/roomStatusBusy"
+            android:id="@+id/tv_hold_to_end"
+            android:textSize="@dimen/circle_button_name_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal">
 
         <ImageButton
-            android:layout_width="@dimen/circle_button_diameter"
-            android:layout_height="@dimen/circle_button_diameter"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:background="@drawable/btn_circle_busy"
             android:id="@+id/btn_extend"
             android:textStyle="bold"
             android:textSize="@dimen/circle_button_name_text_size"
-            android:src="@drawable/ic_add_black_36px" />
+            android:src="@drawable/ic_add" />
 
         <TextView
-            android:text="@string/extend"
+            android:text="@string/extend_by_15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

@@ -1,46 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:paddingTop="64dp"
-    android:paddingBottom="64dp"
-    android:paddingStart="72dp"
-    android:paddingEnd="72dp">
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/pb_img_loading"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/img_avatar"
-            android:layout_width="180dp"
-            android:layout_height="180dp" />
-    </RelativeLayout>
+    android:gravity="center_horizontal">
 
     <TextView
         android:text="12:00 - 13:00"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv_event_period"
-        android:textSize="42sp"
-        android:layout_marginTop="16dp"
-        android:textColor="@android:color/black" />
+        android:textSize="@dimen/event_creator_dialog_time_period_text_size"
+        android:layout_marginTop="@dimen/event_creator_dialog_time_period_top_margin"
+        android:textColor="@color/event_creator_dialog_time_period_color"
+        android:layout_marginBottom="@dimen/event_creator_dialog_time_period_bottom_margin" />
 
-    <TextView
-        android:text="a.shevelev@corp.badoo.com"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/event_creator_dialog_divider_height"
+        android:background="@color/event_creator_dialog_divider_color"/>
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_organizer_email"
-        android:textSize="18sp"
-        android:textColor="@android:color/black" />
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginRight="@dimen/event_creator_dialog_time_right_margin"
+        android:layout_marginLeft="@dimen/event_creator_dialog_time_left_margin">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pb_img_loading"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/roomStatusBusy"
+                android:indeterminateTintMode="src_in"/>
+
+            <ImageView
+                android:id="@+id/img_avatar"
+                android:layout_width="@dimen/event_creator_dialog_avatar_width"
+                android:layout_height="@dimen/event_creator_dialog_avatar_height"
+                android:layout_marginTop="@dimen/event_creator_dialog_avatar_top_margin"
+                android:layout_marginBottom="@dimen/event_creator_dialog_avatar_bottom_margin" />
+        </RelativeLayout>
+
+        <TextView
+            android:text="Alex Shevelev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_creator_name"
+            android:textSize="@dimen/event_creator_dialog_creator_name_text_size"
+            android:textColor="@color/event_creator_dialog_creator_name_text_color" />
+
+        <TextView
+            android:text="a.shevelev@corp.badoo.com"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_creator_email"
+            android:textSize="@dimen/event_creator_dialog_creator_email_text_size"
+            android:textColor="@color/event_creator_dialog_creator_email_text_color"
+            android:layout_marginBottom="@dimen/event_creator_dialog_creator_email_bottom_margin" />
+    </LinearLayout>
+
 </LinearLayout>

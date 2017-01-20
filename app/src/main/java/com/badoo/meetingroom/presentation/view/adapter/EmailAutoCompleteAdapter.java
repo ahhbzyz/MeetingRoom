@@ -86,14 +86,14 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
 
         @Override
         public String convertResultToString(Object resultValue) {
-            return ((BadooPersonModel)(resultValue)).getEmailAddress();
+            return ((BadooPersonModel)(resultValue)).getDisplayName();
         }
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             if(constraint != null) {
                 suggestions.clear();
-                constraint = constraint.toString().split("@")[0];
+
                 if (constraint.length() == 0) {
                     return new FilterResults();
                 }

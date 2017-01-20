@@ -339,7 +339,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     @Override
     public void stopCountDown() {
         mCircleView.stopCircleViewCountDown();
-        mRoomStatusHandler.stopTextViewsCountDown();
     }
 
     @Override

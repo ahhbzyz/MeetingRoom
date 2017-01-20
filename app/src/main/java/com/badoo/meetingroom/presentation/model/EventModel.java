@@ -11,6 +11,7 @@ public interface EventModel extends Parcelable {
 
     int AVAILABLE = 0;
     int BUSY = 1;
+    String FAST_BOOKING_DESCRIPTION = "Fast booking";
 
     String getId();
 
@@ -19,6 +20,10 @@ public interface EventModel extends Parcelable {
     String getCreatorId();
 
     void setCreatorId(String creatorId);
+
+    String getCreatorName();
+
+    void setCreatorName(String creatorName);
 
     String getCreatorEmailAddress();
 
@@ -35,6 +40,10 @@ public interface EventModel extends Parcelable {
     long getEndTime();
 
     void setEndTime(long endTime);
+
+    String getEventTitle();
+
+    void setEventTitle(String eventTitle);
 
     long getDuration();
 
@@ -57,6 +66,10 @@ public interface EventModel extends Parcelable {
     boolean isDoNotDisturb();
 
     void setDoNotDisturb(boolean doNotDisturb);
+
+    boolean isFastBooking();
+
+    void setFastBooking(boolean fastBooking);
 
     int getEventColor();
 

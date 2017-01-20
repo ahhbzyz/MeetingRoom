@@ -6,6 +6,7 @@ package com.badoo.meetingroom.domain.entity.intf;
 public interface LocalEvent extends Entity {
     int AVAILABLE = 0;
     int BUSY = 1;
+    String FAST_BOOKING_DESCRIPTION = "Fast booking";
 
     void setId(String id);
 
@@ -23,15 +24,23 @@ public interface LocalEvent extends Entity {
 
     void setEndTime(long endTime);
 
+    String getEventTitle();
+
+    void setEventTitle(String eventTitle);
+
     String getCreatorId();
 
     void setCreatorId(String creatorId);
+
+    String getCreatorName();
+
+    void setCreatorName(String creatorName);
 
     String getCreatorEmailAddress();
 
     void setCreatorEmailAddress(String creatorEmailAddress);
 
-    boolean isFastBook();
+    boolean isFastBooking();
 
-    void setFastBook(boolean isFastBook);
+    void setFastBooking(boolean isFastBooking);
 }

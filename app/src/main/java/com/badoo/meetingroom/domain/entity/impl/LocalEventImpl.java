@@ -13,11 +13,11 @@ public class LocalEventImpl implements LocalEvent {
     private int status;
     private long startTime;
     private long endTime;
-
+    private String eventTitle;
     private String creatorId;
+    private String creatorName;
     private String creatorEmailAddress;
-
-    private boolean isFastBook;
+    private boolean isFastBooking;
 
     public LocalEventImpl() {
     }
@@ -63,6 +63,16 @@ public class LocalEventImpl implements LocalEvent {
     }
 
     @Override
+    public String getEventTitle() {
+        return eventTitle;
+    }
+
+    @Override
+    public void setEventTitle(String eventTitle) {
+        this.eventTitle = eventTitle;
+    }
+
+    @Override
     public String getCreatorId() {
         return creatorId;
     }
@@ -70,6 +80,16 @@ public class LocalEventImpl implements LocalEvent {
     @Override
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
+    }
+
+    @Override
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    @Override
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 
     @Override
@@ -82,13 +102,11 @@ public class LocalEventImpl implements LocalEvent {
         this.creatorEmailAddress = creatorEmailAddress;
     }
 
-    @Override
-    public boolean isFastBook() {
-        return isFastBook;
+    public boolean isFastBooking() {
+        return isFastBooking;
     }
 
-    @Override
-    public void setFastBook(boolean isFastBook) {
-        this.isFastBook = isFastBook;
+    public void setFastBooking(boolean isFastBooking) {
+        this.isFastBooking = isFastBooking;
     }
 }

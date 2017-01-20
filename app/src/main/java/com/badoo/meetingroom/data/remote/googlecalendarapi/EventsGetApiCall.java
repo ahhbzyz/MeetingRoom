@@ -31,11 +31,12 @@ class EventsGetApiCall implements Callable<List<Event>>{
     }
 
     public List<Event> requestSyncCall() throws Exception {
-        return connectToApi();
+        connectToApi();
+        return mResponse;
 
     }
 
-    private List<Event>  connectToApi() throws Exception {
+    private void connectToApi() throws Exception {
         Events events;
         events = mServices.events().list(mParams.getCalendarId())
             .setTimeMin(mParams.getEventParams().getStart().getDateTime())
@@ -55,7 +56,7 @@ class EventsGetApiCall implements Callable<List<Event>>{
 
         //Events changes = mServices.events().list("zhang.yaozhong@corp.badoo.com").execute();
 
-        return events.getItems();
+        mResponse = events.getItems();
     }
 
     @Override

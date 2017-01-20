@@ -25,57 +25,61 @@
             android:layout_height="match_parent"
             android:id="@+id/layout_no_timestamps">
 
-            <View
-                android:layout_width="@dimen/item_vertical_event_timeline_bar_width"
-                android:background="@color/timeSlotExpired"
-                android:id="@+id/view_item_divider_fill"
-                android:layout_height="@dimen/item_vertical_event_divider_height" />
-
-            <View
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:background="@color/timeSlotExpired"
-                android:id="@+id/view_item_divider"
-                android:layout_height="@dimen/item_vertical_event_divider_height"
-                android:layout_marginStart="@dimen/item_vertical_event_timeline_bar_width" />
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/view_item_divider">
 
-            <ImageView
-                android:id="@+id/img_timeline_bar"
-                android:layout_height="match_parent"
-                android:background="@color/timeSlotExpired"
-                android:layout_width="12dp"
-                android:layout_below="@+id/view_item_divider" />
-
-            <FrameLayout
-                android:id="@+id/layout_clickable"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground"
-                android:layout_below="@+id/view_item_divider"
-                android:layout_toEndOf="@+id/img_timeline_bar">
-
-                <LinearLayout
-                    android:id="@+id/layout_event_content"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:id="@+id/img_timeline_bar"
                     android:layout_height="match_parent"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="0dp">
+                    android:background="@color/timeSlotExpired"
+                    android:layout_width="@dimen/item_vertical_event_timeline_bar_width"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/tv_event_period" />
+                <RelativeLayout
+                    android:id="@+id/layout_dividers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/tv_event_info" />
+                    <LinearLayout
+                        android:id="@+id/layout_event_textviews"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="0dp">
 
-                </LinearLayout>
-            </FrameLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_event_period"
+                            android:textColor="@color/item_vertical_event_period_text"
+                            android:layout_marginEnd="@dimen/item_vertical_event_text_end_margin" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_event_title"
+                            android:textColor="@color/item_vertical_event_title_text"
+                            android:layout_marginEnd="@dimen/item_vertical_event_text_end_margin" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_event_creator"
+                            android:textColor="@color/item_vertical_event_creator_text" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
+
 
         </RelativeLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -87,7 +91,7 @@
         android:visibility="gone">
 
         <TextView
-            android:text="17:30"
+            android:text="@string/fake_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_current_time"

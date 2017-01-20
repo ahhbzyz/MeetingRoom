@@ -14,7 +14,7 @@
     <string name="hold_to_end">Hold to end</string>
     <string name="do_not_disturb">Do not disturb</string>
 
-    <string name="extend">Extend</string>
+    <string name="extend_by_15">Extend by 15</string>
 
     <string name="available_for_upper_case">AVAILABLE FOR</string>
     <string name="on_hold_for_upper_case">ON HOLD FOR</string>
@@ -24,7 +24,7 @@
     <string name="booking">Booking</string>
     <string name="canceling">Canceling</string>
     <string name="today">Today</string>
-    <string name="no_slots_selected_alert">No slots selected</string>
+    <string name="no_slots_selected_alert">Select a slot</string>
     <string name="book">book</string>
     <string name="fast_booking">Fast booking</string>
     <string name="fake_date">Thursday, 12 Jan</string>
@@ -33,4 +33,6 @@
     <string name="two_hour_plus">2H+</string>
     <string name="available_for">Available for</string>
     <string name="busy_until">Busy until</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="no_name_available">No name available</string>
 </resources>

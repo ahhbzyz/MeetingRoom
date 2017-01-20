@@ -87,7 +87,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
     @Override
     public void setTimeSlotList(int position, List<EventModel> eventModelList) {
-
+        mAvailableEventList.clear();
         for (EventModel eventModel: eventModelList) {
             if (eventModel.isExpired()) {
                 continue;

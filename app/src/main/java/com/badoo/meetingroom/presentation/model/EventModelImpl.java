@@ -19,10 +19,13 @@ public class EventModelImpl implements EventModel, Parcelable {
     private int status;
     private long startTime;
     private long endTime;
+    private String eventTitle;
     private String creatorId;
+    private String creatorName;
     private String creatorEmailAddress;
     private boolean isConfirmed;
     private boolean doNotDisturb;
+    private boolean isFastBooking;
     private List<Long> timeStamps;
     private final long ON_HOLD_TIME = TimeHelper.min2Millis(5);
 
@@ -46,6 +49,16 @@ public class EventModelImpl implements EventModel, Parcelable {
     @Override
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
+    }
+
+    @Override
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    @Override
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 
     public String getCreatorEmailAddress() {
@@ -84,6 +97,16 @@ public class EventModelImpl implements EventModel, Parcelable {
     @Override
     public void setEndTime(long endTime) {
         this.endTime = endTime;
+    }
+
+    @Override
+    public String getEventTitle() {
+        return eventTitle;
+    }
+
+    @Override
+    public void setEventTitle(String eventTitle) {
+        this.eventTitle = eventTitle;
     }
 
     @Override
@@ -147,6 +170,16 @@ public class EventModelImpl implements EventModel, Parcelable {
     @Override
     public void setDoNotDisturb(boolean doNotDisturb) {
         this.doNotDisturb = doNotDisturb;
+    }
+
+    @Override
+    public boolean isFastBooking() {
+        return isFastBooking;
+    }
+
+    @Override
+    public void setFastBooking(boolean fastBooking) {
+        isFastBooking = fastBooking;
     }
 
     @Override
@@ -244,10 +277,13 @@ public class EventModelImpl implements EventModel, Parcelable {
         out.writeInt(this.status);
         out.writeLong(this.startTime);
         out.writeLong(this.endTime);
+        out.writeString(this.eventTitle);
         out.writeString(this.creatorId);
+        out.writeString(this.creatorName);
         out.writeString(this.creatorEmailAddress);
         out.writeByte(this.isConfirmed ? (byte) 1 : (byte) 0);
         out.writeByte(this.doNotDisturb ? (byte) 1 : (byte) 0);
+        out.writeByte(this.isFastBooking ? (byte) 1 : (byte) 0);
         out.writeList(this.timeStamps);
     }
 
@@ -256,10 +292,13 @@ public class EventModelImpl implements EventModel, Parcelable {
         this.status = in.readInt();
         this.startTime = in.readLong();
         this.endTime = in.readLong();
+        this.eventTitle = in.readString();
+        this.creatorName = in.readString();
         this.creatorId = in.readString();
         this.creatorEmailAddress = in.readString();
         this.isConfirmed = in.readByte() != 0;
         this.doNotDisturb = in.readByte() != 0;
+        this.isFastBooking = in.readByte() != 0;
         this.timeStamps = new ArrayList<>();
         in.readList(this.timeStamps, Long.class.getClassLoader());
     }
@@ -282,10 +321,10 @@ public class EventModelImpl implements EventModel, Parcelable {
         private static final int AVAILABLE_COLOR = Color.parseColor("#69E27E");
 
         private static final int BUSY_COLOR = Color.parseColor("#F5584F");
-        private static final int BUSY_BG_COLOR = Color.parseColor("#FFE8E8");
+        private static final int BUSY_BG_COLOR = Color.parseColor("#26F5584F");
 
         private static final int ON_HOLD_COLOR = Color.parseColor("#FFB000");
-        private static final int ON_HOLD_BG_COLOR = Color.parseColor("#FFF2DB");
+        private static final int ON_HOLD_BG_COLOR = Color.parseColor("#26FFB000");
 
         private static final int EXPIRED_COLOR = Color.parseColor("#D4D4D4");
 

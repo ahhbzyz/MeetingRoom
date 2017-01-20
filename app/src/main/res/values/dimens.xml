@@ -59,18 +59,36 @@
 
     <dimen name="auto_complete_avatar_width">64dp</dimen>
     <dimen name="auto_complete_avatar_height">64dp</dimen>
-    <dimen name="event_organizer_dialog_avatar_width">180dp</dimen>
-    <dimen name="event_organizer_dialog_avatar_height">180dp</dimen>
+    <dimen name="event_creator_dialog_avatar_width">150dp</dimen>
+    <dimen name="event_creator_dialog_avatar_height">150dp</dimen>
 
     <dimen name="events_calendar_current_time_mark_height">1.5dp</dimen>
     <dimen name="item_vertical_event_start_margin">32dp</dimen>
     <dimen name="item_vertical_event_end_margin">32dp</dimen>
 
-    <dimen name="item_vertical_event_divider_height">0.5dp</dimen>
+    <dimen name="item_vertical_event_divider_height">10dp</dimen>
+    <dimen name="item_vertical_event_hourly_divider_height">1dp</dimen>
 
     <dimen name="daily_event_list_top_margin">16dp</dimen>
     <dimen name="daily_event_list_bottom_margin">32dp</dimen>
     <dimen name="item_vertical_event_timeline_bar_width">12dp</dimen>
 
     <dimen name="time_slot_corner_radius">22dp</dimen>
+
+    <dimen name="event_creator_dialog_divider_height">1dp</dimen>
+    <dimen name="event_creator_dialog_time_period_text_size">32sp</dimen>
+    <dimen name="event_creator_dialog_creator_email_text_size">18sp</dimen>
+
+    <dimen name="event_creator_dialog_creator_email_bottom_margin">32dp</dimen>
+    <dimen name="event_creator_dialog_creator_name_text_size">32sp</dimen>
+
+    <dimen name="event_creator_dialog_time_left_margin">64dp</dimen>
+    <dimen name="event_creator_dialog_time_right_margin">64dp</dimen>
+
+    <dimen name="event_creator_dialog_time_period_top_margin">16dp</dimen>
+    <dimen name="event_creator_dialog_time_period_bottom_margin">16dp</dimen>
+
+    <dimen name="event_creator_dialog_avatar_top_margin">32dp</dimen>
+    <dimen name="event_creator_dialog_avatar_bottom_margin">32dp</dimen>
+    <dimen name="item_vertical_event_text_end_margin">16dp</dimen>
 </resources>

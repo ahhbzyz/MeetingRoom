@@ -16,7 +16,6 @@ public class LinearLayoutManagerWithSmoothScroller extends LinearLayoutManager {
         super(context, orientation, reverseLayout);
     }
 
-
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state,
                                        int position) {
@@ -26,7 +25,7 @@ public class LinearLayoutManagerWithSmoothScroller extends LinearLayoutManager {
     }
 
     private class TopSnappedSmoothScroller extends LinearSmoothScroller {
-        TopSnappedSmoothScroller(Context context) {
+        public TopSnappedSmoothScroller(Context context) {
             super(context);
 
         }
@@ -34,7 +33,7 @@ public class LinearLayoutManagerWithSmoothScroller extends LinearLayoutManager {
         @Override
         public PointF computeScrollVectorForPosition(int targetPosition) {
             return LinearLayoutManagerWithSmoothScroller.this
-                    .computeScrollVectorForPosition(targetPosition);
+                .computeScrollVectorForPosition(targetPosition);
         }
 
         @Override

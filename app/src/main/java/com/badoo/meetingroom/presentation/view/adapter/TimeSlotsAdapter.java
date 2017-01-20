@@ -193,10 +193,17 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
         if (getItemCount() == 1) {
             drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_slot);
+            return drawable;
         }
 
-        if (position == 0) {
-            drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_left_slot);
+
+        if (position == 0 && position < getItemCount() - 1) {
+            int rightStatus = mEventModelList.get(position + 1).getStatus();
+            if (rightStatus == mEventModelList.get(position).getStatus()) {
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_left_slot);
+            } else {
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_slot);
+            }
             return drawable;
         }
 

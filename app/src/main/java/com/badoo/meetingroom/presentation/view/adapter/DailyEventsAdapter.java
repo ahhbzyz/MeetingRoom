@@ -1,7 +1,9 @@
 package com.badoo.meetingroom.presentation.view.adapter;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -40,32 +42,41 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     private final Context mContext;
     private ArrayList<EventModel> mEventModelList;
     private OnItemClickListener mOnItemClickListener;
-    private View mLastDividerView;
+
     private SparseArray<List<TextView>> mTimestampTextViews;
-    private TextView mHiddenTv;
+    private SparseArray<List<View>> mDividers;
+    private SparseArray<List<FrameLayout>> mSubLayouts;
+
+    private SparseArray<TextView> mHiddenTvs;
+
+    private Drawable mRippleDrawable;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_event_period)
         TextView mEventPeriodTv;
-        @BindView(R.id.tv_event_info)
-        TextView mEventInfoTv;
+        @BindView(R.id.tv_event_creator)
+        TextView mEventCreatorTv;
+        @BindView(R.id.tv_event_title)
+        TextView mEventTitle;
         @BindView(R.id.img_timeline_bar)
         ImageView mTimelineBar;
-        @BindView(R.id.layout_event_content)
-        LinearLayout mEventContentLayout;
+        @BindView(R.id.layout_event_textviews)
+        LinearLayout mEventTextViewsLayout;
         @BindView(R.id.layout_timestamps)
         RelativeLayout mTimestampsLayout;
-        @BindView(R.id.layout_clickable)
-        FrameLayout mClickableLayout;
+        @BindView(R.id.layout_dividers)
+        RelativeLayout mDividersLayout;
         @BindView(R.id.layout_current_time)
         LinearLayout mCurrentTimeLayout;
         @BindView(R.id.tv_current_time)
         TextView mCurrentTimeTv;
         @BindView(R.id.layout_no_timestamps)
         RelativeLayout mNoTimestampsLayout;
-        @BindView(R.id.view_item_divider_fill)
-        View mItemDividerFillView;
+
+//        @BindView(R.id.view_item_divider)
+//        View mItemDividerView;
+
 
 
         private ViewHolder(View view) {
@@ -79,6 +90,15 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         mContext = context;
         mEventModelList = new ArrayList<>();
         mTimestampTextViews = new SparseArray<>();
+        mDividers = new SparseArray<>();
+        mHiddenTvs = new SparseArray<>();
+        mSubLayouts = new SparseArray<>();
+        int[] attrs = new int[] { android.R.attr.selectableItemBackground};
+        TypedArray ta = mContext.obtainStyledAttributes(attrs);
+        mRippleDrawable = ta.getDrawable(0);
+
+        // Finally free resources used by TypedArray
+        ta.recycle();
     }
 
     public void setDailyEventList(List<EventModel> roomEventModelList) {
@@ -88,18 +108,16 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         mEventModelList = (ArrayList<EventModel>) roomEventModelList;
         notifyDataSetChanged();
 
-        mLastDividerView = new View(mContext);
-        mLastDividerView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_divider_color));
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-            (int) mContext.getResources().getDimension(R.dimen.item_vertical_event_divider_height));
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        mLastDividerView.setLayoutParams(params);
-
-        mHiddenTv = new TextView(mContext);
-        mHiddenTv.setText(mContext.getString(R.string.fake_time));
-        mHiddenTv.setVisibility(View.INVISIBLE);
-
         createTimestampTextViews(mEventModelList);
+
+
+        for (int i = 0; i < mEventModelList.size(); i++) {
+                TextView mHiddenTv = new TextView(mContext);
+                mHiddenTv.setText(mContext.getString(R.string.fake_time));
+                mHiddenTv.setVisibility(View.INVISIBLE);
+                mHiddenTvs.put(i, mHiddenTv);
+        }
+
     }
 
     @Override
@@ -121,159 +139,186 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             = event.getRemainingTime() / (float) event.getDuration();
 
         // Calculate item height
-        float viewHeight = event.getDuration() * HEIGHT_PER_MILLIS + mContext.getResources().getDimension(R.dimen.item_vertical_event_divider_height);
+        float viewHeight = event.getDuration() * HEIGHT_PER_MILLIS;
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, (int) viewHeight);
         holder.itemView.setLayoutParams(params);
 
         holder.mEventPeriodTv.measure(0, 0);
-        holder.mEventInfoTv.measure(0, 0);
+        holder.mEventCreatorTv.measure(0, 0);
 
         holder.mEventPeriodTv.setVisibility(View.VISIBLE);
-        holder.mEventInfoTv.setVisibility(View.VISIBLE);
+        holder.mEventCreatorTv.setVisibility(View.VISIBLE);
 
         if (viewHeight < holder.mEventPeriodTv.getMeasuredHeight()) {
             holder.mEventPeriodTv.setVisibility(View.INVISIBLE);
-            holder.mEventInfoTv.setVisibility(View.INVISIBLE);
+            holder.mEventCreatorTv.setVisibility(View.INVISIBLE);
         }
-        else if (viewHeight < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
-            holder.mEventInfoTv.setVisibility(View.INVISIBLE);
+        else if (viewHeight < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventCreatorTv.getMeasuredHeight())) {
+            holder.mEventCreatorTv.setVisibility(View.INVISIBLE);
         }
 
-        // new item layout
-        holder.mEventPeriodTv.setText("");
-        holder.mEventInfoTv.setText("");
 
 
-        holder.mItemDividerFillView.setBackgroundColor(event.getEventColor());
+        float topTimelineBarHeight = event.getDuration() * HEIGHT_PER_MILLIS * (1 - remainingProgress);
+
+        holder.mEventTextViewsLayout.setOrientation(LinearLayout.VERTICAL);
+
+        if (viewHeight < holder.mEventPeriodTv.getMeasuredHeight() * 3) {
+            holder.mEventTextViewsLayout.setOrientation(LinearLayout.HORIZONTAL);
+        }
 
 
-        // Reset view
-        LinearLayout.LayoutParams offsetParams
-            = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        offsetParams.setMargins(0, 0, 0, 0);
-        holder.mEventPeriodTv.setLayoutParams(offsetParams);
+        // Set Text
+        if(event.isFastBooking()) {
+            holder.mEventTitle.setText(mContext.getString(R.string.fast_booking));
+            holder.mEventCreatorTv.setText(mContext.getString(R.string.no_name_available));
+        } else {
+            holder.mEventTitle.setText(event.getEventTitle());
+            holder.mEventCreatorTv.setText(event.getCreatorEmailAddress());
+        }
+
+        if (event.isAvailable()) {
+            holder.mEventPeriodTv.setText("");
+        } else {
+            holder.mEventPeriodTv.setText(event.getDurationInText());
+        }
 
         // Event Expired
         if (event.isExpired()) {
-            if (event.isAvailable()) {
-                holder.mEventInfoTv.setText("");
-            }
-            else {
-                holder.mEventPeriodTv.setText(event.getDurationInText());
-                holder.mEventInfoTv.setText(event.getCreatorEmailAddress());
-            }
 
+            holder.mEventTitle.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_title_text_grey));
+            holder.mEventCreatorTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_creator_text_grey));
             holder.mTimelineBar.setBackgroundColor(event.getEventExpiredColor());
-            holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
-            holder.mEventContentLayout.setBackground(null);
-            holder.mItemDividerFillView.setBackgroundColor(event.getEventExpiredColor());
 
+            holder.mEventTextViewsLayout.setBackground(null);
+            holder.mCurrentTimeLayout.setVisibility(View.GONE);
         }
+        else if (event.isProcessing()) {
 
-        float topTimelineBarHeight = event.getDuration() * HEIGHT_PER_MILLIS * (1 - remainingProgress);
-        float bottomTimelineBarHeight = event.getDuration() * HEIGHT_PER_MILLIS * remainingProgress;
-
-
-        if (event.isProcessing()) {
             holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
             holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
             holder.mCurrentTimeLayout.measure(0, 0);
-            holder.mCurrentTimeLayout.setY(topTimelineBarHeight
-                - holder.mCurrentTimeLayout.getMeasuredHeight() / 2f
-                + mContext.getResources().getDimension(R.dimen.item_vertical_event_divider_height));
-        }
-        else {
-            holder.mCurrentTimeLayout.setVisibility(View.GONE);
-        }
+            holder.mCurrentTimeLayout.setY(topTimelineBarHeight - holder.mCurrentTimeLayout.getMeasuredHeight() / 2f);
 
-        // Event in processing
-        if (event.isProcessing()) {
+            holder.mEventTitle.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_title_text));
+            holder.mEventCreatorTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_creator_text));
 
-            holder.mItemDividerFillView.setBackgroundColor(event.getEventExpiredColor());
 
             if (event.isAvailable()) {
-                if (bottomTimelineBarHeight < holder.mEventPeriodTv.getMeasuredHeight()) {
-                    holder.mEventPeriodTv.setVisibility(View.INVISIBLE);
-                    holder.mEventInfoTv.setVisibility(View.INVISIBLE);
-                }
-                else if (bottomTimelineBarHeight < (holder.mEventPeriodTv.getMeasuredHeight() + holder.mEventInfoTv.getMeasuredHeight())) {
-                    holder.mEventInfoTv.setVisibility(View.INVISIBLE);
-                }
-
                 TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getAvailableColor(), remainingProgress);
-
                 holder.mTimelineBar.setBackground(barDrawable);
-                BusyBgDrawable bg = new BusyBgDrawable(Color.TRANSPARENT, Color.TRANSPARENT, remainingProgress);
-                holder.mEventContentLayout.setBackground(bg);
+                holder.mEventTextViewsLayout.setBackground(null);
             }
             else {
                 TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getBusyColor(), remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
-                holder.mEventPeriodTv.setText(event.getDurationInText());
-                holder.mEventInfoTv.setText(event.getCreatorEmailAddress());
-                holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
                 BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE, remainingProgress);
-                holder.mEventContentLayout.setBackground(bg);
+                holder.mEventTextViewsLayout.setBackground(bg);
                 holder.mEventPeriodTv.setText(event.getDurationInText());
             }
         }
-
-        // Event is coming
-        if (event.isComing()) {
+        else {
+            holder.mEventTitle.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_title_text));
+            holder.mEventCreatorTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_creator_text));
             if (event.isAvailable()) {
                 holder.mTimelineBar.setBackgroundColor(event.getAvailableColor());
-                holder.mEventContentLayout.setBackground(null);
+                holder.mEventTextViewsLayout.setBackground(null);
             }
             else {
                 holder.mTimelineBar.setBackgroundColor(event.getBusyColor());
-                holder.mEventPeriodTv.setText(event.getDurationInText());
-                holder.mEventInfoTv.setText(event.getCreatorEmailAddress());
-                holder.mEventInfoTv.setTextColor(ContextCompat.getColor(mContext, R.color.textGray));
                 BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE);
-                holder.mEventContentLayout.setBackground(bg);
+                holder.mEventTextViewsLayout.setBackground(bg);
             }
+            holder.mCurrentTimeLayout.setVisibility(View.GONE);
+
         }
 
 
+        // Add Text views
         holder.mTimestampsLayout.removeAllViews();
-
 
         if (mTimestampTextViews.get(position) != null) {
 
-            for (int i = 0 ; i < mTimestampTextViews.get(position).size(); i ++) {
-                TextView view  = mTimestampTextViews.get(position).get(i);
+            for (int i = 0; i < mTimestampTextViews.get(position).size(); i++) {
+                TextView view = mTimestampTextViews.get(position).get(i);
                 if (TimeHelper.getCurrentTimeInMillis() >= event.getTimeStamps().get(i) - TimeHelper.min2Millis(3) &&
                     TimeHelper.getCurrentTimeInMillis() <= event.getTimeStamps().get(i) + TimeHelper.min2Millis(3)) {
                     continue;
                 }
-                if(view.getParent() != null) {
+                if (view.getParent() != null) {
                     ((ViewGroup) view.getParent()).removeView(view);
                 }
                 holder.mTimestampsLayout.addView(view);
             }
         }
 
-        if (holder.mTimestampsLayout.getChildCount() == 0) {
-            if(mHiddenTv.getParent() != null) {
-                ((ViewGroup) mHiddenTv.getParent()).removeView(mHiddenTv);
+
+        // Add hidden text views
+        if (mHiddenTvs.get(position) != null) {
+            if (mHiddenTvs.get(position).getParent() != null) {
+                ((ViewGroup) mHiddenTvs.get(position).getParent()).removeView(mHiddenTvs.get(position));
             }
-            holder.mTimestampsLayout.addView(mHiddenTv);
+            holder.mTimestampsLayout.addView(mHiddenTvs.get(position));
         }
 
-        addDividerToEnd(holder, position);
 
-        if (event.isAvailable() && !event.isExpired()) {
-            holder.mClickableLayout.setEnabled(true);
-            holder.mClickableLayout.setOnClickListener(v -> {
-                if (this.mOnItemClickListener != null) {
-                    this.mOnItemClickListener.onEventItemClicked(position, mEventModelList);
+        for (int i = 0 ; i < mDividers.size(); i++) {
+            for (View view : mDividers.get(i)) {
+                holder.mDividersLayout.removeView(view);
+            }
+        }
+
+
+        // Add hourly divider
+        if (mDividers.get(position) != null) {
+
+            // Remove all views
+
+
+            // Add corresponding view
+            for (View view : mDividers.get(position)) {
+                if (view.getParent() != null) {
+                    ((ViewGroup) view.getParent()).removeView(view);
                 }
-            });
+                holder.mDividersLayout.addView(view, 0);
+            }
         }
-        else {
-            holder.mClickableLayout.setEnabled(false);
-            holder.mClickableLayout.setOnClickListener(null);
-        }
+
+
+//        for (int i = 0 ; i < mSubLayouts.size(); i++) {
+//            for (View view : mSubLayouts.get(i)) {
+//                holder.mDividersLayout.removeView(view);
+//            }
+//        }
+//
+//        if (mSubLayouts.get(position) != null) {
+//            // Add corresponding view
+//            for (View view : mSubLayouts.get(position)) {
+//                if (view.getParent() != null) {
+//                    ((ViewGroup) view.getParent()).removeView(view);
+//                }
+//                holder.mDividersLayout.addView(view);
+//                view.setFocusable(true);
+//            }
+//        }
+
+        // Add divider to end
+        //addDividerToEnd(holder, position);
+
+
+        // Click listener
+//        if (event.isAvailable() && !event.isExpired()) {
+//            holder.mDividersLayout.setEnabled(true);
+//            holder.mDividersLayout.setOnClickListener(v -> {
+//                if (this.mOnItemClickListener != null) {
+//                    this.mOnItemClickListener.onEventItemClicked(position, mEventModelList);
+//                }
+//            });
+//        }
+//        else {
+//            holder.mDividersLayout.setEnabled(false);
+//            holder.mDividersLayout.setOnClickListener(null);
+//        }
     }
 
     @Override
@@ -292,11 +337,13 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     private void createTimestampTextViews(List<EventModel> eventModelList) {
 
 
-        for (int i = 0; i < eventModelList.size(); i ++) {
+        for (int i = 0; i < eventModelList.size(); i++) {
 
             EventModel eventModel = eventModelList.get(i);
 
             List<TextView> textViewList = new ArrayList<>();
+            List<View> dividerList = new ArrayList<>();
+            List<FrameLayout> layoutList = new ArrayList<>();
 
             for (int j = 0; j < eventModel.getTimeStamps().size(); j++) {
 
@@ -312,26 +359,52 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
                 float textOffset = textViewHeight / 2f;
 
-                float topMargin = (ts - eventModel.getStartTime()) * HEIGHT_PER_MILLIS
-                    - textOffset
-                    + mContext.getResources().getDimension(R.dimen.item_vertical_event_divider_height);
+                float topMargin = (ts - eventModel.getStartTime()) * HEIGHT_PER_MILLIS - textOffset;
 
                 timestampTv.setY(topMargin);
 
                 textViewList.add(timestampTv);
-            }
-            mTimestampTextViews.put(i, textViewList);
-        }
-    }
 
-    private void addDividerToEnd(ViewHolder holder, int position) {
-        if (position == getItemCount() - 1) {
-            if(mLastDividerView.getParent() != null) {
-                ((ViewGroup) mLastDividerView.getParent()).removeView(mLastDividerView);
+//                if (!eventModel.isExpired() && eventModel.isAvailable()) {
+//
+//                    FrameLayout layout = new FrameLayout(mContext);
+//                    float height = HEIGHT_PER_MILLIS * TimeHelper.min2Millis(15);
+//                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) height);
+//                    params.setMargins(0, (int) (topMargin + textOffset), 0, 0);
+//                    layout.setLayoutParams(params);
+//                    layout.setClickable(true);
+//
+//                    if (j % 2 == 0) {
+//                        layout.setBackgroundColor(Color.RED);
+//                    } else  {
+//                        layout.setBackgroundColor(Color.BLACK);
+//                    }
+//
+//                    //layout.setBackgroundColor(Color.RED);
+//                    //layout.setBackground(mRippleDrawable);
+//
+//
+//                    layout.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                        }
+//                    });
+//                    layoutList.add(layout);
+//                }
+
+
+                if (TimeHelper.getMin(ts) == 0) {
+                    View view = new View(mContext);
+                    view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_hourly_divider_color));
+                    RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mContext.getResources().getDimension(R.dimen.item_vertical_event_hourly_divider_height));
+                    dividerParams.setMargins(0, (int) (topMargin + textOffset), 0, 0);
+                    view.setLayoutParams(dividerParams);
+                    dividerList.add(view);
+                }
             }
-            holder.mNoTimestampsLayout.addView(mLastDividerView);
-        } else {
-            holder.mNoTimestampsLayout.removeView(mLastDividerView);
+            mDividers.put(i, dividerList);
+            mTimestampTextViews.put(i, textViewList);
+            mSubLayouts.put(i, layoutList);
         }
     }
 }

@@ -11,10 +11,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,24 +47,41 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     private static final int REQUEST_AUTHORIZATION = 1001;
 
-    @Inject RoomBookingPresenter mPresenter;
-    @Inject TimeSlotsAdapter mAdapter;
-    @Inject @Named("stolzl_regular") Typeface mStolzlRegularTypeface;
-    @Inject @Named("stolzl_medium") Typeface mStolzlMediumTypeface;
-    @Inject @Named(GetAvatar.NAME) GetAvatar mGetAvatarUseCase;
+    @Inject
+    RoomBookingPresenter mPresenter;
+    @Inject
+    TimeSlotsAdapter mAdapter;
+    @Inject
+    @Named("stolzl_regular")
+    Typeface mStolzlRegularTypeface;
+    @Inject
+    @Named("stolzl_medium")
+    Typeface mStolzlMediumTypeface;
+    @Inject
+    @Named(GetAvatar.NAME)
+    GetAvatar mGetAvatarUseCase;
 
-    @BindView(R.id.tv_current_date) TextView mCurrentDateTv;
-    @BindView(R.id.tv_room_name) TextView mRoomNameTv;
-    @BindView(R.id.tv_booking_date) TextView mBookingDateTv;
-    @BindView(R.id.tv_booking_period) TextView mBookingPeriodTv;
+    @BindView(R.id.tv_current_date)
+    TextView mCurrentDateTv;
+    @BindView(R.id.tv_room_name)
+    TextView mRoomNameTv;
+    @BindView(R.id.tv_booking_date)
+    TextView mBookingDateTv;
+    @BindView(R.id.tv_booking_period)
+    TextView mBookingPeriodTv;
 
-    @BindView(R.id.autocomplete_email_address) MyAutoCompleteTextView mAutoCompleteTv;
-    @BindView(R.id.rv_time_slots) RecyclerView mTimeSlotsRv;
-    @BindView(R.id.btn_book) Button mBookBtn;
-    @BindView(R.id.pb_loading_contacts) ProgressBar mLoadingContactsPb;
+    @BindView(R.id.autocomplete_email_address)
+    MyAutoCompleteTextView mAutoCompleteTv;
+    @BindView(R.id.rv_time_slots)
+    RecyclerView mTimeSlotsRv;
+    @BindView(R.id.btn_book)
+    Button mBookBtn;
+    @BindView(R.id.pb_loading_contacts)
+    ProgressBar mLoadingContactsPb;
 
     private boolean hasSlots;
     LinearLayoutManagerWithSmoothScroller mLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +119,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
 
         mLayoutManager = new LinearLayoutManagerWithSmoothScroller(context(), LinearLayoutManager.HORIZONTAL, false);
-        mTimeSlotsRv.setLayoutManager(mLayoutManager);
+        mTimeSlotsRv.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(context(), LinearLayoutManager.HORIZONTAL, false));
         mTimeSlotsRv.setAdapter(mAdapter);
 
         mAutoCompleteTv.setTypeface(mStolzlRegularTypeface);
@@ -110,8 +129,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     public void setUpAutoCompleteTextView(List<BadooPersonModel> badooPersonModelList) {
 
         EmailAutoCompleteAdapter adapter = new EmailAutoCompleteAdapter(this, R.layout.item_badoo_person, badooPersonModelList);
+        mAutoCompleteTv.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mAutoCompleteTv.setAdapter(adapter);
-        mAutoCompleteTv.setThreshold(getString(R.string.badoo_mail_suffix).length() + 2);
         mAutoCompleteTv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -125,16 +144,15 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()) {
-                    s.append(getString(R.string.badoo_mail_suffix));
-                }
+
             }
         });
 
         mAutoCompleteTv.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 RoomBookingActivity.this.setImmersiveMode();
-            } else {
+            }
+            else {
             }
         });
     }
@@ -143,28 +161,27 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     public void renderTimeSlotsInView(int position, List<EventModel> availableEventList) {
 
 
+        if (availableEventList != null && !availableEventList.isEmpty()) {
+            mBookingDateTv.setText(TimeHelper.formatDate(availableEventList.get(0).getStartTime()));
+        }
+        else {
+            mBookingDateTv.setText(getString(R.string.today));
+        }
 
-//        if (startTime < TimeHelper.getMidNightTimeOfDay(1)) {
-//            mBookingDateTv.setText(getString(R.string.today));
-//        } else {
-//            mBookingDateTv.setText(TimeHelper.formatDate(startTime));
-//        }
-//
-//        mAdapter.setTimeSlots(startTime, endTime);
-//
         // Set left padding
         mAdapter.setEventModelList(availableEventList);
 
         if (mAdapter.getItemCount() >= 1) {
+
             int width = Resources.getSystem().getDisplayMetrics().widthPixels;
 
-              float leftPadding = (width) / 2 - getResources().getDimension(R.dimen.room_booking_time_slot_width) / 2f;
-          // }
+            //LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTimeSlotsRv.getLayoutParams();
+            float leftPadding = (width) / 2 - getResources().getDimension(R.dimen.room_booking_time_slot_width) / 2f;
+            //params.setMargins((int) leftPadding, 0, 0, 0);
             mTimeSlotsRv.setPadding((int) leftPadding, 0, 0, 0);
-            //mAdapter.setRecyclerViewParams(width, leftPadding);
         }
 
-        mTimeSlotsRv.smoothScrollToPosition(position);
+        mTimeSlotsRv.scrollToPosition(position);
 
 //        mAdapter.setOnItemClickListener(timeSlotList -> {
 //            //mPresenter.setTimeSlotList(timeSlotList);
@@ -176,7 +193,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         if (startTime != -1 && endTime != -1) {
             if (TimeHelper.isMidNight(endTime)) {
                 mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + "24:00");
-            } else {
+            }
+            else {
                 mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + TimeHelper.formatTime(endTime));
             }
             hasSlots = true;

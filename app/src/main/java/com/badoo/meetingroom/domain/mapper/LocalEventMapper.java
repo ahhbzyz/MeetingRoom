@@ -2,13 +2,13 @@ package com.badoo.meetingroom.domain.mapper;
 
 import com.badoo.meetingroom.domain.entity.intf.LocalEvent;
 import com.badoo.meetingroom.domain.entity.impl.LocalEventImpl;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.google.api.services.calendar.model.Event;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Created by zhangyaozhong on 20/12/2016.
@@ -21,7 +21,7 @@ public class LocalEventMapper {
 
     private LocalEvent map(Event event) {
 
-        LocalEvent roomEvent = null;
+        LocalEvent localEvent = null;
 
         if (event != null && event.getStart().getDateTime() != null
                           && event.getEnd().getDateTime() != null) {
@@ -42,19 +42,21 @@ public class LocalEventMapper {
             long startTime = event.getStart().getDateTime().getValue();
             long endTime = event.getEnd().getDateTime().getValue();
 
-            roomEvent = new LocalEventImpl();
-            roomEvent.setId(event.getId());
-            roomEvent.setCreatorId(creatorId);
-            roomEvent.setCreatorEmailAddress(creatorEmailAddress);
-            roomEvent.setStartTime(startTime);
-            roomEvent.setEndTime(endTime);
-            roomEvent.setStatus(LocalEvent.BUSY);
+            localEvent = new LocalEventImpl();
+            localEvent.setId(event.getId());
+            localEvent.setCreatorId(creatorId);
+            localEvent.setCreatorName(event.getCreator().getDisplayName());
+            localEvent.setCreatorEmailAddress(creatorEmailAddress);
+            localEvent.setStartTime(startTime);
+            localEvent.setEndTime(endTime);
+            localEvent.setEventTitle(event.getSummary());
+            localEvent.setStatus(LocalEvent.BUSY);
 
-            if (event.getDescription() != null && event.getDescription().equals("fast_book")) {
-                roomEvent.setFastBook(true);
+            if (event.getDescription() != null && event.getDescription().equals(LocalEvent.FAST_BOOKING_DESCRIPTION)) {
+                localEvent.setFastBooking(true);
             }
         }
-        return roomEvent;
+        return localEvent;
     }
 
     public List<LocalEvent> map(List<Event> eventList) {

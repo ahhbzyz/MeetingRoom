@@ -27,7 +27,6 @@ class RoomStatusHandler {
 
     private final RoomStatusActivity activity;
     private boolean hasRequested;
-    private CountDownTimer mCountDownTimer;
     private EventModel mCurrentEvent;
 
     @Inject
@@ -95,6 +94,12 @@ class RoomStatusHandler {
         View btnGroup = View.inflate(activity.getApplicationContext(), R.layout.layout_btn_group_onhold, null);
         activity.mButtonsLayout.addView(btnGroup);
 
+        TextView confirmTv = (TextView) btnGroup.findViewById(R.id.tv_confirm);
+        confirmTv.setTypeface(activity.mStolzlRegularTypeface);
+
+        TextView dismissTv = (TextView) btnGroup.findViewById(R.id.tv_confirm);
+        dismissTv.setTypeface(activity.mStolzlRegularTypeface);
+
         ImageButton confirmBtn = (ImageButton) btnGroup.findViewById(R.id.btn_confirm);
         confirmBtn.setOnClickListener(v -> activity.mPresenter.setEventConfirmed());
 
@@ -112,9 +117,18 @@ class RoomStatusHandler {
         View btnGroup = View.inflate(activity.getApplicationContext(), R.layout.layout_btn_group_busy, null);
         activity.mButtonsLayout.addView(btnGroup);
 
+
+        TextView dndTv = (TextView) btnGroup.findViewById(R.id.tv_dnd);
+        dndTv.setTypeface(activity.mStolzlRegularTypeface);
+
+        TextView endTv = (TextView) btnGroup.findViewById(R.id.tv_hold_to_end);
+        endTv.setTypeface(activity.mStolzlRegularTypeface);
+
+        TextView extendTv = (TextView) btnGroup.findViewById(R.id.tv_extend);
+        extendTv.setTypeface(activity.mStolzlRegularTypeface);
+
         LongPressButton endBtn = (LongPressButton) btnGroup.findViewById(R.id.btn_end);
         endBtn.setOnCountDownListener(() -> activity.mPresenter.deleteEvent());
-
 
         ImageButton dndBtn = (ImageButton) btnGroup.findViewById(R.id.btn_dnd);
         dndBtn.setOnClickListener(v -> activity.mPresenter.setDoNotDisturb(true));
@@ -158,15 +172,12 @@ class RoomStatusHandler {
         );
         activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.STROKE);
 
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel();
-        }
 
         switch (event.getStatus()) {
 
             case EventModel.AVAILABLE:
 
-                activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_add_black_24px));
+                activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_add_small));
 
                 activity.mRoomStatusTv.setText(activity.getString(R.string.available_for_upper_case));
 
@@ -179,7 +190,7 @@ class RoomStatusHandler {
                 break;
             case EventModel.BUSY:
 
-                activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_info_black_24px));
+                activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_info));
 
                 if (event.isOnHold() && !event.isConfirmed()) {
                     activity.mRoomStatusTv.setText(activity.getString(R.string.on_hold_for_upper_case));
@@ -211,12 +222,6 @@ class RoomStatusHandler {
                 break;
             default:
                 break;
-        }
-    }
-
-    void stopTextViewsCountDown() {
-        if (mCountDownTimer != null) {
-            mCountDownTimer.cancel();
         }
     }
 
