@@ -105,9 +105,12 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void onEventItemClicked(View view, ArrayList<EventModel> eventModelList) {
+    public void onEventItemClicked(int position, ArrayList<EventModel> eventModelList) {
         Intent intent = new Intent(getActivity(), RoomBookingActivity.class);
-        intent.putParcelableArrayListExtra("eventModelList", eventModelList);
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
+        bundle.putParcelableArrayList("eventModelList", eventModelList);
+        intent.putExtra("bookingRoom", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivityForResult(intent, REQUEST_BOOK_ROOM);
     }

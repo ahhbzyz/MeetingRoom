@@ -1,6 +1,10 @@
 package com.badoo.meetingroom.presentation.view.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,28 +30,39 @@ import butterknife.ButterKnife;
  * Created by zhangyaozhong on 30/12/2016.
  */
 
-public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.ViewHolder>{
+public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.ViewHolder> {
 
     private Context mContext;
-    //private List<TimeSlot> mTimeSlotList;
     private final long mDefaultSlotLength = TimeHelper.min2Millis(15);
+    private final float WIDTH_PER_MILLIS;
     private int mRecyclerViewWidth = -1;
     private int mLeftPadding = -1;
-    private final int [] timestamps = new int[]{15, 30, 45, 60};
-    private OnItemClickListener mOnItemClickListener;
     private List<EventModel> mEventModelList;
     private List<Boolean> mSelectedList;
+    private int mFirstSelectedPos = -1;
+    private int mLastSelectedPos = -1;
 
     public void setEventModelList(List<EventModel> eventModelList) {
         mEventModelList = eventModelList;
-        mSelectedList = new ArrayList<>(mEventModelList.size());
+        mSelectedList = new ArrayList<>();
+        for (EventModel eventModel : eventModelList) {
+            if (eventModel.isAvailable()) {
+                mSelectedList.add(false);
+            }
+            else {
+                mSelectedList.add(true);
+            }
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tv_start_time) TextView mStartTimeTv;
-        @BindView(R.id.img_time_slot) ImageView mTimeSlotImg;
-        @BindView(R.id.divider) View mDivider;
+        @BindView(R.id.tv_start_time)
+        TextView mStartTimeTv;
+        @BindView(R.id.img_time_slot)
+        ImageView mTimeSlotImg;
+
+
         private ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
@@ -57,48 +72,8 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     @Inject
     TimeSlotsAdapter(Context context) {
         this.mContext = context;
+        WIDTH_PER_MILLIS = mContext.getResources().getDimension(R.dimen.room_booking_time_slot_width) / mDefaultSlotLength;
     }
-
-//    public void setTimeSlots(long startTime, long endTime) {
-//
-//        if (endTime <= startTime) {
-//            throw new IllegalArgumentException("End time cannot less than or equal to start time");
-//        }
-//
-////        endTime = TimeHelper.dropSeconds(endTime);
-//
-//        long newStartTime = startTime;
-//        for (int t : timestamps) {
-//            if (TimeHelper.getMin(startTime) <= t) {
-//                newStartTime = TimeHelper.dropSeconds(startTime + TimeHelper.min2Millis(t - TimeHelper.getMin(startTime)));
-//                break;
-//            }
-//        }
-//        int numOfSlots = (int) ((endTime - newStartTime) / mDefaultSlotLength);
-//
-//
-//        if (newStartTime != startTime) {
-//            mTimeSlotList.add(new TimeSlot(startTime));
-//        }
-//        if (numOfSlots <= 0) {
-//            mTimeSlotList.add(new TimeSlot(endTime));
-//        } else {
-//            for (int i = 0; i <= numOfSlots; i++) {
-//                mTimeSlotList.add(new TimeSlot(newStartTime));
-//                newStartTime += mDefaultSlotLength;
-//            }
-//            newStartTime -= mDefaultSlotLength;
-//            if (!TimeHelper.isSameTimeIgnoreSec(newStartTime, endTime)) {
-//                mTimeSlotList.add(new TimeSlot(endTime));
-//            }
-//        }
-//        notifyDataSetChanged();
-//    }
-//
-//    public void setRecyclerViewParams(int width, int leftPadding) {
-//        this.mRecyclerViewWidth = width;
-//        this.mLeftPadding = leftPadding;
-//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -111,147 +86,187 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         EventModel eventModel = mEventModelList.get(position);
+
+        float viewWidth = eventModel.getDuration() * WIDTH_PER_MILLIS;
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) viewWidth,
+            (int) mContext.getResources().getDimension(R.dimen.room_booking_time_slot_height));
+        //holder.mTimeSlotImg.setLayoutParams(params);
+
         holder.mStartTimeTv.setText(eventModel.getStartTimeInText());
 
-        if (!mSelectedList.isEmpty() && mSelectedList.get(position)) {
+        Drawable timeSlotBg = drawTimeSlotShape(position);
+        changeTimeSlotBg(eventModel, position, timeSlotBg);
+        holder.mTimeSlotImg.setBackground(timeSlotBg);
 
-            if (getItemCount() == 2) {
-                if (position == 0) {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_selected_slot));
-                } else {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_busy_slot));
+        holder.itemView.setOnClickListener(v -> {
+
+            if (eventModel.isAvailable()) {
+
+                if (mFirstSelectedPos == -1 || mLastSelectedPos == -1 || (mFirstSelectedPos == position && mLastSelectedPos == position)) {
+
+                    mSelectedList.set(position, !mSelectedList.get(position));
+                    if (mSelectedList.get(position)) {
+                        mFirstSelectedPos = position;
+                        mLastSelectedPos = position;
+                    }
+                    else {
+                        mFirstSelectedPos = -1;
+                        mLastSelectedPos = -1;
+                    }
+                    notifyItemChanged(position);
                 }
-            } else {
-                if (position == 0) {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_selected_start_slot));
-                } else if (position == getItemCount() - 2){
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_selected_end_slot));
-                } else if (position == getItemCount() - 1) {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_busy_slot));
-                } else {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_normal_selected_slot));
+                else {
+                    int i = mFirstSelectedPos < position ? mFirstSelectedPos : position;
+                    int j = mFirstSelectedPos < position ? position : mFirstSelectedPos;
+                    boolean hasBreakPoint = false;
+                    for (int k = i; k <= j; k++) {
+                        if (mEventModelList.get(k).isBusy()) {
+                            hasBreakPoint = true;
+                            break;
+                        }
+                    }
+                    if (hasBreakPoint) {
+                        int temp = mFirstSelectedPos;
+
+                        mSelectedList.set(position, !mSelectedList.get(position));
+                        notifyItemChanged(position);
+
+                        // Remove previous selected slots
+                        while (mSelectedList.get(temp) == mSelectedList.get(position) &&
+                            mEventModelList.get(temp).isAvailable() && temp < getItemCount() - 1) {
+                            mSelectedList.set(temp, !mSelectedList.get(position));
+                            notifyItemChanged(temp);
+                            temp++;
+                        }
+                        mFirstSelectedPos = position;
+                        mLastSelectedPos = position;
+                    }
+                    else {
+
+                        if (position < mFirstSelectedPos) {
+
+                            for (int p = position; p < mFirstSelectedPos; p++) {
+                                mSelectedList.set(p, mSelectedList.get(mFirstSelectedPos));
+                                notifyItemChanged(p);
+                            }
+
+                            mFirstSelectedPos = position;
+
+                        }
+                        else if (position == mFirstSelectedPos) {
+                            mSelectedList.set(position, !mSelectedList.get(position));
+                            notifyItemChanged(position);
+                            mFirstSelectedPos++;
+                        }
+                        else {
+
+                            mSelectedList.set(position, !mSelectedList.get(position));
+                            notifyItemChanged(position);
+
+                            for (int p = mLastSelectedPos + 1; p < position; p++) {
+                                mSelectedList.set(p, mSelectedList.get(mFirstSelectedPos));
+                                notifyItemChanged(p);
+                            }
+
+                            if (!mSelectedList.get(position)) {
+                                for (int p = position + 1; p <= mLastSelectedPos; p++) {
+                                    mSelectedList.set(p, !mSelectedList.get(mFirstSelectedPos));
+                                    notifyItemChanged(p);
+                                }
+                                mLastSelectedPos = position - 1;
+                            }
+                            else {
+                                mLastSelectedPos = position;
+                            }
+                        }
+                    }
                 }
             }
+        });
+    }
 
-        } else {
 
-            if (getItemCount() == 2) {
-                if (position == 0) {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_unselected_slot));
-                } else {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_busy_slot));
-                }
+    private Drawable drawTimeSlotShape(int position) {
+
+        Drawable drawable = null;
+
+        if (getItemCount() == 1) {
+            drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_slot);
+        }
+
+        if (position == 0) {
+            drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_left_slot);
+            return drawable;
+        }
+
+        if (position == getItemCount() - 1 && position >= 1) {
+            int leftStatus = mEventModelList.get(position - 1).getStatus();
+            if (leftStatus == mEventModelList.get(position).getStatus()) {
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_right_slot);
             } else {
-                if (position == 0) {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_unselected_start_slot));
-                } else if (position == getItemCount() - 2){
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_unselected_end_slot));
-                } else if (position == getItemCount() - 1) {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_busy_slot));
-                } else {
-                    holder.mTimeSlotImg.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_normal_unselected_slot));
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_slot);
+            }
+            return drawable;
+        }
+
+        int leftStatus = mEventModelList.get(position - 1).getStatus();
+        int status = mEventModelList.get(position).getStatus();
+        int rightStatus = mEventModelList.get(position + 1).getStatus();
+
+        if (leftStatus == status && status == rightStatus) {
+            drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_slot);
+        }
+
+        if (leftStatus != rightStatus) {
+
+            if (status == EventModel.AVAILABLE) {
+
+                if (leftStatus == EventModel.BUSY) {
+                    drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_left_slot);
+                }
+                else {
+                    drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_right_slot);
+                }
+
+            }
+            else {
+                if (leftStatus == EventModel.BUSY) {
+                    drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_right_slot);
+                }
+                else {
+                    drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_left_slot);
                 }
             }
         }
-        holder.mTimeSlotImg.setLayoutParams(new LinearLayout.LayoutParams((int) mContext.getResources().getDimension(R.dimen.room_booking_time_slot_width),
-            (int) mContext.getResources().getDimension(R.dimen.room_booking_time_slot_height)));
 
-        if (position == getItemCount() - 1) {
-            if (mRecyclerViewWidth != - 1 && mLeftPadding != -1 && mLeftPadding > mContext.getResources().getDimension(R.dimen.room_booking_view_margin)) {
-                int slotWidth = (int) (mRecyclerViewWidth
-                    - mLeftPadding
-                    - mContext.getResources().getDimension(R.dimen.room_booking_time_slot_width) * (getItemCount() - 1)
-                    - mContext.getResources().getDimension(R.dimen.room_booking_time_slot_divider_width) * (getItemCount() - 1));
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    slotWidth,
-                    (int) mContext.getResources().getDimension(R.dimen.room_booking_time_slot_height));
-                holder.mTimeSlotImg.setLayoutParams(params);
-            } else {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    (int) mContext.getResources().getDimension(R.dimen.room_booking_time_slot_width),
-                    (int) mContext.getResources().getDimension(R.dimen.room_booking_time_slot_height));
-                holder.mTimeSlotImg.setLayoutParams(params);
-            }
-            holder.mDivider.setVisibility(View.GONE);
+        if (leftStatus == rightStatus && status != leftStatus) {
+            drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_rounded_slot);
+        }
 
-        } else {
-            holder.mDivider.setVisibility(View.INVISIBLE);
+        return drawable;
+    }
 
-            holder.itemView.setOnClickListener(v -> {
-
-//                slot.setSelected(!slot.isSelected());
-//
-//                boolean meetFirstSelectedSlot = false;
-//                for (int i = 0; i < position; i++) {
-//                    if (!mTimeSlotList.get(i).isSelected() && !meetFirstSelectedSlot) {
-//                        continue;
-//                    }
-//                    meetFirstSelectedSlot = true;
-//                    mTimeSlotList.get(i).setSelected(true);
-//                }
-//
-//                int firstSelectedSlotAfterPos = position;
-//                for (int i = position + 1; i < mTimeSlotList.size(); i++) {
-//                    if (mTimeSlotList.get(i).isSelected()) {
-//                        firstSelectedSlotAfterPos = i;
-//                        break;
-//                    }
-//                }
-//
-//                if (!slot.isSelected() && meetFirstSelectedSlot) {
-//                    for (int i = position + 1; i < mTimeSlotList.size(); i++) {
-//                        mTimeSlotList.get(i).setSelected(false);
-//                    }
-//                } else {
-//                    for (int i = position + 1; i <= firstSelectedSlotAfterPos; i++) {
-//                        mTimeSlotList.get(i).setSelected(true);
-//                    }
-//                }
-
-                notifyDataSetChanged();
-                if (this.mOnItemClickListener != null) {
-                    //this.mOnItemClickListener.onEventItemClicked(mTimeSlotList);
-                }
-            });
+    private void changeTimeSlotBg(EventModel eventModel, int position, Drawable drawable) {
+        if (!mSelectedList.isEmpty() && mSelectedList.get(position)) {
+            drawable.setColorFilter(eventModel.getEventColor(), PorterDuff.Mode.SRC_IN);
+        }
+        else {
+            drawable.setColorFilter(ContextCompat.getColor(mContext, R.color.timeSlotExpired), PorterDuff.Mode.SRC_IN);
         }
     }
+
 
     @Override
     public int getItemCount() {
         return mEventModelList == null ? 0 : mEventModelList.size();
     }
 
-    public class TimeSlot {
-
-        private long startTime;
-        private boolean isSelected = false;
-
-        TimeSlot(long startTime) {
-            this.startTime = startTime;
-        }
-
-        public long getStartTime() {
-            return startTime;
-        }
-
-        public boolean isSelected() {
-            return isSelected;
-        }
-
-        void setSelected(boolean selected) {
-            this.isSelected = selected;
-        }
-
-        String getStartTimeInText() {
-            return TimeHelper.formatTime(startTime);
-        }
-    }
-
-    public void setOnItemClickListener (TimeSlotsAdapter.OnItemClickListener onItemClickListener) {
-        this.mOnItemClickListener = onItemClickListener;
-    }
-
-    public interface OnItemClickListener {
-        void onEventItemClicked(List<TimeSlot> mTimeSlotList);
-    }
+//    public void setOnItemClickListener (TimeSlotsAdapter.OnItemClickListener onItemClickListener) {
+//        this.mOnItemClickListener = onItemClickListener;
+//    }
+//
+//    public interface OnItemClickListener {
+//        void onEventItemClicked(List<TimeSlot> mTimeSlotList);
+//    }
 }

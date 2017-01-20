@@ -17,10 +17,10 @@
         android:layout_marginTop="16dp">
 
         <ImageView
-            android:layout_width="@dimen/room_booking_time_slot_width"
             android:id="@+id/img_time_slot"
             android:layout_height="@dimen/room_booking_time_slot_height"
-            android:background="@drawable/bg_normal_selected_slot" />
+            android:layout_width="100dp"
+            android:background="@drawable/bg_slot" />
 
         <View
             android:id="@+id/divider"

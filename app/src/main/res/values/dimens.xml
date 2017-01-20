@@ -71,4 +71,6 @@
     <dimen name="daily_event_list_top_margin">16dp</dimen>
     <dimen name="daily_event_list_bottom_margin">32dp</dimen>
     <dimen name="item_vertical_event_timeline_bar_width">12dp</dimen>
+
+    <dimen name="time_slot_corner_radius">22dp</dimen>
 </resources>

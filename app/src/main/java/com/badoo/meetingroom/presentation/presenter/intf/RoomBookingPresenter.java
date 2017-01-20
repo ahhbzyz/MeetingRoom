@@ -11,9 +11,12 @@ import java.util.List;
  */
 
 public interface RoomBookingPresenter extends Presenter {
+
     void getContactList();
 
     void setView(RoomBookingView roomBookingView);
+
     void bookRoom(String organizer);
-    void setTimeSlotList(List<EventModel> eventModelList);
+
+    void setTimeSlotList(int position, List<EventModel> eventModelList);
 }

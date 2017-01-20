@@ -3,6 +3,7 @@ package com.badoo.meetingroom.presentation.view.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +27,7 @@ import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.EmailAutoCompleteAdapter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView;
+import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
@@ -60,7 +62,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @BindView(R.id.pb_loading_contacts) ProgressBar mLoadingContactsPb;
 
     private boolean hasSlots;
-
+    LinearLayoutManagerWithSmoothScroller mLayoutManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +73,9 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         initViews();
 
         mPresenter.getContactList();
-        ArrayList<EventModel> eventModelList = getIntent().getParcelableArrayListExtra("eventModelList");
-        mPresenter.setTimeSlotList(eventModelList);
+        ArrayList<EventModel> eventModelList = getIntent().getBundleExtra("bookingRoom").getParcelableArrayList("eventModelList");
+        int position = getIntent().getBundleExtra("bookingRoom").getInt("position");
+        mPresenter.setTimeSlotList(position, eventModelList);
     }
 
 
@@ -96,8 +99,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
 
 
-
-        mTimeSlotsRv.setLayoutManager(new LinearLayoutManager(context(), LinearLayoutManager.HORIZONTAL, false));
+        mLayoutManager = new LinearLayoutManagerWithSmoothScroller(context(), LinearLayoutManager.HORIZONTAL, false);
+        mTimeSlotsRv.setLayoutManager(mLayoutManager);
         mTimeSlotsRv.setAdapter(mAdapter);
 
         mAutoCompleteTv.setTypeface(mStolzlRegularTypeface);
@@ -137,7 +140,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     @Override
-    public void renderTimeSlotsInView(List<EventModel> availableEventList) {
+    public void renderTimeSlotsInView(int position, List<EventModel> availableEventList) {
 
 
 
@@ -149,27 +152,23 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 //
 //        mAdapter.setTimeSlots(startTime, endTime);
 //
-//        // Set left padding
-//        if (mAdapter.getItemCount() >= 1) {
-//            int width = Resources.getSystem().getDisplayMetrics().widthPixels;
-//            int availableSlotLength = (int) ((mAdapter.getItemCount() - 1) * getResources().getDimension(R.dimen.room_booking_time_slot_width));
-//
-//            int leftPadding;
-//
-//            if (availableSlotLength >= width - 2 * getResources().getDimension(R.dimen.room_booking_view_margin)) {
-//                leftPadding = (int) getResources().getDimension(R.dimen.room_booking_view_margin);
-//            }
-//            else {
-//                leftPadding = (width - availableSlotLength) / 2;
-//            }
-//            mTimeSlotsRv.setPadding(leftPadding, 0, 0, 0);
-//            mAdapter.setRecyclerViewParams(width, leftPadding);
-//        }
-
+        // Set left padding
         mAdapter.setEventModelList(availableEventList);
-        mAdapter.setOnItemClickListener(timeSlotList -> {
-            //mPresenter.setTimeSlotList(timeSlotList);
-        });
+
+        if (mAdapter.getItemCount() >= 1) {
+            int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+
+              float leftPadding = (width) / 2 - getResources().getDimension(R.dimen.room_booking_time_slot_width) / 2f;
+          // }
+            mTimeSlotsRv.setPadding((int) leftPadding, 0, 0, 0);
+            //mAdapter.setRecyclerViewParams(width, leftPadding);
+        }
+
+        mTimeSlotsRv.smoothScrollToPosition(position);
+
+//        mAdapter.setOnItemClickListener(timeSlotList -> {
+//            //mPresenter.setTimeSlotList(timeSlotList);
+//        });
     }
 
     @Override

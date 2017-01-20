@@ -86,7 +86,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     }
 
     @Override
-    public void setTimeSlotList(List<EventModel> eventModelList) {
+    public void setTimeSlotList(int position, List<EventModel> eventModelList) {
 
         for (EventModel eventModel: eventModelList) {
             if (eventModel.isExpired()) {
@@ -95,7 +95,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
             mAvailableEventList.add(eventModel);
         }
 
-        mRoomBookingView.renderTimeSlotsInView(mAvailableEventList);
+        mRoomBookingView.renderTimeSlotsInView(position, mAvailableEventList);
 
 //        boolean startTimeHasVal = false;
 //        boolean isFirstSelectedSlot = false;

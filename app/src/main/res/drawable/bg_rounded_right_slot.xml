@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/colorAccentDark">
-    <item>
-        <shape android:shape="rectangle">
-            <corners android:topLeftRadius="0dp" android:topRightRadius="22dp"
-                android:bottomLeftRadius="0dp" android:bottomRightRadius="22dp"/>
-            <solid android:color="@color/colorAccent"/>
-        </shape>
-    </item>
-</ripple>
+<shape android:shape="rectangle" xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:topLeftRadius="0dp" android:topRightRadius="@dimen/time_slot_corner_radius"
+        android:bottomLeftRadius="0dp" android:bottomRightRadius="@dimen/time_slot_corner_radius"/>
+    <solid android:color="@color/roomStatusAvailable"/>
+</shape>

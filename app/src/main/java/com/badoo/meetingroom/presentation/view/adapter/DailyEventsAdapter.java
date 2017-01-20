@@ -266,7 +266,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mClickableLayout.setEnabled(true);
             holder.mClickableLayout.setOnClickListener(v -> {
                 if (this.mOnItemClickListener != null) {
-                    this.mOnItemClickListener.onEventItemClicked(holder.itemView, mEventModelList);
+                    this.mOnItemClickListener.onEventItemClicked(position, mEventModelList);
                 }
             });
         }
@@ -286,7 +286,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     }
 
     public interface OnItemClickListener {
-        void onEventItemClicked(View view, ArrayList<EventModel> eventModelList);
+        void onEventItemClicked(int position, ArrayList<EventModel> eventModelList);
     }
 
     private void createTimestampTextViews(List<EventModel> eventModelList) {
