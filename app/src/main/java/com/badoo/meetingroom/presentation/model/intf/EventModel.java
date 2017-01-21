@@ -1,4 +1,4 @@
-package com.badoo.meetingroom.presentation.model;
+package com.badoo.meetingroom.presentation.model.intf;
 
 import android.os.Parcelable;
 

@@ -1,9 +1,10 @@
-package com.badoo.meetingroom.presentation.model;
+package com.badoo.meetingroom.presentation.model.impl;
 
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;

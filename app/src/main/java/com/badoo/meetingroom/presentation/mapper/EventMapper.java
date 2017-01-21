@@ -2,8 +2,8 @@ package com.badoo.meetingroom.presentation.mapper;
 
 import com.badoo.meetingroom.domain.entity.impl.LocalEventImpl;
 import com.badoo.meetingroom.domain.entity.intf.LocalEvent;
-import com.badoo.meetingroom.presentation.model.EventModel;
-import com.badoo.meetingroom.presentation.model.EventModelImpl;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
+import com.badoo.meetingroom.presentation.model.impl.EventModelImpl;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;
@@ -15,12 +15,12 @@ import javax.inject.Inject;
  * Created by zhangyaozhong on 18/01/2017.
  */
 
-public class CalendarEventsMapper {
+public class EventMapper {
     private long mEventStartTime;
     private long mEventEndTime;
 
     @Inject
-    CalendarEventsMapper() {
+    EventMapper() {
         // Default time period is one day
         mEventStartTime = TimeHelper.getMidNightTimeOfDay(0);
         mEventEndTime = TimeHelper.getMidNightTimeOfDay(1);
@@ -50,56 +50,56 @@ public class CalendarEventsMapper {
         return eventModel;
     }
 
-    public List<EventModel> map(List<LocalEvent> roomEventList) {
+    public List<EventModel> map(List<LocalEvent> eventModelList) {
 
         if (mEventStartTime > mEventEndTime) {
             throw new IllegalArgumentException("Event end time cannot less than event end time");
         }
 
-        List<EventModel> roomEventModelList = new ArrayList<>();
+        List<EventModel> eventModelModelList = new ArrayList<>();
 
-        if (roomEventList != null) {
+        if (eventModelList != null) {
 
-            long firstEventStartTime = roomEventList.isEmpty() ? mEventStartTime : roomEventList.get(0).getStartTime();
+            long firstEventStartTime = eventModelList.isEmpty() ? mEventStartTime : eventModelList.get(0).getStartTime();
             long startTime, endTime;
             long lastEventEndTime = endTime = firstEventStartTime < mEventStartTime ? firstEventStartTime : mEventStartTime;
 
-            for (LocalEvent roomEvent : roomEventList) {
+            for (LocalEvent eventModel : eventModelList) {
 
-                final EventModel roomEventModel = map(roomEvent);
+                final EventModel eventModelModel = map(eventModel);
 
-                if (roomEventModel != null) {
+                if (eventModelModel != null) {
 
                     // Skip event start at same time
-                    if (roomEvent.getStartTime() < endTime) {
+                    if (eventModel.getStartTime() < endTime) {
                         continue;
                     }
 
-                    startTime = roomEvent.getStartTime();
-                    endTime = roomEvent.getEndTime();
+                    startTime = eventModel.getStartTime();
+                    endTime = eventModel.getEndTime();
 
 
                     // CHeck here
                     if (startTime > lastEventEndTime) {
-                        roomEventModelList.addAll(generateAvailableEvents(lastEventEndTime, startTime));
+                        eventModelModelList.addAll(generateAvailableEvents(lastEventEndTime, startTime));
                     }
 
-                    addTimeStampsBetweenPeriod(roomEventModel);
-                    roomEventModelList.add(roomEventModel);
+                    addTimeStampsBetweenPeriod(eventModelModel);
+                    eventModelModelList.add(eventModelModel);
                     lastEventEndTime = endTime;
                 }
             }
 
             if (lastEventEndTime < mEventEndTime) {
-                roomEventModelList.addAll(generateAvailableEvents(lastEventEndTime, mEventEndTime));
-                roomEventModelList.get(roomEventModelList.size() - 1).getTimeStamps().add(mEventEndTime);
+                eventModelModelList.addAll(generateAvailableEvents(lastEventEndTime, mEventEndTime));
+                eventModelModelList.get(eventModelModelList.size() - 1).getTimeStamps().add(mEventEndTime);
             } else {
-                roomEventModelList.get(roomEventModelList.size() - 1).getTimeStamps().add(lastEventEndTime);
+                eventModelModelList.get(eventModelModelList.size() - 1).getTimeStamps().add(lastEventEndTime);
             }
         }
 
 
-        return roomEventModelList;
+        return eventModelModelList;
     }
 
 
@@ -114,11 +114,11 @@ public class CalendarEventsMapper {
             timestamp += TimeHelper.min2Millis(15);
 
             if (timestamp > startTime && timestamp < endTime) {
-                eventList.add(generateAvailableEvent(startTime, timestamp));
+                eventList.add(generateAvailableEvent(startTime, timestamp, endTime));
                 startTime = timestamp;
             }
             if (timestamp > endTime) {
-                eventList.add(generateAvailableEvent(startTime, endTime));
+                eventList.add(generateAvailableEvent(startTime, endTime, endTime));
                 break;
             }
         }
@@ -141,20 +141,20 @@ public class CalendarEventsMapper {
                 break;
             }
 
-
             timestamp += TimeHelper.min2Millis(15);
         }
 
         eventModel.setTimeStamps(result);
     }
 
-    private EventModel generateAvailableEvent(long startTime, long endTime) {
-        EventModel roomEvent = new EventModelImpl();
-        roomEvent.setStartTime(startTime);
-        roomEvent.setEndTime(endTime);
-        roomEvent.setStatus(LocalEventImpl.AVAILABLE);
-        addTimeStampsBetweenPeriod(roomEvent);
-        return roomEvent;
+    private EventModel generateAvailableEvent(long startTime, long endTime, long nextBusyEventStartTime) {
+        EventModel eventModel = new EventModelImpl();
+        eventModel.setStartTime(startTime);
+        eventModel.setEndTime(endTime);
+        eventModel.setNextBusyEventStartTime(nextBusyEventStartTime);
+        eventModel.setStatus(LocalEventImpl.AVAILABLE);
+        addTimeStampsBetweenPeriod(eventModel);
+        return eventModel;
     }
 
     public void setEventStartTime(long eventStartTime) {

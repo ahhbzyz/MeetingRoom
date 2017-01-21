@@ -1,4 +1,4 @@
-package com.badoo.meetingroom.presentation.model;
+package com.badoo.meetingroom.presentation.model.impl;
 
 /**
  * Created by zhangyaozhong on 23/12/2016.

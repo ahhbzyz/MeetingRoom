@@ -1,4 +1,6 @@
-package com.badoo.meetingroom.presentation.model;
+package com.badoo.meetingroom.presentation.model.impl;
+
+import com.badoo.meetingroom.presentation.model.BadooPersonModel;
 
 /**
  * Created by zhangyaozhong on 13/01/2017.
