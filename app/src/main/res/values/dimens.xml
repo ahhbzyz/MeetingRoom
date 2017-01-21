@@ -66,7 +66,7 @@
     <dimen name="item_vertical_event_start_margin">32dp</dimen>
     <dimen name="item_vertical_event_end_margin">32dp</dimen>
 
-    <dimen name="item_vertical_event_divider_height">10dp</dimen>
+    <dimen name="item_vertical_event_divider_height">1dp</dimen>
     <dimen name="item_vertical_event_hourly_divider_height">1dp</dimen>
 
     <dimen name="daily_event_list_top_margin">16dp</dimen>
@@ -91,4 +91,7 @@
     <dimen name="event_creator_dialog_avatar_top_margin">32dp</dimen>
     <dimen name="event_creator_dialog_avatar_bottom_margin">32dp</dimen>
     <dimen name="item_vertical_event_text_end_margin">16dp</dimen>
+
+    <dimen name="item_vertical_event_text_views_left_padding">16dp</dimen>
+    <dimen name="item_vertical_event_text_views_top_padding">8dp</dimen>
 </resources>

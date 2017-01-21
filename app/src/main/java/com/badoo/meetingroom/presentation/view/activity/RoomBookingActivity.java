@@ -15,6 +15,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -80,6 +81,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     ProgressBar mLoadingContactsPb;
 
     private boolean hasSlots;
+    private String mSelectedEmail;
     LinearLayoutManagerWithSmoothScroller mLayoutManager;
 
     @Override
@@ -113,7 +115,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         mBookingDateTv.setTypeface(mStolzlRegularTypeface);
         mBookingPeriodTv.setTypeface(mStolzlRegularTypeface);
 
-        mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mAutoCompleteTv.getText().toString().trim()));
+        mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mSelectedEmail));
         mBookBtn.setClickable(false);
         mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
 
@@ -139,6 +141,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mSelectedEmail = null;
                 validateBookingParameters();
             }
 
@@ -148,11 +151,14 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             }
         });
 
+        mAutoCompleteTv.setOnItemClickListener((parent, view, position, id) -> {
+            mSelectedEmail = badooPersonModelList.get(position).getEmailAddress();
+            validateBookingParameters();
+        });
+
         mAutoCompleteTv.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 RoomBookingActivity.this.setImmersiveMode();
-            }
-            else {
             }
         });
     }
@@ -183,13 +189,12 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
         mTimeSlotsRv.scrollToPosition(position);
 
-//        mAdapter.setOnItemClickListener(timeSlotList -> {
-//            //mPresenter.setTimeSlotList(timeSlotList);
-//        });
+        mAdapter.setOnItemClickListener((startIndex, endIndex) -> mPresenter.updateSelectedTimePeriod(startIndex, endIndex));
     }
 
     @Override
     public void updateTimePeriodTextView(long startTime, long endTime) {
+        System.out.println(startTime);
         if (startTime != -1 && endTime != -1) {
             if (TimeHelper.isMidNight(endTime)) {
                 mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + "24:00");
@@ -208,7 +213,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     private void validateBookingParameters() {
-        if (hasSlots && isValidEmailAddress(mAutoCompleteTv.getText().toString().trim())) {
+        if (hasSlots && isValidEmailAddress(mSelectedEmail)) {
             mBookBtn.setClickable(true);
             mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book));
         }
@@ -276,6 +281,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     private boolean isValidEmailAddress(String email) {
+        if(email == null) return false;
         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
         java.util.regex.Matcher m = p.matcher(email);

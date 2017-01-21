@@ -142,7 +142,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
         mProgressDialog = ImmersiveProgressDialogFragment.newInstance();
 
         mEventOrganizerDialog = EventCreatorDialogFragment.newInstance();
-        mEventOrganizerDialog.setView(this);
 
         mLoadingDataDialogHandler = new Handler();
 

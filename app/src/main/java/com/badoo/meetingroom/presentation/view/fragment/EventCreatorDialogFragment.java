@@ -48,7 +48,6 @@ import butterknife.ButterKnife;
 
 public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
 
-    private RoomStatusView mRoomStatusView;
     private EventModel mEvent;
 
 
@@ -74,11 +73,6 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
         return new EventCreatorDialogFragment();
     }
 
-
-    public void setView(RoomStatusView roomStatusView) {
-        mRoomStatusView = roomStatusView;
-    }
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -94,9 +88,15 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
         if (mEvent != null) {
             mEventPeriodTv.setText(mEvent.getDurationInText());
 
-            if (mEvent.getCreatorEmailAddress() != null && mEvent.getCreatorName() != null) {
-                mCreatorNameTv.setText(mEvent.getCreatorName());
-                mCreatorEmailTv.setText(mEvent.getCreatorEmailAddress());
+            mCreatorNameTv.setText(mEvent.getCreatorName());
+            mCreatorEmailTv.setText(mEvent.getCreatorEmailAddress());
+
+
+            if (mEvent.getCreatorName() == null) {
+
+            }
+
+            if (mEvent.getCreatorEmailAddress() != null ) {
             }
 
             if (mEvent.isFastBooking()) {
@@ -145,16 +145,8 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
                     Glide.with(getActivity())
                         .load(mAvatarUrl).asBitmap().centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(new BitmapImageViewTarget(mAvatarImg){
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                super.setResource(resource);
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                    RoundedBitmapDrawableFactory.create(getActivity().getResources(), resource);
-                                circularBitmapDrawable.setCircular(true);
-                                mAvatarImg.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
+                        .into(mAvatarImg);
+                    mCreatorNameTv.setText(badooPersonModel.getDisplayName());
                     break;
                 }
             }
@@ -173,13 +165,13 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
                 throw e;
             }
             catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
-                mRoomStatusView.handleRecoverableAuthException(userRecoverableAuthIOException);
+                //mRoomStatusView.handleRecoverableAuthException(userRecoverableAuthIOException);
             }
             catch (GoogleJsonResponseException googleJsonResponseException) {
-                mRoomStatusView.showError(googleJsonResponseException.getDetails().getMessage());
+                //mRoomStatusView.showError(googleJsonResponseException.getDetails().getMessage());
             }
             catch (Exception exception) {
-                mRoomStatusView.showError(exception.getMessage());
+                //mRoomStatusView.showError(exception.getMessage());
             }
             catch (Throwable throwable) {
                 throwable.printStackTrace();

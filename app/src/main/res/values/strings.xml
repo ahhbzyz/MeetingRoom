@@ -24,7 +24,7 @@
     <string name="booking">Booking</string>
     <string name="canceling">Canceling</string>
     <string name="today">Today</string>
-    <string name="no_slots_selected_alert">Select a slot</string>
+    <string name="no_slots_selected_alert">Choose your slots</string>
     <string name="book">book</string>
     <string name="fast_booking">Fast booking</string>
     <string name="fake_date">Thursday, 12 Jan</string>

@@ -19,4 +19,6 @@ public interface RoomBookingPresenter extends Presenter {
     void bookRoom(String organizer);
 
     void setTimeSlotList(int position, List<EventModel> eventModelList);
+
+    void updateSelectedTimePeriod(int startIndex, int endIndex);
 }

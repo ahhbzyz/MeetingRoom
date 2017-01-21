@@ -1,9 +1,7 @@
 package com.badoo.meetingroom.presentation.view.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -34,13 +32,15 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
     private Context mContext;
     private final long mDefaultSlotLength = TimeHelper.min2Millis(15);
+    private final float MIN_SLOT_WIDTH;
+    private final float MAX_SLOT_WIDTH;
     private final float WIDTH_PER_MILLIS;
-    private int mRecyclerViewWidth = -1;
-    private int mLeftPadding = -1;
+
     private List<EventModel> mEventModelList;
     private List<Boolean> mSelectedList;
-    private int mFirstSelectedPos = -1;
-    private int mLastSelectedPos = -1;
+    private int mStartSelectedPos = -1;
+    private int mEndSelectedPos = -1;
+    private OnItemClickListener mOnItemClickListener;
 
     public void setEventModelList(List<EventModel> eventModelList) {
         mEventModelList = eventModelList;
@@ -71,8 +71,10 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
     @Inject
     TimeSlotsAdapter(Context context) {
-        this.mContext = context;
-        WIDTH_PER_MILLIS = mContext.getResources().getDimension(R.dimen.room_booking_time_slot_width) / mDefaultSlotLength;
+        mContext = context;
+        MIN_SLOT_WIDTH = mContext.getResources().getDimension(R.dimen.room_booking_time_slot_width) / 2f;
+        MAX_SLOT_WIDTH = mContext.getResources().getDimension(R.dimen.room_booking_time_slot_width);
+        WIDTH_PER_MILLIS = MAX_SLOT_WIDTH / mDefaultSlotLength;
     }
 
     @Override
@@ -89,9 +91,13 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
         float viewWidth = eventModel.getDuration() * WIDTH_PER_MILLIS;
 
+        viewWidth = viewWidth < MIN_SLOT_WIDTH ? MIN_SLOT_WIDTH : viewWidth;
+        viewWidth = viewWidth > MAX_SLOT_WIDTH ? MAX_SLOT_WIDTH : viewWidth;
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) viewWidth,
             (int) mContext.getResources().getDimension(R.dimen.room_booking_time_slot_height));
-        //holder.mTimeSlotImg.setLayoutParams(params);
+
+        holder.mTimeSlotImg.setLayoutParams(params);
 
         holder.mStartTimeTv.setText(eventModel.getStartTimeInText());
 
@@ -103,22 +109,22 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
 
             if (eventModel.isAvailable()) {
 
-                if (mFirstSelectedPos == -1 || mLastSelectedPos == -1 || (mFirstSelectedPos == position && mLastSelectedPos == position)) {
+                if (mStartSelectedPos == -1 || mEndSelectedPos == -1 || (mStartSelectedPos == position && mEndSelectedPos == position)) {
 
                     mSelectedList.set(position, !mSelectedList.get(position));
                     if (mSelectedList.get(position)) {
-                        mFirstSelectedPos = position;
-                        mLastSelectedPos = position;
+                        mStartSelectedPos = position;
+                        mEndSelectedPos = position;
                     }
                     else {
-                        mFirstSelectedPos = -1;
-                        mLastSelectedPos = -1;
+                        mStartSelectedPos = -1;
+                        mEndSelectedPos = -1;
                     }
                     notifyItemChanged(position);
                 }
                 else {
-                    int i = mFirstSelectedPos < position ? mFirstSelectedPos : position;
-                    int j = mFirstSelectedPos < position ? position : mFirstSelectedPos;
+                    int i = mStartSelectedPos < position ? mStartSelectedPos : position;
+                    int j = mStartSelectedPos < position ? position : mStartSelectedPos;
                     boolean hasBreakPoint = false;
                     for (int k = i; k <= j; k++) {
                         if (mEventModelList.get(k).isBusy()) {
@@ -127,7 +133,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                         }
                     }
                     if (hasBreakPoint) {
-                        int temp = mFirstSelectedPos;
+                        int temp = mStartSelectedPos;
 
                         mSelectedList.set(position, !mSelectedList.get(position));
                         notifyItemChanged(position);
@@ -139,50 +145,53 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                             notifyItemChanged(temp);
                             temp++;
                         }
-                        mFirstSelectedPos = position;
-                        mLastSelectedPos = position;
+                        mStartSelectedPos = position;
+                        mEndSelectedPos = position;
                     }
                     else {
 
-                        if (position < mFirstSelectedPos) {
+                        if (position < mStartSelectedPos) {
 
-                            for (int p = position; p < mFirstSelectedPos; p++) {
-                                mSelectedList.set(p, mSelectedList.get(mFirstSelectedPos));
+                            for (int p = position; p < mStartSelectedPos; p++) {
+                                mSelectedList.set(p, mSelectedList.get(mStartSelectedPos));
                                 notifyItemChanged(p);
                             }
 
-                            mFirstSelectedPos = position;
+                            mStartSelectedPos = position;
 
                         }
-                        else if (position == mFirstSelectedPos) {
+                        else if (position == mStartSelectedPos) {
                             mSelectedList.set(position, !mSelectedList.get(position));
                             notifyItemChanged(position);
-                            mFirstSelectedPos++;
+                            mStartSelectedPos++;
                         }
                         else {
 
                             mSelectedList.set(position, !mSelectedList.get(position));
                             notifyItemChanged(position);
 
-                            for (int p = mLastSelectedPos + 1; p < position; p++) {
-                                mSelectedList.set(p, mSelectedList.get(mFirstSelectedPos));
+                            for (int p = mEndSelectedPos + 1; p < position; p++) {
+                                mSelectedList.set(p, mSelectedList.get(mStartSelectedPos));
                                 notifyItemChanged(p);
                             }
 
                             if (!mSelectedList.get(position)) {
-                                for (int p = position + 1; p <= mLastSelectedPos; p++) {
-                                    mSelectedList.set(p, !mSelectedList.get(mFirstSelectedPos));
+                                for (int p = position + 1; p <= mEndSelectedPos; p++) {
+                                    mSelectedList.set(p, !mSelectedList.get(mStartSelectedPos));
                                     notifyItemChanged(p);
                                 }
-                                mLastSelectedPos = position - 1;
+                                mEndSelectedPos = position - 1;
                             }
                             else {
-                                mLastSelectedPos = position;
+                                mEndSelectedPos = position;
                             }
                         }
                     }
                 }
             }
+
+            mOnItemClickListener.onEventItemClicked(mStartSelectedPos, mEndSelectedPos);
+
         });
     }
 
@@ -269,11 +278,11 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
         return mEventModelList == null ? 0 : mEventModelList.size();
     }
 
-//    public void setOnItemClickListener (TimeSlotsAdapter.OnItemClickListener onItemClickListener) {
-//        this.mOnItemClickListener = onItemClickListener;
-//    }
-//
-//    public interface OnItemClickListener {
-//        void onEventItemClicked(List<TimeSlot> mTimeSlotList);
-//    }
+    public void setOnItemClickListener (TimeSlotsAdapter.OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onEventItemClicked(int startIndex, int endIndex);
+    }
 }

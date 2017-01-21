@@ -22,60 +22,65 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/layout_no_timestamps">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <ImageView
+                android:id="@+id/img_timeline_bar"
+                android:layout_height="match_parent"
+                android:background="@color/timeSlotExpired"
+                android:layout_width="@dimen/item_vertical_event_timeline_bar_width"/>
+
+            <RelativeLayout
+                android:id="@+id/layout_dividers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/view_item_divider">
-
-                <ImageView
-                    android:id="@+id/img_timeline_bar"
-                    android:layout_height="match_parent"
-                    android:background="@color/timeSlotExpired"
-                    android:layout_width="@dimen/item_vertical_event_timeline_bar_width"/>
-
-                <RelativeLayout
-                    android:id="@+id/layout_dividers"
+                android:clickable="true"
+                android:background="?attr/selectableItemBackground"
+                android:layout_toEndOf="@+id/img_timeline_bar">
+                
+                <View
+                    android:background="@color/item_vertical_event_divider_color"
+                    android:id="@+id/view_top_divider"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:background="?attr/selectableItemBackground">
+                    android:layout_height="@dimen/item_vertical_event_divider_height"
+                    android:layout_alignParentTop="true" />
+                <View
+                    android:background="@color/item_vertical_event_divider_color"
+                    android:id="@+id/view_bottom_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_vertical_event_divider_height"
+                    android:layout_alignParentBottom="true" />
 
-                    <LinearLayout
-                        android:id="@+id/layout_event_textviews"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="0dp">
+                <LinearLayout
+                    android:id="@+id/layout_event_text_views"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingStart="@dimen/item_vertical_event_text_views_left_padding"
+                    android:paddingTop="@dimen/item_vertical_event_text_views_top_padding">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/tv_event_period"
-                            android:textColor="@color/item_vertical_event_period_text"
-                            android:layout_marginEnd="@dimen/item_vertical_event_text_end_margin" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_event_period"
+                        android:textColor="@color/item_vertical_event_period_text"
+                        android:layout_marginEnd="@dimen/item_vertical_event_text_end_margin" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/tv_event_title"
-                            android:textColor="@color/item_vertical_event_title_text"
-                            android:layout_marginEnd="@dimen/item_vertical_event_text_end_margin" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_event_title"
+                        android:textColor="@color/item_vertical_event_title_text"
+                        android:layout_marginEnd="@dimen/item_vertical_event_text_end_margin" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/tv_event_creator"
-                            android:textColor="@color/item_vertical_event_creator_text" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_event_creator"
+                        android:textColor="@color/item_vertical_event_creator_text" />
 
-                    </LinearLayout>
-                </RelativeLayout>
-            </LinearLayout>
-
+                </LinearLayout>
+            </RelativeLayout>
 
 
         </RelativeLayout>

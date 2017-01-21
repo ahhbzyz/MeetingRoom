@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
+import com.badoo.meetingroom.presentation.view.adapter.EventItemDecoration;
 import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity;
@@ -46,6 +47,8 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     private static final String ARG_PAGE = "page";
     private int mPage;
 
+    private EventCreatorDialogFragment mEventOrganizerDialog;
+
     public static DailyEventsFragment newInstance(int page) {
         DailyEventsFragment fragment = new DailyEventsFragment();
         Bundle args = new Bundle();
@@ -71,6 +74,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_daily_events, container, false);
+        mEventOrganizerDialog = EventCreatorDialogFragment.newInstance();
         ButterKnife.bind(this, view);
         setUpEventsRecyclerView();
         mPresenter.setView(this);
@@ -81,6 +85,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     private void setUpEventsRecyclerView() {
         mAdapter.setOnItemClickListener(this);
         mDailyEventsRv.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(this.getActivity().getApplicationContext()));
+
         mDailyEventsRv.setAdapter(mAdapter);
     }
 
@@ -88,6 +93,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public void renderDailyEvents(List<EventModel> roomEventModelList) {
 
         mAdapter.setDailyEventList(roomEventModelList);
+        mDailyEventsRv.addItemDecoration(new EventItemDecoration(getActivity(), R.drawable.divider_vertical_event, roomEventModelList));
 
         int currentEventPosition = 0;
 
@@ -105,7 +111,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     }
 
     @Override
-    public void onEventItemClicked(int position, ArrayList<EventModel> eventModelList) {
+    public void onAvailableEventItemClicked(int position, ArrayList<EventModel> eventModelList) {
         Intent intent = new Intent(getActivity(), RoomBookingActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("position", position);
@@ -113,6 +119,14 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         intent.putExtra("bookingRoom", bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivityForResult(intent, REQUEST_BOOK_ROOM);
+    }
+
+    @Override
+    public void onBusyEventItemClicked(EventModel eventModel) {
+        if (mEventOrganizerDialog != null) {
+            mEventOrganizerDialog.setEvent(eventModel);
+            mEventOrganizerDialog.show(getActivity());
+        }
     }
 
     @Override

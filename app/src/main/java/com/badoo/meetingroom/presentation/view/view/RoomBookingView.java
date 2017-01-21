@@ -15,7 +15,7 @@ public interface RoomBookingView extends LoadDataView {
 
     void setUpAutoCompleteTextView(List<BadooPersonModel> badooPersonModelList);
     void renderTimeSlotsInView(int position, List<EventModel> availableEventList);
-    void updateTimePeriodTextView(long selectedEndTime, long selectedEndTime1);
+    void updateTimePeriodTextView(long selectedStarTime, long selectedEndTime);
     void showRecoverableAuth(UserRecoverableAuthIOException e);
     void showBookingSuccessful(long value);
 }

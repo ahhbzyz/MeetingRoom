@@ -32,8 +32,8 @@ import javax.inject.Named;
 public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
     private RoomBookingView mRoomBookingView;
-    private long selectedStartTime;
-    private long selectedEndTime;
+    private long mSelectedStartTime;
+    private long mSelectedEndTime;
     private final InsertEvent mInsertEventUseCase;
     private final GetPersons mGetPersonsUseCase;
     private final BadooPersonModelMapper mMapper;
@@ -64,13 +64,13 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     @Override
     public void bookRoom(String organizer) {
         Event event = new Event();
-        DateTime startDateTime = new DateTime(selectedStartTime);
+        DateTime startDateTime = new DateTime(mSelectedStartTime);
         EventDateTime start = new EventDateTime()
             .setDateTime(startDateTime)
             .setTimeZone("Europe/London");
         event.setStart(start);
 
-        DateTime endDateTime = new DateTime(selectedEndTime);
+        DateTime endDateTime = new DateTime(mSelectedEndTime);
         EventDateTime end = new EventDateTime()
             .setDateTime(endDateTime)
             .setTimeZone("Europe/London");
@@ -88,47 +88,34 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     @Override
     public void setTimeSlotList(int position, List<EventModel> eventModelList) {
         mAvailableEventList.clear();
-        for (EventModel eventModel: eventModelList) {
-            if (eventModel.isExpired()) {
-                continue;
-            }
-            mAvailableEventList.add(eventModel);
+
+        int tempPos = position;
+        while (tempPos >= 0 && eventModelList.get(tempPos).isAvailable()) {
+            tempPos --;
+        }
+        if (tempPos != position) {
+            tempPos++;
         }
 
-        mRoomBookingView.renderTimeSlotsInView(position, mAvailableEventList);
+        for (int i = tempPos; i < eventModelList.size(); i++) {
+            mAvailableEventList.add(eventModelList.get(i));
+        }
 
-//        boolean startTimeHasVal = false;
-//        boolean isFirstSelectedSlot = false;
-//        selectedStartTime = -1;
-//        selectedEndTime = -1;
-//
-//        int numOfSelectedSlots = 0;
-//
-//        for (int i = 0; i < timeSlotList.size(); i++) {
-//
-//            TimeSlotsAdapter.TimeSlot slot = timeSlotList.get(i);
-//
-//            if (!slot.isSelected() && !isFirstSelectedSlot) {
-//                continue;
-//            }
-//            isFirstSelectedSlot = true;
-//            if (!startTimeHasVal) {
-//                selectedStartTime = slot.getStartTime();
-//                startTimeHasVal = true;
-//            }
-//            numOfSelectedSlots++;
-//            if (!slot.isSelected() || i == timeSlotList.size() - 1) {
-//                selectedEndTime = slot.getStartTime();
-//                break;
-//            }
-//        }
-//
-//        if (numOfSelectedSlots == 0) {
-//            selectedStartTime = -1;
-//            selectedEndTime = -1;
-//        }
-//        mRoomBookingView.updateTimePeriodTextView(selectedStartTime, selectedEndTime);
+        mRoomBookingView.renderTimeSlotsInView(position - tempPos, mAvailableEventList);
     }
+
+    @Override
+    public void updateSelectedTimePeriod(int startIndex, int endIndex) {
+        if (startIndex >= 0 && endIndex < mAvailableEventList.size()) {
+            mSelectedStartTime = mAvailableEventList.get(startIndex).getStartTime();
+            mSelectedEndTime = mAvailableEventList.get(endIndex).getEndTime();
+        } else {
+            mSelectedStartTime = -1;
+            mSelectedEndTime = -1;
+        }
+        mRoomBookingView.updateTimePeriodTextView(mSelectedStartTime, mSelectedEndTime);
+    }
+
 
     private final class InsertEventSubscriber extends DefaultSubscriber<Event> {
 

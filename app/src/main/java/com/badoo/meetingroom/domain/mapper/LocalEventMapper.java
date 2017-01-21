@@ -4,6 +4,7 @@ import com.badoo.meetingroom.domain.entity.intf.LocalEvent;
 import com.badoo.meetingroom.domain.entity.impl.LocalEventImpl;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,16 @@ public class LocalEventMapper {
             localEvent.setEndTime(endTime);
             localEvent.setEventTitle(event.getSummary());
             localEvent.setStatus(LocalEvent.BUSY);
+
+            if (event.getAttendees() != null) {
+                for (EventAttendee eventAttendee : event.getAttendees()) {
+                    if (eventAttendee.getEmail().equals(Badoo.getCurrentRoom().getId()) &&
+                        eventAttendee.getResponseStatus().equals("declined")) {
+                        return null;
+                    }
+                }
+            }
+
 
             if (event.getDescription() != null && event.getDescription().equals(LocalEvent.FAST_BOOKING_DESCRIPTION)) {
                 localEvent.setFastBooking(true);

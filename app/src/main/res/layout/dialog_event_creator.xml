@@ -42,12 +42,12 @@
                 android:indeterminateTint="@color/roomStatusBusy"
                 android:indeterminateTintMode="src_in"/>
 
-            <ImageView
-                android:id="@+id/img_avatar"
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="@dimen/event_creator_dialog_avatar_width"
                 android:layout_height="@dimen/event_creator_dialog_avatar_height"
                 android:layout_marginTop="@dimen/event_creator_dialog_avatar_top_margin"
-                android:layout_marginBottom="@dimen/event_creator_dialog_avatar_bottom_margin" />
+                android:layout_marginBottom="@dimen/event_creator_dialog_avatar_bottom_margin"
+                android:id="@+id/img_avatar"/>
         </RelativeLayout>
 
         <TextView
