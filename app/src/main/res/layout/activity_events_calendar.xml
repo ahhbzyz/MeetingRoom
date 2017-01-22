@@ -63,6 +63,8 @@
             android:adjustViewBounds="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
             android:layout_gravity="end"/>
 
         <TextView
@@ -93,8 +95,6 @@
     <com.badoo.meetingroom.presentation.view.component.nonswipeviewpager.NonSwipeViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false"
-        android:clipToPadding="false"
         android:id="@+id/view_pager">
     </com.badoo.meetingroom.presentation.view.component.nonswipeviewpager.NonSwipeViewPager>
 </LinearLayout>

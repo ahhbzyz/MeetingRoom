@@ -15,6 +15,12 @@ public class BallPulseSyncIndicator extends Indicator {
     private float[] translateYFloats = new float[3];
     private float radius = 10;
 
+    BallPulseSyncIndicator() {
+        translateYFloats[0] = 0;
+        translateYFloats[1] = 0;
+        translateYFloats[2] = 0;
+    }
+
     @Override
     public void draw(Canvas canvas, Paint paint) {
 
@@ -44,7 +50,7 @@ public class BallPulseSyncIndicator extends Indicator {
         int[] delays = new int[]{0, 300, 600};
         for (int i = 0; i < 3; i++) {
             final int index = i;
-            ValueAnimator scaleAnim = ValueAnimator.ofFloat(radius, getHeight() - 2 * radius, radius);
+            ValueAnimator scaleAnim = ValueAnimator.ofFloat(0, getHeight() - 2 * radius, 0);
             scaleAnim.setDuration(1000);
             scaleAnim.setRepeatCount(-1);
             scaleAnim.setStartDelay(delays[i]);

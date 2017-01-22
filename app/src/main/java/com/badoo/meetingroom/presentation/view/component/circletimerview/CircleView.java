@@ -94,13 +94,8 @@ public class CircleView extends View {
 
     private ValueAnimator mRotateAnimator;
 
-    private Context mContext;
-    private OnColorAnimateListener mOnColorAnimateListener;
-
     public CircleView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        this.mContext = context;
 
         TypedArray ta = context.getTheme().obtainStyledAttributes(
                 attrs,
@@ -109,8 +104,8 @@ public class CircleView extends View {
         );
 
         try {
-            mCircleRadius = ta.getFloat(R.styleable.CircleView_bgCircleRadius, DEFAULT_CIRCLE_RADIUS);
-            mCircleStrokeWidth = ta.getFloat(R.styleable.CircleView_bgCircleStrokeWidth, DEFAULT_CIRCLE_STROKE_WIDTH);
+            mCircleRadius = ta.getDimension(R.styleable.CircleView_bgCircleRadius, DEFAULT_CIRCLE_RADIUS);
+            mCircleStrokeWidth = ta.getDimension(R.styleable.CircleView_bgCircleStrokeWidth, DEFAULT_CIRCLE_STROKE_WIDTH);
             mCircleBackgroundColor = ta.getColor(R.styleable.CircleView_bgCircleColor, DEFAULT_CIRCLE_BACKGROUND_COLOR);
             mCircleColor = ta.getColor(R.styleable.CircleView_bgArcColor, DEFAULT_CIRCLE_COLOR);
         } finally {
@@ -248,13 +243,13 @@ public class CircleView extends View {
 
         mRotateAnimator.addUpdateListener(valueAnimator -> {
             setRotateDegree((Float) valueAnimator.getAnimatedValue());
-            mCountDownListener.onCountDownTicking(valueAnimator.getDuration() - valueAnimator.getCurrentPlayTime() + 1000);
+            mCountDownListener.onCountDownTicking();
         });
 
         mRotateAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
-                mCountDownListener.onCountDownTicking(remainingTime);
+                mCountDownListener.onCountDownTicking();
             }
 
             @Override
@@ -288,17 +283,6 @@ public class CircleView extends View {
     }
 
     /**
-     * Set max progress
-     *
-     * @param progress
-     */
-    public void setMaxProgress(float progress) {
-        if (progress > 0) {
-            mMaxProgress = progress;
-        }
-    }
-
-    /**
      * Get max progress
      */
     public float getMaxProgress() {
@@ -306,21 +290,8 @@ public class CircleView extends View {
     }
 
     public void setColorTheme(int circleColor, int circleBackgroundColor) {
-
         setCircleColor(circleColor);
         setCircleBackgroundColor(circleBackgroundColor);
-
-//        ValueAnimator colorAnimator = new ValueAnimator();
-//        colorAnimator.setIntValues(mCircleColor, circleColor);
-//        colorAnimator.setEvaluator(new ArgbEvaluator());
-//        colorAnimator.setDuration(1200);
-//        colorAnimator.start();
-//
-//        ValueAnimator bgColorAnimator = new ValueAnimator();
-//        bgColorAnimator.setIntValues(mCircleBackgroundColor, circleBackgroundColor);
-//        bgColorAnimator.setEvaluator(new ArgbEvaluator());
-//        bgColorAnimator.setDuration(1200);
-//        bgColorAnimator.start();
     }
 
     /**
@@ -411,15 +382,18 @@ public class CircleView extends View {
      * Created by zhangyaozhong on 08/12/2016.
      */
     public interface OnCountDownListener {
-        void onCountDownTicking(long millisUntilFinished);
+        void onCountDownTicking();
         void onCountDownFinished();
     }
 
-    public void setOnColorAnimateListener (OnColorAnimateListener listener) {
-        this.mOnColorAnimateListener = listener;
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
     }
 
-    public interface OnColorAnimateListener {
-        void onAnimationEnd();
+    @Override
+    protected void onDetachedFromWindow() {
+        stopCircleViewCountDown();
+        super.onDetachedFromWindow();
     }
 }

@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.MyFirebaseMessagingService;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalEventItemDecoration;
@@ -47,13 +45,9 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
  * Created by zhangyaozhong on 22/12/2016.
  */
 
-public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
-                                                                View.OnClickListener,
-                                                                CircleView.OnCountDownListener,
-    HorizontalTimelineAdapter.OnEventClickListener {
+public class RoomStatusActivity extends BaseActivity implements RoomStatusView, View.OnClickListener, CircleView.OnCountDownListener, HorizontalTimelineAdapter.OnEventClickListener {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
-    private static final int REQUEST_AUTHORIZATION = 1001;
 
     @Inject RoomStatusPresenter mPresenter;
     @Inject HorizontalTimelineAdapter mAdapter;
@@ -103,7 +97,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     private ImmersiveProgressDialogFragment mProgressDialog;
     private EventCreatorDialogFragment mEventOrganizerDialog;
     private Handler mLoadingDataDialogHandler;
-    private LinearLayoutManager mLayoutManager;
 
     final long SCROLL_BACK_WAIT_TIME = 3000;
     final long SHOW_LOADING_DIALOG_WAIT_TIME = 1000;
@@ -140,22 +133,9 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
 
         // Dialog
         mProgressDialog = ImmersiveProgressDialogFragment.newInstance();
-
         mEventOrganizerDialog = EventCreatorDialogFragment.newInstance();
-
         mLoadingDataDialogHandler = new Handler();
-
         mRoomStatusHandler = new RoomStatusHandler(this);
-
-
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                Object value = getIntent().getExtras().get(key);
-                Log.d("DD", "Key: " + key + " Value: " + value);
-            }
-        }
-
-        startService(new Intent(this, MyFirebaseMessagingService.class));
     }
 
     private void setUptCircleTimeTextViews() {
@@ -171,16 +151,13 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     private void setUpCircleView() {
         mCircleView.setTailIconDrawable(R.drawable.ic_arrow_left_white);
         mCircleView.setOnCountDownListener(this);
-        mCircleView.setOnClickListener(this);
-
-        mCircleTimeViewBtn.setOnClickListener(this);
     }
 
     private void setUpHorizontalTimelineView() {
         mAdapter.setOnEventClickListener(this);
         mHorizontalTimelineRv.addItemDecoration(new HorizontalEventItemDecoration(this, R.drawable.divider_horizontal_event));
         mHorizontalTimelineRv.setAdapter(mAdapter);
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mHorizontalTimelineRv.setLayoutManager(mLayoutManager);
         Handler scrollBackHandler = new Handler();
         mHorizontalTimelineRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -205,6 +182,88 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     }
 
     @Override
+    public void onClick(View v) {
+        ActivityOptions options = ActivityOptions
+            .makeSceneTransitionAnimation(this, mRoomNameTv, "roomName");
+        switch (v.getId()) {
+            case R.id.img_calendar:
+                Intent calendarIntent = new Intent(RoomStatusActivity.this, EventsCalendarActivity.class);
+                startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM, options.toBundle());
+                break;
+            case R.id.img_room:
+                Intent roomListIntent = new Intent(RoomStatusActivity.this, AllRoomActivity.class);
+                startActivityForResult(roomListIntent, REQUEST_BOOK_ROOM, options.toBundle());
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void renderRoomEvent(EventModel currentEvent) {
+        updateRoomStatusView(currentEvent);
+        startCircleViewAnimator(currentEvent);
+    }
+
+    @Override
+    public void startCircleViewAnimator(EventModel currentEvent) {
+        if (currentEvent == null) {
+            return;
+        }
+
+        if (currentEvent.isOnHold()) {
+            mCircleView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getStartTime() + currentEvent.getOnHoldTime());
+        } else {
+            mCircleView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getEndTime());
+        }
+    }
+
+    @Override
+    public void onCountDownTicking() {
+        mPresenter.onCountDownTicking();
+    }
+
+    @Override
+    public void onCountDownFinished() {
+        mPresenter.onCountDownFinished();
+    }
+
+    @Override
+    public void updateRoomStatusView(EventModel currentEvent) {
+        mRoomStatusHandler.updateRoomStatusView(currentEvent);
+    }
+
+    @Override
+    public void updateRoomStatusTextView(EventModel mCurrentEvent) {
+        mRoomStatusHandler.updateRoomStatusTextView(mCurrentEvent);
+    }
+
+    @Override
+    public void updateExtendButtonState(boolean state) {
+        mRoomStatusHandler.updateExtendButtonState(state);
+    }
+
+    @Override
+    public void renderRoomEventList(List<EventModel> roomEventModelList) {
+        mAdapter.setEventList(roomEventModelList);
+    }
+
+    @Override
+    public void updateHorizontalTimeline(int currentEventPosition) {
+//        float leftMargin = -(TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis())
+//            + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
+//        System.out.println(leftMargin);
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
+//
+//        mHorizontalTimelineRv.setX(-1000);
+    }
+
+    @Override
+    public void updateRecyclerView() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onAvailableEventClicked(int position, ArrayList<EventModel> eventModelList) {
         Intent intent = new Intent(this, RoomBookingActivity.class);
         Bundle bundle = new Bundle();
@@ -221,73 +280,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
             mEventOrganizerDialog.setEvent(eventModel);
             mEventOrganizerDialog.show(this);
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        ActivityOptions options = ActivityOptions
-            .makeSceneTransitionAnimation(this, mRoomNameTv, "roomName");
-        switch (v.getId()) {
-            case R.id.img_calendar:
-                Intent calendarIntent = new Intent(RoomStatusActivity.this, EventsCalendarActivity.class);
-                startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM, options.toBundle());
-                break;
-            case R.id.img_room:
-                Intent roomListIntent = new Intent(RoomStatusActivity.this, AllRoomActivity.class);
-                startActivityForResult(roomListIntent, REQUEST_BOOK_ROOM, options.toBundle());
-                break;
-            case R.id.circle_view:
-                mPresenter.setDoNotDisturb(false);
-                break;
-            case R.id.img_book:
-                mPresenter.circleTimeViewBtnClick();
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void renderRoomEvent(EventModel currentEvent) {
-        updateCircleTimeViewStatus(currentEvent);
-        startCircleViewAnimator(currentEvent);
-    }
-
-    @Override
-    public void startCircleViewAnimator(EventModel currentEvent) {
-        if (currentEvent == null) {
-            return;
-        }
-        if (currentEvent.isOnHold()) {
-            mCircleView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getStartTime() + currentEvent.getOnHoldTime());
-        } else {
-            mCircleView.startCountDownTimer(currentEvent.getStartTime(), currentEvent.getEndTime());
-        }
-    }
-
-    @Override
-    public void renderRoomEventList(List<EventModel> roomEventModelList) {
-        mAdapter.setEventList(roomEventModelList);
-    }
-
-    @Override
-    public void updateCircleTimeViewStatus(EventModel currentEvent) {
-        mRoomStatusHandler.updateCircleTimeViewStatus(currentEvent);
-    }
-
-    @Override
-    public void updateHorizontalTimeline(int currentEventPosition) {
-//        float leftMargin = -(TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis())
-//            + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
-//        System.out.println(leftMargin);
-//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
-//
-//        mHorizontalTimelineRv.setX(-1000);
-    }
-
-    @Override
-    public void updateRecyclerView() {
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -311,28 +303,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     }
 
     @Override
-    public void showButtonGroupForAvailableStatus() {
-        mRoomStatusHandler.showButtonGroupForAvailableStatus();
-    }
-
-    @Override
-    public void showButtonGroupForOnHoldStatus() {
-        mRoomStatusHandler.showButtonGroupForOnHoldStatus();
-    }
-
-    @Override
-    public void showButtonGroupForBusyStatus() {
-        mRoomStatusHandler.showButtonGroupForBusyStatus();
-    }
-
-    @Override
-    public void showButtonGroupForDoNotDisturbStatus(String endTimeInText) {
-        mRoomStatusHandler.showButtonGroupForDoNotDisturbStatus(endTimeInText);
-    }
-
-
-
-    @Override
     public void hideTopBottomContent() {
         mTopContentLayout.animate().translationY(-mTopContentLayout.getHeight());
         mBottomContentLayout.animate().translationY(mBottomContentLayout.getHeight());
@@ -347,21 +317,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     @Override
     public void stopCountDown() {
         mCircleView.stopCircleViewCountDown();
-    }
-
-    @Override
-    public void updateExtendButtonState(boolean state) {
-        mRoomStatusHandler.updateExtendButtonState(state);
-    }
-
-    @Override
-    public void onCountDownTicking(long millisUntilFinished) {
-        mRoomStatusHandler.onCountDownTicking(millisUntilFinished);
-    }
-
-    @Override
-    public void onCountDownFinished() {
-        mPresenter.onCountDownFinished();
     }
 
     @Override
@@ -391,19 +346,9 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     }
 
     @Override
-    public void handleRecoverableAuthException(UserRecoverableAuthIOException e) {
-        this.startActivityForResult(e.getIntent(), 1000);
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_AUTHORIZATION:
-                if (resultCode == RESULT_OK) {
-                    mPresenter.getEvents();
-                }
-                break;
             case REQUEST_BOOK_ROOM:
                 if (resultCode == RESULT_OK) {
                     mPresenter.getEvents();

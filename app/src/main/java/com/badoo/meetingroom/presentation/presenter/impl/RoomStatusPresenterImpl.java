@@ -11,9 +11,7 @@ import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.event.UpdateEvent;
 import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.mapper.RoomEventsMapper;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
-import com.badoo.meetingroom.presentation.model.impl.EventModelImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -71,8 +69,8 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     @Override
-    public void onCountDownTicking(long millisUntilFinished) {
-
+    public void onCountDownTicking() {
+        mRoomEventsView.updateRoomStatusTextView(mCurrentEvent);
     }
 
     @Override
@@ -89,6 +87,11 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     @Override
+    public void updateHorizontalTimeline() {
+        mRoomEventsView.updateHorizontalTimeline(getNumOfExpiredEvents());
+    }
+
+    @Override
     public void setDoNotDisturb(boolean isDoNotDisturb) {
         mCurrentEvent.setDoNotDisturb(isDoNotDisturb);
         if (mCurrentEvent.isDoNotDisturb()) {
@@ -97,20 +100,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         else {
             mRoomEventsView.showTopBottomContent();
         }
-        mRoomEventsView.updateCircleTimeViewStatus(mCurrentEvent);
-        showButtonsForEvent();
-    }
-
-    @Override
-    public void onRestart() {
-        mCurrentEventPos = getCurrentEventPosition(mEventList);
-        showCurrentEventOnCircleTimeView();
-        onSystemTimeRefresh();
-    }
-
-    @Override
-    public void updateHorizontalTimeline() {
-        mRoomEventsView.updateHorizontalTimeline(getNumOfExpiredEvents());
+        mRoomEventsView.updateRoomStatusView(mCurrentEvent);
     }
 
     @Override
@@ -125,14 +115,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     @Override
-    public void onSystemTimeRefresh() {
-        updateHorizontalTimeline();
-        mRoomEventsView.updateRecyclerView();
-        checkEventExtendable();
-    }
-
-    @Override
-    public void circleTimeViewBtnClick() {
+    public void onCircleTimeViewBtnClick() {
         if (mCurrentEvent.isAvailable()) {
             mRoomEventsView.bookRoom(TimeHelper.getCurrentTimeInMillis(), mCurrentEvent.getEndTime());
         }
@@ -141,25 +124,17 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
-    private void showButtonsForEvent() {
-        switch (mCurrentEvent.getStatus()) {
-            case EventModelImpl.AVAILABLE:
-                mRoomEventsView.showButtonGroupForAvailableStatus();
-                break;
-            case EventModelImpl.BUSY:
-                if (mCurrentEvent.isOnHold()) {
-                    mRoomEventsView.showButtonGroupForOnHoldStatus();
-                }
-                else if (mCurrentEvent.isDoNotDisturb()) {
-                    mRoomEventsView.showButtonGroupForDoNotDisturbStatus(mCurrentEvent.getEndTimeInText());
-                }
-                else {
-                    mRoomEventsView.showButtonGroupForBusyStatus();
-                }
-                break;
-            default:
-                break;
-        }
+    @Override
+    public void onRestart() {
+        mCurrentEventPos = getCurrentEventPosition(mEventList);
+        showCurrentEventOnCircleTimeView();
+        onSystemTimeRefresh();
+    }
+
+    @Override
+    public void onSystemTimeRefresh() {
+        updateHorizontalTimeline();
+        mRoomEventsView.updateRecyclerView();
         checkEventExtendable();
     }
 
@@ -173,7 +148,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             }
 
             mRoomEventsView.renderRoomEvent(mCurrentEvent);
-            showButtonsForEvent();
+            checkEventExtendable();
         }
     }
 
@@ -193,10 +168,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
-    private int getNumOfExpiredEvents() {
-        return mCurrentEventPos;
-    }
-
     private void checkEventExtendable() {
         if (mCurrentEvent != null &&
             mCurrentEvent.isBusy() &&
@@ -212,6 +183,10 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             }
         }
         mRoomEventsView.updateExtendButtonState(false);
+    }
+
+    private int getNumOfExpiredEvents() {
+        return mCurrentEventPos;
     }
 
     @Override
@@ -342,9 +317,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             try {
                 throw e;
             }
-            catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
-                mRoomEventsView.handleRecoverableAuthException(userRecoverableAuthIOException);
-            }
             catch (GoogleJsonResponseException googleJsonResponseException) {
                 mRoomEventsView.showError(googleJsonResponseException.getDetails().getMessage());
             }
@@ -386,9 +358,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             try {
                 throw e;
             }
-            catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
-                mRoomEventsView.handleRecoverableAuthException(userRecoverableAuthIOException);
-            }
             catch (GoogleJsonResponseException googleJsonResponseException) {
                 mRoomEventsView.showError(googleJsonResponseException.getDetails().getMessage());
             }
@@ -428,9 +397,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             try {
                 throw e;
             }
-            catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
-                mRoomEventsView.handleRecoverableAuthException(userRecoverableAuthIOException);
-            }
             catch (GoogleJsonResponseException googleJsonResponseException) {
                 mRoomEventsView.showError(googleJsonResponseException.getDetails().getMessage());
             }
@@ -469,9 +435,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             dismissViewLoading();
             try {
                 throw e;
-            }
-            catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
-                mRoomEventsView.handleRecoverableAuthException(userRecoverableAuthIOException);
             }
             catch (GoogleJsonResponseException googleJsonResponseException) {
                 mRoomEventsView.showError(googleJsonResponseException.getDetails().getMessage());

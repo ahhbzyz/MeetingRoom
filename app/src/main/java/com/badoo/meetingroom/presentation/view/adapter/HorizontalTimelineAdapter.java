@@ -95,8 +95,8 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         barDrawable.setRemainingProgress(remainingProgress);
         barDrawable.setCornerRadius(0, 0, 0, 0);
 
-
-        if (event.isExpired()) {
+        //todo
+        if (!event.isComing()) {
             if (position == 0) {
                 barDrawable.setCornerRadius(1, 0, 0, 0);
             }
@@ -106,7 +106,6 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
             }
 
         } else {
-
             if (position == 0) {
                 barDrawable.setCornerRadius(0, 0, 1, 0);
             }
@@ -137,9 +136,9 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         if (event.isProcessing()) {
             holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
             holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-            holder.mCurrentTimeTv.measure(0, 0);
-            holder.mCurrentTimeTv.setX(-holder.mCurrentTimeTv.getMeasuredWidth() / 2f);
             holder.mCurrentTimeLayout.setX(leftTimelineBarWidth);
+            holder.mCurrentTimeLayout.measure(0, 0);
+            holder.mCurrentTimeTv.setX(-holder.mCurrentTimeLayout.getMeasuredWidth() / 2f);
         } else {
             holder.mCurrentTimeLayout.setVisibility(View.GONE);
         }

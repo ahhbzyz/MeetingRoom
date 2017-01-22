@@ -116,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/tv_room_capacity"
-                    android:textSize="34sp" />
+                    android:textSize="@dimen/item_room_capacity_text_size" />
 
                 <ImageView
                     android:layout_width="wrap_content"

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/activityBackgroundColor"
     tools:context="com.badoo.meetingroom.presentation.view.activity.RoomStatusActivity"
     android:orientation="vertical">
@@ -67,6 +67,8 @@
                 android:adjustViewBounds="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="32dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:layout_gravity="end"/>
 
             <TextView
@@ -88,10 +90,13 @@
                 android:layout_gravity="end"
                 android:layout_marginEnd="48dp"
                 android:adjustViewBounds="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:layout_width="36dp" />
 
 
         </android.support.v7.widget.Toolbar>
+
     </LinearLayout>
 
     <LinearLayout
@@ -112,6 +117,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
+                <com.badoo.meetingroom.presentation.view.component.circletimerview.CircleView
+                    android:id="@+id/circle_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:bgCircleStrokeWidth="@dimen/circle_view_stroke_width"
+                    android:layout_centerInParent="true" />
+
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
@@ -119,23 +131,27 @@
                     android:id="@+id/layout_circle_timer_info"
                     android:gravity="center_vertical|center_horizontal"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true">
+                    android:layout_centerVertical="false"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/circle_view_stroke_width"
+                    android:paddingBottom="@dimen/circle_view_stroke_width">
 
                     <TextView
                         android:text="@string/available_for_upper_case"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_room_status"
-                        android:textSize="32sp"
+                        android:textSize="@dimen/circle_view_status_text_size"
                         android:includeFontPadding="false"
                         android:textColor="@color/textColorBlack" />
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="240dp"
+                        android:layout_width="@dimen/circle_view_timer_text_width"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_room_status"
-                        android:gravity="center_vertical|center_horizontal">
+                        android:clipChildren="false"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:layout_marginTop="-8dp">
 
                         <TextView
                             android:text="1"
@@ -144,7 +160,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:id="@+id/tv_timer_one"
-                            android:textSize="80sp"
+                            android:textSize="@dimen/circle_view_timer_text_size"
                             android:includeFontPadding="false"
                             android:textColor="@color/textColorBlack" />
 
@@ -155,7 +171,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:id="@+id/tv_timer_two"
-                            android:textSize="80sp"
+                            android:textSize="@dimen/circle_view_timer_text_size"
                             android:includeFontPadding="false"
                             android:textColor="@color/textColorBlack" />
 
@@ -164,11 +180,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/tv_timer_colon"
-                            android:textSize="80sp"
+                            android:textSize="@dimen/circle_view_timer_text_size"
                             android:textColor="@color/textColorBlack"
                             android:gravity="center_vertical|center_horizontal"
                             android:includeFontPadding="false"
-                            android:layout_weight="1.2" />
+                            android:layout_weight="1" />
 
                         <TextView
                             android:text="0"
@@ -177,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:id="@+id/tv_timer_three"
-                            android:textSize="80sp"
+                            android:textSize="@dimen/circle_view_timer_text_size"
                             android:includeFontPadding="false"
                             android:textColor="@color/textColorBlack" />
 
@@ -188,7 +204,7 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:id="@+id/tv_timer_four"
-                            android:textSize="80sp"
+                            android:textSize="@dimen/circle_view_timer_text_size"
                             android:includeFontPadding="false"
                             android:textColor="@color/textColorBlack" />
 
@@ -201,13 +217,6 @@
                         android:layout_height="48dp"
                         android:src="@drawable/ic_info" />
                 </LinearLayout>
-
-                <com.badoo.meetingroom.presentation.view.component.circletimerview.CircleView
-                    android:id="@+id/circle_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true" />
 
                 <LinearLayout
                     android:orientation="vertical"

@@ -1,6 +1,5 @@
 package com.badoo.meetingroom.presentation.view.component.ballpulseloadingview;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -8,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -22,7 +20,7 @@ public class BallPulseLoadingView extends View {
 
     private static final String TAG = "BallPulseLoadingView";
 
-    private static final BallPulseSyncIndicator DEFAULT_INDICATOR = new BallPulseSyncIndicator();
+    private BallPulseSyncIndicator DEFAULT_INDICATOR;
 
     private static final int MIN_SHOW_TIME = 500; // ms
     private static final int MIN_DELAY = 500; // ms
@@ -75,6 +73,8 @@ public class BallPulseLoadingView extends View {
 
 
     private void init(Context context, AttributeSet attrs) {
+
+        DEFAULT_INDICATOR = new BallPulseSyncIndicator();
 
         mMinWidth = 120;
         mMinHeight = 48;
@@ -377,7 +377,7 @@ public class BallPulseLoadingView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        //startAnimation();
+        startAnimation();
         removeCallbacks();
     }
 
@@ -386,8 +386,8 @@ public class BallPulseLoadingView extends View {
         stopAnimation();
         // This should come after stopAnimation(), otherwise an invalidate message remains in the
         // queue, which can prevent the entire view hierarchy from being GC'ed during a rotation
-        super.onDetachedFromWindow();
         removeCallbacks();
+        super.onDetachedFromWindow();
     }
 
     private void removeCallbacks() {

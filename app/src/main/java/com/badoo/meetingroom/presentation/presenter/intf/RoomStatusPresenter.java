@@ -10,9 +10,9 @@ import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 public interface RoomStatusPresenter extends Presenter {
     void setView(@NonNull RoomStatusView roomEventsView);
 
-    void onCountDownTicking(long millisUntilFinished);
+    void onCountDownTicking();
     void onCountDownFinished();
-    void circleTimeViewBtnClick();
+    void onCircleTimeViewBtnClick();
     void setEventConfirmed();
     void setDoNotDisturb(boolean isDoNotDisturb);
     void onRestart();

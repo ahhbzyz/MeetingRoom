@@ -14,10 +14,12 @@
     <dimen name="circle_button_name_top_margin">24dp</dimen>
     <dimen name="circle_button_name_text_size">16sp</dimen>
 
-    <dimen name="circle_time_view_btn_diameter">48dp</dimen>
+    <dimen name="circle_view_stroke_width">38dp</dimen>
+    <dimen name="circle_view_timer_text_size">72sp</dimen>
+    <dimen name="circle_view_status_text_size">28sp</dimen>
+    <dimen name="circle_view_timer_text_width">220dp</dimen>
 
-    <dimen name="circle_time_view_btn_available_img_width">16dp</dimen>
-    <dimen name="circle_time_view_btn_available_img_height">16dp</dimen>
+    <dimen name="circle_view_btn_diameter">48dp</dimen>
 
     <dimen name="confirm_btn_img_width">32dp</dimen>
     <dimen name="confirm_btn_img_height">24dp</dimen>
@@ -101,4 +103,6 @@
     <dimen name="room_status_do_not_disturb_big_text_size">40sp</dimen>
     <dimen name="item_vertical_event_left_padding">32dp</dimen>
     <dimen name="item_vertical_event_right_padding">32dp</dimen>
+    <dimen name="item_room_capacity_text_size">24sp</dimen>
+
 </resources>

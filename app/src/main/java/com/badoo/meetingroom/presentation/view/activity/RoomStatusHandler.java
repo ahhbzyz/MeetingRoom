@@ -1,6 +1,5 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -27,20 +26,78 @@ class RoomStatusHandler {
 
     private final RoomStatusActivity activity;
     private boolean hasRequested;
-    private EventModel mCurrentEvent;
-    private ImageButton extendBtn;
 
     @Inject
     RoomStatusHandler(RoomStatusActivity activity) {
         this.activity = activity;
     }
 
-    void showButtonGroupForAvailableStatus() {
+    void updateRoomStatusView(EventModel event) {
+        if (event == null) {
+            return;
+        }
 
+        activity.mCircleView.setColorTheme(
+            event.getEventColor(),
+            event.getEventBgColor()
+        );
+
+        // Reset circle background paint style
+        activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.STROKE);
+
+
+        switch (event.getStatus()) {
+
+            case EventModel.AVAILABLE:
+
+                showAvailableView(event);
+
+                break;
+
+            case EventModel.BUSY:
+
+                if (event.isOnHold()) {
+
+                    showOnHoldView();
+
+                } else if (event.isDoNotDisturb()) {
+
+                    showDoNotDisturbView(event);
+
+                } else {
+
+                    showBusyView(event);
+
+                }
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    void showAvailableView(EventModel currentEvent) {
+
+        // Text
+        activity.mRoomStatusTv.setText(activity.getString(R.string.available_for_upper_case));
+        long hours = TimeUnit.MILLISECONDS.toHours(currentEvent.getRemainingTimeUntilNextBusyEvent());
+        if (hours >= 2) {
+            setTimerText(activity.getString(R.string.two_hour_plus));
+        }
+
+        // Visibilities
+        activity.mCircleView.setTailIconVisibility(false);
         activity.mFastBookTv.setVisibility(View.VISIBLE);
+        activity.mCircleTimerInfoLayout.setVisibility(View.VISIBLE);
+        activity.mCircleTimeViewBtn.setVisibility(View.VISIBLE);
+        activity.mDndLayout.setVisibility(View.INVISIBLE);
 
         // Update button group layout
         activity.mButtonsLayout.removeAllViews();
+
+        // Circle time view button
+        activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_add_small));
+        activity.mCircleTimeViewBtn.setBackground(activity.getDrawable(R.drawable.btn_circle_available));
 
         View btnGroup = View.inflate(activity.getApplicationContext(), R.layout.layout_btn_group_available, null);
         activity.mButtonsLayout.addView(btnGroup);
@@ -85,11 +142,19 @@ class RoomStatusHandler {
         }
     }
 
+    void showOnHoldView() {
 
-    void showButtonGroupForOnHoldStatus() {
+        // Text view
+        activity.mRoomStatusTv.setText(activity.getString(R.string.on_hold_for_upper_case));
 
+        // Visibilities
+        activity.mCircleView.setTailIconVisibility(true);
         activity.mFastBookTv.setVisibility(View.GONE);
+        activity.mCircleTimerInfoLayout.setVisibility(View.VISIBLE);
+        activity.mCircleTimeViewBtn.setVisibility(View.VISIBLE);
+        activity.mDndLayout.setVisibility(View.INVISIBLE);
 
+        // Remove buttons
         activity.mButtonsLayout.removeAllViews();
 
         View btnGroup = View.inflate(activity.getApplicationContext(), R.layout.layout_btn_group_onhold, null);
@@ -109,11 +174,25 @@ class RoomStatusHandler {
         dismissBtn.setOnClickListener(v -> activity.mPresenter.deleteEvent());
     }
 
-    void showButtonGroupForBusyStatus() {
+    void showBusyView(EventModel currentEvent) {
 
+        // Text view
+        activity.mRoomStatusTv.setText(activity.getString(R.string.busy_until_upper_case));
+        setTimerText(currentEvent.getEndTimeInText());
+
+        // Visibilities
+        activity.mCircleView.setTailIconVisibility(true);
         activity.mFastBookTv.setVisibility(View.GONE);
+        activity.mCircleTimerInfoLayout.setVisibility(View.VISIBLE);
+        activity.mCircleTimeViewBtn.setVisibility(View.VISIBLE);
+        activity.mDndLayout.setVisibility(View.INVISIBLE);
 
         activity.mButtonsLayout.removeAllViews();
+
+        activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_info));
+        activity.mCircleTimeViewBtn.setBackground(activity.getDrawable(R.drawable.btn_circle_busy));
+
+        activity.mCircleTimeViewBtn.setOnClickListener(v -> activity.mPresenter.onCircleTimeViewBtnClick());
 
         View btnGroup = View.inflate(activity.getApplicationContext(), R.layout.layout_btn_group_busy, null);
         activity.mButtonsLayout.addView(btnGroup);
@@ -138,11 +217,21 @@ class RoomStatusHandler {
         extendBtn.setOnClickListener(v -> activity.mPresenter.updateEvent());
     }
 
-    void showButtonGroupForDoNotDisturbStatus(String eventEndTime) {
+    void showDoNotDisturbView(EventModel currentEvent) {
 
+        activity.mCircleView.setColorTheme(currentEvent.getEventColor(), currentEvent.getEventColor());
+        activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.FILL_AND_STROKE);
+
+        // Visibilities
+        activity.mCircleView.setTailIconVisibility(false);
         activity.mFastBookTv.setVisibility(View.GONE);
+        activity.mCircleTimerInfoLayout.setVisibility(View.INVISIBLE);
+        activity.mCircleTimeViewBtn.setVisibility(View.INVISIBLE);
+        activity.mDndLayout.setVisibility(View.VISIBLE);
 
         activity.mButtonsLayout.removeAllViews();
+
+        activity.mCircleView.setOnClickListener(v -> activity.mPresenter.setDoNotDisturb(false));
 
         View btnGroup = View.inflate(activity.getApplicationContext(), R.layout.layout_btn_group_dnd, null);
         activity.mButtonsLayout.addView(btnGroup);
@@ -152,63 +241,10 @@ class RoomStatusHandler {
 
         TextView endTimeTv = (TextView) btnGroup.findViewById(R.id.tv_end_time);
         endTimeTv.setTypeface(activity.mStolzlMediumTypeface);
-        endTimeTv.setText(eventEndTime);
+        endTimeTv.setText(currentEvent.getEndTimeInText());
     }
 
-    void updateCircleTimeViewStatus(EventModel event) {
-        if (event == null) {
-            return;
-        }
-
-        mCurrentEvent = event;
-
-        activity.mCircleView.setTailIconVisibility(!event.isAvailable() && !event.isDoNotDisturb());
-        activity.mCircleTimerInfoLayout.setVisibility(event.isDoNotDisturb() ? View.INVISIBLE : View.VISIBLE);
-        activity.mCircleTimeViewBtn.setVisibility(View.VISIBLE);
-
-        activity.mDndLayout.setVisibility(event.isDoNotDisturb() ? View.VISIBLE : View.INVISIBLE);
-        activity.mCircleView.setColorTheme(
-            event.getEventColor(),
-            event.getEventBgColor()
-        );
-        activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.STROKE);
-
-
-        switch (event.getStatus()) {
-
-            case EventModel.AVAILABLE:
-
-                activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_add_small));
-
-                activity.mRoomStatusTv.setText(activity.getString(R.string.available_for_upper_case));
-
-                long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTimeUntilNextBusyEvent());
-
-                if (hours >= 2) {
-                    setTimerText(activity.getString(R.string.two_hour_plus));
-                }
-
-                break;
-            case EventModel.BUSY:
-
-                activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_info));
-
-                if (event.isOnHold() && !event.isConfirmed()) {
-                    activity.mRoomStatusTv.setText(activity.getString(R.string.on_hold_for_upper_case));
-                } else if (event.isDoNotDisturb()) {
-                    activity.mCircleView.setColorTheme(event.getEventColor(), event.getEventColor());
-                    activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.FILL_AND_STROKE);
-                } else {
-                    activity.mRoomStatusTv.setText(activity.getString(R.string.busy_until_upper_case));
-                    setTimerText(mCurrentEvent.getEndTimeInText());
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    void onCountDownTicking(long millisUntilFinished) {
+    void updateRoomStatusTextView(EventModel mCurrentEvent) {
         switch (mCurrentEvent.getStatus()) {
             case EventModel.AVAILABLE:
                 long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTimeUntilNextBusyEvent());
@@ -218,7 +254,7 @@ class RoomStatusHandler {
                 break;
             case EventModel.BUSY:
                 if (mCurrentEvent.isOnHold() && !mCurrentEvent.isConfirmed()) {
-                    setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
+                    setTimerText(TimeHelper.formatMillisInMinAndSec(mCurrentEvent.getRemainingOnHoldTime()));
                 }
                 break;
             default:

@@ -120,7 +120,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         // Current event
         EventModel event = mEventModelList.get(position);
 
-
         // Remaining progress of event
         float remainingProgress
             = event.getRemainingTime() / (float) event.getDuration();
@@ -135,10 +134,9 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         holder.mEventCreatorTv.setVisibility(View.VISIBLE);
         holder.mEventTitle.setVisibility(View.VISIBLE);
 
-
-        float topTimelineBarHeight = event.getDuration() * HEIGHT_PER_MILLIS * (1 - remainingProgress);
-
         holder.mEventTextViewsLayout.setOrientation(LinearLayout.VERTICAL);
+
+        holder.mEventPeriodTv.measure(0, 0);
 
         if (viewHeight < holder.mEventPeriodTv.getMeasuredHeight() * 3 + mContext.getResources().getDimension(R.dimen.item_vertical_event_text_views_top_padding)) {
             holder.mEventTextViewsLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -172,6 +170,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
         holder.mExpiredEventTopDivider.setVisibility(View.GONE);
         holder.mExpiredEventBottomDivider.setVisibility(View.GONE);
+        holder.mCurrentTimeLayout.setVisibility(View.GONE);
 
         // Event Expired
         if (event.isExpired()) {
@@ -189,14 +188,13 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mEventCreatorTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_creator_text_grey));
 
             holder.mEventTextViewsLayout.setBackground(null);
-            holder.mCurrentTimeLayout.setVisibility(View.GONE);
         }
-        else if (event.isProcessing()) {
 
-//            holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
-//            holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
-//            holder.mCurrentTimeTv.setY(- holder.mCurrentTimeTv.getMeasuredHeight() / 2f);
-//            holder.mCurrentTimeLayout.setY(topTimelineBarHeight);
+        if (event.isProcessing()) {
+
+            holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
+            holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
+
 
             holder.mEventTitle.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_title_text));
             holder.mEventCreatorTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_creator_text));
@@ -216,8 +214,14 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 holder.mEventTextViewsLayout.setBackground(bg);
                 holder.mEventPeriodTv.setText(event.getDurationInText());
             }
+
+            float topTimelineBarHeight = event.getDuration() * HEIGHT_PER_MILLIS * (1 - remainingProgress);
+            holder.mCurrentTimeLayout.setY(topTimelineBarHeight);
+            holder.mCurrentTimeLayout.measure(0, 0);
+            holder.mCurrentTimeTv.setY(-holder.mCurrentTimeLayout.getMeasuredHeight() / 2f);
+
         }
-        else {
+        if (event.isComing()) {
             holder.mEventTitle.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_title_text));
             holder.mEventCreatorTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_creator_text));
             if (event.isAvailable()) {
@@ -229,8 +233,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE);
                 holder.mEventTextViewsLayout.setBackground(bg);
             }
-            holder.mCurrentTimeLayout.setVisibility(View.GONE);
-
         }
 
 
@@ -341,12 +343,16 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.addRule(CENTER);
-                params.setMargins(0, (int) topMargin,0, 0);
-                timestampTv.setLayoutParams(params);
 
+                if (i == eventModelList.size() - 1 && j == eventModel.getTimeStamps().size() - 1) {
+                    timestampTv.setLayoutParams(params);
+                    timestampTv.setY(topMargin);
+                } else {
+                    params.setMargins(0, (int) topMargin, 0, 0);
+                    timestampTv.setLayoutParams(params);
+                }
 
                 textViewList.add(timestampTv);
-
 
                 if (TimeHelper.getMin(ts) == 0) {
                     if (ts == eventModel.getStartTime() && eventModel.isBusy()) {
