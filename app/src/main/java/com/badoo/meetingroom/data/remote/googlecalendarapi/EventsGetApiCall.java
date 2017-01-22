@@ -42,7 +42,6 @@ class EventsGetApiCall implements Callable<List<Event>>{
             .setTimeMin(mParams.getEventParams().getStart().getDateTime())
             .setTimeMax(mParams.getEventParams().getEnd().getDateTime())
             .setOrderBy("startTime")
-            .setAlwaysIncludeEmail(true)
             .setShowDeleted(false)
             .setSingleEvents(true)
             .setMaxResults(mParams.getNumOfResult())

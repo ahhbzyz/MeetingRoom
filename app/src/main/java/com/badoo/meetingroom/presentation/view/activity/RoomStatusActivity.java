@@ -21,8 +21,9 @@ import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.MyFirebaseMessagingService;
-import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
+import com.badoo.meetingroom.presentation.view.adapter.HorizontalEventItemDecoration;
 import com.badoo.meetingroom.presentation.view.fragment.EventCreatorDialogFragment;
 import com.badoo.meetingroom.presentation.view.fragment.ImmersiveProgressDialogFragment;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalTimelineAdapter;
@@ -30,9 +31,8 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -50,7 +50,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
                                                                 View.OnClickListener,
                                                                 CircleView.OnCountDownListener,
-                                                                HorizontalTimelineAdapter.OnItemClickListener {
+    HorizontalTimelineAdapter.OnEventClickListener {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
     private static final int REQUEST_AUTHORIZATION = 1001;
@@ -177,7 +177,8 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     }
 
     private void setUpHorizontalTimelineView() {
-        mAdapter.setOnItemClickListener(this);
+        mAdapter.setOnEventClickListener(this);
+        mHorizontalTimelineRv.addItemDecoration(new HorizontalEventItemDecoration(this, R.drawable.divider_horizontal_event));
         mHorizontalTimelineRv.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mHorizontalTimelineRv.setLayoutManager(mLayoutManager);
@@ -195,23 +196,31 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
                 if (newState == SCROLL_STATE_IDLE) {
                     scrollBackHandler.postDelayed(() -> {
                         if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
-                            mHorizontalTimelineRv.smoothScrollToPosition(0);
+                            //mHorizontalTimelineRv.smoothScrollToPosition(0);
                         }
                     }, SCROLL_BACK_WAIT_TIME);
                 }
             }
         });
-
-//        // Adjust current time text
-//        mCurrentTimeTv.measure(0, 0);
-//        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mCurrentTimeTv.getLayoutParams();
-//        params.setMargins((int) (-mCurrentTimeTv.getMeasuredWidth() / 2f), params.topMargin, params.rightMargin, params.bottomMargin);
-//        mCurrentTimeTv.setLayoutParams(params);
     }
 
     @Override
-    public void onEventItemClicked(int position) {
-        mPresenter.onEventClicked(position);
+    public void onAvailableEventClicked(int position, ArrayList<EventModel> eventModelList) {
+        Intent intent = new Intent(this, RoomBookingActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
+        bundle.putParcelableArrayList("eventModelList", eventModelList);
+        intent.putExtra("bookingRoom", bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivityForResult(intent, REQUEST_BOOK_ROOM);
+    }
+
+    @Override
+    public void onBusyEventClicked(EventModel eventModel) {
+        if (mEventOrganizerDialog != null) {
+            mEventOrganizerDialog.setEvent(eventModel);
+            mEventOrganizerDialog.show(this);
+        }
     }
 
     @Override
@@ -268,12 +277,12 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
 
     @Override
     public void updateHorizontalTimeline(int currentEventPosition) {
-        float leftMargin = -(TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis())
-            - currentEventPosition * getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_time_slot_divider_width)
-            + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
-        params.setMargins((int)leftMargin, params.topMargin, params.rightMargin, params.bottomMargin);
-        mHorizontalTimelineRv.setLayoutParams(params);
+//        float leftMargin = -(TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis())
+//            + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
+//        System.out.println(leftMargin);
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
+//
+//        mHorizontalTimelineRv.setX(-1000);
     }
 
     @Override
@@ -338,6 +347,11 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView,
     @Override
     public void stopCountDown() {
         mCircleView.stopCircleViewCountDown();
+    }
+
+    @Override
+    public void updateExtendButtonState(boolean state) {
+        mRoomStatusHandler.updateExtendButtonState(state);
     }
 
     @Override

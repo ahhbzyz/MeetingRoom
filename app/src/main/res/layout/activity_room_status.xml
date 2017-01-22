@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -111,16 +110,16 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_horizontal"
                 android:layout_weight="1">
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/layout_circle_timer_info"
                     android:gravity="center_vertical|center_horizontal"
-                    android:layout_centerInParent="true"
-                    android:id="@+id/layout_circle_timer_info">
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true">
 
                     <TextView
                         android:text="@string/available_for_upper_case"
@@ -197,10 +196,9 @@
 
                     <ImageButton
                         android:id="@+id/img_book"
-                        android:background="@drawable/btn_oval_grey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:background="@drawable/btn_circle_available"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:src="@drawable/ic_info" />
                 </LinearLayout>
 
@@ -232,7 +230,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_dnd"
-                        android:textSize="42sp"
+                        android:textSize="@dimen/room_status_do_not_disturb_big_text_size"
                         android:gravity="center_vertical|center_horizontal"
                         android:textColor="@android:color/white" />
 
@@ -280,9 +278,7 @@
                 android:id="@+id/rv_horizontal_timeline"
                 android:clipChildren="false"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="5dp" />
+                android:layout_height="match_parent" />
 
         </RelativeLayout>
     </LinearLayout>

@@ -2,8 +2,8 @@ package com.badoo.meetingroom.presentation.mapper;
 
 import com.badoo.meetingroom.domain.entity.intf.LocalEvent;
 import com.badoo.meetingroom.domain.entity.impl.LocalEventImpl;
-import com.badoo.meetingroom.presentation.model.EventModel;
-import com.badoo.meetingroom.presentation.model.EventModelImpl;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
+import com.badoo.meetingroom.presentation.model.impl.EventModelImpl;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;

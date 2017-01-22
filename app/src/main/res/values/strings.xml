@@ -35,4 +35,7 @@
     <string name="busy_until">Busy until</string>
     <string name="enter_your_name">Enter your name</string>
     <string name="no_name_available">No name available</string>
+    <string name="search_for_people">Search for people</string>
+    <string name="mobile_booking">Mobile Booking</string>
+    <string name="checking">Checking...</string>
 </resources>

@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
+import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.view.component.button.LongPressButton;
 import com.badoo.meetingroom.presentation.view.component.button.TwoLineTextButton;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -28,6 +28,7 @@ class RoomStatusHandler {
     private final RoomStatusActivity activity;
     private boolean hasRequested;
     private EventModel mCurrentEvent;
+    private ImageButton extendBtn;
 
     @Inject
     RoomStatusHandler(RoomStatusActivity activity) {
@@ -97,7 +98,7 @@ class RoomStatusHandler {
         TextView confirmTv = (TextView) btnGroup.findViewById(R.id.tv_confirm);
         confirmTv.setTypeface(activity.mStolzlRegularTypeface);
 
-        TextView dismissTv = (TextView) btnGroup.findViewById(R.id.tv_confirm);
+        TextView dismissTv = (TextView) btnGroup.findViewById(R.id.tv_dismiss);
         dismissTv.setTypeface(activity.mStolzlRegularTypeface);
 
         ImageButton confirmBtn = (ImageButton) btnGroup.findViewById(R.id.btn_confirm);
@@ -181,7 +182,7 @@ class RoomStatusHandler {
 
                 activity.mRoomStatusTv.setText(activity.getString(R.string.available_for_upper_case));
 
-                long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTime());
+                long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTimeUntilNextBusyEvent());
 
                 if (hours >= 2) {
                     setTimerText(activity.getString(R.string.two_hour_plus));
@@ -210,9 +211,9 @@ class RoomStatusHandler {
     void onCountDownTicking(long millisUntilFinished) {
         switch (mCurrentEvent.getStatus()) {
             case EventModel.AVAILABLE:
-                long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTime());
+                long hours = TimeUnit.MILLISECONDS.toHours(mCurrentEvent.getRemainingTimeUntilNextBusyEvent());
                 if (hours < 2) {
-                    setTimerText(TimeHelper.formatMillisInMinAndSec(millisUntilFinished));
+                    setTimerText(TimeHelper.formatMillisInMinAndSec(mCurrentEvent.getRemainingTimeUntilNextBusyEvent()));
                 }
                 break;
             case EventModel.BUSY:
@@ -243,6 +244,19 @@ class RoomStatusHandler {
             activity.mTimerTwoTv.setText(null);
             activity.mTimerThreeTv.setText(null);
             activity.mTimerFourTv.setText(null);
+        }
+    }
+
+    void updateExtendButtonState(boolean state) {
+        ImageButton extendBtn = (ImageButton) activity.mButtonsLayout.findViewById(R.id.btn_extend);
+        if (extendBtn != null) {
+            if (state) {
+                extendBtn.setAlpha(1f);
+                extendBtn.setEnabled(true);
+            } else {
+                extendBtn.setEnabled(false);
+                extendBtn.setAlpha(.3f);
+            }
         }
     }
 }

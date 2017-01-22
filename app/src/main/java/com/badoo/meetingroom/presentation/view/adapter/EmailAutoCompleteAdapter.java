@@ -11,7 +11,7 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package com.badoo.meetingroom.presentation.mapper;
 
 import com.badoo.meetingroom.domain.entity.intf.BadooPerson;
-import com.badoo.meetingroom.presentation.model.BadooPersonModel;
-import com.badoo.meetingroom.presentation.model.BadooPersonModelImpl;
+import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.impl.BadooPersonModelImpl;
 
 import java.util.ArrayList;
 import java.util.List;

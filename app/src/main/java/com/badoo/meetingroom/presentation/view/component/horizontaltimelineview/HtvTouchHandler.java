@@ -7,7 +7,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.OverScroller;
 
-import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 
 import java.util.LinkedList;
 

@@ -91,9 +91,10 @@
         android:clipToPadding="false"/>
 
     <com.badoo.meetingroom.presentation.view.component.nonswipeviewpager.NonSwipeViewPager
-        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:id="@+id/view_pager">
     </com.badoo.meetingroom.presentation.view.component.nonswipeviewpager.NonSwipeViewPager>
 </LinearLayout>

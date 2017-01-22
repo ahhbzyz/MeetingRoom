@@ -15,21 +15,20 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.domain.interactor.GetAvatar;
-import com.badoo.meetingroom.presentation.model.BadooPersonModel;
-import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.EmailAutoCompleteAdapter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView;
+import com.badoo.meetingroom.presentation.view.component.ballpulseloadingview.BallPulseLoadingView;
 import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
@@ -77,8 +76,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     RecyclerView mTimeSlotsRv;
     @BindView(R.id.btn_book)
     Button mBookBtn;
-    @BindView(R.id.pb_loading_contacts)
-    ProgressBar mLoadingContactsPb;
+    @BindView(R.id.bp_loading_view)
+    BallPulseLoadingView mLoadingContactsPb;
 
     private boolean hasSlots;
     private String mSelectedEmail;
@@ -92,11 +91,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         this.getComponent().inject(this);
         mPresenter.setView(this);
         initViews();
-
-        mPresenter.getContactList();
-        ArrayList<EventModel> eventModelList = getIntent().getBundleExtra("bookingRoom").getParcelableArrayList("eventModelList");
-        int position = getIntent().getBundleExtra("bookingRoom").getInt("position");
-        mPresenter.setTimeSlotList(position, eventModelList);
+        getBundleData();
     }
 
 
@@ -125,6 +120,22 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         mTimeSlotsRv.setAdapter(mAdapter);
 
         mAutoCompleteTv.setTypeface(mStolzlRegularTypeface);
+    }
+
+    @Override
+    public void getBundleData() {
+        ArrayList<EventModel> eventModelList = getIntent().getBundleExtra("bookingRoom").getParcelableArrayList("eventModelList");
+        int position = getIntent().getBundleExtra("bookingRoom").getInt("position");
+        mPresenter.setTimeSlotList(position, eventModelList);
+        mPresenter.getContactList();
+    }
+
+    @Override
+    public void showBookingInformation(String date) {
+        mBookingDateTv.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
+        mBookingDateTv.setText(date);
+        mBookingPeriodTv.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
+        mBookingPeriodTv.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -165,14 +176,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     public void renderTimeSlotsInView(int position, List<EventModel> availableEventList) {
-
-
-        if (availableEventList != null && !availableEventList.isEmpty()) {
-            mBookingDateTv.setText(TimeHelper.formatDate(availableEventList.get(0).getStartTime()));
-        }
-        else {
-            mBookingDateTv.setText(getString(R.string.today));
-        }
 
         // Set left padding
         mAdapter.setEventModelList(availableEventList);
@@ -247,14 +250,15 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     public void showLoadingData(String message) {
-        mLoadingContactsPb.setVisibility(View.VISIBLE);
+        mBookingPeriodTv.setVisibility(View.INVISIBLE);
+        mBookingDateTv.setText(getResources().getString(R.string.checking));
+        mLoadingContactsPb.show();
     }
 
     @Override
     public void dismissLoadingData() {
-        mLoadingContactsPb.setVisibility(View.GONE);
+        mLoadingContactsPb.hide();
     }
-
 
     @Override
     public void showError(String message) {

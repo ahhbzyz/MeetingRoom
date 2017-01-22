@@ -2,14 +2,13 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.domain.entity.intf.Room;
-import com.badoo.meetingroom.domain.entity.intf.LocalEvent;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetCalendarList;
-import com.badoo.meetingroom.domain.interactor.event.GetRoomEvents;
+import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.presentation.mapper.RoomEventsMapper;
 import com.badoo.meetingroom.presentation.mapper.RoomModelMapper;
-import com.badoo.meetingroom.presentation.model.EventModel;
-import com.badoo.meetingroom.presentation.model.RoomModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomListView;
@@ -33,7 +32,7 @@ public class RoomListPresenterImpl implements RoomListPresenter {
 
     private RoomListView mRoomListView;
     private final GetCalendarList mGetCalendarListUseCase;
-    private final GetRoomEvents mGetEventsUseCase;
+    private final GetEvents mGetEventsUseCase;
     private final RoomModelMapper mRoomModelMapper;
     private final RoomEventsMapper mRoomEventModelMapper;
     private List<RoomModel> mRoomModelList;
@@ -41,7 +40,7 @@ public class RoomListPresenterImpl implements RoomListPresenter {
 
     @Inject
     RoomListPresenterImpl(@Named(GetCalendarList.NAME) GetCalendarList getCalendarListUseCase,
-                          @Named(GetRoomEvents.NAME) GetRoomEvents getEventsUseCase,
+                          @Named(GetEvents.NAME) GetEvents getEventsUseCase,
                           RoomModelMapper roomModelMapper, RoomEventsMapper roomEventModelMapper) {
 
         mGetCalendarListUseCase = getCalendarListUseCase;
@@ -111,7 +110,7 @@ public class RoomListPresenterImpl implements RoomListPresenter {
                 params.setEventParams(event);
                 GetEventsSubscriber subscriber = new GetEventsSubscriber();
                 subscriber.setPosition(i);
-                mGetEventsUseCase.init(params).execute(subscriber);
+                mGetEventsUseCase.init(params, 0).execute(subscriber);
             }
         }
 

@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.presentation.model.impl;
 
-import com.badoo.meetingroom.presentation.model.EventModel;
-import com.badoo.meetingroom.presentation.model.RoomModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 
 /**
  * Created by zhangyaozhong on 16/01/2017.

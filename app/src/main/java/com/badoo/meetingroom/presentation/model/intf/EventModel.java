@@ -49,6 +49,12 @@ public interface EventModel extends Parcelable {
 
     long getRemainingTime();
 
+    long getRemainingTimeUntilNextBusyEvent();
+
+    long getNextBusyEventStartTime();
+
+    void setNextBusyEventStartTime(long nextBusyEventStartTime);
+
     boolean isBusy();
 
     boolean isAvailable();

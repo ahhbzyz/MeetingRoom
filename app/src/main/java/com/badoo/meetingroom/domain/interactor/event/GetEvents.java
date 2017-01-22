@@ -4,8 +4,8 @@ import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.UseCase;
 import com.badoo.meetingroom.domain.repository.LocalEventRepo;
 import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.mapper.EventsMapper;
-import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.mapper.EventMapper;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 
 import java.util.List;
 
@@ -18,21 +18,21 @@ import rx.Observable;
  */
 
 public class GetEvents extends UseCase<List<EventModel>> {
-    public static final String NAME = "getCalendarEvents";
+    public static final String NAME = "getEvents";
 
     private final LocalEventRepo mRoomEventRepository;
-    private final EventsMapper mEventsMapper;
+    private final EventMapper mEventMapper;
     private CalendarApiParams mParams;
 
     @Inject
-    GetEvents(LocalEventRepo roomEventRepository, EventsMapper eventsMapper) {
+    GetEvents(LocalEventRepo roomEventRepository, EventMapper eventMapper) {
         mRoomEventRepository = roomEventRepository;
-        mEventsMapper = eventsMapper;
+        mEventMapper = eventMapper;
     }
 
     public GetEvents init(CalendarApiParams params, int page) {
-        mEventsMapper.setEventStartTime(Badoo.getStartTimeOfDay(page));
-        mEventsMapper.setEventEndTime(Badoo.getEndTimeOfDay(page));
+        mEventMapper.setEventStartTime(Badoo.getStartTimeOfDay(page));
+        mEventMapper.setEventEndTime(Badoo.getEndTimeOfDay(page));
         mParams = params;
         return this;
     }
@@ -42,7 +42,7 @@ public class GetEvents extends UseCase<List<EventModel>> {
         if (mParams == null) {
             throw new IllegalArgumentException("init(CalendarApiParams) not called, or called with null argument");
         }
-        return mRoomEventRepository.getRoomEventList(mParams).map(mEventsMapper::map);
+        return mRoomEventRepository.getRoomEventList(mParams).map(mEventMapper::map);
     }
 
 }

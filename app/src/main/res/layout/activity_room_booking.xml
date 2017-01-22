@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activityBackgroundColor"
-    tools:context="com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity">
+    tools:context="com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -58,7 +59,7 @@
     </android.support.v7.widget.Toolbar>
 
     <TextView
-        android:text="@string/today"
+        android:text="@string/checking"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_booking_date"
@@ -67,15 +68,28 @@
         android:gravity="center_vertical|center_horizontal"
         android:layout_marginTop="64dp" />
 
-    <TextView
-        android:text="@string/no_slots_selected_alert"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_booking_period"
-        android:textSize="42sp"
-        android:textColor="@android:color/black"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="16dp" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/no_slots_selected_alert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_booking_period"
+            android:textSize="42sp"
+            android:textColor="@android:color/black"
+            android:gravity="center_vertical|center_horizontal"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <com.badoo.meetingroom.presentation.view.component.ballpulseloadingview.BallPulseLoadingView
+            android:layout_width="wrap_content"
+            android:id="@+id/bp_loading_view"
+            android:layout_centerInParent="true"
+            android:layout_height="@dimen/bp_loading_view_height" />
+    </RelativeLayout>
 
 
     <android.support.v7.widget.RecyclerView
@@ -85,6 +99,7 @@
             android:clipToPadding="false"
             android:layout_marginTop="32dp">
         </android.support.v7.widget.RecyclerView>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -106,20 +121,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/pb_loading_contacts"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:visibility="gone" />
-
             <com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView
+                android:maxLines="1"
                 android:id="@+id/autocomplete_email_address"
                 android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:hint="@string/search_for_people" />
         </RelativeLayout>
 
 

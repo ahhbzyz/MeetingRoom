@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.model.RoomModel;
+import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.MainPresenter;
 import com.badoo.meetingroom.presentation.view.view.MainView;
 import com.google.android.gms.common.GoogleApiAvailability;

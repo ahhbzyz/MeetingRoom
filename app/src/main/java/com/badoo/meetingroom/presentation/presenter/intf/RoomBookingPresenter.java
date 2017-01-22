@@ -1,7 +1,6 @@
 package com.badoo.meetingroom.presentation.presenter.intf;
 
-import com.badoo.meetingroom.presentation.model.EventModel;
-import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 
 import java.util.List;

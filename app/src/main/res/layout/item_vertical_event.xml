@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:clipChildren="false"
+    android:clipToPadding="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
@@ -8,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
+        android:clipToPadding="false"
         android:layout_marginStart="@dimen/item_vertical_event_end_margin"
         android:layout_marginEnd="@dimen/item_vertical_event_start_margin">
 
@@ -15,7 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/layout_timestamps"
+            android:clipChildren="false"
             android:clipToPadding="false"
+            android:paddingStart="0dp"
             android:paddingEnd="@dimen/item_vertical_event_start_margin">
 
         </RelativeLayout>
@@ -33,22 +37,22 @@
             <RelativeLayout
                 android:id="@+id/layout_dividers"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:clickable="true"
                 android:background="?attr/selectableItemBackground"
                 android:layout_toEndOf="@+id/img_timeline_bar">
-                
+
                 <View
                     android:background="@color/item_vertical_event_divider_color"
                     android:id="@+id/view_top_divider"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/item_vertical_event_divider_height"
+                    android:layout_height="@dimen/item_vertical_event_grey_divider_height"
                     android:layout_alignParentTop="true" />
                 <View
                     android:background="@color/item_vertical_event_divider_color"
                     android:id="@+id/view_bottom_divider"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/item_vertical_event_divider_height"
+                    android:layout_height="@dimen/item_vertical_event_grey_divider_height"
                     android:layout_alignParentBottom="true" />
 
                 <LinearLayout
@@ -57,7 +61,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingStart="@dimen/item_vertical_event_text_views_left_padding"
-                    android:paddingTop="@dimen/item_vertical_event_text_views_top_padding">
+                    android:paddingTop="@dimen/item_vertical_event_text_views_top_padding"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -89,21 +95,23 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:id="@+id/layout_current_time"
         android:visibility="gone">
 
         <TextView
             android:text="@string/fake_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:id="@+id/tv_current_time"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:gravity="center_vertical|center_horizontal" />
 
         <View
             android:layout_width="match_parent"

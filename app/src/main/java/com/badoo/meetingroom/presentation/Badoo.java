@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.presentation;
 
-import com.badoo.meetingroom.presentation.model.RoomModel;
+import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 /**

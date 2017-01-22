@@ -5,7 +5,9 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 
 /**
@@ -20,20 +22,39 @@ public class TimelineBarDrawable extends Drawable {
     private final Paint backgroundPaint;
     private int topColor;
     private int bottomColor;
-    private float remainingProgress;
+    private float remainingProgress = 1f;
     private int orientation = VERTICAL;
 
+    private int leftBarLeftRadius = 0;
+    private int leftBarRightRadius = 0;
+    private int rightBarLeftRadius = 0;
+    private int rightBarRightRadius = 0;
 
-    public TimelineBarDrawable(int topColor, int bottomColor, float remainingProgress) {
+    private final int CORNER_RADIUS = 10;
+
+
+    public void setCornerRadius(int leftBarLeftRadius, int leftBarRightRadius, int rightBarLeftRadius, int rightBarRightRadius) {
+        this.leftBarLeftRadius = leftBarLeftRadius;
+        this.leftBarRightRadius = leftBarRightRadius;
+        this.rightBarLeftRadius = rightBarLeftRadius;
+        this.rightBarRightRadius = rightBarRightRadius;
+        invalidateSelf();
+    }
+
+
+    public TimelineBarDrawable(int topColor, int bottomColor) {
         this.topColor = topColor;
         this.bottomColor = bottomColor;
-        this.remainingProgress = remainingProgress;
         this.backgroundPaint = new Paint();
+    }
+
+    public void setRemainingProgress(float remainingProgress) {
+        this.remainingProgress = remainingProgress;
+        invalidateSelf();
     }
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-
         // get drawable dimensions
         Rect bounds = getBounds();
 
@@ -53,11 +74,20 @@ public class TimelineBarDrawable extends Drawable {
             float rightBarWidth = remainingProgress * width;
             float leftBarWidth = width - rightBarWidth;
 
+            float leftBarLeft = leftBarLeftRadius == 0 ? 0 : leftBarWidth / 2f;
+            float leftBarRight = leftBarRightRadius == 0 ? 0 : leftBarWidth / 2f;
+
             backgroundPaint.setColor(topColor);
-            canvas.drawRect(0, 0, leftBarWidth, height, backgroundPaint);
+            canvas.drawRect(0 + leftBarLeft, 0, leftBarWidth - leftBarRight, height, backgroundPaint);
+            canvas.drawRoundRect(new RectF(0, 0, leftBarWidth, height), CORNER_RADIUS, CORNER_RADIUS, backgroundPaint);
+
+
+            float rightBarLeft = rightBarLeftRadius == 0 ? 0 : rightBarWidth / 2f;
+            float rightBarRight = rightBarRightRadius == 0 ? 0 : rightBarWidth / 2f;
 
             backgroundPaint.setColor(bottomColor);
-            canvas.drawRect(leftBarWidth, 0, width, height, backgroundPaint);
+            canvas.drawRect(leftBarWidth + rightBarLeft, 0, width - rightBarRight, height, backgroundPaint);
+            canvas.drawRoundRect(new RectF(leftBarWidth, 0, width, height), CORNER_RADIUS, CORNER_RADIUS, backgroundPaint);
         }
     }
 

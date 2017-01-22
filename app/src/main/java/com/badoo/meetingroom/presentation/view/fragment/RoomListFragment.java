@@ -10,8 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.RoomModel;
-import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
+import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.RoomListAdapter;
 import com.badoo.meetingroom.presentation.view.view.RoomListView;

@@ -36,8 +36,9 @@
 
     <dimen name="horizontal_timeline_height">48dp</dimen>
     <dimen name="horizontal_timeline_current_time_mark_left_margin">120dp</dimen>
+    <dimen name="item_horizontal_event_divider_width">2dp</dimen>
+
     <dimen name="horizontal_timeline_current_time_mark_width">1.5dp</dimen>
-    <dimen name="horizontal_timeline_time_slot_divider_width">2dp</dimen>
 
     <dimen name="events_calendar_tab_min_width">100dp</dimen>
 
@@ -66,7 +67,9 @@
     <dimen name="item_vertical_event_start_margin">32dp</dimen>
     <dimen name="item_vertical_event_end_margin">32dp</dimen>
 
-    <dimen name="item_vertical_event_divider_height">1dp</dimen>
+    <dimen name="item_vertical_event_grey_divider_height">1dp</dimen>
+    <dimen name="item_vertical_event_white_divider_height">2dp</dimen>
+
     <dimen name="item_vertical_event_hourly_divider_height">1dp</dimen>
 
     <dimen name="daily_event_list_top_margin">16dp</dimen>
@@ -93,5 +96,9 @@
     <dimen name="item_vertical_event_text_end_margin">16dp</dimen>
 
     <dimen name="item_vertical_event_text_views_left_padding">16dp</dimen>
-    <dimen name="item_vertical_event_text_views_top_padding">8dp</dimen>
+    <dimen name="item_vertical_event_text_views_top_padding">4dp</dimen>
+    <dimen name="bp_loading_view_height">24dp</dimen>
+    <dimen name="room_status_do_not_disturb_big_text_size">40sp</dimen>
+    <dimen name="item_vertical_event_left_padding">32dp</dimen>
+    <dimen name="item_vertical_event_right_padding">32dp</dimen>
 </resources>

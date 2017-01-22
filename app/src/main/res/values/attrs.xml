@@ -85,4 +85,11 @@
 
         <attr name="busyBgColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="BallPulseLoadingView">
+        <attr name="minWidth" format="dimension" />
+        <attr name="minHeight" format="dimension" />
+        <attr name="indicatorName" format="string"/>
+        <attr name="indicatorColor" format="color"/>
+    </declare-styleable>
 </resources>

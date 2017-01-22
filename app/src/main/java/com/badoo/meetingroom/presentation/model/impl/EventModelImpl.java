@@ -4,7 +4,7 @@ import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ public class EventModelImpl implements EventModel, Parcelable {
     private int status;
     private long startTime;
     private long endTime;
+    private long nextBusyEventStartTime;
     private String eventTitle;
     private String creatorId;
     private String creatorName;
@@ -122,6 +123,24 @@ public class EventModelImpl implements EventModel, Parcelable {
         }
         return startTime > TimeHelper.getCurrentTimeInMillis() ? getDuration() : endTime - TimeHelper.getCurrentTimeInMillis();
     }
+
+    @Override
+    public long getRemainingTimeUntilNextBusyEvent() {
+        return startTime > TimeHelper.getCurrentTimeInMillis() ? getNextBusyEventStartTime() - startTime : getNextBusyEventStartTime() - TimeHelper.getCurrentTimeInMillis();
+    }
+
+    @Override
+    public long getNextBusyEventStartTime() {
+        if (!isAvailable()) {
+            return endTime;
+        }
+        return nextBusyEventStartTime;
+    }
+
+    public void setNextBusyEventStartTime(long nextBusyEventStartTime) {
+        this.nextBusyEventStartTime = nextBusyEventStartTime;
+    }
+
 
     @Override
     public boolean isBusy() {
@@ -278,6 +297,7 @@ public class EventModelImpl implements EventModel, Parcelable {
         out.writeInt(this.status);
         out.writeLong(this.startTime);
         out.writeLong(this.endTime);
+        out.writeLong(this.nextBusyEventStartTime);
         out.writeString(this.eventTitle);
         out.writeString(this.creatorId);
         out.writeString(this.creatorName);
@@ -293,6 +313,7 @@ public class EventModelImpl implements EventModel, Parcelable {
         this.status = in.readInt();
         this.startTime = in.readLong();
         this.endTime = in.readLong();
+        this.nextBusyEventStartTime = in.readLong();
         this.eventTitle = in.readString();
         this.creatorName = in.readString();
         this.creatorId = in.readString();

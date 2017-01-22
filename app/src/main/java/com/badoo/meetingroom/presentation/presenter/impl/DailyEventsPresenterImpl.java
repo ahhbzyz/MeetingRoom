@@ -2,9 +2,9 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
-import com.badoo.meetingroom.domain.interactor.event.GetCalendarEvents;
+import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.view.view.DailyEventsView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -28,12 +28,12 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
 
     private DailyEventsView mDailyEventsView;
-    private final GetCalendarEvents mGetCalendarEventsUseCase;
+    private final GetEvents mGetCalendarEventsUseCase;
     private List<EventModel> mEventList;
     private int mPage = 0;
 
     @Inject
-    DailyEventsPresenterImpl(@Named(GetCalendarEvents.NAME)GetCalendarEvents getCalendarEventsUseCase) {
+    DailyEventsPresenterImpl(@Named(GetEvents.NAME)GetEvents getCalendarEventsUseCase) {
         mGetCalendarEventsUseCase = getCalendarEventsUseCase;
         mEventList = new ArrayList<>();
     }

@@ -6,6 +6,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
@@ -16,6 +17,7 @@ import android.support.annotation.NonNull;
 public class BusyBgDrawable extends Drawable {
 
 
+    private final float CORNER_RADIUS = 20;
     private final int pastBgColor = Color.parseColor("#4DD4D4D4");
     private int bgColor;
 
@@ -63,12 +65,13 @@ public class BusyBgDrawable extends Drawable {
         float topRectHeight = height - bottomRectHeight;
 
         mBgPaint.setColor(pastBgColor);
-        canvas.drawRect(0, 0, width, topRectHeight, mBgPaint);
+        canvas.drawRoundRect(new RectF(- CORNER_RADIUS, 0, width, topRectHeight), CORNER_RADIUS, CORNER_RADIUS, mBgPaint);
 
         mBgPaint.setColor(bgColor);
-        canvas.drawRect(0, topRectHeight, width, height, mBgPaint);
+        canvas.drawRoundRect(new RectF(-CORNER_RADIUS, topRectHeight, width, height), CORNER_RADIUS, CORNER_RADIUS, mBgPaint);
 
-        for (float i = -(bottomRectHeight); i <= width; i += gap) {
+
+        for (float i = - bottomRectHeight; i < width- CORNER_RADIUS; i += gap) {
             canvas.drawLine(i, topRectHeight, i + bottomRectHeight, height, mDividerPaint);
         }
     }

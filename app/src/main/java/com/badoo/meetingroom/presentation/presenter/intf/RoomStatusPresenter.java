@@ -15,7 +15,6 @@ public interface RoomStatusPresenter extends Presenter {
     void circleTimeViewBtnClick();
     void setEventConfirmed();
     void setDoNotDisturb(boolean isDoNotDisturb);
-    void onEventClicked(int position);
     void onRestart();
     void updateHorizontalTimeline();
 

@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.OverScroller;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.LinkedList;

@@ -8,9 +8,10 @@ import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
-import com.badoo.meetingroom.presentation.model.BadooPersonModel;
-import com.badoo.meetingroom.presentation.model.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -54,8 +55,6 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         mGetPersonsUseCase.execute(new GetPersonsSubscriber());
     }
 
-
-
     @Override
     public void setView(RoomBookingView roomBookingView) {
         this.mRoomBookingView = roomBookingView;
@@ -76,6 +75,8 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
             .setTimeZone("Europe/London");
         event.setEnd(end);
 
+        event.setSummary(mRoomBookingView.context().getString(R.string.mobile_booking));
+
         List<EventAttendee> eventAttendees = new ArrayList<>(1);
         eventAttendees.add(new EventAttendee().setEmail(organizer));
         event.setAttendees(eventAttendees);
@@ -87,10 +88,11 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
     @Override
     public void setTimeSlotList(int position, List<EventModel> eventModelList) {
+
         mAvailableEventList.clear();
 
         int tempPos = position;
-        while (tempPos >= 0 && eventModelList.get(tempPos).isAvailable()) {
+        while (tempPos >= 0 && eventModelList.get(tempPos).isAvailable() && !eventModelList.get(tempPos).isExpired()) {
             tempPos --;
         }
         if (tempPos != position) {
@@ -198,7 +200,17 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         }
     }
 
-    private void dismissViewLoading() {this.mRoomBookingView.dismissLoadingData();}
+    private void dismissViewLoading() {
+        this.mRoomBookingView.dismissLoadingData();
+        if (mAvailableEventList != null && !mAvailableEventList.isEmpty()) {
+            if (mAvailableEventList.get(0).getStartTime() >= TimeHelper.getMidNightTimeOfDay(1)) {
+                mRoomBookingView.showBookingInformation(TimeHelper.formatDate(mAvailableEventList.get(0).getStartTime()));
+            } else {
+                mRoomBookingView.showBookingInformation(mRoomBookingView.context().getString(R.string.today));
+            }
+
+        }
+    }
 
 
     @Override

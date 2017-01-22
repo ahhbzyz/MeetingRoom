@@ -2,17 +2,12 @@ package com.badoo.meetingroom.presentation.view.fragment;
 
 
 import android.app.Dialog;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -24,12 +19,10 @@ import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
-import com.badoo.meetingroom.presentation.model.BadooPersonModel;
-import com.badoo.meetingroom.presentation.model.EventModel;
-import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
+import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
@@ -86,28 +79,21 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
         mCreatorNameTv.setTypeface(stolzlRegularTypeface);
 
         if (mEvent != null) {
-            mEventPeriodTv.setText(mEvent.getDurationInText());
 
+            mEventPeriodTv.setText(mEvent.getDurationInText());
             mCreatorNameTv.setText(mEvent.getCreatorName());
             mCreatorEmailTv.setText(mEvent.getCreatorEmailAddress());
 
 
-            if (mEvent.getCreatorName() == null) {
-
-            }
-
-            if (mEvent.getCreatorEmailAddress() != null ) {
-            }
-
             if (mEvent.isFastBooking()) {
                 mCreatorNameTv.setText(getActivity().getString(R.string.fast_booking));
                 mCreatorEmailTv.setText(getActivity().getString(R.string.no_name_available));
+                mAvatarImg.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.ic_fast_booking));
+
             }
 
             if (mEvent.getCreatorEmailAddress() != null) {
                 getPersonsUseCase.execute(new GetPersonsSubscriber());
-            } else {
-                mAvatarImg.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.ic_fast_booking));
             }
         }
 
