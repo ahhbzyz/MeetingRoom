@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity implements MainView, EasyPermissi
         getComponent().inject(this);
         mGetCredentialPresenter.setView(this);
         mGetCredentialPresenter.init();
-
+        findViewById(R.id.btn_status).setEnabled(false);
         findViewById(R.id.btn_status).setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, RoomStatusActivity.class);
             startActivity(intent);
@@ -85,9 +85,9 @@ public class MainActivity extends BaseActivity implements MainView, EasyPermissi
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 Badoo.setCurrentRoom(roomModelList.get(0));
-
             }
         });
+        findViewById(R.id.btn_status).setEnabled(true);
     }
 
     @Override

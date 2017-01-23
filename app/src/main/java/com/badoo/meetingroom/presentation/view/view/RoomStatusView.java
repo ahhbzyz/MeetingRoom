@@ -17,7 +17,7 @@ public interface RoomStatusView extends LoadDataView {
 
     void updateRoomStatusView(EventModel currentEvent);
 
-    void updateHorizontalTimeline(int numOfExpiredEvents);
+    void updateHorizontalTimeline();
 
     void updateRecyclerView();
 

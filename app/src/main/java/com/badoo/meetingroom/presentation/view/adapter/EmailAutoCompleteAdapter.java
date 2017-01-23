@@ -149,13 +149,13 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
         @Override @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
             ArrayList<BadooPersonModel> filteredList = (ArrayList<BadooPersonModel>) results.values;
-            if(results.count > 0) {
+            if(filteredList != null && results.count > 0) {
                 clear();
                 for (BadooPersonModel badooPersonModel : filteredList) {
                     add(badooPersonModel);
                 }
-                notifyDataSetChanged();
             }
+            notifyDataSetChanged();
         }
     };
 

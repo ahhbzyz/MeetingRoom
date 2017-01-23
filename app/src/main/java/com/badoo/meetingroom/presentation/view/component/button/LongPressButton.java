@@ -114,7 +114,7 @@ public class LongPressButton extends ImageButton {
     public void setPressed(boolean pressed) {
         super.setPressed(pressed);
         if (pressed) {
-            mAnimator = ValueAnimator.ofFloat(360f, 0f);
+            mAnimator = ValueAnimator.ofFloat(0, 360f);
             mAnimator.setDuration(800);
             mAnimator.addUpdateListener(valueAnimator -> updateRotateDegree((Float) valueAnimator.getAnimatedValue()));
 
@@ -128,7 +128,7 @@ public class LongPressButton extends ImageButton {
                 @Override
                 public void onAnimationEnd(Animator animator) {
 
-                    if (rotateDegree == 0) {
+                    if (rotateDegree == 360) {
                         if (mCountDownListener != null) {
                             mCountDownListener.onCountDownFinished();
                         }
@@ -151,7 +151,7 @@ public class LongPressButton extends ImageButton {
             if (mAnimator != null) {
                 mAnimator.cancel();
             }
-            updateRotateDegree(360);
+            updateRotateDegree(0);
             drawCountDownCircle = false;
         }
 

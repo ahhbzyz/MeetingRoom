@@ -43,4 +43,5 @@
     <string name="all_rooms">All Rooms</string>
     <string name="first_floor">1st floor</string>
     <string name="fourth_floor">4th floor</string>
+    <string name="symbol_between_date_time">•</string>
 </resources>

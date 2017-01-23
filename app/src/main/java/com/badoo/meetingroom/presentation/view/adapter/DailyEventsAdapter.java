@@ -2,13 +2,12 @@ package com.badoo.meetingroom.presentation.view.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,9 +42,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     private ArrayList<EventModel> mEventModelList;
     private OnEventClickListener mOnEventClickListener;
 
-    private SparseArray<List<TextView>> mTimestampTextViews;
-    private SparseArray<List<View>> mDividers;
-    private SparseArray<TextView> mHiddenTvs;
+    private List<ItemView> mItemViewList;
+    private OnEventRenderFinishListener mOnEventRenderFinishListener;
 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -62,8 +60,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         LinearLayout mEventTextViewsLayout;
         @BindView(R.id.layout_timestamps)
         RelativeLayout mTimestampsLayout;
-        @BindView(R.id.layout_dividers)
-        RelativeLayout mDividersLayout;
+        @BindView(R.id.layout_text_views)
+        RelativeLayout mTextViewsLayout;
         @BindView(R.id.layout_current_time)
         LinearLayout mCurrentTimeLayout;
         @BindView(R.id.tv_current_time)
@@ -72,6 +70,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         View mExpiredEventTopDivider;
         @BindView(R.id.view_bottom_divider)
         View mExpiredEventBottomDivider;
+        @BindView(R.id.layout_dividers)
+        RelativeLayout mDividersLayout;
 
         private ViewHolder(View view) {
             super(view);
@@ -83,9 +83,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     DailyEventsAdapter(Context context) {
         mContext = context;
         mEventModelList = new ArrayList<>();
-        mTimestampTextViews = new SparseArray<>();
-        mDividers = new SparseArray<>();
-        mHiddenTvs = new SparseArray<>();
+        mItemViewList = new ArrayList<>();
     }
 
     public void setDailyEventList(List<EventModel> roomEventModelList) {
@@ -93,19 +91,20 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             throw new IllegalArgumentException("Room event list cannot be null");
         }
         mEventModelList = (ArrayList<EventModel>) roomEventModelList;
-        notifyDataSetChanged();
 
-        createTimestampTextViewsAndHourlyDivider(mEventModelList);
+        Handler mCalcItemViewHandler = new Handler();
 
+        final Runnable runnable = () -> {
 
-        for (int i = 0; i < mEventModelList.size(); i++) {
-                TextView mHiddenTv = new TextView(mContext);
-                mHiddenTv.setText(mContext.getString(R.string.fake_time));
-                mHiddenTv.setVisibility(View.INVISIBLE);
-                mHiddenTvs.put(i, mHiddenTv);
-        }
+            mItemViewList = calculateItemView(mEventModelList);
+            notifyDataSetChanged();
+            mOnEventRenderFinishListener.onEventRenderFinish();
+        };
 
+        mCalcItemViewHandler.post(runnable);
     }
+
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -117,41 +116,47 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        // Current event
-        EventModel event = mEventModelList.get(position);
+        if (mItemViewList.isEmpty()) {
+            return;
+        }
 
-        // Remaining progress of event
-        float remainingProgress
-            = event.getRemainingTime() / (float) event.getDuration();
+        // Current event
+        EventModel eventModel = mEventModelList.get(position);
+        ItemView itemView = mItemViewList.get(position);
 
         // Calculate item height
-        float viewHeight = event.getDuration() * HEIGHT_PER_MILLIS;
+        float viewHeight = itemView.getViewHeight();
+        // Remaining progress of event
+        float remainingProgress = eventModel.getRemainingTime() / (float) eventModel.getDuration();
+
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, (int) viewHeight);
         holder.itemView.setLayoutParams(params);
 
-
+        // Reset view child
         holder.mEventPeriodTv.setVisibility(View.VISIBLE);
         holder.mEventCreatorTv.setVisibility(View.VISIBLE);
         holder.mEventTitle.setVisibility(View.VISIBLE);
-
+        holder.mExpiredEventTopDivider.setVisibility(View.GONE);
+        holder.mExpiredEventBottomDivider.setVisibility(View.GONE);
+        holder.mCurrentTimeLayout.setVisibility(View.GONE);
         holder.mEventTextViewsLayout.setOrientation(LinearLayout.VERTICAL);
 
         holder.mEventPeriodTv.measure(0, 0);
 
+        // Change orientation when view height too small
         if (viewHeight < holder.mEventPeriodTv.getMeasuredHeight() * 3 + mContext.getResources().getDimension(R.dimen.item_vertical_event_text_views_top_padding)) {
             holder.mEventTextViewsLayout.setOrientation(LinearLayout.HORIZONTAL);
             holder.mEventTitle.setVisibility(View.GONE);
          }
 
-
         // Set Text
-        if(event.isFastBooking()) {
+        if(eventModel.isFastBooking()) {
             holder.mEventTitle.setText(mContext.getString(R.string.fast_booking));
             holder.mEventCreatorTv.setText(mContext.getString(R.string.no_name_available));
         } else {
-            holder.mEventTitle.setText(event.getEventTitle());
-            String creatorName = event.getCreatorName();
-            String creatorEmail = event.getCreatorEmailAddress();
+            holder.mEventTitle.setText(eventModel.getEventTitle());
+            String creatorName = eventModel.getCreatorName();
+            String creatorEmail = eventModel.getCreatorEmailAddress();
 
             if (creatorName != null && creatorEmail != null) {
                 holder.mEventCreatorTv.setText(creatorName + " (" + creatorEmail + ")");
@@ -162,24 +167,19 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             }
         }
 
-        if (event.isAvailable()) {
+        if (eventModel.isAvailable()) {
             holder.mEventPeriodTv.setText("");
         } else {
-            holder.mEventPeriodTv.setText(event.getDurationInText());
+            holder.mEventPeriodTv.setText(eventModel.getDurationInText());
         }
 
-        holder.mExpiredEventTopDivider.setVisibility(View.GONE);
-        holder.mExpiredEventBottomDivider.setVisibility(View.GONE);
-        holder.mCurrentTimeLayout.setVisibility(View.GONE);
-
         // Event Expired
-        if (event.isExpired()) {
+        if (eventModel.isExpired()) {
 
-
-            if (event.isBusy()) {
+            if (eventModel.isBusy()) {
                 holder.mExpiredEventTopDivider.setVisibility(View.VISIBLE);
                 holder.mExpiredEventBottomDivider.setVisibility(View.VISIBLE);
-                holder.mTimelineBar.setBackgroundColor(event.getEventExpiredColor());
+                holder.mTimelineBar.setBackgroundColor(eventModel.getEventExpiredColor());
             } else {
                 holder.mTimelineBar.setBackgroundColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_expired_time_line_bar));
             }
@@ -190,7 +190,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mEventTextViewsLayout.setBackground(null);
         }
 
-        if (event.isProcessing()) {
+        // Event is processing
+        if (eventModel.isProcessing()) {
 
             holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
             holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
@@ -200,37 +201,39 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mEventCreatorTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_creator_text));
 
 
-            if (event.isAvailable()) {
-                TimelineBarDrawable barDrawable = new TimelineBarDrawable(ContextCompat.getColor(mContext, R.color.item_vertical_event_expired_time_line_bar), event.getAvailableColor());
+            if (eventModel.isAvailable()) {
+                TimelineBarDrawable barDrawable = new TimelineBarDrawable(ContextCompat.getColor(mContext, R.color.item_vertical_event_expired_time_line_bar), eventModel.getAvailableColor());
                 barDrawable.setRemainingProgress(remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
                 holder.mEventTextViewsLayout.setBackground(null);
             }
             else {
-                TimelineBarDrawable barDrawable = new TimelineBarDrawable(event.getEventExpiredColor(), event.getBusyColor());
+                TimelineBarDrawable barDrawable = new TimelineBarDrawable(eventModel.getEventExpiredColor(), eventModel.getBusyColor());
                 barDrawable.setRemainingProgress(remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
-                BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE, remainingProgress);
+                BusyBgDrawable bg = new BusyBgDrawable(eventModel.getBusyBgColor(), Color.WHITE, remainingProgress);
                 holder.mEventTextViewsLayout.setBackground(bg);
-                holder.mEventPeriodTv.setText(event.getDurationInText());
+                holder.mEventPeriodTv.setText(eventModel.getDurationInText());
             }
 
-            float topTimelineBarHeight = event.getDuration() * HEIGHT_PER_MILLIS * (1 - remainingProgress);
+            float topTimelineBarHeight = eventModel.getDuration() * HEIGHT_PER_MILLIS * (1 - remainingProgress);
             holder.mCurrentTimeLayout.setY(topTimelineBarHeight);
             holder.mCurrentTimeLayout.measure(0, 0);
             holder.mCurrentTimeTv.setY(-holder.mCurrentTimeLayout.getMeasuredHeight() / 2f);
 
         }
-        if (event.isComing()) {
+
+        // Event is coming
+        if (eventModel.isComing()) {
             holder.mEventTitle.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_title_text));
             holder.mEventCreatorTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_creator_text));
-            if (event.isAvailable()) {
-                holder.mTimelineBar.setBackgroundColor(event.getAvailableColor());
+            if (eventModel.isAvailable()) {
+                holder.mTimelineBar.setBackgroundColor(eventModel.getAvailableColor());
                 holder.mEventTextViewsLayout.setBackground(null);
             }
             else {
-                holder.mTimelineBar.setBackgroundColor(event.getBusyColor());
-                BusyBgDrawable bg = new BusyBgDrawable(event.getBusyBgColor(), Color.WHITE);
+                holder.mTimelineBar.setBackgroundColor(eventModel.getBusyColor());
+                BusyBgDrawable bg = new BusyBgDrawable(eventModel.getBusyBgColor(), Color.WHITE);
                 holder.mEventTextViewsLayout.setBackground(bg);
             }
         }
@@ -239,16 +242,18 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         // Add Text views
         holder.mTimestampsLayout.removeAllViews();
 
-        if (mTimestampTextViews.get(position) != null) {
+        List<TextView> textViewList = itemView.getTextViewList();
+        if (textViewList != null) {
 
-            for (int i = 0; i < mTimestampTextViews.get(position).size(); i++) {
+            for (int i = 0; i < textViewList.size(); i++) {
 
-                TextView view = mTimestampTextViews.get(position).get(i);
+                TextView view = textViewList.get(i);
 
-                if (TimeHelper.getCurrentTimeInMillis() >= event.getTimeStamps().get(i) - TimeHelper.min2Millis(3) &&
-                    TimeHelper.getCurrentTimeInMillis() <= event.getTimeStamps().get(i) + TimeHelper.min2Millis(3)) {
+                if (TimeHelper.getCurrentTimeInMillis() >= eventModel.getTimeStamps().get(i) - TimeHelper.min2Millis(2) &&
+                    TimeHelper.getCurrentTimeInMillis() <= eventModel.getTimeStamps().get(i) + TimeHelper.min2Millis(2)) {
                     continue;
                 }
+
                 if (view.getParent() != null) {
                     ((ViewGroup) view.getParent()).removeView(view);
                 }
@@ -258,46 +263,43 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
 
         // Add hidden text views
-        if (mHiddenTvs.get(position) != null) {
-            if (mHiddenTvs.get(position).getParent() != null) {
-                ((ViewGroup) mHiddenTvs.get(position).getParent()).removeView(mHiddenTvs.get(position));
+        TextView hiddenTv = itemView.getHiddenTextView();
+        if (hiddenTv != null) {
+            if (hiddenTv.getParent() != null) {
+                ((ViewGroup) hiddenTv.getParent()).removeView(hiddenTv);
             }
-            holder.mTimestampsLayout.addView(mHiddenTvs.get(position));
-        }
-
-
-        for (int i = 0 ; i < mDividers.size(); i++) {
-            int key = mDividers.keyAt(i);
-            for (View view : mDividers.get(key)) {
-                holder.mDividersLayout.removeView(view);
-            }
+            holder.mTimestampsLayout.addView(hiddenTv);
         }
 
         // Add hourly divider
-        if (mDividers.get(position) != null) {
+        List<View> dividerList = itemView.getDividerList();
 
-            // Add corresponding view
-            for (View view : mDividers.get(position)) {
+        holder.mDividersLayout.removeAllViews();
+
+        if (dividerList != null) {
+            for (View view : dividerList) {
                 if (view.getParent() != null) {
                     ((ViewGroup) view.getParent()).removeView(view);
                 }
-                holder.mDividersLayout.addView(view, 0);
+                holder.mDividersLayout.addView(view);
             }
         }
 
-        if (!event.isExpired()) {
-            holder.mDividersLayout.setOnClickListener(v -> {
+
+        // Click listener
+        if (!eventModel.isExpired()) {
+            holder.mTextViewsLayout.setOnClickListener(v -> {
                 if (this.mOnEventClickListener != null) {
-                    if (event.isAvailable()) {
+                    if (eventModel.isAvailable()) {
                         mOnEventClickListener.onAvailableEventClicked(position, mEventModelList);
                     } else {
-                        mOnEventClickListener.onBusyEventClicked(event);
+                        mOnEventClickListener.onBusyEventClicked(eventModel);
                     }
                 }
             });
         }
         else {
-            holder.mDividersLayout.setOnClickListener(null);
+            holder.mTextViewsLayout.setOnClickListener(null);
         }
     }
 
@@ -306,6 +308,155 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         return mEventModelList.size();
     }
 
+    private List<ItemView> calculateItemView(List<EventModel> eventModelList) {
+
+        List<ItemView> itemViewList = new ArrayList<>();
+
+        for (int i = 0; i < eventModelList.size(); i ++) {
+
+            EventModel eventModel = eventModelList.get(i);
+
+            ItemView itemView = new ItemView();
+
+            float viewHeight = eventModel.getDuration() * HEIGHT_PER_MILLIS;
+            itemView.setViewHeight(viewHeight);
+
+            itemView.setTextViewList(createTimestampTextViews(i, eventModel));
+            itemView.setDividerList(createHourlyDividers(eventModel));
+
+            TextView hiddenTv = new TextView(mContext);
+            hiddenTv.setText(mContext.getString(R.string.fake_time));
+            hiddenTv.setVisibility(View.INVISIBLE);
+            itemView.setHiddenTextView(hiddenTv);
+
+            itemViewList.add(itemView);
+        }
+
+        return itemViewList;
+    }
+
+    private List<TextView> createTimestampTextViews(int position, EventModel eventModel) {
+
+        List<TextView> textViewList = new ArrayList<>();
+
+        for (int i = 0; i < eventModel.getTimeStamps().size(); i++) {
+
+            long ts = eventModel.getTimeStamps().get(i);
+
+            TextView timestampTv = new TextView(mContext);
+
+            timestampTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_timestamp_color));
+            timestampTv.setText(TimeHelper.formatTime(ts));
+
+            timestampTv.measure(0, 0);
+            timestampTv.setHeight(timestampTv.getMeasuredHeight());
+
+
+            float textViewHeight = timestampTv.getMeasuredHeight();
+
+            float textOffset = textViewHeight / 2f;
+
+            float topMargin = (ts - eventModel.getStartTime()) * HEIGHT_PER_MILLIS - textOffset;
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.addRule(CENTER);
+
+            if (position == getItemCount() - 1 && i == eventModel.getTimeStamps().size() - 1) {
+                timestampTv.setLayoutParams(params);
+                timestampTv.setY(topMargin);
+            } else {
+                params.setMargins(0, (int) topMargin, 0, 0);
+                timestampTv.setLayoutParams(params);
+            }
+
+            textViewList.add(timestampTv);
+
+
+        }
+        return textViewList;
+    }
+
+    private List<View> createHourlyDividers(EventModel eventModel) {
+
+        List<View> dividerList = new ArrayList<>();
+
+        for (int i = 0; i < eventModel.getTimeStamps().size(); i++) {
+
+            long ts = eventModel.getTimeStamps().get(i);
+
+            if (TimeHelper.getMin(ts) == 0) {
+                if (ts == eventModel.getStartTime() && eventModel.isBusy()) {
+
+                } else {
+                    View view = new View(mContext);
+                    view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_hourly_divider_color));
+                    RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mContext.getResources().getDimension(R.dimen.item_vertical_event_hourly_divider_height));
+                    float topMargin = (ts - eventModel.getStartTime()) * HEIGHT_PER_MILLIS;
+                    dividerParams.setMargins(0, (int) (topMargin), 0, 0);
+                    view.setLayoutParams(dividerParams);
+                    dividerList.add(view);
+                }
+            }
+        }
+
+        return dividerList;
+    }
+
+
+    private class ItemView {
+
+        private float viewHeight;
+        private List<TextView> textViewList;
+        private TextView hiddenTextView;
+        private List<View> dividerList;
+
+        ItemView() {
+
+        }
+
+        float getViewHeight() {
+            return viewHeight;
+        }
+
+        void setViewHeight(float viewHeight) {
+            this.viewHeight = viewHeight;
+        }
+
+
+        List<TextView> getTextViewList() {
+            return textViewList;
+        }
+
+        void setTextViewList(List<TextView> textViewList) {
+            this.textViewList = textViewList;
+        }
+
+        TextView getHiddenTextView() {
+            return hiddenTextView;
+        }
+
+        void setHiddenTextView(TextView hiddenTextView) {
+            this.hiddenTextView = hiddenTextView;
+        }
+
+        List<View> getDividerList() {
+            return dividerList;
+        }
+
+        void setDividerList(List<View> dividerList) {
+            this.dividerList = dividerList;
+        }
+
+    }
+
+
+    public void setOnEventRenderFinishListener(OnEventRenderFinishListener onEventRenderFinishListener) {
+        this.mOnEventRenderFinishListener = onEventRenderFinishListener;
+    }
+
+    public interface OnEventRenderFinishListener {
+        void onEventRenderFinish();
+    }
     public void setOnItemClickListener(OnEventClickListener onEventClickListener) {
         this.mOnEventClickListener = onEventClickListener;
     }
@@ -315,63 +466,4 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         void onBusyEventClicked(EventModel eventModel);
     }
 
-    private void createTimestampTextViewsAndHourlyDivider(List<EventModel> eventModelList) {
-
-        for (int i = 0; i < eventModelList.size(); i++) {
-
-            EventModel eventModel = eventModelList.get(i);
-
-            List<TextView> textViewList = new ArrayList<>();
-            List<View> dividerList = new ArrayList<>();
-
-            for (int j = 0; j < eventModel.getTimeStamps().size(); j++) {
-
-                long ts = eventModel.getTimeStamps().get(j);
-
-                TextView timestampTv = new TextView(mContext);
-
-
-                timestampTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_timestamp_color));
-                timestampTv.setText(TimeHelper.formatTime(ts));
-
-                timestampTv.measure(0, 0);
-                timestampTv.setHeight(timestampTv.getMeasuredHeight());
-
-
-                float textViewHeight = timestampTv.getMeasuredHeight();
-
-                float textOffset = textViewHeight / 2f;
-
-                float topMargin = (ts - eventModel.getStartTime()) * HEIGHT_PER_MILLIS - textOffset;
-
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.addRule(CENTER);
-
-                if (i == eventModelList.size() - 1 && j == eventModel.getTimeStamps().size() - 1) {
-                    timestampTv.setLayoutParams(params);
-                    timestampTv.setY(topMargin);
-                } else {
-                    params.setMargins(0, (int) topMargin, 0, 0);
-                    timestampTv.setLayoutParams(params);
-                }
-
-                textViewList.add(timestampTv);
-
-                if (TimeHelper.getMin(ts) == 0) {
-                    if (ts == eventModel.getStartTime() && eventModel.isBusy()) {
-
-                    } else {
-                        View view = new View(mContext);
-                        view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_hourly_divider_color));
-                        RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mContext.getResources().getDimension(R.dimen.item_vertical_event_hourly_divider_height));
-                        dividerParams.setMargins(0, (int) (topMargin + textOffset), 0, 0);
-                        view.setLayoutParams(dividerParams);
-                        dividerList.add(view);
-                    }
-                }
-            }
-            mDividers.put(i, dividerList);
-            mTimestampTextViews.put(i, textViewList);
-        }
-    }
 }

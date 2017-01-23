@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalEventItemDecoration;
@@ -48,7 +47,6 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 public class RoomStatusActivity extends BaseActivity implements RoomStatusView, View.OnClickListener, CircleView.OnCountDownListener, HorizontalTimelineAdapter.OnEventClickListener {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
-    private static final int REQUEST_AUTHORIZATION = 1001;
 
     @Inject RoomStatusPresenter mPresenter;
     @Inject HorizontalTimelineAdapter mAdapter;
@@ -58,7 +56,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     @Inject @Named("stolzl_medium") Typeface mStolzlMediumTypeface;
 
     // Status bar
-    @BindView(R.id.tv_current_date) TextView mCurrentDateTv;
+    @BindView(R.id.tv_current_date_time) TextView mCurrentDateTimeTv;
 
     // Toolbar
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -99,7 +97,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     private EventCreatorDialogFragment mEventOrganizerDialog;
     private Handler mLoadingDataDialogHandler;
 
-    final long SCROLL_BACK_WAIT_TIME = 3000;
+    final long SCROLL_BACK_WAIT_TIME = 10000;
     final long SHOW_LOADING_DIALOG_WAIT_TIME = 1000;
 
     private RoomStatusHandler mRoomStatusHandler;
@@ -128,7 +126,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         // TextViews
         mRoomNameTv.setTypeface(mStolzlMediumTypeface);
         mFastBookTv.setTypeface(mStolzlRegularTypeface);
-        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(this));
+        mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
         mCalendarImg.setOnClickListener(this);
         mRoomImg.setOnClickListener(this);
 
@@ -156,6 +154,12 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     private void setUpHorizontalTimelineView() {
         mAdapter.setOnEventClickListener(this);
+        mAdapter.setOnEventRenderFinishListener(new HorizontalTimelineAdapter.OnEventRenderFinishListener() {
+            @Override
+            public void onEventRenderFinish() {
+                updateHorizontalTimeline();
+            }
+        });
         mHorizontalTimelineRv.addItemDecoration(new HorizontalEventItemDecoration(this, R.drawable.divider_horizontal_event));
         mHorizontalTimelineRv.setAdapter(mAdapter);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -172,11 +176,11 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == SCROLL_STATE_IDLE) {
-                    scrollBackHandler.postDelayed(() -> {
-                        if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
-                            mHorizontalTimelineRv.smoothScrollToPosition(0);
-                        }
-                    }, SCROLL_BACK_WAIT_TIME);
+//                    scrollBackHandler.postDelayed(() -> {
+//                        if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
+//                            mHorizontalTimelineRv.smoothScrollToPosition(0);
+//                        }
+//                    }, SCROLL_BACK_WAIT_TIME);
                 }
             }
         });
@@ -250,13 +254,16 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     }
 
     @Override
-    public void updateHorizontalTimeline(int currentEventPosition) {
-        float leftMargin = -((TimeHelper.getCurrentTimeSinceMidNight()) * mAdapter.getWidthPerMillis())
-            - currentEventPosition * getResources().getDimension(R.dimen.item_horizontal_event_divider_width)
+    public void updateHorizontalTimeline() {
+        if (mAdapter.getPastTimeWidth() == -1) {
+            return;
+        }
+        float leftMargin = -mAdapter.getPastTimeWidth()
             + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
         params.setMargins((int) leftMargin, 0 ,0 ,0);
         mHorizontalTimelineRv.setLayoutParams(params);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -376,7 +383,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     @Override
     protected void onSystemTimeRefresh() {
-        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomStatusActivity.this));
+        mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
         mPresenter.onSystemTimeRefresh();
     }
 }

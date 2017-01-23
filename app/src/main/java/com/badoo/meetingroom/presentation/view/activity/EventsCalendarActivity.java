@@ -32,7 +32,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.img_room) ImageView mRoomImg;
-    @BindView(R.id.tv_current_date) TextView mCurrentDateTv;
+    @BindView(R.id.tv_current_date_time) TextView mCurrentDateTimeTv;
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) NonSwipeViewPager mViewPager;
 
@@ -65,7 +65,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
             startActivity(intent);
         });
 
-        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(this));
+        mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
     }
 
 
@@ -89,7 +89,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
     @Override
     protected void onSystemTimeRefresh() {
-        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(EventsCalendarActivity.this));
+        mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
         if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
             mAdapter.getRegisteredFragment(0).getPresenter().onSystemTimeUpdate();
         }

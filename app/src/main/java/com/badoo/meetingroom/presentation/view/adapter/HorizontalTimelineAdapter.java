@@ -1,6 +1,7 @@
 package com.badoo.meetingroom.presentation.view.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,10 +29,29 @@ import butterknife.ButterKnife;
  */
 
 public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTimelineAdapter.ViewHolder>{
-    private static final int MIN_SLOT_TIME = 5;
-    private float WIDTH_PER_MILLIS = (70 + 10) / (float)TimeHelper.min2Millis(MIN_SLOT_TIME);
+
+
+    private float MAX_BUSY_SLOT_WIDTH = 375;
+    private float MIN_BUSY_SLOT_WIDTH = 125;
+    private float SLOT_WIDTH_WITH_DASHES;
+
+    private float MIN_AVAILABLE_SLOT_WIDTH = 125;
+
+
+    private float AVAILABLE_SLOT_WIDTH = 250;
+
+
+    private float BUSY_SLOT_WIDTH_PER_MILLIS = MIN_BUSY_SLOT_WIDTH / (float) TimeHelper.min2Millis(15);
+    private float AVAILABLE_SLOT_WIDTH_PER_MILLIS = AVAILABLE_SLOT_WIDTH / (float) TimeHelper.min2Millis(15);
+
+
     private List<EventModel> mEvents;
+    private List<ItemView> mItemViewList;
+
     private OnEventClickListener mOnEventClickListener;
+
+    private Context mContext;
+    private OnEventRenderFinishListener mOnEventRenderFinishListener;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -49,6 +69,8 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     @Inject
     HorizontalTimelineAdapter(Context context) {
         mEvents = new ArrayList<>();
+        mContext = context;
+        SLOT_WIDTH_WITH_DASHES = MAX_BUSY_SLOT_WIDTH + TimelineBarDrawable.numOfDashes * mContext.getResources().getDimension(R.dimen.item_horizontal_event_divider_width);
     }
 
     public void setEventList(List<EventModel> roomEventModelList) {
@@ -56,8 +78,61 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
             throw new IllegalArgumentException("Room event list cannot be null");
         }
         mEvents = roomEventModelList;
-        System.out.println(mEvents.size());
-        notifyDataSetChanged();
+
+        Handler mCalcItemViewHandler = new Handler();
+
+        final Runnable runnable = () -> {
+            mItemViewList = calcItemView(mEvents);
+            mOnEventRenderFinishListener.onEventRenderFinish();
+            notifyDataSetChanged();
+        };
+
+        mCalcItemViewHandler.post(runnable);
+
+    }
+
+    private List<ItemView> calcItemView(List<EventModel> mEvents) {
+
+        List<ItemView> itemViewList = new ArrayList<>();
+
+        for (EventModel eventModel : mEvents) {
+
+            ItemView itemView = new ItemView();
+
+            float viewWidth;
+
+            if (eventModel.isAvailable()) {
+
+                viewWidth = eventModel.getDuration() * AVAILABLE_SLOT_WIDTH_PER_MILLIS;
+
+                if (viewWidth < MIN_AVAILABLE_SLOT_WIDTH) {
+
+                    viewWidth = MIN_AVAILABLE_SLOT_WIDTH;
+
+                }
+
+            } else {
+
+                viewWidth = eventModel.getDuration() * BUSY_SLOT_WIDTH_PER_MILLIS;
+
+                if (viewWidth < MIN_BUSY_SLOT_WIDTH) {
+
+                    viewWidth = MIN_BUSY_SLOT_WIDTH;
+
+                } else if (viewWidth > MAX_BUSY_SLOT_WIDTH) {
+
+                    viewWidth = SLOT_WIDTH_WITH_DASHES;
+
+                }
+
+            }
+
+            itemView.setViewWidth(viewWidth);
+
+            itemViewList.add(itemView);
+        }
+
+        return itemViewList;
     }
 
     @Override
@@ -70,18 +145,22 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        EventModel event = mEvents.get(position);
+        if (mItemViewList == null || mItemViewList.isEmpty()) {
+            return;
+        }
 
-        float remainingProgress = event.getRemainingTime() / (float)event.getDuration();
+        EventModel eventModel = mEvents.get(position);
+        ItemView itemView = mItemViewList.get(position);
 
-        float viewWidth = event.getDuration() * WIDTH_PER_MILLIS;
+        float viewWidth = itemView.getViewWidth();
+        float remainingProgress = eventModel.getRemainingTime() / (float) eventModel.getDuration();
+
 
         RelativeLayout.LayoutParams params = new
-            RelativeLayout.LayoutParams(Math.round(viewWidth), RelativeLayout.LayoutParams.MATCH_PARENT);
+            RelativeLayout.LayoutParams((int) viewWidth, RelativeLayout.LayoutParams.MATCH_PARENT);
         holder.itemView.setLayoutParams(params);
 
-        holder.mStartTimeTv.setText(event.getStartTimeInText());
-
+        holder.mStartTimeTv.setText(eventModel.getStartTimeInText());
         holder.mStartTimeTv.measure(0, 0);
 
         // 5 offset
@@ -92,12 +171,11 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         }
 
         TimelineBarDrawable barDrawable
-            = new TimelineBarDrawable(event.getEventExpiredColor(), event.getEventColor());
+            = new TimelineBarDrawable(eventModel.getEventExpiredColor(), eventModel.getEventColor());
         barDrawable.setRemainingProgress(remainingProgress);
         barDrawable.setCornerRadius(0, 0, 0, 0);
 
-        //todo
-        if (!event.isComing()) {
+        if (!eventModel.isComing()) {
             if (position == 0) {
                 barDrawable.setCornerRadius(1, 0, 0, 0);
             }
@@ -116,25 +194,29 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
             }
         }
 
+        if (eventModel.isBusy() && viewWidth > MAX_BUSY_SLOT_WIDTH) {
+            barDrawable.setHasDashes(true, mContext.getResources().getDimension(R.dimen.item_horizontal_event_divider_width));
+        }
 
 
         barDrawable.setOrientation(TimelineBarDrawable.HORIZONTAL);
 
         holder.mTimelineBarImg.setBackground(barDrawable);
 
-        if (!event.isExpired()) {
-            if (event.isAvailable()) {
+        if (!eventModel.isExpired()) {
+            if (eventModel.isAvailable()) {
                 holder.itemView.setOnClickListener(v -> mOnEventClickListener.onAvailableEventClicked(position, (ArrayList<EventModel>) mEvents));
             } else {
-                holder.itemView.setOnClickListener(v -> mOnEventClickListener.onBusyEventClicked(event));
+                holder.itemView.setOnClickListener(v -> mOnEventClickListener.onBusyEventClicked(eventModel));
             }
         } else {
             holder.itemView.setOnClickListener(null);
         }
 
-        float leftTimelineBarWidth = event.getDuration() * WIDTH_PER_MILLIS * (1 - remainingProgress);
 
-        if (event.isProcessing()) {
+
+        if (eventModel.isProcessing()) {
+            float leftTimelineBarWidth = viewWidth * (1 - remainingProgress);
             holder.mCurrentTimeLayout.setVisibility(View.VISIBLE);
             holder.mCurrentTimeTv.setText(TimeHelper.getCurrentTimeInMillisInText());
             holder.mCurrentTimeLayout.setX(leftTimelineBarWidth);
@@ -145,8 +227,25 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         }
     }
 
-    public float getWidthPerMillis() {
-        return WIDTH_PER_MILLIS;
+
+    public float getPastTimeWidth() {
+        if (mEvents == null || mItemViewList == null || mEvents.isEmpty() || mItemViewList.isEmpty()) {
+            return -1;
+        }
+        float width = 0;
+        int i = 0;
+        for (; i < mEvents.size(); i++) {
+            EventModel eventModel = mEvents.get(i);
+            if (eventModel.isProcessing()) {
+                float leftTimelineBarWidth = mItemViewList.get(i).getViewWidth() * (1 - eventModel.getRemainingTime() / (float) eventModel.getDuration());
+                width += leftTimelineBarWidth;
+                break;
+            }
+            width += mItemViewList.get(i).getViewWidth();
+        }
+
+        width += i * mContext.getResources().getDimension(R.dimen.item_vertical_event_white_divider_height);
+        return width;
     }
 
     @Override
@@ -161,5 +260,26 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     public interface OnEventClickListener {
         void onAvailableEventClicked(int position, ArrayList<EventModel> eventModelList);
         void onBusyEventClicked(EventModel eventModel);
+    }
+
+    private class ItemView {
+        private float viewWidth;
+
+        float getViewWidth() {
+            return viewWidth;
+        }
+
+        void setViewWidth(float viewWidth) {
+            this.viewWidth = viewWidth;
+        }
+
+    }
+
+    public void setOnEventRenderFinishListener(OnEventRenderFinishListener onEventRenderFinishListener) {
+        this.mOnEventRenderFinishListener = onEventRenderFinishListener;
+    }
+
+    public interface OnEventRenderFinishListener {
+        void onEventRenderFinish();
     }
 }

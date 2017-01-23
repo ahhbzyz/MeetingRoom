@@ -65,7 +65,7 @@ public class RoomListPresenterImpl implements RoomListPresenter {
             params.setEventParams(event);
             GetEventsSubscriber subscriber = new GetEventsSubscriber();
             subscriber.setPosition(i);
-            mGetEventsUseCase.init(params, 0).execute(subscriber);
+            mGetEventsUseCase.init(params, TimeHelper.getMidNightTimeOfDay(0), TimeHelper.getMidNightTimeOfDay(1)).execute(subscriber);
         }
     }
 

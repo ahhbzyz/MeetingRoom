@@ -1,6 +1,6 @@
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
     <targets>
-        <target android:excludeId="@+id/tv_current_date"/>
+        <target android:excludeId="@+id/tv_current_date_time"/>
     </targets>
     <changeBounds/>
 </transitionSet>

@@ -11,14 +11,10 @@ import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.event.UpdateEvent;
 import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.model.impl.EventModelImpl;
-import com.badoo.meetingroom.presentation.model.impl.RoomModelImpl;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
-import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
@@ -84,14 +80,13 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         else {
             moveToNextEvent();
             showCurrentEventOnCircleTimeView();
-            mRoomEventsView.updateHorizontalTimeline(getNumOfExpiredEvents());
-            onSystemTimeRefresh();
+            updateHorizontalTimeline();
         }
     }
 
     @Override
     public void updateHorizontalTimeline() {
-        mRoomEventsView.updateHorizontalTimeline(getNumOfExpiredEvents());
+        mRoomEventsView.updateHorizontalTimeline();
     }
 
     @Override
@@ -103,7 +98,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         else {
             mRoomEventsView.showTopBottomContent();
         }
-        mRoomEventsView.updateRoomStatusView(mCurrentEvent);
+        showCurrentEventOnCircleTimeView();
     }
 
     @Override
@@ -113,8 +108,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             mConfirmedIds.add(mCurrentEvent.getId());
         }
         showCurrentEventOnCircleTimeView();
-        mRoomEventsView.updateHorizontalTimeline(getNumOfExpiredEvents());
-        mRoomEventsView.updateRecyclerView();
+        updateHorizontalTimeline();
     }
 
     @Override
@@ -137,7 +131,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     @Override
     public void onSystemTimeRefresh() {
         updateHorizontalTimeline();
-        mRoomEventsView.updateRecyclerView();
         checkEventExtendable();
     }
 
@@ -168,7 +161,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     private void showEventsOnHorizontalTimelineView() {
         if (mEventList != null && !mEventList.isEmpty()) {
             mRoomEventsView.renderRoomEventList(mEventList);
-            mRoomEventsView.updateHorizontalTimeline(getNumOfExpiredEvents());
         }
     }
 
@@ -220,7 +212,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         if (Badoo.getCurrentRoom() != null) {
             CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
             params.setEventParams(event);
-            mGetEventsUseCase.init(params, 0).execute(new GetEventsSubscriber());
+            long startTime = TimeHelper.getMidNightTimeOfDay(0);
+            long endTime = TimeHelper.getMidNightTimeOfDay(1);
+            mGetEventsUseCase.init(params, startTime, endTime).execute(new GetEventsSubscriber());
         }
     }
 

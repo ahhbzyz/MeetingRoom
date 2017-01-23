@@ -27,7 +27,7 @@
             android:text="@string/fake_date"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/tv_current_date"
+            android:id="@+id/tv_current_date_time"
             android:textColor="@color/status_bar_time_text_color"
             android:layout_marginEnd="@dimen/status_bar_time_margin_right"
             android:gravity="center_vertical|center_horizontal"
@@ -120,11 +120,14 @@
             android:layout_height="match_parent">
 
             <com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView
+                android:enabled="false"
                 android:maxLines="1"
                 android:id="@+id/autocomplete_email_address"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:privateImeOptions="nm"
+                android:imeOptions="actionDone"
                 android:hint="@string/search_for_people" />
         </RelativeLayout>
 

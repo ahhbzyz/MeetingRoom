@@ -8,6 +8,7 @@ import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
+import com.badoo.meetingroom.presentation.model.impl.EventModelImpl;
 import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
@@ -92,15 +93,32 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         mAvailableEventList.clear();
 
         int tempPos = position;
-        while (tempPos >= 0 && eventModelList.get(tempPos).isAvailable() && !eventModelList.get(tempPos).isExpired()) {
+        while (tempPos >= 0 && !eventModelList.get(tempPos).isExpired()) {
             tempPos --;
         }
+
         if (tempPos != position) {
             tempPos++;
         }
 
+        while(tempPos < eventModelList.size() - 1 && eventModelList.get(tempPos).isBusy()) {
+            tempPos++;
+        }
+
+        tempPos ++;
+
+
         for (int i = tempPos; i < eventModelList.size(); i++) {
             mAvailableEventList.add(eventModelList.get(i));
+        }
+
+        if (!eventModelList.isEmpty()) {
+            EventModel eventModel = new EventModelImpl();
+            eventModel.setStartTime(TimeHelper.getCurrentTimeInMillis());
+            eventModel.setEndTime(mAvailableEventList.get(0).getStartTime());
+            eventModel.setStatus(EventModel.AVAILABLE);
+
+            //mAvailableEventList.add(0, eventModel);
         }
 
         mRoomBookingView.renderTimeSlotsInView(position - tempPos, mAvailableEventList);

@@ -151,7 +151,7 @@ class RoomStatusHandler {
         activity.mCircleView.setTailIconVisibility(true);
         activity.mFastBookTv.setVisibility(View.GONE);
         activity.mCircleTimerInfoLayout.setVisibility(View.VISIBLE);
-        activity.mCircleTimeViewBtn.setVisibility(View.VISIBLE);
+        activity.mCircleTimeViewBtn.setVisibility(View.INVISIBLE);
         activity.mDndLayout.setVisibility(View.INVISIBLE);
 
         // Remove buttons

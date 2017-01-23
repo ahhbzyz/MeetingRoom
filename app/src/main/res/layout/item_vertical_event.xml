@@ -29,29 +29,37 @@
             <ImageView
                 android:id="@+id/img_timeline_bar"
                 android:layout_height="match_parent"
-                android:background="@color/timeSlotExpired"
                 android:layout_width="@dimen/item_vertical_event_timeline_bar_width"/>
 
             <RelativeLayout
-                android:id="@+id/layout_dividers"
+                android:id="@+id/layout_text_views"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="true"
                 android:background="?attr/selectableItemBackground"
                 android:layout_toEndOf="@+id/img_timeline_bar">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/layout_dividers">
+
+                </RelativeLayout>
+
                 <View
                     android:background="@color/item_vertical_event_divider_color"
                     android:id="@+id/view_top_divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_vertical_event_grey_divider_height"
-                    android:layout_alignParentTop="true" />
+                    android:layout_alignParentTop="true"
+                    android:visibility="gone" />
                 <View
                     android:background="@color/item_vertical_event_divider_color"
                     android:id="@+id/view_bottom_divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/item_vertical_event_grey_divider_height"
-                    android:layout_alignParentBottom="true" />
+                    android:layout_alignParentBottom="true"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/layout_event_text_views"

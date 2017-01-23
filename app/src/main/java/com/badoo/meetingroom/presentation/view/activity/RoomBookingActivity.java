@@ -61,8 +61,8 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Named(GetAvatar.NAME)
     GetAvatar mGetAvatarUseCase;
 
-    @BindView(R.id.tv_current_date)
-    TextView mCurrentDateTv;
+    @BindView(R.id.tv_current_date_time)
+    TextView mCurrentDateTimeTv;
     @BindView(R.id.tv_room_name)
     TextView mRoomNameTv;
     @BindView(R.id.tv_booking_date)
@@ -99,7 +99,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         mRoomNameTv.setTypeface(mStolzlMediumTypeface);
-        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomBookingActivity.this));
+        mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
         // add back arrow to toolbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -142,6 +142,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     public void setUpAutoCompleteTextView(List<BadooPersonModel> badooPersonModelList) {
 
         EmailAutoCompleteAdapter adapter = new EmailAutoCompleteAdapter(this, R.layout.item_badoo_person, badooPersonModelList);
+        mAutoCompleteTv.setEnabled(true);
         mAutoCompleteTv.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mAutoCompleteTv.setAdapter(adapter);
         mAutoCompleteTv.addTextChangedListener(new TextWatcher() {
@@ -161,6 +162,18 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
             }
         });
+
+//        mAutoCompleteTv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+//                    if (mSelectedEmail != null) {
+//                        mPresenter.bookRoom(mSelectedEmail);
+//                    }
+//                }
+//                return false;
+//            }
+//        });
 
         mAutoCompleteTv.setOnItemClickListener((parent, view, position, id) -> {
             mSelectedEmail = badooPersonModelList.get(position).getEmailAddress();
@@ -244,6 +257,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         if (item.getItemId() == android.R.id.home) {
             finishAfterTransition();
             overridePendingTransition(0, 0);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -294,8 +308,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     protected void onSystemTimeRefresh() {
-        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(RoomBookingActivity.this));
-
+        mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
     }
 
 }

@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.badoo.meetingroom.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,9 +22,11 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeHelper {
 
-    public static String getCurrentDateAndWeek(Context context) {
-        return DateUtils.formatDateTime(context, getCurrentTimeInMillis(), DateUtils.FORMAT_ABBREV_MONTH| DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY);
+    public static String getCurrentDateTime(Context context) {
+        return getCurrentTimeInMillisInText() + " " + context.getString(R.string.symbol_between_date_time) + " " +
+            DateUtils.formatDateTime(context, getCurrentTimeInMillis(), DateUtils.FORMAT_ABBREV_MONTH| DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_WEEKDAY);
     }
+
 
     public static long getCurrentTimeInMillis() {
         return Calendar.getInstance().getTimeInMillis();

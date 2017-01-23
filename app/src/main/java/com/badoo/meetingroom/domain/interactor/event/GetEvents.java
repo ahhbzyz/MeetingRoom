@@ -31,9 +31,9 @@ public class GetEvents extends UseCase<List<EventModel>> {
         mEventMapper = eventMapper;
     }
 
-    public GetEvents init(CalendarApiParams params, int page) {
-        mEventMapper.setEventStartTime(TimeHelper.getMidNightTimeOfDay(page));
-        mEventMapper.setEventEndTime(Badoo.getEndTimeOfDay(page));
+    public GetEvents init(CalendarApiParams params, long startTime, long endTime) {
+        mEventMapper.setEventStartTime(startTime);
+        mEventMapper.setEventEndTime(endTime);
         mParams = params;
         return this;
     }

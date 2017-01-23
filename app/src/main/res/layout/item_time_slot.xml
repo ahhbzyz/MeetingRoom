@@ -7,26 +7,26 @@
         android:text="11:45"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_start_time"
-        android:layout_weight="1" />
+        android:id="@+id/tv_start_time" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp">
-
-        <ImageView
-            android:id="@+id/img_time_slot"
-            android:layout_height="@dimen/room_booking_time_slot_height"
-            android:layout_width="100dp"
-            android:background="@drawable/bg_slot" />
 
         <View
             android:id="@+id/divider"
             android:layout_width="@dimen/room_booking_time_slot_divider_width"
             android:layout_height="match_parent"
             android:background="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/img_time_slot"
+            android:layout_height="@dimen/room_booking_time_slot_height"
+            android:layout_width="match_parent"
+            android:background="@drawable/bg_slot" />
+
     </LinearLayout>
 
 </LinearLayout>

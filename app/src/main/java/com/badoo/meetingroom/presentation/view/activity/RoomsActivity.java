@@ -18,7 +18,6 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomsView;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,7 +31,7 @@ public class RoomsActivity extends BaseActivity implements RoomsView{
 
     @Inject @Named("stolzl_medium") Typeface mStolzlMediumTypeface;
 
-    @BindView(R.id.tv_current_date) TextView mCurrentDateTv;
+    @BindView(R.id.tv_current_date_time) TextView mCurrentDateTimeTv;
     @BindView(R.id.tv_all_rooms) TextView mAllRoomsTv;
     @BindView(R.id.tab_layout_floors) TabLayout mFloorsTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
@@ -63,7 +62,7 @@ public class RoomsActivity extends BaseActivity implements RoomsView{
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(this));
+        mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
     }
 
     @Override
@@ -79,13 +78,14 @@ public class RoomsActivity extends BaseActivity implements RoomsView{
             mAllRoomsTv.setText("Bahamas");
             finishAfterTransition();
             overridePendingTransition(0, 0);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onSystemTimeRefresh() {
-        mCurrentDateTv.setText(TimeHelper.getCurrentDateAndWeek(this));
+        mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
         if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
             mAdapter.getRegisteredFragment(mViewPager.getCurrentItem()).updateRoomList();
         }

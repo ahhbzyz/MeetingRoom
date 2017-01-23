@@ -1,6 +1,7 @@
 package com.badoo.meetingroom.presentation.view.component.drawable;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
@@ -30,27 +31,18 @@ public class TimelineBarDrawable extends Drawable {
     private int rightBarLeftRadius = 0;
     private int rightBarRightRadius = 0;
 
+    private float dashWidth;
+
     private final int CORNER_RADIUS = 10;
 
-
-    public void setCornerRadius(int leftBarLeftRadius, int leftBarRightRadius, int rightBarLeftRadius, int rightBarRightRadius) {
-        this.leftBarLeftRadius = leftBarLeftRadius;
-        this.leftBarRightRadius = leftBarRightRadius;
-        this.rightBarLeftRadius = rightBarLeftRadius;
-        this.rightBarRightRadius = rightBarRightRadius;
-        invalidateSelf();
-    }
+    private boolean hasDashes;
+    public static final int numOfDashes = 3;
 
 
     public TimelineBarDrawable(int topColor, int bottomColor) {
         this.topColor = topColor;
         this.bottomColor = bottomColor;
         this.backgroundPaint = new Paint();
-    }
-
-    public void setRemainingProgress(float remainingProgress) {
-        this.remainingProgress = remainingProgress;
-        invalidateSelf();
     }
 
     @Override
@@ -70,24 +62,43 @@ public class TimelineBarDrawable extends Drawable {
 
             backgroundPaint.setColor(bottomColor);
             canvas.drawRect(0, topBarHeight, width, height, backgroundPaint);
+
         } else {
+
             float rightBarWidth = remainingProgress * width;
             float leftBarWidth = width - rightBarWidth;
 
             float leftBarLeft = leftBarLeftRadius == 0 ? 0 : leftBarWidth / 2f;
             float leftBarRight = leftBarRightRadius == 0 ? 0 : leftBarWidth / 2f;
 
+
+            // Draw right bar first to have dashes covered by left bar
+            if (!hasDashes) {
+
+                float rightBarLeft = rightBarLeftRadius == 0 ? 0 : rightBarWidth / 2f;
+                float rightBarRight = rightBarRightRadius == 0 ? 0 : rightBarWidth / 2f;
+
+                backgroundPaint.setColor(bottomColor);
+                canvas.drawRect(leftBarWidth + rightBarLeft, 0, width - rightBarRight, height, backgroundPaint);
+                canvas.drawRoundRect(new RectF(leftBarWidth, 0, width, height), CORNER_RADIUS, CORNER_RADIUS, backgroundPaint);
+
+            } else {
+
+                backgroundPaint.setColor(bottomColor);
+                canvas.drawRect(leftBarWidth, 0, width - numOfDashes * 2 * dashWidth, height, backgroundPaint);
+
+                for(int i = 0; i < numOfDashes * 2; i ++) {
+                    int color = i % 2 == 0 ? Color.TRANSPARENT : bottomColor;
+                    backgroundPaint.setColor(color);
+                    canvas.drawRect(width - numOfDashes * 2 * dashWidth + i * dashWidth, 0, width - numOfDashes * 2 * dashWidth + (i + 1) * dashWidth, height, backgroundPaint);
+                }
+
+            }
+
+            // draw left bar
             backgroundPaint.setColor(topColor);
             canvas.drawRect(0 + leftBarLeft, 0, leftBarWidth - leftBarRight, height, backgroundPaint);
             canvas.drawRoundRect(new RectF(0, 0, leftBarWidth, height), CORNER_RADIUS, CORNER_RADIUS, backgroundPaint);
-
-
-            float rightBarLeft = rightBarLeftRadius == 0 ? 0 : rightBarWidth / 2f;
-            float rightBarRight = rightBarRightRadius == 0 ? 0 : rightBarWidth / 2f;
-
-            backgroundPaint.setColor(bottomColor);
-            canvas.drawRect(leftBarWidth + rightBarLeft, 0, width - rightBarRight, height, backgroundPaint);
-            canvas.drawRoundRect(new RectF(leftBarWidth, 0, width, height), CORNER_RADIUS, CORNER_RADIUS, backgroundPaint);
         }
     }
 
@@ -114,6 +125,24 @@ public class TimelineBarDrawable extends Drawable {
 
     public void setOrientation(int orientation) {
         this.orientation = orientation;
+        invalidateSelf();
+    }
+
+    public void setRemainingProgress(float remainingProgress) {
+        this.remainingProgress = remainingProgress;
+        invalidateSelf();
+    }
+
+    public void setHasDashes(boolean hasDashes, float dashWidth) {
+        this.hasDashes = hasDashes;
+        this.dashWidth = dashWidth;
+    }
+
+    public void setCornerRadius(int leftBarLeftRadius, int leftBarRightRadius, int rightBarLeftRadius, int rightBarRightRadius) {
+        this.leftBarLeftRadius = leftBarLeftRadius;
+        this.leftBarRightRadius = leftBarRightRadius;
+        this.rightBarLeftRadius = rightBarLeftRadius;
+        this.rightBarRightRadius = rightBarRightRadius;
         invalidateSelf();
     }
 }

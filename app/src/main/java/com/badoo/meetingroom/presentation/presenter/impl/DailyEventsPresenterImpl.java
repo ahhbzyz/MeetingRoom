@@ -72,7 +72,9 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
         CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
         params.setEventParams(event);
-        mGetCalendarEventsUseCase.init(params, mPage).execute(new GetEventsSubscriber());
+        long startTime = Badoo.getStartTimeOfDay(mPage);
+        long endTime = Badoo.getEndTimeOfDay(mPage);
+        mGetCalendarEventsUseCase.init(params, startTime, endTime).execute(new GetEventsSubscriber());
     }
 
     private final class GetEventsSubscriber extends DefaultSubscriber<List<EventModel>> {

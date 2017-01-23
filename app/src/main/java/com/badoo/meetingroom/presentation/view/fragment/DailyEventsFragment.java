@@ -91,19 +91,24 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public void renderDailyEvents(List<EventModel> roomEventModelList) {
         mDailyEventsRv.addItemDecoration(new VerticalEventItemDecoration(getActivity(), R.drawable.divider_vertical_event, roomEventModelList));
         mAdapter.setDailyEventList(roomEventModelList);
+        mAdapter.setOnEventRenderFinishListener(() -> {
 
-        int currentEventPosition = 0;
+            if (mPage == 0) {
+                int currentEventPosition = 0;
 
-        for (EventModel roomEventModel : roomEventModelList) {
-            if (roomEventModel.isProcessing()) {
-                break;
+                for (EventModel roomEventModel : roomEventModelList) {
+                    if (roomEventModel.isProcessing()) {
+                        break;
+                    }
+                    currentEventPosition ++;
+                }
+                if (currentEventPosition >= 2) {
+                    mDailyEventsRv.scrollToPosition(currentEventPosition - 2);
+                }
+                mDailyEventsRv.smoothScrollToPosition(currentEventPosition);
             }
-            currentEventPosition ++;
-        }
+        });
 
-        if (mPage == 0) {
-            mDailyEventsRv.smoothScrollToPosition(currentEventPosition);
-        }
 
     }
 
