@@ -63,7 +63,7 @@ public class TimeHelper {
 
 
     public static String formatMillisInMin(long millis) {
-        return String.format(Locale.getDefault(), "%02d",
+        return String.format(Locale.getDefault(), "%d",
             TimeUnit.MILLISECONDS.toMinutes(millis));
     }
 

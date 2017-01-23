@@ -56,6 +56,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
             throw new IllegalArgumentException("Room event list cannot be null");
         }
         mEvents = roomEventModelList;
+        System.out.println(mEvents.size());
         notifyDataSetChanged();
     }
 

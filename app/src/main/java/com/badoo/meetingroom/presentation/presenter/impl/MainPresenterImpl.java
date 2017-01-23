@@ -1,24 +1,24 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
 import android.support.annotation.NonNull;
+import android.util.SparseArray;
 
 import com.badoo.meetingroom.data.exception.GooglePlayServicesAvailabilityException;
 import com.badoo.meetingroom.data.exception.NoAccountNameFoundInCacheException;
 import com.badoo.meetingroom.data.exception.NoPermissionToAccessContactsException;
 import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
-import com.badoo.meetingroom.domain.entity.intf.Room;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
-import com.badoo.meetingroom.domain.interactor.GetCalendarList;
+import com.badoo.meetingroom.domain.interactor.GetRoomList;
 import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
 import com.badoo.meetingroom.presentation.mapper.GoogleAccountModelMapper;
-import com.badoo.meetingroom.presentation.mapper.RoomModelMapper;
 import com.badoo.meetingroom.presentation.model.impl.GoogleAccountModel;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.MainPresenter;
 import com.badoo.meetingroom.presentation.view.view.MainView;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,21 +34,19 @@ public class MainPresenterImpl implements MainPresenter {
 
     private final GetGoogleAccount mGetGoogleAccountUseCase;
     private final PutGoogleAccount mPutGoogleAccountUseCase;
-    private final GetCalendarList mGetCalendarListUseCase;
+    private final GetRoomList mGetRoomListUseCase;
     private final GoogleAccountModelMapper mGoogleAccountMapper;
-    private final RoomModelMapper mRoomModelMapper;
 
     @Inject
     MainPresenterImpl(@Named(GetGoogleAccount.NAME) GetGoogleAccount getGoogleAccountUseCase,
                       @Named(PutGoogleAccount.NAME) PutGoogleAccount putGoogleAccountUseCase,
-                      GetCalendarList getCalendarListUseCase,
-                      GoogleAccountModelMapper googleAccountModelMapper,
-                      RoomModelMapper roomModelMapper) {
+                      GetRoomList getRoomListUseCase,
+                      GoogleAccountModelMapper googleAccountModelMapper) {
+
         this.mGetGoogleAccountUseCase = getGoogleAccountUseCase;
         this.mPutGoogleAccountUseCase = putGoogleAccountUseCase;
-        this.mGetCalendarListUseCase = getCalendarListUseCase;
+        this.mGetRoomListUseCase = getRoomListUseCase;
         this.mGoogleAccountMapper = googleAccountModelMapper;
-        this.mRoomModelMapper = roomModelMapper;
     }
 
     @Override
@@ -112,7 +110,7 @@ public class MainPresenterImpl implements MainPresenter {
         public void onNext(GoogleAccount googleAccount) {
             super.onNext(googleAccount);
             showAccountNameOnSnackBar(googleAccount);
-            mGetCalendarListUseCase.execute(new GetCalendarListSubscriber());
+            mGetRoomListUseCase.execute(new GetRoomListSubscriber());
         }
 
         @Override
@@ -146,6 +144,7 @@ public class MainPresenterImpl implements MainPresenter {
 
             } catch (Exception exception) {
 
+                exception.printStackTrace();
                 mMainView.showError(exception.getMessage());
 
             } catch (Throwable throwable) {
@@ -182,16 +181,24 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
-    private final class GetCalendarListSubscriber extends DefaultSubscriber<List<Room>> {
+    private final class GetRoomListSubscriber extends DefaultSubscriber<SparseArray<List<RoomModel>>> {
         @Override
         public void onStart() {
             super.onStart();
         }
 
         @Override
-        public void onNext(List<Room> roomList) {
-            super.onNext(roomList);
-            List<RoomModel> roomModelList = mRoomModelMapper.map(roomList);
+        public void onNext(SparseArray<List<RoomModel>> roomModelListMap) {
+            super.onNext(roomModelListMap);
+
+            List<RoomModel> roomModelList = new ArrayList<>();
+
+            for (int i = 0; i < roomModelListMap.size(); i++) {
+
+                int key = roomModelListMap.keyAt(i);
+                List<RoomModel> list = roomModelListMap.get(key);
+                roomModelList.addAll(list);
+            }
             mMainView.setUpRoomListSpinner(roomModelList);
         }
 
@@ -220,6 +227,6 @@ public class MainPresenterImpl implements MainPresenter {
     public void destroy() {
         mGetGoogleAccountUseCase.unSubscribe();
         mPutGoogleAccountUseCase.unSubscribe();
-        mGetCalendarListUseCase.unSubscribe();
+        mGetRoomListUseCase.unSubscribe();
     }
 }

@@ -16,7 +16,7 @@ import javax.inject.Inject;
 public class RoomMapper {
 
     @Inject
-    public RoomMapper() {}
+    RoomMapper() {}
 
     private Room map(CalendarListEntry entry) {
 
@@ -28,6 +28,9 @@ public class RoomMapper {
         room = new RoomImpl();
         room.setName(entry.getSummary());
         room.setId(entry.getId());
+        String description = entry.getDescription();
+        // tparse json
+        room.setFloor(1);
         return room;
     }
 

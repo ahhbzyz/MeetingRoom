@@ -154,7 +154,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             String creatorEmail = event.getCreatorEmailAddress();
 
             if (creatorName != null && creatorEmail != null) {
-                holder.mEventCreatorTv.setText(creatorName + "(" + creatorEmail + ")");
+                holder.mEventCreatorTv.setText(creatorName + " (" + creatorEmail + ")");
             } else if (creatorName != null) {
                 holder.mEventCreatorTv.setText(creatorName);
             } else {
@@ -242,7 +242,9 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         if (mTimestampTextViews.get(position) != null) {
 
             for (int i = 0; i < mTimestampTextViews.get(position).size(); i++) {
+
                 TextView view = mTimestampTextViews.get(position).get(i);
+
                 if (TimeHelper.getCurrentTimeInMillis() >= event.getTimeStamps().get(i) - TimeHelper.min2Millis(3) &&
                     TimeHelper.getCurrentTimeInMillis() <= event.getTimeStamps().get(i) + TimeHelper.min2Millis(3)) {
                     continue;
@@ -265,7 +267,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
 
         for (int i = 0 ; i < mDividers.size(); i++) {
-            for (View view : mDividers.get(i)) {
+            int key = mDividers.keyAt(i);
+            for (View view : mDividers.get(key)) {
                 holder.mDividersLayout.removeView(view);
             }
         }

@@ -60,7 +60,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
         }
 
         mRoomImg.setOnClickListener(v -> {
-            Intent intent = new Intent(EventsCalendarActivity.this, AllRoomActivity.class);
+            Intent intent = new Intent(EventsCalendarActivity.this, RoomsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         });

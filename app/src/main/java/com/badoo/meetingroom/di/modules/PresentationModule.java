@@ -7,12 +7,14 @@ import com.badoo.meetingroom.presentation.presenter.impl.MainPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomListPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomStatusPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.impl.RoomsPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.EventsCalendarPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.MainPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
+import com.badoo.meetingroom.presentation.presenter.intf.RoomsPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -54,6 +56,12 @@ public class PresentationModule {
     @PerActivity
     RoomBookingPresenter provideRoomBookingPresenter(RoomBookingPresenterImpl roomBookingPresenterImpl) {
         return roomBookingPresenterImpl;
+    }
+
+    @Provides
+    @PerActivity
+    RoomsPresenter provideRoomsPresenter(RoomsPresenterImpl roomsPresenterImpl) {
+        return roomsPresenterImpl;
     }
 
     @Provides

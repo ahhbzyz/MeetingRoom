@@ -6,6 +6,7 @@ import com.badoo.meetingroom.domain.repository.LocalEventRepo;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.mapper.EventMapper;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
+import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class GetEvents extends UseCase<List<EventModel>> {
     }
 
     public GetEvents init(CalendarApiParams params, int page) {
-        mEventMapper.setEventStartTime(Badoo.getStartTimeOfDay(page));
+        mEventMapper.setEventStartTime(TimeHelper.getMidNightTimeOfDay(page));
         mEventMapper.setEventEndTime(Badoo.getEndTimeOfDay(page));
         mParams = params;
         return this;

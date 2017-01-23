@@ -1,5 +1,7 @@
 package com.badoo.meetingroom.presentation.model.impl;
 
+import android.os.Parcel;
+
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 
@@ -119,4 +121,49 @@ public class RoomModelImpl implements RoomModel {
     public void setStationerySupported(boolean stationerySupported) {
         isStationerySupported = stationerySupported;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeInt(this.floor);
+        dest.writeInt(this.status);
+        dest.writeInt(this.capacity);
+        dest.writeByte(this.isTvSupported ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isVideoConferenceSupported ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isBeverageAllowed ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isStationerySupported ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.currentEvent, flags);
+    }
+
+    RoomModelImpl(Parcel in) {
+        this.id = in.readString();
+        this.name = in.readString();
+        this.floor = in.readInt();
+        this.status = in.readInt();
+        this.capacity = in.readInt();
+        this.isTvSupported = in.readByte() != 0;
+        this.isVideoConferenceSupported = in.readByte() != 0;
+        this.isBeverageAllowed = in.readByte() != 0;
+        this.isStationerySupported = in.readByte() != 0;
+        this.currentEvent = in.readParcelable(EventModel.class.getClassLoader());
+    }
+
+    public static final Creator<RoomModelImpl> CREATOR = new Creator<RoomModelImpl>() {
+        @Override
+        public RoomModelImpl createFromParcel(Parcel source) {
+            return new RoomModelImpl(source);
+        }
+
+        @Override
+        public RoomModelImpl[] newArray(int size) {
+            return new RoomModelImpl[size];
+        }
+    };
 }

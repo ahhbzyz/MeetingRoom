@@ -54,6 +54,10 @@
     <color name="event_creator_dialog_creator_name_text_color">#000000</color>
     <color name="event_creator_dialog_creator_email_text_color">#808080</color>
     <color name="event_creator_dialog_divider_color">#D4D4D4</color>
+    <color name="item_room_capacity_text_size">#000000</color>
+    <color name="status_bar_time_text_color">#000000</color>
+    <color name="tool_bar_title_text_color">#000000</color>
+    <color name="tool_bar_available_room_number_text_color">#000000</color>
 
 
 </resources>

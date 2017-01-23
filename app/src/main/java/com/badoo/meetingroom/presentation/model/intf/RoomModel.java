@@ -1,9 +1,11 @@
 package com.badoo.meetingroom.presentation.model.intf;
 
+import android.os.Parcelable;
+
 /**
  * Created by zhangyaozhong on 16/01/2017.
  */
-public interface RoomModel {
+public interface RoomModel extends Parcelable {
 
     String getId();
 

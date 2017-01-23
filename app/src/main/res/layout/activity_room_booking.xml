@@ -6,33 +6,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activityBackgroundColor"
-    tools:context="com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    tools:context="com.badoo.meetingroom.presentation.view.activity.RoomBookingActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:id="@+id/layout_status_bar"
-        android:layout_height="32dp">
+        android:layout_height="@dimen/status_bar_height">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/img_badoo_logo"
             android:adjustViewBounds="true"
-            android:layout_marginStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:layout_marginStart="@dimen/status_bar_badoo_logo_margin_left"
+            android:paddingTop="@dimen/status_bar_badoo_logo_padding_top"
+            android:paddingBottom="@dimen/status_bar_badoo_logo_padding_bottom"
             android:src="@drawable/ic_badoo_logo" />
 
         <TextView
+            android:text="@string/fake_date"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/tv_current_date"
-            android:textColor="@android:color/black"
-            android:layout_marginEnd="16dp"
+            android:textColor="@color/status_bar_time_text_color"
+            android:layout_marginEnd="@dimen/status_bar_time_margin_right"
             android:gravity="center_vertical|center_horizontal"
-            android:layout_alignParentEnd="true"
-            android:text="@string/fake_date" />
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 
@@ -44,17 +43,16 @@
         android:id="@+id/toolbar">
 
         <TextView
-            android:text="Bahamas"
+            android:text="@string/fake_room_name"
             android:transitionName="roomName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_room_name"
-            android:textSize="48sp"
+            android:textSize="@dimen/tool_bar_title_text_size"
             android:layout_marginStart="32dp"
             android:gravity="center_vertical|center_horizontal"
-            android:textColor="@android:color/black"
+            android:textColor="@color/tool_bar_title_text_color"
             android:layout_gravity="center"/>
-
 
     </android.support.v7.widget.Toolbar>
 

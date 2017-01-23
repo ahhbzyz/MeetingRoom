@@ -5,7 +5,7 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!--Status bar-->
-    <dimen name="status_bar_height">16dp</dimen>
+    <dimen name="status_bar_height">32dp</dimen>
 
     <!--Room status activity-->
 
@@ -18,8 +18,6 @@
     <dimen name="circle_view_timer_text_size">72sp</dimen>
     <dimen name="circle_view_status_text_size">28sp</dimen>
     <dimen name="circle_view_timer_text_width">220dp</dimen>
-
-    <dimen name="circle_view_btn_diameter">48dp</dimen>
 
     <dimen name="confirm_btn_img_width">32dp</dimen>
     <dimen name="confirm_btn_img_height">24dp</dimen>
@@ -104,5 +102,28 @@
     <dimen name="item_vertical_event_left_padding">32dp</dimen>
     <dimen name="item_vertical_event_right_padding">32dp</dimen>
     <dimen name="item_room_capacity_text_size">24sp</dimen>
+    
+    
+    <dimen name="item_room_icon_left_margin">24dp</dimen>
+    <dimen name="item_room_icon_height">24dp</dimen>
+
+    <dimen name="status_bar_badoo_logo_margin_left">24dp</dimen>
+    <dimen name="status_bar_badoo_logo_padding_top">8dp</dimen>
+    <dimen name="status_bar_badoo_logo_padding_bottom">8dp</dimen>
+    <dimen name="status_bar_time_margin_right">32dp</dimen>
+
+    <dimen name="tool_bar_title_text_size">48sp</dimen>
+    <dimen name="tool_bar_title_margin_left">32dp</dimen>
+    <dimen name="tool_bar_icon_width">32dp</dimen>
+    <dimen name="tool_bar_room_icon_margin_right">32dp</dimen>
+    <dimen name="tool_bar_available_room_number_text_size">24sp</dimen>
+    <dimen name="tool_bar_available_room_number_text_margin_right">8dp</dimen>
+    <dimen name="tool_bar_calendar_icon_margin_right">32dp</dimen>
+
+    <dimen name="circle_view_btn_width">48dp</dimen>
+    <dimen name="circle_view_btn_height">48dp</dimen>
+
+    <dimen name="circle_view_timer_info_layout_margin_top">150dp</dimen>
+    <dimen name="circle_view_btn_margin_top">8dp</dimen>
 
 </resources>

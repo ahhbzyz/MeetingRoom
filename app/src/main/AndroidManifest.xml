@@ -28,7 +28,7 @@
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".presentation.view.activity.EventsCalendarActivity"/>
         <activity android:name=".presentation.view.activity.RoomBookingActivity"/>
-        <activity android:name=".presentation.view.activity.AllRoomActivity"/>
+        <activity android:name=".presentation.view.activity.RoomsActivity"/>
     </application>
     <service
         android:name=".MyFirebaseMessagingService">

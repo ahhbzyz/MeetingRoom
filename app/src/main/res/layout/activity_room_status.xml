@@ -18,27 +18,27 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:id="@+id/layout_status_bar"
-            android:layout_height="32dp">
+            android:layout_height="@dimen/status_bar_height">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/img_badoo_logo"
-                android:layout_marginStart="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:src="@drawable/ic_badoo_logo"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:layout_marginStart="@dimen/status_bar_badoo_logo_margin_left"
+                android:paddingTop="@dimen/status_bar_badoo_logo_padding_top"
+                android:paddingBottom="@dimen/status_bar_badoo_logo_padding_bottom"
+                android:src="@drawable/ic_badoo_logo" />
 
             <TextView
+                android:text="Wednesday, 11, July"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/tv_current_date"
-                android:textColor="@android:color/black"
-                android:layout_marginEnd="16dp"
+                android:textColor="@color/status_bar_time_text_color"
+                android:layout_marginEnd="@dimen/status_bar_time_margin_right"
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_alignParentEnd="true" />
-
         </RelativeLayout>
 
         <android.support.v7.widget.Toolbar
@@ -54,19 +54,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_room_name"
-                android:textSize="48sp"
-                android:layout_marginStart="32dp"
+                android:textSize="@dimen/tool_bar_title_text_size"
+                android:layout_marginStart="@dimen/tool_bar_title_margin_left"
                 android:gravity="center_vertical|center_horizontal"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/tool_bar_title_text_color" />
 
             <ImageView
-                android:layout_width="36dp"
+                android:layout_width="@dimen/tool_bar_icon_width"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_room"
                 android:id="@+id/img_room"
                 android:adjustViewBounds="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="32dp"
+                android:layout_marginEnd="@dimen/tool_bar_calendar_icon_margin_right"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:layout_gravity="end"/>
@@ -78,9 +78,9 @@
                 android:id="@+id/tv_room"
                 android:layout_toStartOf="@+id/img_room"
                 android:gravity="center_vertical|center_horizontal"
-                android:textSize="24sp"
-                android:textColor="@android:color/black"
-                android:layout_marginEnd="8dp"
+                android:textSize="@dimen/tool_bar_available_room_number_text_size"
+                android:textColor="@color/tool_bar_available_room_number_text_color"
+                android:layout_marginEnd="@dimen/tool_bar_available_room_number_text_margin_right"
                 android:layout_gravity="end"/>
 
             <ImageView
@@ -88,11 +88,11 @@
                 android:src="@drawable/ic_calendar_view"
                 android:id="@+id/img_calendar"
                 android:layout_gravity="end"
-                android:layout_marginEnd="48dp"
+                android:layout_marginEnd="@dimen/tool_bar_room_icon_margin_right"
                 android:adjustViewBounds="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:layout_width="36dp" />
+                android:layout_width="@dimen/tool_bar_icon_width" />
 
 
         </android.support.v7.widget.Toolbar>
@@ -131,10 +131,9 @@
                     android:id="@+id/layout_circle_timer_info"
                     android:gravity="center_vertical|center_horizontal"
                     android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="false"
                     android:layout_centerVertical="false"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/circle_view_stroke_width"
-                    android:paddingBottom="@dimen/circle_view_stroke_width">
+                    android:layout_marginTop="@dimen/circle_view_timer_info_layout_margin_top">
 
                     <TextView
                         android:text="@string/available_for_upper_case"
@@ -213,8 +212,9 @@
                     <ImageButton
                         android:id="@+id/img_book"
                         android:background="@drawable/btn_circle_available"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/circle_view_btn_width"
+                        android:layout_height="@dimen/circle_view_btn_height"
+                        android:layout_marginTop="@dimen/circle_view_btn_margin_top"
                         android:src="@drawable/ic_info" />
                 </LinearLayout>
 
@@ -279,7 +279,6 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipChildren="false"
             android:id="@+id/layout_bottom_content"
             android:layout_weight="6">
 

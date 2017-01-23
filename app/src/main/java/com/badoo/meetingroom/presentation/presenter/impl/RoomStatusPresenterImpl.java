@@ -11,7 +11,10 @@ import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.event.UpdateEvent;
 import com.badoo.meetingroom.presentation.Badoo;
+import com.badoo.meetingroom.presentation.model.impl.EventModelImpl;
+import com.badoo.meetingroom.presentation.model.impl.RoomModelImpl;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
@@ -44,7 +47,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
 
     private List<EventModel> mEventList;
-    private int mCurrentEventPos;
+    private int mCurrentEventPos = -1;
 
     private EventModel mCurrentEvent;
     private HashSet<String> mConfirmedIds;
@@ -139,9 +142,10 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     private void showCurrentEventOnCircleTimeView() {
-        if (mEventList != null && mCurrentEventPos < mEventList.size() && mEventList.get(mCurrentEventPos) != null) {
-            mCurrentEvent = mEventList.get(mCurrentEventPos);
 
+        if (mEventList != null && mCurrentEventPos >= 0 && mCurrentEventPos < mEventList.size() && mEventList.get(mCurrentEventPos) != null) {
+
+            mCurrentEvent = mEventList.get(mCurrentEventPos);
 
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mCurrentEvent.setConfirmed(true);
@@ -183,6 +187,15 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             }
         }
         mRoomEventsView.updateExtendButtonState(false);
+    }
+
+    private int getCurrentEventPosition(List<EventModel> roomEventModelList) {
+        for (EventModel eventModel : roomEventModelList) {
+            if (eventModel.isProcessing()) {
+                return roomEventModelList.indexOf(eventModel);
+            }
+        }
+        return -1;
     }
 
     private int getNumOfExpiredEvents() {
@@ -273,19 +286,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
-    private int getCurrentEventPosition(List<EventModel> roomEventModelList) {
-        int currentEventPos = 0;
-        for (EventModel eventModel : roomEventModelList) {
-            if (eventModel.isExpired()) {
-                currentEventPos++;
-            }
-            else {
-                break;
-            }
-        }
-        return currentEventPos;
-    }
-
     private final class GetEventsSubscriber extends DefaultSubscriber<List<EventModel>> {
 
         @Override
@@ -296,12 +296,10 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
         @Override
         public void onNext(List<EventModel> roomEvents) {
-            mEventList.clear();
-            mEventList.addAll(roomEvents);
+            mEventList = roomEvents;
             mCurrentEventPos = getCurrentEventPosition(mEventList);
             showCurrentEventOnCircleTimeView();
             showEventsOnHorizontalTimelineView();
-
         }
 
         @Override

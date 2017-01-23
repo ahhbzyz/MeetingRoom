@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalEventItemDecoration;
@@ -28,7 +29,6 @@ import com.badoo.meetingroom.presentation.view.adapter.HorizontalTimelineAdapter
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleView;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +48,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 public class RoomStatusActivity extends BaseActivity implements RoomStatusView, View.OnClickListener, CircleView.OnCountDownListener, HorizontalTimelineAdapter.OnEventClickListener {
 
     private static final int REQUEST_BOOK_ROOM = 1000;
+    private static final int REQUEST_AUTHORIZATION = 1001;
 
     @Inject RoomStatusPresenter mPresenter;
     @Inject HorizontalTimelineAdapter mAdapter;
@@ -173,7 +174,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
                 if (newState == SCROLL_STATE_IDLE) {
                     scrollBackHandler.postDelayed(() -> {
                         if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
-                            //mHorizontalTimelineRv.smoothScrollToPosition(0);
+                            mHorizontalTimelineRv.smoothScrollToPosition(0);
                         }
                     }, SCROLL_BACK_WAIT_TIME);
                 }
@@ -191,7 +192,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
                 startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM, options.toBundle());
                 break;
             case R.id.img_room:
-                Intent roomListIntent = new Intent(RoomStatusActivity.this, AllRoomActivity.class);
+                Intent roomListIntent = new Intent(RoomStatusActivity.this, RoomsActivity.class);
                 startActivityForResult(roomListIntent, REQUEST_BOOK_ROOM, options.toBundle());
                 break;
             default:
@@ -250,12 +251,12 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     @Override
     public void updateHorizontalTimeline(int currentEventPosition) {
-//        float leftMargin = -(TimeHelper.getCurrentTimeSinceMidNight() * mAdapter.getWidthPerMillis())
-//            + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
-//        System.out.println(leftMargin);
-//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
-//
-//        mHorizontalTimelineRv.setX(-1000);
+        float leftMargin = -((TimeHelper.getCurrentTimeSinceMidNight()) * mAdapter.getWidthPerMillis())
+            - currentEventPosition * getResources().getDimension(R.dimen.item_horizontal_event_divider_width)
+            + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
+        params.setMargins((int) leftMargin, 0 ,0 ,0);
+        mHorizontalTimelineRv.setLayoutParams(params);
     }
 
     @Override

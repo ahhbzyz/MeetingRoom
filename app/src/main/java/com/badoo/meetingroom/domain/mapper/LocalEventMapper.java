@@ -29,15 +29,21 @@ public class LocalEventMapper {
 
             String creatorEmailAddress = null;
             String creatorId = null;
+            String creatorName = null;
 
-            if (event.getCreator().isSelf()) {
-                if (event.getAttendees() != null && !event.getAttendees().isEmpty()) {
-                    creatorId = event.getAttendees().get(0).getId();
-                    creatorEmailAddress = event.getAttendees().get(0).getEmail();
+            if (event.getCreator() != null ) {
+                if (event.getCreator().getEmail().equals(Badoo.getCurrentRoom().getId())) {
+                    if (event.getAttendees() != null && !event.getAttendees().isEmpty()) {
+                        creatorId = event.getAttendees().get(0).getId();
+                        creatorEmailAddress = event.getAttendees().get(0).getEmail();
+                        creatorName = event.getAttendees().get(0).getDisplayName();
+
+                    }
+                }else{
+                    creatorId = event.getCreator().getId();
+                    creatorEmailAddress = event.getCreator().getEmail();
+                    creatorName = event.getCreator().getDisplayName();
                 }
-            } else {
-                creatorId = event.getCreator().getId();
-                creatorEmailAddress = event.getCreator().getEmail();
             }
 
             long startTime = event.getStart().getDateTime().getValue();
@@ -46,7 +52,7 @@ public class LocalEventMapper {
             localEvent = new LocalEventImpl();
             localEvent.setId(event.getId());
             localEvent.setCreatorId(creatorId);
-            localEvent.setCreatorName(event.getCreator().getDisplayName());
+            localEvent.setCreatorName(creatorName);
             localEvent.setCreatorEmailAddress(creatorEmailAddress);
             localEvent.setStartTime(startTime);
             localEvent.setEndTime(endTime);

@@ -66,15 +66,21 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         RoomModel roomModel = mRoomList.get(position);
         holder.mRoomNameTv.setText(roomModel.getName());
+
         if (roomModel.getCurrentEvent() != null) {
 
             EventModel currentEvent = roomModel.getCurrentEvent();
-            long remainingHours = TimeUnit.MILLISECONDS.toHours(currentEvent.getRemainingTime());
+
+            long remainingTime = currentEvent.getRemainingTimeUntilNextBusyEvent();
+
+            long remainingHours = TimeUnit.MILLISECONDS.toHours(remainingTime);
+
             if (remainingHours >= 2) {
                 holder.mRemainingTimeTv.setText(mContext.getString(R.string.two_hour_plus));
             } else {
-                holder.mRemainingTimeTv.setText(TimeHelper.formatMillisInMin(currentEvent.getRemainingTime()));
+                holder.mRemainingTimeTv.setText(TimeHelper.formatMillisInMin(remainingTime));
             }
+
             if (currentEvent.isAvailable()) {
 
                 holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_available));
@@ -82,7 +88,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
                 if (remainingHours >= 2) {
                     holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + mContext.getString(R.string.two_hour_plus));
                 } else {
-                    holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + TimeHelper.formatMillisInMin(currentEvent.getRemainingTime()) + " min");
+                    holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + TimeHelper.formatMillisInMin(remainingTime) + " min");
                 }
             } else {
                 holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_busy));

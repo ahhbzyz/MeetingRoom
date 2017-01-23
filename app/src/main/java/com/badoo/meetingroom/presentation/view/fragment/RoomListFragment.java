@@ -15,6 +15,7 @@ import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.RoomListAdapter;
 import com.badoo.meetingroom.presentation.view.view.RoomListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,7 +33,9 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
     @BindView(R.id.pb_loading_room_list) ProgressBar mLoadingRoomListPb;
 
     private static final String ARG_PAGE = "page";
+    private static final String ARG_ROOM_LIST = "roomList";
     private int mPage;
+    private List<RoomModel> mRoomModelList;
 
 
     public RoomListFragment() {
@@ -40,10 +43,11 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
         setRetainInstance(true);
     }
 
-    public static RoomListFragment newInstance(int page) {
+    public static RoomListFragment newInstance(int page, ArrayList<RoomModel> roomModelList) {
         RoomListFragment fragment = new RoomListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
+        args.putParcelableArrayList(ARG_ROOM_LIST, roomModelList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,6 +57,7 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mPage = getArguments().getInt(ARG_PAGE);
+            mRoomModelList = getArguments().getParcelableArrayList(ARG_ROOM_LIST);
         }
         this.getComponent().inject(this);
     }
@@ -66,7 +71,8 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
 
         setUpRecyclerView();
         mPresenter.setView(this);
-        mPresenter.getRoomList();
+        mPresenter.setPage(mPage);
+        mPresenter.getRoomEvents(mRoomModelList);
 
         return view;
     }
