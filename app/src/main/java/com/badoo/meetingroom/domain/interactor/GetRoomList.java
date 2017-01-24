@@ -7,6 +7,7 @@ import com.badoo.meetingroom.presentation.mapper.RoomModelMapper;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -16,7 +17,7 @@ import rx.Observable;
  * Created by zhangyaozhong on 16/01/2017.
  */
 
-public class GetRoomList extends UseCase<SparseArray<List<RoomModel>>> {
+public class GetRoomList extends UseCase<TreeMap<Integer, List<RoomModel>>> {
 
     public static final String NAME = "getRoomList";
 
@@ -30,7 +31,7 @@ public class GetRoomList extends UseCase<SparseArray<List<RoomModel>>> {
     }
 
     @Override
-    protected Observable<SparseArray<List<RoomModel>>> buildUseCaseObservable() {
+    protected Observable<TreeMap<Integer, List<RoomModel>>> buildUseCaseObservable() {
         return mCalendarListRepo.getCalendarList().map(mRoomModelMapper::map);
     }
 }

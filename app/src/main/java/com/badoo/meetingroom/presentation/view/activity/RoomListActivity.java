@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -20,6 +19,7 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomListView;
 
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -50,6 +50,7 @@ public class RoomListActivity extends BaseActivity implements RoomListView {
 
         setUpToolbar();
         mPresenter.setView(this);
+
         mPresenter.getRoomList();
     }
 
@@ -69,7 +70,7 @@ public class RoomListActivity extends BaseActivity implements RoomListView {
     }
 
     @Override
-    public void setUpViewPager(SparseArray<List<RoomModel>> roomModelListMap) {
+    public void setUpViewPager(TreeMap<Integer, List<RoomModel>> roomModelListMap) {
         mAdapter = new RoomListFragmentPagerAdapter(context(), getSupportFragmentManager(), roomModelListMap);
         mViewPager.setAdapter(mAdapter);
         mFloorsTabLayout.setupWithViewPager(mViewPager);
@@ -78,7 +79,7 @@ public class RoomListActivity extends BaseActivity implements RoomListView {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finishAfterTransition();
+            finish();
             overridePendingTransition(0, 0);
             return true;
         }
@@ -92,6 +93,8 @@ public class RoomListActivity extends BaseActivity implements RoomListView {
             mAdapter.getRegisteredFragment(mViewPager.getCurrentItem()).notifyListChange();
         }
     }
+
+
 
     @Override
     public void showLoadingData(String message) {

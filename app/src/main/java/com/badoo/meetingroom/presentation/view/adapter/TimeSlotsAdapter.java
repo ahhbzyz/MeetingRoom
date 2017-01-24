@@ -89,9 +89,8 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                         itemViewList.get(j).setViewWidth(0);
                         j--;
                     }
-                    viewWidth = 0;
+                    viewWidth = j + 1 == i ? MAX_SLOT_WIDTH + 1 : 0;
                     itemViewList.get(j+1).setViewWidth(MAX_SLOT_WIDTH + 1);
-
                 } else {
                     viewWidth = viewWidth < MIN_SLOT_WIDTH ? MIN_SLOT_WIDTH : viewWidth;
                     viewWidth = viewWidth > MAX_SLOT_WIDTH ? MAX_SLOT_WIDTH : viewWidth;

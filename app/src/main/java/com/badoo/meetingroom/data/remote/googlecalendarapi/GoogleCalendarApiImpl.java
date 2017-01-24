@@ -133,23 +133,23 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
     }
 
     private List<Event> getEventsFromApi(Calendar services, CalendarApiParams params) throws Exception {
-        return EventsGetApiCall.createGET(services, params).requestSyncCall();
+        return EventsGetApiCall.create(services, params).requestSyncCall();
     }
 
     private Event insertEventFromApi(Calendar services, CalendarApiParams params) throws Exception {
-        return EventInsertApiCall.createINSERT(services, params).requestSyncCall();
+        return EventInsertApiCall.create(services, params).requestSyncCall();
     }
 
     private Void deleteEventFromApi(Calendar services, CalendarApiParams params) throws Exception {
-        return EventDeleteApiCall.createDelete(services, params).requestSyncCall();
+        return EventDeleteApiCall.create(services, params).requestSyncCall();
     }
 
     private Event updateEventFromApi(Calendar service, CalendarApiParams params) throws Exception {
-        return EventUpdateApiCall.createUpdate(service, params).requestSyncCall();
+        return EventUpdateApiCall.create(service, params).requestSyncCall();
     }
 
     private List<CalendarListEntry> getCalendarListFromApi(Calendar service) throws Exception {
-        return GetCalendarListApiCall.createGET(service).requestSyncCall();
+        return GetCalendarListApiCall.create(service).requestSyncCall();
     }
 
     private boolean hasInternetConnection() {

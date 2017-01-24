@@ -4,6 +4,7 @@ package com.badoo.meetingroom.domain.entity.intf;
  * Created by zhangyaozhong on 16/01/2017.
  */
 public interface Room {
+
     String getId();
 
     void setId(String id);
@@ -15,10 +16,6 @@ public interface Room {
     int getFloor();
 
     void setFloor(int floor);
-
-    int getStatus();
-
-    void setStatus(int status);
 
     int getCapacity();
 

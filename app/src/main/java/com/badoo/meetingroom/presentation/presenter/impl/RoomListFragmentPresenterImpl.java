@@ -4,6 +4,7 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.event.GetEvents;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
@@ -21,7 +22,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Observable;
-
 
 /**
  * Created by zhangyaozhong on 05/01/2017.
@@ -53,14 +53,12 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
         Event event = new Event();
         DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
         EventDateTime start = new EventDateTime()
-            .setDateTime(startDateTime)
-            .setTimeZone("Europe/London");
+            .setDateTime(startDateTime);
         event.setStart(start);
 
         DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
         EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime)
-            .setTimeZone("Europe/London");
+            .setDateTime(endDateTime);
         event.setEnd(end);
 
         useCaseFinishCount = 0;
@@ -114,7 +112,7 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
                     } else if (o1.getCurrentEvent().isBusy() && o2.getCurrentEvent().isAvailable()) {
                         return 1;
                     } else if (o1.getCurrentEvent().isAvailable() && o2.getCurrentEvent().isAvailable()){
-                        return (int) (o2.getCurrentEvent().getNextBusyEventStartTime() - o1.getCurrentEvent().getNextBusyEventStartTime());
+                        return Long.compare(o2.getCurrentEvent().getNextBusyEventStartTime(), o1.getCurrentEvent().getNextBusyEventStartTime());
                     } else {
                         return (int) (o1.getCurrentEvent().getNextBusyEventStartTime() - o2.getCurrentEvent().getNextBusyEventStartTime());
                     }
@@ -122,6 +120,7 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
                 }).subscribe(roomModelList -> {
                     mRoomModelList = roomModelList;
                     mRoomListFragmentView.renderRoomListInView(mRoomModelList);
+                    mRoomListFragmentView.dismissLoadingData();
                 });
             }
         }
@@ -129,7 +128,6 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
         @Override
         public void onCompleted() {
             super.onCompleted();
-            mRoomListFragmentView.dismissLoadingData();
         }
 
         @Override

@@ -33,12 +33,13 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.img_room) ImageView mRoomImg;
+    @BindView(R.id.tv_ava_rooms) TextView mAvailableRoomsTv;
     @BindView(R.id.tv_current_date_time) TextView mCurrentDateTimeTv;
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) NonSwipeViewPager mViewPager;
 
-    private static final String ARG_ROOM_ID = "roomId";
-    private static final String ARG_SHOW_ROOM_LIST_ICON = "showRoomListIcon";
+    public static final String ARG_ROOM_ID = "roomId";
+    public static final String ARG_SHOW_ROOM_LIST_ICON = "showRoomListIcon";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +65,11 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
         }
 
         if (getIntent().getExtras().getBoolean(ARG_SHOW_ROOM_LIST_ICON, true)) {
-            mRoomImg.setVisibility(View.GONE);
-        } else {
             mRoomImg.setVisibility(View.VISIBLE);
+            mAvailableRoomsTv.setVisibility(View.VISIBLE);
+        } else {
+            mRoomImg.setVisibility(View.GONE);
+            mAvailableRoomsTv.setVisibility(View.GONE);
         }
 
         mRoomImg.setOnClickListener(v -> {

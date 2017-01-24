@@ -20,7 +20,7 @@ class EventUpdateApiCall implements Callable<Event>{
         mParams = params;
     }
 
-    static EventUpdateApiCall createUpdate(Calendar services, CalendarApiParams params) {
+    static EventUpdateApiCall create(Calendar services, CalendarApiParams params) {
         return new EventUpdateApiCall(services, params);
     }
 

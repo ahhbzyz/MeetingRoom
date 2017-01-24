@@ -36,6 +36,7 @@ public class CalendarApiParams {
         return numOfResult;
     }
 
+    // todo check
     public CalendarApiParams setNumOfResult(int numOfResult) {
         this.numOfResult = numOfResult;
         return this;

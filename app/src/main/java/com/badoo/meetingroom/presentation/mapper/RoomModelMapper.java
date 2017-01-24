@@ -7,9 +7,13 @@ import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.model.impl.RoomModelImpl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -42,9 +46,9 @@ public class RoomModelMapper {
     }
 
 
-    public SparseArray<List<RoomModel>> map(List<Room> roomList) {
+    public TreeMap<Integer, List<RoomModel>> map(List<Room> roomList) {
 
-        final SparseArray<List<RoomModel>> roomModelListMap = new SparseArray<>();
+        final TreeMap<Integer, List<RoomModel>> roomModelListMap = new TreeMap<>();
 
         for (Room room : roomList) {
 
@@ -60,6 +64,8 @@ public class RoomModelMapper {
                 roomModelListMap.put(roomModel.getFloor(), roomModelList);
             }
         }
+
+
         return roomModelListMap;
     }
 }

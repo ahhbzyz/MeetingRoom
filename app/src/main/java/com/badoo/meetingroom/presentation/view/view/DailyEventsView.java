@@ -17,5 +17,4 @@ public interface DailyEventsView extends LoadDataView{
 
     void updateRecyclerView();
 
-    void handlerUserRecoverableAuth(UserRecoverableAuthIOException e);
 }

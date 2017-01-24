@@ -42,12 +42,11 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     private final UpdateEvent mUpdateEventUseCase;
 
 
-    private List<EventModel> mEventList;
+    private List<EventModel> mEventModelList;
     private int mCurrentEventPos = -1;
 
     private EventModel mCurrentEvent;
     private HashSet<String> mConfirmedIds;
-
 
     @Inject
     RoomStatusPresenterImpl(@Named(GetEvents.NAME) GetEvents getEventsUseCase,
@@ -59,7 +58,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         mDeleteEventUseCase = deleteEventUseCase;
         mUpdateEventUseCase = updateEventUseCase;
         mConfirmedIds = new HashSet<>();
-        mEventList = new ArrayList<>();
+        mEventModelList = new ArrayList<>();
     }
 
     @Override
@@ -114,7 +113,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     @Override
     public void onCircleTimeViewBtnClick() {
         if (mCurrentEvent.isAvailable()) {
-            mRoomEventsView.bookRoom(TimeHelper.getCurrentTimeInMillis(), mCurrentEvent.getEndTime());
+            mRoomEventsView.bookRoomFrom(mCurrentEventPos, (ArrayList<EventModel>)mEventModelList);
         }
         else {
             mRoomEventsView.showEventOrganizerDialog(mCurrentEvent);
@@ -123,7 +122,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void onRestart() {
-        mCurrentEventPos = getCurrentEventPosition(mEventList);
+        mCurrentEventPos = getCurrentEventPosition(mEventModelList);
         showCurrentEventOnCircleTimeView();
         onSystemTimeRefresh();
     }
@@ -136,9 +135,9 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     private void showCurrentEventOnCircleTimeView() {
 
-        if (mEventList != null && mCurrentEventPos >= 0 && mCurrentEventPos < mEventList.size() && mEventList.get(mCurrentEventPos) != null) {
+        if (mEventModelList != null && mCurrentEventPos >= 0 && mCurrentEventPos < mEventModelList.size() && mEventModelList.get(mCurrentEventPos) != null) {
 
-            mCurrentEvent = mEventList.get(mCurrentEventPos);
+            mCurrentEvent = mEventModelList.get(mCurrentEventPos);
 
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mCurrentEvent.setConfirmed(true);
@@ -150,7 +149,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     private void moveToNextEvent() {
-        if (mEventList != null && !mEventList.isEmpty()) {
+        if (mEventModelList != null && !mEventModelList.isEmpty()) {
             if (mConfirmedIds.contains(mCurrentEvent.getId())) {
                 mConfirmedIds.remove(mCurrentEvent.getId());
             }
@@ -159,20 +158,21 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     }
 
     private void showEventsOnHorizontalTimelineView() {
-        if (mEventList != null && !mEventList.isEmpty()) {
-            mRoomEventsView.renderRoomEventList(mEventList);
+        if (mEventModelList != null && !mEventModelList.isEmpty()) {
+            mRoomEventsView.renderRoomEventList(mEventModelList);
         }
     }
 
+    // Todo check all the buttons availabilities
     private void checkEventExtendable() {
         if (mCurrentEvent != null &&
             mCurrentEvent.isBusy() &&
             mCurrentEvent.isProcessing() &&
-            mEventList != null &&
-            mCurrentEventPos < mEventList.size() - 1
-            && mEventList.get(mCurrentEventPos + 1) != null) {
+            mEventModelList != null &&
+            mCurrentEventPos < mEventModelList.size() - 1
+            && mEventModelList.get(mCurrentEventPos + 1) != null) {
 
-            EventModel eventModel = mEventList.get(mCurrentEventPos + 1);
+            EventModel eventModel = mEventModelList.get(mCurrentEventPos + 1);
             if (eventModel.isAvailable() && (eventModel.getNextBusyEventStartTime() - eventModel.getStartTime() >= TimeHelper.min2Millis(15))) {
                 mRoomEventsView.updateExtendButtonState(true);
                 return;
@@ -192,24 +192,25 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void getEvents() {
+
         Event event = new Event();
         DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(0));
         EventDateTime start = new EventDateTime()
-            .setDateTime(startDateTime)
-            .setTimeZone("Europe/London");
+            .setDateTime(startDateTime);
         event.setStart(start);
 
         DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(1));
         EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime)
-            .setTimeZone("Europe/London");
+            .setDateTime(endDateTime);
         event.setEnd(end);
 
         if (Badoo.getCurrentRoom() != null) {
+
             CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
             params.setEventParams(event);
-            long startTime = TimeHelper.getMidNightTimeOfDay(0);
-            long endTime = TimeHelper.getMidNightTimeOfDay(1);
+            long startTime = Badoo.getStartTimeOfDay(0);
+            long endTime = Badoo.getEndTimeOfDay(0);
+
             mGetEventsUseCase.init(params, startTime, endTime).execute(new GetEventsSubscriber());
         }
     }
@@ -223,14 +224,12 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             Event event = new Event();
             DateTime startDateTime = new DateTime(startTime);
             EventDateTime start = new EventDateTime()
-                .setDateTime(startDateTime)
-                .setTimeZone("Europe/London");
+                .setDateTime(startDateTime);
             event.setStart(start);
 
             DateTime endDateTime = new DateTime(endTime);
             EventDateTime end = new EventDateTime()
-                .setDateTime(endDateTime)
-                .setTimeZone("Europe/London");
+                .setDateTime(endDateTime);
             event.setEnd(end);
 
             event.setDescription(EventModel.FAST_BOOKING_DESCRIPTION);
@@ -255,8 +254,8 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
     @Override
     public void updateEvent() {
-        if (mEventList != null && mCurrentEventPos < mEventList.size() - 1 && mEventList.get(mCurrentEventPos + 1) != null) {
-            EventModel eventModel = mEventList.get(mCurrentEventPos + 1);
+        if (mEventModelList != null && mCurrentEventPos < mEventModelList.size() - 1 && mEventModelList.get(mCurrentEventPos + 1) != null) {
+            EventModel eventModel = mEventModelList.get(mCurrentEventPos + 1);
             if (eventModel.isAvailable() && (eventModel.getNextBusyEventStartTime() - eventModel.getStartTime() >= TimeHelper.min2Millis(15))) {
                 long extendedTime = TimeHelper.min2Millis(15);
                 // Extent
@@ -265,8 +264,7 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
                 DateTime endDateTime = new DateTime(mCurrentEvent.getEndTime() + extendedTime);
                 EventDateTime end = new EventDateTime()
-                    .setDateTime(endDateTime)
-                    .setTimeZone("Europe/London");
+                    .setDateTime(endDateTime);
                 event.setEnd(end);
 
                 CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
@@ -286,8 +284,8 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
 
         @Override
         public void onNext(List<EventModel> roomEvents) {
-            mEventList = roomEvents;
-            mCurrentEventPos = getCurrentEventPosition(mEventList);
+            mEventModelList = roomEvents;
+            mCurrentEventPos = getCurrentEventPosition(mEventModelList);
             showCurrentEventOnCircleTimeView();
             showEventsOnHorizontalTimelineView();
         }

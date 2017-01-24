@@ -12,7 +12,7 @@ import java.util.List;
  * Created by zhangyaozhong on 04/01/2017.
  */
 
-public class GetPeopleApiCall implements Callable<List<Person>>{
+class GetPeopleApiCall implements Callable<List<Person>>{
 
     private People mServices = null;
 
@@ -20,7 +20,7 @@ public class GetPeopleApiCall implements Callable<List<Person>>{
         this.mServices = services;
     }
 
-    static GetPeopleApiCall createGET(People services) {
+    static GetPeopleApiCall create(People services) {
         return new GetPeopleApiCall(services);
     }
 

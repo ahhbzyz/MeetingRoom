@@ -1,8 +1,10 @@
 package com.badoo.meetingroom.presentation.view.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,6 +27,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class RoomListFragment extends BaseFragment implements RoomListFragmentView {
 
@@ -32,12 +36,12 @@ public class RoomListFragment extends BaseFragment implements RoomListFragmentVi
     @Inject RoomListPresenter mPresenter;
 
     @BindView(R.id.rv_room_list) RecyclerView mRecyclerView;
-    @BindView(R.id.pb_loading_room_list_events) ProgressBar mLoadingRoomListEventsPb;
+    @BindView(R.id.layout_refresh_room_list) SwipeRefreshLayout mLayoutRefreshRoomList;
 
     private static final String ARG_PAGE = "page";
     private static final String ARG_ROOM_LIST = "roomList";
-    private static final String ARG_ROOM_ID = "roomId";
-    private static final String ARG_SHOW_ROOM_LIST_ICON = "showRoomListIcon";
+    private static final int REQUEST_BOOK_ROOM = 1000;
+
 
     private int mPage;
     private List<RoomModel> mRoomModelList;
@@ -74,11 +78,23 @@ public class RoomListFragment extends BaseFragment implements RoomListFragmentVi
         ButterKnife.bind(this, view);
 
         setUpRecyclerView();
+        setUpSwipeRefreshLayout();
         mPresenter.setView(this);
         mPresenter.setPage(mPage);
-        mPresenter.getRoomEvents(mRoomModelList);
+        getRoomEvents();
 
         return view;
+    }
+
+
+
+    public void getRoomEvents() {
+        if (mRoomModelList != null) {
+            mPresenter.getRoomEvents(mRoomModelList);
+        }
+    }
+    private void setUpSwipeRefreshLayout() {
+        mLayoutRefreshRoomList.setOnRefreshListener(() -> getRoomEvents());
     }
 
     private void setUpRecyclerView() {
@@ -101,10 +117,26 @@ public class RoomListFragment extends BaseFragment implements RoomListFragmentVi
     public void showEventsCalendarView(String id) {
         Intent intent = new Intent(getActivity(), EventsCalendarActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(ARG_ROOM_ID, id);
-        bundle.putBoolean(ARG_SHOW_ROOM_LIST_ICON, false);
+        bundle.putString(EventsCalendarActivity.ARG_ROOM_ID, id);
+        bundle.putBoolean(EventsCalendarActivity.ARG_SHOW_ROOM_LIST_ICON, false);
         intent.putExtras(bundle);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_BOOK_ROOM);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_BOOK_ROOM:
+                if (resultCode == RESULT_OK) {
+                    getRoomEvents();
+                    Intent returnIntent = new Intent();
+                    getActivity().setResult(Activity.RESULT_OK, returnIntent);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -114,12 +146,17 @@ public class RoomListFragment extends BaseFragment implements RoomListFragmentVi
 
     @Override
     public void showLoadingData(String message) {
-        mLoadingRoomListEventsPb.setVisibility(View.VISIBLE);
+        mLayoutRefreshRoomList.post(new Runnable() {
+            @Override
+            public void run() {
+                mLayoutRefreshRoomList.setRefreshing(true);
+            }
+        });
     }
 
     @Override
     public void dismissLoadingData() {
-        mLoadingRoomListEventsPb.setVisibility(View.GONE);
+        mLayoutRefreshRoomList.setRefreshing(false);
     }
 
     @Override

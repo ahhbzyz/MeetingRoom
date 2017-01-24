@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 public class FileManager {
 
     @Inject
-    public FileManager () {}
+    FileManager () {}
 
     void putAccountNameToPreferences(Context context, String fileName, String key, String accountName) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);

@@ -43,7 +43,6 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
 
     private EventModel mEvent;
 
-
     @BindView(R.id.img_avatar) ImageView mAvatarImg;
     @BindView(R.id.pb_img_loading) ProgressBar mImgLoadingPb;
     @BindView(R.id.tv_event_period) TextView mEventPeriodTv;
@@ -124,6 +123,8 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
 
         @Override
         public void onNext(List<BadooPerson> badooPersonList) {
+
+            // TODO rx java hash map
             List<BadooPersonModel> badooPersonModelList = mMapper.map(badooPersonList);
             for (BadooPersonModel badooPersonModel : badooPersonModelList) {
                 if (mEvent.getCreatorEmailAddress().equals(badooPersonModel.getEmailAddress())) {
@@ -149,15 +150,6 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
             super.onError(e);
             try {
                 throw e;
-            }
-            catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
-                //mRoomStatusView.handleRecoverableAuthException(userRecoverableAuthIOException);
-            }
-            catch (GoogleJsonResponseException googleJsonResponseException) {
-                //mRoomStatusView.showError(googleJsonResponseException.getDetails().getMessage());
-            }
-            catch (Exception exception) {
-                //mRoomStatusView.showError(exception.getMessage());
             }
             catch (Throwable throwable) {
                 throwable.printStackTrace();

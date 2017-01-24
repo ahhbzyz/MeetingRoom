@@ -20,7 +20,7 @@ class GetCalendarListApiCall implements Callable<List<CalendarListEntry>> {
         this.mServices = services;
     }
 
-    static GetCalendarListApiCall createGET(Calendar services) {
+    static GetCalendarListApiCall create(Calendar services) {
         return new GetCalendarListApiCall(services);
     }
 

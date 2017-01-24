@@ -20,7 +20,7 @@ class EventDeleteApiCall implements Callable<Void>{
         mParams = params;
     }
 
-    static EventDeleteApiCall createDelete(Calendar services, CalendarApiParams params) {
+    static EventDeleteApiCall create(Calendar services, CalendarApiParams params) {
         return new EventDeleteApiCall(services, params);
     }
 

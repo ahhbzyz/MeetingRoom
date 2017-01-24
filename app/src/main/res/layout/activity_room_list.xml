@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:theme="?attr/actionBarTheme"
         android:minHeight="?attr/actionBarSize"
+        android:elevation="5dp"
         android:id="@+id/toolbar">
 
         <TextView
@@ -67,7 +68,9 @@
         app:tabGravity="center"
         app:tabIndicatorHeight="@dimen/room_list_tab_height"
         app:tabMinWidth="@dimen/room_list_tab_min_width"
-        android:id="@+id/tab_layout_floors"/>
+        android:id="@+id/tab_layout_floors"
+        android:background="@color/backgroundColor"
+        android:elevation="5dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -20,6 +20,8 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -181,24 +183,24 @@ public class MainPresenterImpl implements MainPresenter {
         }
     }
 
-    private final class GetRoomListSubscriber extends DefaultSubscriber<SparseArray<List<RoomModel>>> {
+    private final class GetRoomListSubscriber extends DefaultSubscriber<TreeMap<Integer, List<RoomModel>>> {
         @Override
         public void onStart() {
             super.onStart();
         }
 
         @Override
-        public void onNext(SparseArray<List<RoomModel>> roomModelListMap) {
+        public void onNext(TreeMap<Integer, List<RoomModel>> roomModelListMap) {
             super.onNext(roomModelListMap);
 
             List<RoomModel> roomModelList = new ArrayList<>();
 
-            for (int i = 0; i < roomModelListMap.size(); i++) {
-
-                int key = roomModelListMap.keyAt(i);
+            for(Map.Entry<Integer,List<RoomModel>> entry : roomModelListMap.entrySet()) {
+                int key = entry.getKey();
                 List<RoomModel> list = roomModelListMap.get(key);
                 roomModelList.addAll(list);
             }
+
             mMainView.setUpRoomListSpinner(roomModelList);
         }
 

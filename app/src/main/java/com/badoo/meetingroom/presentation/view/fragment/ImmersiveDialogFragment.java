@@ -12,7 +12,6 @@ import android.view.WindowManager;
 
 public abstract class ImmersiveDialogFragment extends BaseDialogFragment{
 
-    @SuppressLint("CommitTransaction")
     public void show(Activity activity) {
 
         // Show the dialog.
@@ -28,7 +27,9 @@ public abstract class ImmersiveDialogFragment extends BaseDialogFragment{
         // It is necessary to call executePendingTransactions() on the FragmentManager
         // before hiding the navigation bar, because otherwise getWindow() would raise a
         // NullPointerException since the window was not yet created.
-        getFragmentManager().executePendingTransactions();
+        if (!this.isAdded()) {
+            getFragmentManager().executePendingTransactions();
+        }
 
         // Hide the navigation bar. It is important to do this after show() was called.
         // If we would do this in onCreateDialog(), we would get a requestFeature()

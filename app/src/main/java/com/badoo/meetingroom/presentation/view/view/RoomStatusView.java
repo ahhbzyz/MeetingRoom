@@ -3,6 +3,7 @@ package com.badoo.meetingroom.presentation.view.view;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +20,9 @@ public interface RoomStatusView extends LoadDataView {
 
     void updateHorizontalTimeline();
 
-    void updateRecyclerView();
+    void bookRoomFrom(int position, ArrayList<EventModel> eventModelList);
 
     void startCircleViewAnimator(EventModel currentEvent);
-
-    void bookRoom(long startTime, long endTime);
 
     void showEventOrganizerDialog(EventModel mCurrentEvent);
 
@@ -36,4 +35,5 @@ public interface RoomStatusView extends LoadDataView {
     void updateExtendButtonState(boolean state);
 
     void updateRoomStatusTextView(EventModel mCurrentEvent);
+
 }

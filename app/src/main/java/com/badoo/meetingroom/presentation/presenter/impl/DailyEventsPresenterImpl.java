@@ -60,14 +60,12 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
         DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage));
         EventDateTime start = new EventDateTime()
-            .setDateTime(startDateTime)
-            .setTimeZone("Europe/London");
+            .setDateTime(startDateTime);
         event.setStart(start);
 
         DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
         EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime)
-            .setTimeZone("Europe/London");
+            .setDateTime(endDateTime);
         event.setEnd(end);
 
         CalendarApiParams params = new CalendarApiParams(roomId);
@@ -103,8 +101,6 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
             mDailyEventsView.dismissLoadingData();
             try {
                 throw e;
-            } catch (UserRecoverableAuthIOException e1) {
-                mDailyEventsView.handlerUserRecoverableAuth(e1);
             } catch (GoogleJsonResponseException googleJsonResponseException) {
                 mDailyEventsView.showError(googleJsonResponseException.getDetails().getMessage());
             } catch (Exception exception) {

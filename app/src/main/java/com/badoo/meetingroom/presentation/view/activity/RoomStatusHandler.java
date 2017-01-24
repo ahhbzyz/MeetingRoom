@@ -50,9 +50,7 @@ class RoomStatusHandler {
         switch (event.getStatus()) {
 
             case EventModel.AVAILABLE:
-
                 showAvailableView(event);
-
                 break;
 
             case EventModel.BUSY:
@@ -99,6 +97,7 @@ class RoomStatusHandler {
         // Circle time view button
         activity.mCircleTimeViewBtn.setImageDrawable(activity.getDrawable(R.drawable.ic_add_small));
         activity.mCircleTimeViewBtn.setBackground(activity.getDrawable(R.drawable.btn_circle_available));
+        activity.mCircleTimeViewBtn.setOnClickListener(v -> activity.mPresenter.onCircleTimeViewBtnClick());
 
         View btnGroup = View.inflate(activity.getApplicationContext(), R.layout.layout_btn_group_available, null);
         activity.mButtonsLayout.addView(btnGroup);

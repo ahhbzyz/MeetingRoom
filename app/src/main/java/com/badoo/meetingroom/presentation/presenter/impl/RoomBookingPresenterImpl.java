@@ -62,18 +62,16 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     }
 
     @Override
-    public void bookRoom(String organizer) {
+    public void bookRoom(String organizer, String roomId) {
         Event event = new Event();
         DateTime startDateTime = new DateTime(mSelectedStartTime);
         EventDateTime start = new EventDateTime()
-            .setDateTime(startDateTime)
-            .setTimeZone("Europe/London");
+            .setDateTime(startDateTime);
         event.setStart(start);
 
         DateTime endDateTime = new DateTime(mSelectedEndTime);
         EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime)
-            .setTimeZone("Europe/London");
+            .setDateTime(endDateTime);
         event.setEnd(end);
 
         event.setSummary(mRoomBookingView.context().getString(R.string.mobile_booking));
@@ -82,7 +80,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         eventAttendees.add(new EventAttendee().setEmail(organizer));
         event.setAttendees(eventAttendees);
 
-        CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
+        CalendarApiParams params = new CalendarApiParams(roomId);
         params.setEventParams(event);
         mInsertEventUseCase.init(params).execute(new InsertEventSubscriber());
     }
@@ -93,20 +91,17 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         mAvailableEventList.clear();
 
         int tempPos = position;
-        while (tempPos >= 0 && !eventModelList.get(tempPos).isExpired()) {
+        while (tempPos >= 0 && !eventModelList.get(tempPos).isProcessing()) {
             tempPos --;
         }
 
-        if (tempPos != position) {
+        if (tempPos == -1) {
             tempPos++;
         }
 
         while(tempPos < eventModelList.size() - 1 && eventModelList.get(tempPos).isBusy()) {
             tempPos++;
         }
-
-        tempPos ++;
-
 
         for (int i = tempPos; i < eventModelList.size(); i++) {
             mAvailableEventList.add(eventModelList.get(i));
@@ -167,8 +162,6 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
             dismissViewLoading();
             try {
                 throw e;
-            } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
-                mRoomBookingView.showRecoverableAuth(userRecoverableAuthIOException);
             } catch (GoogleJsonResponseException googleJsonResponseException) {
                 mRoomBookingView.showError(googleJsonResponseException.getDetails().getMessage());
             } catch (Exception exception) {
@@ -206,8 +199,6 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
             dismissViewLoading();
             try {
                 throw e;
-            } catch (UserRecoverableAuthIOException userRecoverableAuthIOException) {
-                mRoomBookingView.showRecoverableAuth(userRecoverableAuthIOException);
             } catch (GoogleJsonResponseException googleJsonResponseException) {
                 mRoomBookingView.showError(googleJsonResponseException.getDetails().getMessage());
             } catch (Exception exception) {
@@ -229,7 +220,6 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
         }
     }
-
 
     @Override
     public void Resume() {

@@ -26,7 +26,7 @@ class EventsGetApiCall implements Callable<List<Event>>{
         mParams = params;
     }
 
-    static EventsGetApiCall createGET(Calendar services, CalendarApiParams params) {
+    static EventsGetApiCall create(Calendar services, CalendarApiParams params) {
         return new EventsGetApiCall(services, params);
     }
 
@@ -46,7 +46,7 @@ class EventsGetApiCall implements Callable<List<Event>>{
             .setSingleEvents(true)
             .setMaxResults(mParams.getNumOfResult())
             .execute();
-       // mResponse =
+
 
 //        Map<String, String> params = new HashMap<>();
 //        Channel request = new Channel()
@@ -58,6 +58,10 @@ class EventsGetApiCall implements Callable<List<Event>>{
         //Events changes = mServices.events().list("zhang.yaozhong@corp.badoo.com").execute();
 
         mResponse = events.getItems();
+
+        for (int i = 0; i < mResponse.size(); i++) {
+            //System.out.println(mResponse.get(i).toString());
+        }
     }
 
     @Override

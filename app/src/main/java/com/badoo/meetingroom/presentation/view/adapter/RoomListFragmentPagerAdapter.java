@@ -13,6 +13,8 @@ import com.badoo.meetingroom.presentation.view.fragment.RoomListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -23,16 +25,17 @@ import javax.inject.Inject;
 public class RoomListFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
-    private SparseArray<List<RoomModel>> mRoomModelListMap;
+    private TreeMap<Integer, List<RoomModel>> mRoomModelListMap;
     private SparseArray<String> mTabTitles;
     private Context mContext;
 
     @Inject
-    public RoomListFragmentPagerAdapter(Context context, FragmentManager fm, SparseArray<List<RoomModel>> roomModelListMap) {
+    public RoomListFragmentPagerAdapter(Context context, FragmentManager fm, TreeMap<Integer, List<RoomModel>> roomModelListMap) {
         super(fm);
         mContext = context;
         mTabTitles = new SparseArray<>();
-        mTabTitles.put(0, mContext.getString(R.string.all_rooms));
+        mTabTitles.put(-1, mContext.getString(R.string.all_rooms));
+
         mTabTitles.put(1, mContext.getString(R.string.first_floor));
         mTabTitles.put(4, mContext.getString(R.string.fourth_floor));
 
@@ -42,15 +45,21 @@ public class RoomListFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
+
             List<RoomModel> roomModelList = new ArrayList<>();
-            for (int i = 0; i < mRoomModelListMap.size(); i++) {
-                int key = mRoomModelListMap.keyAt(i);
+
+            for(Map.Entry<Integer,List<RoomModel>> entry : mRoomModelListMap.entrySet()) {
+                int key = entry.getKey();
                 List<RoomModel> list = mRoomModelListMap.get(key);
                 roomModelList.addAll(list);
             }
+
             return RoomListFragment.newInstance(position, (ArrayList<RoomModel>) roomModelList);
+
         } else {
-            return RoomListFragment.newInstance(position, (ArrayList<RoomModel>) mRoomModelListMap.get(position));
+            int key = (int) mRoomModelListMap.keySet().toArray()[position - 1];
+
+            return RoomListFragment.newInstance(position, (ArrayList<RoomModel>) mRoomModelListMap.get(key));
         }
     }
 
@@ -61,7 +70,11 @@ public class RoomListFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTabTitles.get(position) == null ? "Unknown" :mTabTitles.get(position);
+        if (position == 0) {
+            return mTabTitles.get(-1);
+        }
+        int key = (int) mRoomModelListMap.keySet().toArray()[position - 1];
+        return mTabTitles.get(key) == null ? "Unknown" : mTabTitles.get(key);
     }
 
     public Object instantiateItem(ViewGroup container, int position) {

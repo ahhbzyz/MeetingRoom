@@ -2,7 +2,10 @@ package com.badoo.meetingroom.data.remote.googlecalendarapi;
 
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -20,7 +23,7 @@ class EventInsertApiCall implements Callable<Event>{
         mParams = params;
     }
 
-    static EventInsertApiCall createINSERT(Calendar services, CalendarApiParams params) {
+    static EventInsertApiCall create(Calendar services, CalendarApiParams params) {
         return new EventInsertApiCall(services, params);
     }
 
@@ -30,7 +33,11 @@ class EventInsertApiCall implements Callable<Event>{
     }
 
     private void connectToApi() throws Exception {
-        mResponse = mServices.events().insert(mParams.getCalendarId(), mParams.getEventParams()).execute();
+        Event event = mParams.getEventParams();
+        List<EventAttendee> eventAttendeeList = event.getAttendees() == null ? new ArrayList<>() : event.getAttendees();
+        eventAttendeeList.add(new EventAttendee().setEmail(mParams.getCalendarId()));
+        event.setAttendees(eventAttendeeList);
+        mResponse = mServices.events().insert("primary", mParams.getEventParams()).execute();
     }
 
     @Override

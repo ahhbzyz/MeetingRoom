@@ -103,16 +103,14 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     final long SCROLL_BACK_WAIT_TIME = 10000;
     final long SHOW_LOADING_DIALOG_WAIT_TIME = 1000;
 
-    private static final String ARG_ROOM_ID = "roomId";
-    private static final String ARG_SHOW_ROOM_LIST_ICON = "showRoomListIcon";
-
-
     private RoomStatusHandler mRoomStatusHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         ThemeHelper.onActivityCreateSetTheme(this);
+
         setContentView(R.layout.activity_room_status);
         ButterKnife.bind(this);
         getComponent().inject(this);
@@ -122,6 +120,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         setUpCircleView();
         setUptCircleTimeTextViews();
         setUpHorizontalTimelineView();
+
         mPresenter.getEvents();
     }
 
@@ -143,6 +142,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         mProgressDialog = ImmersiveProgressDialogFragment.newInstance();
         mEventOrganizerDialog = EventCreatorDialogFragment.newInstance();
         mLoadingDataDialogHandler = new Handler();
+
         mRoomStatusHandler = new RoomStatusHandler(this);
     }
 
@@ -162,13 +162,11 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     }
 
     private void setUpHorizontalTimelineView() {
+
         mAdapter.setOnEventClickListener(this);
-        mAdapter.setOnEventRenderFinishListener(new HorizontalTimelineAdapter.OnEventRenderFinishListener() {
-            @Override
-            public void onEventRenderFinish() {
-                updateHorizontalTimeline();
-            }
-        });
+
+        mAdapter.setOnEventRenderFinishListener(() -> updateHorizontalTimeline());
+
         mHorizontalTimelineRv.addItemDecoration(new HorizontalEventItemDecoration(this, R.drawable.divider_horizontal_event));
         mHorizontalTimelineRv.setAdapter(mAdapter);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -185,11 +183,11 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == SCROLL_STATE_IDLE) {
-//                    scrollBackHandler.postDelayed(() -> {
-//                        if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
-//                            mHorizontalTimelineRv.smoothScrollToPosition(0);
-//                        }
-//                    }, SCROLL_BACK_WAIT_TIME);
+                    scrollBackHandler.postDelayed(() -> {
+                        if (mHorizontalTimelineRv.computeHorizontalScrollOffset() != 0) {
+                            mHorizontalTimelineRv.smoothScrollToPosition(0);
+                        }
+                    }, SCROLL_BACK_WAIT_TIME);
                 }
             }
         });
@@ -197,20 +195,19 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     @Override
     public void onClick(View v) {
-        ActivityOptions options = ActivityOptions
-            .makeSceneTransitionAnimation(this, mRoomNameTv, "roomName");
+
         switch (v.getId()) {
             case R.id.img_calendar:
                 Intent calendarIntent = new Intent(RoomStatusActivity.this, EventsCalendarActivity.class);
                 Bundle args = new Bundle();
-                args.putString(ARG_ROOM_ID, Badoo.getCurrentRoom().getId());
-                args.putBoolean(ARG_SHOW_ROOM_LIST_ICON, true);
-                calendarIntent.putExtra(ARG_ROOM_ID, Badoo.getCurrentRoom().getId());
-                startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM, options.toBundle());
+                args.putString(EventsCalendarActivity.ARG_ROOM_ID, Badoo.getCurrentRoom().getId());
+                args.putBoolean(EventsCalendarActivity.ARG_SHOW_ROOM_LIST_ICON, true);
+                calendarIntent.putExtras(args);
+                startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM);
                 break;
             case R.id.img_room:
                 Intent roomListIntent = new Intent(RoomStatusActivity.this, RoomListActivity.class);
-                startActivityForResult(roomListIntent, REQUEST_BOOK_ROOM, options.toBundle());
+                startActivityForResult(roomListIntent, REQUEST_BOOK_ROOM);
                 break;
 
             case R.id.img_night_mode:
@@ -290,19 +287,20 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     }
 
     @Override
-    public void updateRecyclerView() {
-        mAdapter.notifyDataSetChanged();
+    public void bookRoomFrom(int position, ArrayList<EventModel> mEventModelList) {
+        Intent intent = new Intent(this, RoomBookingActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(RoomBookingActivity.ARG_POSITION, position);
+        bundle.putParcelableArrayList(RoomBookingActivity.ARG_ROOM_LIST, mEventModelList);
+        bundle.putString(RoomBookingActivity.ARG_ROOM_ID, Badoo.getCurrentRoom().getId());
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivityForResult(intent, REQUEST_BOOK_ROOM);
     }
 
     @Override
-    public void onAvailableEventClicked(int position, ArrayList<EventModel> eventModelList) {
-        Intent intent = new Intent(this, RoomBookingActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("position", position);
-        bundle.putParcelableArrayList("eventModelList", eventModelList);
-        intent.putExtra("bookingRoom", bundle);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivityForResult(intent, REQUEST_BOOK_ROOM);
+    public void onAvailableEventClick(int position, List<EventModel> eventModelList) {
+        bookRoomFrom(position, (ArrayList<EventModel>) eventModelList);
     }
 
     @Override
@@ -311,18 +309,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
             mEventOrganizerDialog.setEvent(eventModel);
             mEventOrganizerDialog.show(this);
         }
-    }
-
-    @Override
-    public void bookRoom(long startTime, long endTime) {
-        Intent intent = new Intent(this, RoomBookingActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putLong("startTime", startTime);
-        bundle.putLong("endTime", endTime);
-        intent.putExtra("timePeriod", bundle);
-        ActivityOptions options = ActivityOptions
-            .makeSceneTransitionAnimation(this, mRoomNameTv, "roomName");
-        startActivityForResult(intent, REQUEST_BOOK_ROOM, options.toBundle());
     }
 
     @Override

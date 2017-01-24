@@ -75,7 +75,7 @@ public class GooglePeopleApiImpl implements GooglePeopleApi {
     }
 
     private List<Person> getPersonListFromApi(People services) throws Exception {
-        return GetPeopleApiCall.createGET(services).requestSyncCall();
+        return GetPeopleApiCall.create(services).requestSyncCall();
     }
 
     private Person getPersonFromApi(People services, String personId) throws Exception {

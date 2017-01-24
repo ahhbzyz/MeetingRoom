@@ -69,7 +69,7 @@
 
             <ImageView
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_calendar_view"
+                android:src="@drawable/common_google_signin_btn_icon_light"
                 android:id="@+id/img_night_mode"
                 android:layout_gravity="end"
                 android:layout_marginEnd="@dimen/tool_bar_room_icon_margin_right"

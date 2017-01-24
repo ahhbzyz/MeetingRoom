@@ -10,6 +10,7 @@ import com.badoo.meetingroom.presentation.view.view.RoomListView;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -41,7 +42,7 @@ public class RoomListPresenterImpl implements RoomsPresenter {
     }
 
 
-    private final class GetRoomListSubscriber extends DefaultSubscriber<SparseArray<List<RoomModel>>> {
+    private final class GetRoomListSubscriber extends DefaultSubscriber<TreeMap<Integer, List<RoomModel>>> {
         @Override
         public void onStart() {
             super.onStart();
@@ -49,7 +50,7 @@ public class RoomListPresenterImpl implements RoomsPresenter {
         }
 
         @Override
-        public void onNext(SparseArray<List<RoomModel>> roomModelListMap) {
+        public void onNext(TreeMap<Integer, List<RoomModel>> roomModelListMap) {
             super.onNext(roomModelListMap);
 
             if (roomModelListMap == null) {

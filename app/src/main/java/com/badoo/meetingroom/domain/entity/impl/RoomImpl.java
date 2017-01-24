@@ -11,7 +11,6 @@ public class RoomImpl implements Room {
     private String id;
     private String name;
     private int floor;
-    private int status;
     private int capacity;
     private boolean isTvSupported;
     private boolean isVideoConferenceSupported;
@@ -19,7 +18,6 @@ public class RoomImpl implements Room {
     private boolean isStationerySupported;
 
     public RoomImpl() {
-
     }
 
     @Override
@@ -50,16 +48,6 @@ public class RoomImpl implements Room {
     @Override
     public void setFloor(int floor) {
         this.floor = floor;
-    }
-
-    @Override
-    public int getStatus() {
-        return status;
-    }
-
-    @Override
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     @Override

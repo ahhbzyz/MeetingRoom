@@ -29,6 +29,7 @@ public class GetEvents extends UseCase<List<EventModel>> {
         mEventModelMapper = eventModelMapper;
     }
 
+    // Todo to execute method
     public GetEvents init(CalendarApiParams params, long startTime, long endTime) {
         mEventModelMapper.setEventStartTime(startTime);
         mEventModelMapper.setEventEndTime(endTime);

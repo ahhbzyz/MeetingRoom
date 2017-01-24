@@ -34,7 +34,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class DailyEventsFragment extends BaseFragment implements DailyEventsView, DailyEventsAdapter.OnEventClickListener {
 
-    private static final int REQUEST_AUTHORIZATION = 1001;
     private static final int REQUEST_BOOK_ROOM = 1000;
 
     @Inject DailyEventsPresenter mPresenter;
@@ -77,10 +76,12 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_daily_events, container, false);
+
         mEventOrganizerDialog = EventCreatorDialogFragment.newInstance();
         ButterKnife.bind(this, view);
         setUpEventsRecyclerView();
         mPresenter.setView(this);
+
         mPresenter.getEvents(roomId);
         return view;
     }
@@ -93,8 +94,11 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     @Override
     public void renderDailyEvents(List<EventModel> roomEventModelList) {
-        mDailyEventsRv.addItemDecoration(new VerticalEventItemDecoration(getActivity(), R.drawable.divider_vertical_event, roomEventModelList));
+
+        mDailyEventsRv.addItemDecoration(new VerticalEventItemDecoration(getActivity().getApplicationContext(), R.drawable.divider_vertical_event, roomEventModelList));
+
         mAdapter.setDailyEventList(roomEventModelList);
+
         mAdapter.setOnEventRenderFinishListener(() -> {
 
             if (mPage == 0) {
@@ -120,9 +124,10 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public void onAvailableEventClicked(int position, ArrayList<EventModel> eventModelList) {
         Intent intent = new Intent(getActivity(), RoomBookingActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("position", position);
-        bundle.putParcelableArrayList("eventModelList", eventModelList);
-        intent.putExtra("bookingRoom", bundle);
+        bundle.putInt(RoomBookingActivity.ARG_POSITION, position);
+        bundle.putParcelableArrayList(RoomBookingActivity.ARG_ROOM_LIST, eventModelList);
+        bundle.putString(RoomBookingActivity.ARG_ROOM_ID, roomId);
+        intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivityForResult(intent, REQUEST_BOOK_ROOM);
     }
@@ -164,11 +169,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_AUTHORIZATION:
-                if (resultCode == RESULT_OK) {
-                    mPresenter.getEvents(roomId);
-                }
-                break;
             case REQUEST_BOOK_ROOM:
                 if (resultCode == RESULT_OK) {
                     mPresenter.getEvents(roomId);
@@ -181,11 +181,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
 
     public DailyEventsPresenter getPresenter() {
         return mPresenter;
-    }
-
-    @Override
-    public void handlerUserRecoverableAuth(UserRecoverableAuthIOException e) {
-        startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
     }
 
     @Override

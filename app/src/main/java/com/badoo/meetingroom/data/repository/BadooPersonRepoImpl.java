@@ -26,8 +26,8 @@ public class BadooPersonRepoImpl implements BadooPersonRepo {
 
     @Inject
     BadooPersonRepoImpl(BadooPersonMapper badooPersonDataMapper, PersonStoreFactory personDataStoreFactory) {
-        this.mBadooPersonDataMapper = badooPersonDataMapper;
-        this.mPersonDataStore = personDataStoreFactory.createRemotePersonStore();
+        mBadooPersonDataMapper = badooPersonDataMapper;
+        mPersonDataStore = personDataStoreFactory.createRemotePersonStore();
     }
 
     @Override

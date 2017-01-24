@@ -13,9 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,8 +46,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RoomBookingActivity extends BaseActivity implements RoomBookingView {
-
-    private static final int REQUEST_AUTHORIZATION = 1001;
 
     @Inject
     RoomBookingPresenter mPresenter;
@@ -81,7 +81,13 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     private boolean hasSlots;
     private String mSelectedEmail;
+    private String mRoomId;
     LinearLayoutManagerWithSmoothScroller mLayoutManager;
+
+    public static final String ARG_ROOM_LIST = "roomList";
+    public static final String ARG_POSITION = "position";
+    public static final String ARG_ROOM_ID = "roomId";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +116,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
         mBookingDateTv.setTypeface(mStolzlRegularTypeface);
         mBookingPeriodTv.setTypeface(mStolzlRegularTypeface);
 
-        mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mSelectedEmail));
+        mBookBtn.setOnClickListener(v -> mPresenter.bookRoom(mSelectedEmail, mRoomId));
         mBookBtn.setClickable(false);
         mBookBtn.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.btn_rounded_book_disabled));
 
@@ -124,8 +130,9 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     public void getBundleData() {
-        ArrayList<EventModel> eventModelList = getIntent().getBundleExtra("bookingRoom").getParcelableArrayList("eventModelList");
-        int position = getIntent().getBundleExtra("bookingRoom").getInt("position");
+        ArrayList<EventModel> eventModelList = getIntent().getExtras().getParcelableArrayList(ARG_ROOM_LIST);
+        int position = getIntent().getExtras().getInt(ARG_POSITION);
+        mRoomId = getIntent().getExtras().getString(ARG_ROOM_ID);
         mPresenter.setTimeSlotList(position, eventModelList);
         mPresenter.getContactList();
     }
@@ -163,17 +170,17 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             }
         });
 
-//        mAutoCompleteTv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-//                    if (mSelectedEmail != null) {
-//                        mPresenter.bookRoom(mSelectedEmail);
-//                    }
-//                }
-//                return false;
-//            }
-//        });
+        mAutoCompleteTv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    if (mSelectedEmail != null) {
+                        mPresenter.bookRoom(mSelectedEmail, mRoomId);
+                    }
+                }
+                return false;
+            }
+        });
 
         mAutoCompleteTv.setOnItemClickListener((parent, view, position, id) -> {
             mSelectedEmail = badooPersonModelList.get(position).getEmailAddress();
@@ -240,22 +247,18 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     @Override
-    public void showRecoverableAuth(UserRecoverableAuthIOException e) {
-        startActivityForResult(e.getIntent(), REQUEST_AUTHORIZATION);
-    }
-
-    @Override
     public void showBookingSuccessful(long value) {
         Intent returnIntent = new Intent();
         returnIntent.putExtra("startTime", value);
         setResult(Activity.RESULT_OK, returnIntent);
-        finishAfterTransition();
+        finish();
+        overridePendingTransition(0, 0);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finishAfterTransition();
+            finish();
             overridePendingTransition(0, 0);
             return true;
         }
@@ -278,20 +281,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     public void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_AUTHORIZATION:
-                if (resultCode == RESULT_OK) {
-                    mPresenter.bookRoom(mAutoCompleteTv.getText().toString().trim());
-                }
-                break;
-        }
-    }
-
 
     @Override
     public Context context() {

@@ -15,7 +15,7 @@ public interface RoomBookingPresenter extends Presenter {
 
     void setView(RoomBookingView roomBookingView);
 
-    void bookRoom(String organizer);
+    void bookRoom(String organizer, String roomId);
 
     void setTimeSlotList(int position, List<EventModel> eventModelList);
 
