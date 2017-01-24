@@ -1,6 +1,6 @@
 package com.badoo.meetingroom.presentation.presenter.intf;
 
-import com.badoo.meetingroom.presentation.view.view.RoomsView;
+import com.badoo.meetingroom.presentation.view.view.RoomListView;
 
 /**
  * Created by zhangyaozhong on 22/01/2017.
@@ -8,5 +8,5 @@ import com.badoo.meetingroom.presentation.view.view.RoomsView;
 
 public interface RoomsPresenter extends Presenter {
     void getRoomList();
-    void setView(RoomsView roomsView);
+    void setView(RoomListView roomListView);
 }

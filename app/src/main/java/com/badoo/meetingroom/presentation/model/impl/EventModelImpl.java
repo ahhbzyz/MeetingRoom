@@ -323,7 +323,9 @@ public class EventModelImpl implements EventModel, Parcelable {
         this.isFastBooking = in.readByte() != 0;
         this.timeStamps = new ArrayList<>();
         in.readList(this.timeStamps, Long.class.getClassLoader());
+
     }
+
 
     public static final Creator<EventModel> CREATOR = new Creator<EventModel>() {
         @Override

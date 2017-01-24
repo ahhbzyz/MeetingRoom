@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
@@ -32,6 +33,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     private List<RoomModel> mRoomList;
     private Context mContext;
     private int lastPosition = -1;
+    private final float IMG_DISABLE_ALPHA = .3f;
 
     public void setRoomList(List<RoomModel> roomList) {
         mRoomList = roomList;
@@ -43,6 +45,20 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         @BindView(R.id.tv_remaining_time) TextView mRemainingTimeTv;
         @BindView(R.id.tv_room_name) TextView mRoomNameTv;
         @BindView(R.id.tv_room_info) TextView mRoomInfo;
+        @BindView(R.id.tv_room_capacity) TextView mRoomCapacityTv;
+
+        @BindView(R.id.img_tv)
+        ImageView mTvImg;
+
+        @BindView(R.id.img_video)
+        ImageView mVideoImg;
+
+        @BindView(R.id.img_beverage)
+        ImageView mBeverageImg;
+
+        @BindView(R.id.img_stationery)
+        ImageView mStationeryImg;
+
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -64,50 +80,72 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         RoomModel roomModel = mRoomList.get(position);
+
         holder.mRoomNameTv.setText(roomModel.getName());
 
-        if (roomModel.getCurrentEvent() != null) {
+        holder.mRoomCapacityTv.setText(String.valueOf(roomModel.getCapacity()));
 
-            EventModel currentEvent = roomModel.getCurrentEvent();
+        if (roomModel.isTvSupported()) {
+            holder.mTvImg.setAlpha(1f);
+        } else {
+            holder.mTvImg.setAlpha(IMG_DISABLE_ALPHA);
+        }
 
-            long remainingTime = currentEvent.getRemainingTimeUntilNextBusyEvent();
+        if (roomModel.isVideoConferenceSupported()) {
+            holder.mVideoImg.setAlpha(1f);
+        } else {
+            holder.mVideoImg.setAlpha(IMG_DISABLE_ALPHA);
+        }
 
-            long remainingHours = TimeUnit.MILLISECONDS.toHours(remainingTime);
+
+        if (roomModel.isBeverageAllowed()) {
+            holder.mBeverageImg.setAlpha(1f);
+        } else {
+            holder.mBeverageImg.setAlpha(IMG_DISABLE_ALPHA);
+        }
+
+        if (roomModel.isStationerySupported()) {
+            holder.mStationeryImg.setAlpha(1f);
+        } else {
+            holder.mStationeryImg.setAlpha(IMG_DISABLE_ALPHA);
+        }
+
+
+        if (roomModel.getCurrentEvent() == null) {
+            return;
+        }
+
+        EventModel currentEvent = roomModel.getCurrentEvent();
+
+        long remainingTime = currentEvent.getRemainingTimeUntilNextBusyEvent();
+
+        long remainingHours = TimeUnit.MILLISECONDS.toHours(remainingTime);
+
+        if (remainingHours >= 2) {
+            holder.mRemainingTimeTv.setText(mContext.getString(R.string.two_hour_plus));
+        } else {
+
+            holder.mRemainingTimeTv.setText(TimeHelper.formatMillisInMin(remainingTime + TimeHelper.min2Millis(1)));
+        }
+
+        if (currentEvent.isAvailable()) {
+
+            holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_available));
 
             if (remainingHours >= 2) {
-                holder.mRemainingTimeTv.setText(mContext.getString(R.string.two_hour_plus));
+                holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + mContext.getString(R.string.two_hour_plus));
             } else {
-                holder.mRemainingTimeTv.setText(TimeHelper.formatMillisInMin(remainingTime));
+                String remainingMins = (TimeHelper.formatMillisInMin(remainingTime + TimeHelper.min2Millis(1)));
+                holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + remainingMins + " min");
             }
-
-            if (currentEvent.isAvailable()) {
-
-                holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_available));
-
-                if (remainingHours >= 2) {
-                    holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + mContext.getString(R.string.two_hour_plus));
-                } else {
-                    holder.mRoomInfo.setText(mContext.getString(R.string.available_for) + " " + TimeHelper.formatMillisInMin(remainingTime) + " min");
-                }
-            } else {
-                holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_busy));
-                holder.mRoomInfo.setText(mContext.getString(R.string.busy_until) + " " + currentEvent.getEndTimeInText());
-            }
-        }
-        //setAnimation(holder.itemView, position);
-    }
-
-    private void setAnimation(View viewToAnimate, int position)
-    {
-        // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition)
-        {
-            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
-            viewToAnimate.startAnimation(animation);
-            lastPosition = position;
+        } else {
+            holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_busy));
+            holder.mRoomInfo.setText(mContext.getString(R.string.busy_until) + " " + currentEvent.getEndTimeInText());
         }
     }
+
 
     @Override
     public int getItemCount() {

@@ -5,6 +5,8 @@ import android.os.Parcel;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 
+import java.util.List;
+
 /**
  * Created by zhangyaozhong on 16/01/2017.
  */
@@ -20,7 +22,7 @@ public class RoomModelImpl implements RoomModel {
     private boolean isVideoConferenceSupported;
     private boolean isBeverageAllowed;
     private boolean isStationerySupported;
-    private EventModel currentEvent;
+    private List<EventModel> eventModelList;
 
     public RoomModelImpl() {
 
@@ -36,12 +38,28 @@ public class RoomModelImpl implements RoomModel {
         this.id = id;
     }
 
-    public EventModel getCurrentEvent() {
-        return currentEvent;
+    @Override
+    public List<EventModel> getEventModelList() {
+        return eventModelList;
     }
 
-    public void setCurrentEvent(EventModel currentEvent) {
-        this.currentEvent = currentEvent;
+    @Override
+    public void setEventModelList(List<EventModel> eventModelList) {
+        this.eventModelList = eventModelList;
+    }
+
+    @Override
+    public EventModel getCurrentEvent() {
+        if (getEventModelList() == null) {
+            return null;
+        }
+
+        for (EventModel eventModel : getEventModelList()) {
+            if (eventModel.isProcessing()) {
+                return eventModel;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -139,10 +157,10 @@ public class RoomModelImpl implements RoomModel {
         dest.writeByte(this.isVideoConferenceSupported ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isBeverageAllowed ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isStationerySupported ? (byte) 1 : (byte) 0);
-        dest.writeParcelable(this.currentEvent, flags);
+        dest.writeTypedList(this.eventModelList);
     }
 
-    RoomModelImpl(Parcel in) {
+    private RoomModelImpl(Parcel in) {
         this.id = in.readString();
         this.name = in.readString();
         this.floor = in.readInt();
@@ -152,7 +170,7 @@ public class RoomModelImpl implements RoomModel {
         this.isVideoConferenceSupported = in.readByte() != 0;
         this.isBeverageAllowed = in.readByte() != 0;
         this.isStationerySupported = in.readByte() != 0;
-        this.currentEvent = in.readParcelable(EventModel.class.getClassLoader());
+        this.eventModelList = in.createTypedArrayList(EventModelImpl.CREATOR);
     }
 
     public static final Creator<RoomModelImpl> CREATOR = new Creator<RoomModelImpl>() {

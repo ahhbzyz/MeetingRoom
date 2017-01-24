@@ -16,8 +16,8 @@
         android:textColor="@android:color/white"
         android:textSize="22sp"
         android:textStyle="normal|bold"
-        android:layout_width="64dp"
-        android:layout_height="64dp" />
+        android:layout_width="@dimen/item_room_remaining_time_text_view_width"
+        android:layout_height="@dimen/item_room_remaining_time_text_view_height" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -119,10 +119,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_room_capacity"
                 android:textSize="@dimen/item_room_capacity_text_size"
-                android:layout_weight="1"
-                android:layout_toLeftOf="@+id/layout_room_availabilities"
+                android:layout_toStartOf="@+id/layout_room_availabilities"
                 android:layout_centerVertical="true"
-                android:textColor="@color/item_room_capacity_text_size" />
+                android:textColor="@color/item_room_capacity_text_size"
+                android:layout_marginEnd="@dimen/item_room_capacity_margin_right" />
 
         </RelativeLayout>
 

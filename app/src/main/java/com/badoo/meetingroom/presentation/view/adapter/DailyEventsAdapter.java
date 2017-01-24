@@ -105,7 +105,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     }
 
 
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
@@ -147,29 +146,40 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         if (viewHeight < holder.mEventPeriodTv.getMeasuredHeight() * 3 + mContext.getResources().getDimension(R.dimen.item_vertical_event_text_views_top_padding)) {
             holder.mEventTextViewsLayout.setOrientation(LinearLayout.HORIZONTAL);
             holder.mEventTitle.setVisibility(View.GONE);
-         }
+        }
 
         // Set Text
-        if(eventModel.isFastBooking()) {
+        if (eventModel.isFastBooking()) {
             holder.mEventTitle.setText(mContext.getString(R.string.fast_booking));
             holder.mEventCreatorTv.setText(mContext.getString(R.string.no_name_available));
-        } else {
-            holder.mEventTitle.setText(eventModel.getEventTitle());
+        }
+        else {
+
+            if (eventModel.getEventTitle() != null) {
+                holder.mEventTitle.setText(eventModel.getEventTitle());
+            }
+            else {
+                holder.mEventTitle.setVisibility(View.GONE);
+            }
+
             String creatorName = eventModel.getCreatorName();
             String creatorEmail = eventModel.getCreatorEmailAddress();
 
             if (creatorName != null && creatorEmail != null) {
                 holder.mEventCreatorTv.setText(creatorName + " (" + creatorEmail + ")");
-            } else if (creatorName != null) {
+            }
+            else if (creatorName != null) {
                 holder.mEventCreatorTv.setText(creatorName);
-            } else {
+            }
+            else {
                 holder.mEventCreatorTv.setText(creatorEmail);
             }
         }
 
         if (eventModel.isAvailable()) {
             holder.mEventPeriodTv.setText("");
-        } else {
+        }
+        else {
             holder.mEventPeriodTv.setText(eventModel.getDurationInText());
         }
 
@@ -180,7 +190,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 holder.mExpiredEventTopDivider.setVisibility(View.VISIBLE);
                 holder.mExpiredEventBottomDivider.setVisibility(View.VISIBLE);
                 holder.mTimelineBar.setBackgroundColor(eventModel.getEventExpiredColor());
-            } else {
+            }
+            else {
                 holder.mTimelineBar.setBackgroundColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_expired_time_line_bar));
             }
 
@@ -292,7 +303,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 if (this.mOnEventClickListener != null) {
                     if (eventModel.isAvailable()) {
                         mOnEventClickListener.onAvailableEventClicked(position, mEventModelList);
-                    } else {
+                    }
+                    else {
                         mOnEventClickListener.onBusyEventClicked(eventModel);
                     }
                 }
@@ -312,7 +324,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
         List<ItemView> itemViewList = new ArrayList<>();
 
-        for (int i = 0; i < eventModelList.size(); i ++) {
+        for (int i = 0; i < eventModelList.size(); i++) {
 
             EventModel eventModel = eventModelList.get(i);
 
@@ -364,7 +376,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             if (position == getItemCount() - 1 && i == eventModel.getTimeStamps().size() - 1) {
                 timestampTv.setLayoutParams(params);
                 timestampTv.setY(topMargin);
-            } else {
+            }
+            else {
                 params.setMargins(0, (int) topMargin, 0, 0);
                 timestampTv.setLayoutParams(params);
             }
@@ -387,7 +400,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             if (TimeHelper.getMin(ts) == 0) {
                 if (ts == eventModel.getStartTime() && eventModel.isBusy()) {
 
-                } else {
+                }
+                else {
                     View view = new View(mContext);
                     view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_hourly_divider_color));
                     RelativeLayout.LayoutParams dividerParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mContext.getResources().getDimension(R.dimen.item_vertical_event_hourly_divider_height));
@@ -410,10 +424,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         private TextView hiddenTextView;
         private List<View> dividerList;
 
-        ItemView() {
-
-        }
-
         float getViewHeight() {
             return viewHeight;
         }
@@ -421,7 +431,6 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         void setViewHeight(float viewHeight) {
             this.viewHeight = viewHeight;
         }
-
 
         List<TextView> getTextViewList() {
             return textViewList;
@@ -457,12 +466,14 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
     public interface OnEventRenderFinishListener {
         void onEventRenderFinish();
     }
+
     public void setOnItemClickListener(OnEventClickListener onEventClickListener) {
         this.mOnEventClickListener = onEventClickListener;
     }
 
     public interface OnEventClickListener {
         void onAvailableEventClicked(int position, ArrayList<EventModel> eventModelList);
+
         void onBusyEventClicked(EventModel eventModel);
     }
 

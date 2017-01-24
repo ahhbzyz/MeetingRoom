@@ -36,8 +36,6 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
     private float SLOT_WIDTH_WITH_DASHES;
 
     private float MIN_AVAILABLE_SLOT_WIDTH = 125;
-
-
     private float AVAILABLE_SLOT_WIDTH = 250;
 
 

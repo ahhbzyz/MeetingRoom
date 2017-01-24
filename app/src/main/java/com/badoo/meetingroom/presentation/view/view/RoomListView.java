@@ -1,20 +1,15 @@
 package com.badoo.meetingroom.presentation.view.view;
 
+import android.util.SparseArray;
+
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 
 import java.util.List;
 
 /**
- * Created by zhangyaozhong on 05/01/2017.
+ * Created by zhangyaozhong on 22/01/2017.
  */
 
 public interface RoomListView extends LoadDataView {
-
-    int getPage();
-
-    void renderRoomListInView(List<RoomModel> mRoomList);
-
-    void updateRoomList();
-
-    void notifyItemChange(int position);
+    void setUpViewPager(SparseArray<List<RoomModel>> roomModelListMap);
 }

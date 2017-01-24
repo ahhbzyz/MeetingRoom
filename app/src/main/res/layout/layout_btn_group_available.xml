@@ -20,6 +20,7 @@
         android:background="@drawable/btn_circle_available"
         app:topText="10"
         app:bottomText="min"
+
         android:layout_marginStart="@dimen/circle_button_left_margin"
         android:layout_marginEnd="@dimen/circle_button_left_margin"
         android:id="@+id/btn_ten_min" />
@@ -30,6 +31,7 @@
         android:background="@drawable/btn_circle_available"
         app:topText="15"
         app:bottomText="min"
+
         android:id="@+id/btn_fifteen_min" />
 
 </LinearLayout>

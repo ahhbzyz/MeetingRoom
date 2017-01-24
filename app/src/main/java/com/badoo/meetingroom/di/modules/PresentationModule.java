@@ -5,9 +5,9 @@ import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImp
 import com.badoo.meetingroom.presentation.presenter.impl.EventsCalendarPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.MainPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
-import com.badoo.meetingroom.presentation.presenter.impl.RoomListPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.impl.RoomListFragmentPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomStatusPresenterImpl;
-import com.badoo.meetingroom.presentation.presenter.impl.RoomsPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.impl.RoomListPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.EventsCalendarPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.MainPresenter;
@@ -60,13 +60,13 @@ public class PresentationModule {
 
     @Provides
     @PerActivity
-    RoomsPresenter provideRoomsPresenter(RoomsPresenterImpl roomsPresenterImpl) {
-        return roomsPresenterImpl;
+    RoomsPresenter provideRoomsPresenter(RoomListPresenterImpl roomListPresenterImpl) {
+        return roomListPresenterImpl;
     }
 
     @Provides
     @PerActivity
-    RoomListPresenter provideRoomListPresenterImpl(RoomListPresenterImpl roomListPresenterImpl) {
-        return roomListPresenterImpl;
+    RoomListPresenter provideRoomListPresenterImpl(RoomListFragmentPresenterImpl roomListFragmentPresenterImpl) {
+        return roomListFragmentPresenterImpl;
     }
 }

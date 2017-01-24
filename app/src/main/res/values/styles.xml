@@ -1,15 +1,36 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@android:color/white</item>
-        <item name="colorPrimaryDark">@android:color/white</item>
-        <item name="colorAccent">@color/colorAccent</item>
 
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:overScrollMode">never</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="AppTheme.Light" parent="AppTheme">
+        <item name="backgroundColor">@color/backgroundColor</item>
+        <item name="textColorPrimary">@color/textColorPrimary</item>
+        <item name="textColorSecondary">@color/textColorSecondary</item>
+        <item name="statusBarCurrentDateTime">@color/statusBarCurrentDateTime</item>
+        <item name="fastBooking">@color/fastBooking</item>
+        <item name="timeSlotExpired">@color/timeSlotExpired</item>
+        <item name="roomStatusAvailable">@color/roomStatusAvailable</item>
+        <item name="roomStatusBusy">@color/roomStatusBusy</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="AppTheme">
+        <item name="backgroundColor">@color/backgroundColorInverse</item>
+        <item name="textColorPrimary">@color/textColorPrimaryInverse</item>
+        <item name="textColorSecondary">@color/textColorSecondaryInverse</item>
+        <item name="statusBarCurrentDateTime">@color/statusBarCurrentDateTimeInverse</item>
+        <item name="fastBooking">@color/fastBookingInverse</item>
+        <item name="timeSlotExpired">@color/timeSlotExpiredInverse</item>
+        <item name="roomStatusAvailable">@color/roomStatusAvailableInverse</item>
+        <item name="roomStatusBusy">@color/roomStatusBusyInverse</item>
     </style>
 
     <style name="MyCalendarTabLayout" parent="Widget.Design.TabLayout">

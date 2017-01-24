@@ -105,6 +105,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme_Dark);
         setContentView(R.layout.activity_room_status);
         ButterKnife.bind(this);
         getComponent().inject(this);
@@ -196,7 +197,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
                 startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM, options.toBundle());
                 break;
             case R.id.img_room:
-                Intent roomListIntent = new Intent(RoomStatusActivity.this, RoomsActivity.class);
+                Intent roomListIntent = new Intent(RoomStatusActivity.this, RoomListActivity.class);
                 startActivityForResult(roomListIntent, REQUEST_BOOK_ROOM, options.toBundle());
                 break;
             default:

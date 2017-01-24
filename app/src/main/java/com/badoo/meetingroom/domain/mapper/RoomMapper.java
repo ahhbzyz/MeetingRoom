@@ -6,6 +6,8 @@ import com.google.api.services.calendar.model.CalendarListEntry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.inject.Inject;
 
@@ -31,6 +33,25 @@ public class RoomMapper {
         String description = entry.getDescription();
         // tparse json
         room.setFloor(1);
+        Random rand = new Random();
+        int randomNum = rand.nextInt(8 - 1 + 1) + 1;
+        boolean flag = randomNum % 2 == 0;
+        room.setStationerySupported(flag);
+
+        room.setCapacity(randomNum);
+
+        randomNum = rand.nextInt(2 - 1 + 1) + 1;
+        flag = randomNum % 2 == 0;
+        room.setBeverageAllowed(flag);
+
+        randomNum = rand.nextInt(3 - 1 + 1) + 1;
+        flag = randomNum % 2 == 0;
+        room.setTvSupported(flag);
+
+        randomNum = rand.nextInt(7 - 1 + 1) + 1;
+        flag = randomNum % 2 == 0;
+        room.setVideoConferenceSupported(flag);
+
         return room;
     }
 

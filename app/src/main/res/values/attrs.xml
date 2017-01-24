@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="currTimeTextSize" format="float"/>
-    <attr name="currTimeTextColor" format="color"/>
+    <attr name="backgroundColor" format="color"/>
+    <attr name="textColorPrimary" format="color"/>
+    <attr name="textColorSecondary" format="color"/>
+    <attr name="statusBarCurrentDateTime" format="color"/>
+    <attr name="fastBooking" format="color"/>
+    <attr name="timeSlotExpired" format="color"/>
+    <attr name="roomStatusAvailable" format="color"/>
+    <attr name="roomStatusBusy" format="color"/>
+    <attr name="roomStatusBusyBg" format="color"/>
 
-    <attr name="timelineMarkColor" format="color"/>
-    <attr name="timelineMarkWidth" format="float"/>
-
-    <attr name="pastTimeSlotColor" format="color"/>
-
-    <attr name="timelineStrokeWidth" format="float"/>
 
     <declare-styleable name="CircleView">
 
@@ -33,30 +34,6 @@
         <attr name="circleBtnRadius" format="float"/>
     </declare-styleable>
 
-    <declare-styleable name="HorizontalTimelineView">
-
-        <attr name="timelineStrokeWidth"/>
-        <attr name="timelineHeight" format="float"/>
-
-        <attr name="currTimeTextColor" />
-        <attr name="currTimeTextSize" />
-
-        <attr name="slotTimeTextColor" format="color"/>
-        <attr name="slotTimeTextSize" format="float"/>
-
-        <attr name="timelineMarkCx" format="float"/>
-        <attr name="timelineMarkColor" />
-        <attr name="timelineMarkWidth" />
-
-        <attr name="movedTimelineMarkColor" format="color"/>
-
-        <attr name="pastTimeSlotColor"/>
-
-        <attr name="gapTimeSlotColor" format="color"/>
-        <attr name="gapTimeSlotWidth" format="float"/>
-    </declare-styleable>
-
-
     <declare-styleable name="TwoLineTextButton">
 
         <attr name="topTextSize" format="float"/>
@@ -68,23 +45,6 @@
         <attr name="bottomText" format="string"/>
     </declare-styleable>
 
-
-    <declare-styleable name="DayView">
-        <attr name="timeTextSize" format="float"/>
-        <attr name="timeTextColor" format="color"/>
-
-        <attr name="currTimeTextSize" />
-        <attr name="currTimeTextColor"/>
-
-        <attr name="timelineMarkColor"/>
-        <attr name="timelineMarkWidth"/>
-
-        <attr name="pastTimeSlotColor"/>
-
-        <attr name="timelineStrokeWidth"/>
-
-        <attr name="busyBgColor" format="color"/>
-    </declare-styleable>
 
     <declare-styleable name="BallPulseLoadingView">
         <attr name="minWidth" format="dimension" />

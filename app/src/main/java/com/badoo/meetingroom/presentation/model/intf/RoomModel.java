@@ -2,6 +2,8 @@ package com.badoo.meetingroom.presentation.model.intf;
 
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by zhangyaozhong on 16/01/2017.
  */
@@ -11,9 +13,11 @@ public interface RoomModel extends Parcelable {
 
     void setId(String id);
 
-    EventModel getCurrentEvent();
+    List<EventModel> getEventModelList();
 
-    void setCurrentEvent(EventModel currentEvent);
+    void setEventModelList(List<EventModel> eventModelList);
+
+    EventModel getCurrentEvent();
 
     String getName();
 

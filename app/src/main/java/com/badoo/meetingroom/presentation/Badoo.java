@@ -14,7 +14,6 @@ public class Badoo {
 
     private static RoomModel ROOM;
 
-    // default public constructor
     public static RoomModel getCurrentRoom() {
         return ROOM;
     }

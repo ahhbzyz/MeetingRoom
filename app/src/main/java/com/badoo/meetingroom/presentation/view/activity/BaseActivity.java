@@ -50,6 +50,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         setImmersiveMode();
+        onSystemTimeRefresh();
     }
 
     private ActivityModule getActivityModule() {

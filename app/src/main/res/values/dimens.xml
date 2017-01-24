@@ -125,5 +125,11 @@
 
     <dimen name="circle_view_timer_info_layout_margin_top">150dp</dimen>
     <dimen name="circle_view_btn_margin_top">8dp</dimen>
+    <dimen name="item_room_capacity_margin_right">8dp</dimen>
+    <dimen name="item_room_remaining_time_text_view_width">64dp</dimen>
+    <dimen name="item_room_remaining_time_text_view_height">64dp</dimen>
+    <dimen name="fast_booking_text_size">30sp</dimen>
+    <dimen name="item_horizontal_event_current_time_text_size">16sp</dimen>
+    <dimen name="item_horizontal_event_timeline_bar_height">12dp</dimen>
 
 </resources>

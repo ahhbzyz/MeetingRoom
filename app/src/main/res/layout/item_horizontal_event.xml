@@ -19,7 +19,7 @@
     <ImageView
         android:id="@+id/img_timeline_bar"
         android:layout_width="match_parent"
-        android:layout_height="12dp"
+        android:layout_height="@dimen/item_horizontal_event_timeline_bar_height"
         android:background="@color/timeSlotExpired"
         android:layout_centerVertical="true" />
 
@@ -34,9 +34,9 @@
             android:maxLines="1"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="12:00"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:text="@string/fake_time"
+            android:textColor="?attr/textColorPrimary"
+            android:textSize="@dimen/item_horizontal_event_current_time_text_size"
             android:textStyle="normal|bold"
             android:gravity="center_vertical|center_horizontal" />
 
@@ -44,7 +44,7 @@
             android:id="@+id/view_time_mark"
             android:layout_width="@dimen/horizontal_timeline_current_time_mark_width"
             android:layout_height="wrap_content"
-            android:background="@android:color/black" />
+            android:background="?attr/textColorPrimary" />
 
     </LinearLayout>
 

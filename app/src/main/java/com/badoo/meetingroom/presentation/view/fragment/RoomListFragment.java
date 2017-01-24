@@ -13,7 +13,7 @@ import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.RoomListAdapter;
-import com.badoo.meetingroom.presentation.view.view.RoomListView;
+import com.badoo.meetingroom.presentation.view.view.RoomListFragmentView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +24,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class RoomListFragment extends BaseFragment implements RoomListView{
+public class RoomListFragment extends BaseFragment implements RoomListFragmentView {
 
     @Inject RoomListAdapter mAdapter;
     @Inject RoomListPresenter mPresenter;
 
     @BindView(R.id.rv_room_list) RecyclerView mRecyclerView;
-    @BindView(R.id.pb_loading_room_list) ProgressBar mLoadingRoomListPb;
+    @BindView(R.id.pb_loading_room_list_events) ProgressBar mLoadingRoomListEventsPb;
 
     private static final String ARG_PAGE = "page";
     private static final String ARG_ROOM_LIST = "roomList";
@@ -39,7 +39,6 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
 
 
     public RoomListFragment() {
-        // Required empty public constructor
         setRetainInstance(true);
     }
 
@@ -94,12 +93,12 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
 
     @Override
     public void showLoadingData(String message) {
-        mLoadingRoomListPb.setVisibility(View.VISIBLE);
+        mLoadingRoomListEventsPb.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void dismissLoadingData() {
-        mLoadingRoomListPb.setVisibility(View.GONE);
+        mLoadingRoomListEventsPb.setVisibility(View.GONE);
     }
 
     @Override
@@ -113,14 +112,9 @@ public class RoomListFragment extends BaseFragment implements RoomListView{
     }
 
     @Override
-    public void updateRoomList() {
+    public void notifyListChange() {
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
-    }
-
-    @Override
-    public void notifyItemChange(int position) {
-        mAdapter.notifyItemChanged(position);
     }
 }

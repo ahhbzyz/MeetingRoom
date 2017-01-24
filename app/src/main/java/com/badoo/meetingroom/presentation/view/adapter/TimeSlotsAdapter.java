@@ -32,7 +32,6 @@ import butterknife.ButterKnife;
 public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.ViewHolder> {
 
     private Context mContext;
-    private final long mDefaultSlotLength = TimeHelper.min2Millis(15);
     private final float DEFAULT_SLOT_WIDTH;
     private final float MIN_SLOT_WIDTH;
     private final float MAX_SLOT_WIDTH;
@@ -125,7 +124,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
         DEFAULT_SLOT_WIDTH = mContext.getResources().getDimension(R.dimen.room_booking_time_slot_width);
         MIN_SLOT_WIDTH = DEFAULT_SLOT_WIDTH / 2f;
         MAX_SLOT_WIDTH = DEFAULT_SLOT_WIDTH * 2f;
-        WIDTH_PER_MILLIS = DEFAULT_SLOT_WIDTH / mDefaultSlotLength;
+        WIDTH_PER_MILLIS = DEFAULT_SLOT_WIDTH / TimeHelper.min2Millis(15);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.badoo.meetingroom.presentation.view.activity;
 
 import android.graphics.Paint;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;

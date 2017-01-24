@@ -12,6 +12,7 @@ public interface EventModel extends Parcelable {
     int AVAILABLE = 0;
     int BUSY = 1;
     String FAST_BOOKING_DESCRIPTION = "Fast booking";
+    Creator<EventModel> CREATOR = null;
 
     String getId();
 

@@ -5,22 +5,44 @@
     <color name="colorAccent">#69E27E</color>
     <color name="colorAccentDark">#41BB56</color>
 
-    <color name="activityBackgroundColor">#ffffff</color>
+    <!-- Status bar -->
+    <color name="status_bar_time_text_color">#000000</color>
 
+    <!-- Tool bar -->
+    <color name="tool_bar_title_text_color">#000000</color>
+    <color name="tool_bar_available_room_number_text_color">#000000</color>
+
+    <color name="backgroundColor">#ffffff</color>
+    <color name="textColorPrimary">#000000</color>
+    <color name="textColorSecondary">#64FFFFFF</color>
+    <color name="statusBarCurrentDateTime">#000000</color>
+    <color name="fastBooking">#000000</color>
+    <color name="timeSlotExpired">#D4D4D4</color>
+
+
+    <color name="backgroundColorInverse">#212123</color>
+    <color name="textColorPrimaryInverse">#FFFFFF</color>
+    <color name="textColorSecondaryInverse">#80FFFFFF</color>
+    <color name="statusBarCurrentDateTimeInverse">#80FFFFFF</color>
+    <color name="fastBookingInverse">#80FFFFFF</color>
+    <color name="timeSlotExpiredInverse">#16FFFFFF</color>
+
+    <color name="roomStatusAvailableInverse">#00FF2C</color>
+    <color name="roomStatusBusyInverse">#FE0D00</color>
+    <color name="roomStatusBusyBgInverse">#32FE0E00</color>
+
+    <!-- Room status color -->
     <color name="roomStatusAvailable">#69e27e</color>
     <color name="roomStatusAvailableDark">#41BB56</color>
 
     <color name="roomStatusOnHold">#FFB000</color>
+    <color name="roomStatusOnHoldBg">#FFF2DB</color>
     <color name="roomStatusOnHoldDark">#D99C16</color>
 
     <color name="roomStatusBusy">#F5584F</color>
+    <color name="roomStatusBusyBg">#FFE8E8</color>
     <color name="roomStatusBusyDark">#E6342A</color>
 
-
-    <color name="roomStatusOnHoldBg">#FFF2DB</color>
-    <color name="roomStatusBusyBg">#FFE8E8</color>
-
-    <color name="timeSlotExpired">#D4D4D4</color>
 
     <color name="textGray">#808080</color>
     <color name="textLightGray">#AEAEB1</color>
@@ -34,30 +56,26 @@
 
 
     <color name="textColorWhite">#ffffff</color>
-    <color name="item_vertical_event_timestamp_color">#808080</color>
 
+    <!-- Vertical item -->
+    <color name="item_vertical_event_timestamp_color">#808080</color>
     <color name="item_vertical_event_divider_color">#D4D4D4</color>
     <color name="item_vertical_event_hourly_divider_color">#44D4D4D4</color>
     <color name="item_vertical_event_expired_time_line_bar">#44D4D4D4</color>
-
-
-
-
     <color name="item_vertical_event_period_text">#808080</color>
     <color name="item_vertical_event_creator_text">#000000</color>
     <color name="item_vertical_event_title_text">#000000</color>
-
     <color name="item_vertical_event_creator_text_grey">#808080</color>
     <color name="item_vertical_event_title_text_grey">#808080</color>
+
+    <!-- Event creator dialog -->
     <color name="event_creator_dialog_time_period_color">#000000</color>
     <color name="event_creator_dialog_creator_text_color">#000000</color>
     <color name="event_creator_dialog_creator_name_text_color">#000000</color>
     <color name="event_creator_dialog_creator_email_text_color">#808080</color>
     <color name="event_creator_dialog_divider_color">#D4D4D4</color>
+
     <color name="item_room_capacity_text_size">#000000</color>
-    <color name="status_bar_time_text_color">#000000</color>
-    <color name="tool_bar_title_text_color">#000000</color>
-    <color name="tool_bar_available_room_number_text_color">#000000</color>
 
 
 </resources>

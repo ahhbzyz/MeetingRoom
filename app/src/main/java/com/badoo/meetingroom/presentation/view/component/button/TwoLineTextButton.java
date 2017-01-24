@@ -61,16 +61,15 @@ public class TwoLineTextButton extends ImageButton {
         try {
             mTopText = ta.getString(R.styleable.TwoLineTextButton_topText);
             mTopTextColor = ta.getColor(R.styleable.TwoLineTextButton_topTextColor, DEFAULT_TOP_TEXT_COLOR);
-            mTopTextSize = ta.getFloat(R.styleable.TwoLineTextButton_topTextSize, DEFAULT_TOP_TEXT_SIZE);
+            mTopTextSize = ta.getDimension(R.styleable.TwoLineTextButton_topTextSize, DEFAULT_TOP_TEXT_SIZE);
 
             mBottomText = ta.getString(R.styleable.TwoLineTextButton_bottomText);
             mBottomTextColor = ta.getColor(R.styleable.TwoLineTextButton_bottomTextColor, DEFAULT_BOTTOM_TEXT_COLOR);
-            mBottomTextSize = ta.getFloat(R.styleable.TwoLineTextButton_bottomTextSize, DEFAULT_BOTTOM_TEXT_SIZE);
+            mBottomTextSize = ta.getDimension(R.styleable.TwoLineTextButton_bottomTextSize, DEFAULT_BOTTOM_TEXT_SIZE);
 
         } finally {
             ta.recycle();
         }
-
 
         init();
     }
@@ -115,6 +114,11 @@ public class TwoLineTextButton extends ImageButton {
             return;
         }
         mBottomText = bottomText;
+        invalidate();
+    }
+
+    public void setTopTextColor(int color) {
+        this.mTopTextColor = color;
         invalidate();
     }
 }

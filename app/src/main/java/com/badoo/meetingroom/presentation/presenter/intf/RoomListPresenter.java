@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.presentation.presenter.intf;
 
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
-import com.badoo.meetingroom.presentation.view.view.RoomListView;
+import com.badoo.meetingroom.presentation.view.view.RoomListFragmentView;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface RoomListPresenter extends Presenter {
 
-    void setView(RoomListView view);
+    void setView(RoomListFragmentView view);
 
     void getRoomEvents(List<RoomModel> roomModelList);
 
