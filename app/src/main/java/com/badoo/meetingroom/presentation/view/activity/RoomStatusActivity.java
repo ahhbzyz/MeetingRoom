@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
+import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalEventItemDecoration;
@@ -28,6 +29,7 @@ import com.badoo.meetingroom.presentation.view.adapter.HorizontalTimelineAdapter
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleView;
+import com.badoo.meetingroom.presentation.view.viewutils.ThemeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.img_calendar) ImageView mCalendarImg;
     @BindView(R.id.img_room) ImageView mRoomImg;
+    @BindView(R.id.img_night_mode) ImageView mNightModeImg;
 
     // Circle time view
     @BindView(R.id.circle_view) CircleView mCircleView;
@@ -100,12 +103,16 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     final long SCROLL_BACK_WAIT_TIME = 10000;
     final long SHOW_LOADING_DIALOG_WAIT_TIME = 1000;
 
+    private static final String ARG_ROOM_ID = "roomId";
+    private static final String ARG_SHOW_ROOM_LIST_ICON = "showRoomListIcon";
+
+
     private RoomStatusHandler mRoomStatusHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.AppTheme_Dark);
+        ThemeHelper.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_room_status);
         ButterKnife.bind(this);
         getComponent().inject(this);
@@ -130,6 +137,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
         mCalendarImg.setOnClickListener(this);
         mRoomImg.setOnClickListener(this);
+        mNightModeImg.setOnClickListener(this);
 
         // Dialog
         mProgressDialog = ImmersiveProgressDialogFragment.newInstance();
@@ -194,16 +202,30 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         switch (v.getId()) {
             case R.id.img_calendar:
                 Intent calendarIntent = new Intent(RoomStatusActivity.this, EventsCalendarActivity.class);
+                Bundle args = new Bundle();
+                args.putString(ARG_ROOM_ID, Badoo.getCurrentRoom().getId());
+                args.putBoolean(ARG_SHOW_ROOM_LIST_ICON, true);
+                calendarIntent.putExtra(ARG_ROOM_ID, Badoo.getCurrentRoom().getId());
                 startActivityForResult(calendarIntent, REQUEST_BOOK_ROOM, options.toBundle());
                 break;
             case R.id.img_room:
                 Intent roomListIntent = new Intent(RoomStatusActivity.this, RoomListActivity.class);
                 startActivityForResult(roomListIntent, REQUEST_BOOK_ROOM, options.toBundle());
                 break;
+
+            case R.id.img_night_mode:
+
+                if (ThemeHelper.getCurrentTheme() == ThemeHelper.THEME_DARK) {
+                    ThemeHelper.changeToTheme(this, ThemeHelper.THEME_DEFAULT);
+                } else {
+                    ThemeHelper.changeToTheme(this, ThemeHelper.THEME_DARK);
+                }
+                break;
             default:
                 break;
         }
     }
+
 
     @Override
     public void renderRoomEvent(EventModel currentEvent) {

@@ -13,5 +13,5 @@ public interface DailyEventsPresenter extends Presenter {
 
     void setView(DailyEventsView dailyEventsView);
 
-    void getEvents();
+    void getEvents(String roomId);
 }

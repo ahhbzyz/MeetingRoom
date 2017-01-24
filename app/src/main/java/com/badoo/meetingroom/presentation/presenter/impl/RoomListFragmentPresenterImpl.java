@@ -14,16 +14,13 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 
-import java.util.Collections;
-import java.util.Comparator;
+
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func2;
 
 
 /**
@@ -82,6 +79,11 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
         mPage = page;
     }
 
+    @Override
+    public void onRoomItemClick(int position) {
+        mRoomListFragmentView.showEventsCalendarView(mRoomModelList.get(position).getId());
+    }
+
     private final class GetEventsSubscriber extends DefaultSubscriber<List<EventModel>> {
 
         private int position;
@@ -111,9 +113,12 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
                         return -1;
                     } else if (o1.getCurrentEvent().isBusy() && o2.getCurrentEvent().isAvailable()) {
                         return 1;
-                    } else {
+                    } else if (o1.getCurrentEvent().isAvailable() && o2.getCurrentEvent().isAvailable()){
                         return (int) (o2.getCurrentEvent().getNextBusyEventStartTime() - o1.getCurrentEvent().getNextBusyEventStartTime());
+                    } else {
+                        return (int) (o1.getCurrentEvent().getNextBusyEventStartTime() - o2.getCurrentEvent().getNextBusyEventStartTime());
                     }
+
                 }).subscribe(roomModelList -> {
                     mRoomModelList = roomModelList;
                     mRoomListFragmentView.renderRoomListInView(mRoomModelList);

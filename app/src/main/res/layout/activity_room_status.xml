@@ -67,6 +67,17 @@
                 android:clickable="true"
                 android:layout_width="@dimen/tool_bar_icon_width" />
 
+            <ImageView
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_calendar_view"
+                android:id="@+id/img_night_mode"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/tool_bar_room_icon_margin_right"
+                android:adjustViewBounds="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:layout_width="@dimen/tool_bar_icon_width" />
+
 
         </android.support.v7.widget.Toolbar>
 

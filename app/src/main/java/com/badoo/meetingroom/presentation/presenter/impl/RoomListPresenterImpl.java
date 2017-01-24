@@ -32,7 +32,7 @@ public class RoomListPresenterImpl implements RoomsPresenter {
 
     @Override
     public void getRoomList() {
-        mGetRoomListUseCase.execute(new GetCalendarListSubscriber());
+        mGetRoomListUseCase.execute(new GetRoomListSubscriber());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class RoomListPresenterImpl implements RoomsPresenter {
     }
 
 
-    private final class GetCalendarListSubscriber extends DefaultSubscriber<SparseArray<List<RoomModel>>> {
+    private final class GetRoomListSubscriber extends DefaultSubscriber<SparseArray<List<RoomModel>>> {
         @Override
         public void onStart() {
             super.onStart();

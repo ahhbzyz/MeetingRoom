@@ -16,4 +16,6 @@ public interface RoomListPresenter extends Presenter {
     void getRoomEvents(List<RoomModel> roomModelList);
 
     void setPage(int page);
+
+    void onRoomItemClick(int position);
 }

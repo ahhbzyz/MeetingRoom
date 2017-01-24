@@ -44,14 +44,17 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     @BindView(R.id.pb_loading_data) ProgressBar mLoadingDataPb;
 
     private static final String ARG_PAGE = "page";
+    private static final String ARG_ROOM_ID = "roomId";
     private int mPage;
+    private String roomId;
 
     private EventCreatorDialogFragment mEventOrganizerDialog;
 
-    public static DailyEventsFragment newInstance(int page) {
+    public static DailyEventsFragment newInstance(int page, String roomId) {
         DailyEventsFragment fragment = new DailyEventsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
+        args.putString(ARG_ROOM_ID, roomId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,6 +68,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mPage = getArguments().getInt(ARG_PAGE);
+            roomId = getArguments().getString(ARG_ROOM_ID);
         }
         getComponent().inject(this);
     }
@@ -77,7 +81,7 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         ButterKnife.bind(this, view);
         setUpEventsRecyclerView();
         mPresenter.setView(this);
-        mPresenter.getEvents();
+        mPresenter.getEvents(roomId);
         return view;
     }
 
@@ -162,12 +166,12 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         switch (requestCode) {
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
-                    mPresenter.getEvents();
+                    mPresenter.getEvents(roomId);
                 }
                 break;
             case REQUEST_BOOK_ROOM:
                 if (resultCode == RESULT_OK) {
-                    mPresenter.getEvents();
+                    mPresenter.getEvents(roomId);
                     Intent returnIntent = new Intent();
                     getActivity().setResult(Activity.RESULT_OK, returnIntent);
                 }

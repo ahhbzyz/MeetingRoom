@@ -55,7 +55,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     }
 
     @Override
-    public void getEvents() {
+    public void getEvents(String roomId) {
         Event event = new Event();
 
         DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage));
@@ -70,7 +70,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
             .setTimeZone("Europe/London");
         event.setEnd(end);
 
-        CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
+        CalendarApiParams params = new CalendarApiParams(roomId);
         params.setEventParams(event);
         long startTime = Badoo.getStartTimeOfDay(mPage);
         long endTime = Badoo.getEndTimeOfDay(mPage);

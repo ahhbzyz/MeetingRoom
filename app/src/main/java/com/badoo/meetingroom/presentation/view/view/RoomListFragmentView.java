@@ -15,4 +15,6 @@ public interface RoomListFragmentView extends LoadDataView {
     void renderRoomListInView(List<RoomModel> mRoomList);
 
     void notifyListChange();
+
+    void showEventsCalendarView(String id);
 }

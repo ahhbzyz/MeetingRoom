@@ -1,6 +1,7 @@
 package com.badoo.meetingroom.presentation.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.ProgressBar;
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
+import com.badoo.meetingroom.presentation.view.activity.EventsCalendarActivity;
 import com.badoo.meetingroom.presentation.view.adapter.RoomListAdapter;
 import com.badoo.meetingroom.presentation.view.view.RoomListFragmentView;
 
@@ -34,6 +36,9 @@ public class RoomListFragment extends BaseFragment implements RoomListFragmentVi
 
     private static final String ARG_PAGE = "page";
     private static final String ARG_ROOM_LIST = "roomList";
+    private static final String ARG_ROOM_ID = "roomId";
+    private static final String ARG_SHOW_ROOM_LIST_ICON = "showRoomListIcon";
+
     private int mPage;
     private List<RoomModel> mRoomModelList;
 
@@ -79,11 +84,27 @@ public class RoomListFragment extends BaseFragment implements RoomListFragmentVi
     private void setUpRecyclerView() {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new RoomListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                mPresenter.onRoomItemClick(position);
+            }
+        });
     }
 
     @Override
     public int getPage() {
         return mPage;
+    }
+
+    @Override
+    public void showEventsCalendarView(String id) {
+        Intent intent = new Intent(getActivity(), EventsCalendarActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_ROOM_ID, id);
+        bundle.putBoolean(ARG_SHOW_ROOM_LIST_ICON, false);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     @Override
@@ -117,4 +138,6 @@ public class RoomListFragment extends BaseFragment implements RoomListFragmentVi
             mAdapter.notifyDataSetChanged();
         }
     }
+
+
 }

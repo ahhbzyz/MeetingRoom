@@ -34,6 +34,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     private Context mContext;
     private int lastPosition = -1;
     private final float IMG_DISABLE_ALPHA = .3f;
+    private OnItemClickListener mOnItemClickListener;
 
     public void setRoomList(List<RoomModel> roomList) {
         mRoomList = roomList;
@@ -144,11 +145,21 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
             holder.mRemainingTimeTv.setBackground(mContext.getDrawable(R.drawable.bg_oval_busy));
             holder.mRoomInfo.setText(mContext.getString(R.string.busy_until) + " " + currentEvent.getEndTimeInText());
         }
+
+        holder.itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(position));
     }
 
 
     @Override
     public int getItemCount() {
         return mRoomList == null ? 0 : mRoomList.size();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
     }
 }

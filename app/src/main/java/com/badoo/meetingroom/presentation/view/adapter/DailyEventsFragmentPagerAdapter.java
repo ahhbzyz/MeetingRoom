@@ -27,11 +27,14 @@ public class DailyEventsFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private final int numOfDays = 7;
     private List<String> mTabTitles = new ArrayList<>(numOfDays);
+    private final String roomId;
 
     @Inject
-    public DailyEventsFragmentPagerAdapter(FragmentManager fm) {
+    public DailyEventsFragmentPagerAdapter(FragmentManager fm, String roomId) {
 
         super(fm);
+
+        this.roomId = roomId;
 
         mTabTitles.add("Today");
 
@@ -48,7 +51,7 @@ public class DailyEventsFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return DailyEventsFragment.newInstance(position);
+        return DailyEventsFragment.newInstance(position, roomId);
     }
 
     @Override

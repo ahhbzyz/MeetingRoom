@@ -190,10 +190,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         return -1;
     }
 
-    private int getNumOfExpiredEvents() {
-        return mCurrentEventPos;
-    }
-
     @Override
     public void getEvents() {
         Event event = new Event();

@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +37,9 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) NonSwipeViewPager mViewPager;
 
+    private static final String ARG_ROOM_ID = "roomId";
+    private static final String ARG_SHOW_ROOM_LIST_ICON = "showRoomListIcon";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +63,12 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
+        if (getIntent().getExtras().getBoolean(ARG_SHOW_ROOM_LIST_ICON, true)) {
+            mRoomImg.setVisibility(View.GONE);
+        } else {
+            mRoomImg.setVisibility(View.VISIBLE);
+        }
+
         mRoomImg.setOnClickListener(v -> {
             Intent intent = new Intent(EventsCalendarActivity.this, RoomListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -70,7 +80,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
 
     private void setUpViewPager() {
-        mAdapter = new DailyEventsFragmentPagerAdapter(getSupportFragmentManager());
+        mAdapter = new DailyEventsFragmentPagerAdapter(getSupportFragmentManager(), getIntent().getExtras().getString(ARG_ROOM_ID));
         mViewPager.setAdapter(mAdapter);
         // Center tab layout
         float width = Resources.getSystem().getDisplayMetrics().widthPixels;
