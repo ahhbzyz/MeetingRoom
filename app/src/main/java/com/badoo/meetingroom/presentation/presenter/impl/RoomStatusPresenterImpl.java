@@ -3,7 +3,7 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 import android.support.annotation.NonNull;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
+import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.badoo.meetingroom.di.PerActivity;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.event.DeleteEvent;
@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by zhangyaozhong on 22/12/2016.

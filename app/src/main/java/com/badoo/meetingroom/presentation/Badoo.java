@@ -11,7 +11,6 @@ public class Badoo {
 
     private static final int START_TIME = 8;
     private static final int END_TIME = 20;
-    public static final String PUSH_NOTIFICATION_CHANNEL_ID = "01234567-89ab-cdef-0123456789ab";
 
     private static RoomModel ROOM;
     public static RoomModel getCurrentRoom() {

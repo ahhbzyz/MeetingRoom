@@ -1,14 +1,15 @@
 package com.badoo.meetingroom.di.modules;
 
+import com.badoo.meetingroom.domain.interactor.BindPushNotifications;
 import com.badoo.meetingroom.domain.interactor.GetRoomList;
 import com.badoo.meetingroom.domain.interactor.event.DeleteEvent;
 import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.domain.interactor.event.GetEvents;
-import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
+import com.badoo.meetingroom.domain.interactor.googleaccount.GetGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.GetPerson;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
-import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
+import com.badoo.meetingroom.domain.interactor.googleaccount.PutGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.event.UpdateEvent;
 
 import javax.inject.Named;
@@ -83,5 +84,12 @@ public class UseCaseModule {
     @Named(GetRoomList.NAME)
     GetRoomList provideGetCalendarListUseCase(GetRoomList getRoomList) {
         return getRoomList;
+    }
+
+
+    @Provides
+    @Named(BindPushNotifications.NAME)
+    BindPushNotifications provideBindPushNotificationsUseCase(BindPushNotifications bindPushNotifications) {
+        return bindPushNotifications;
     }
 }

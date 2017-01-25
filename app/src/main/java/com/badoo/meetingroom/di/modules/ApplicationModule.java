@@ -2,17 +2,15 @@ package com.badoo.meetingroom.di.modules;
 
 import android.content.Context;
 
-import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
+import com.badoo.meetingroom.data.remote.CalendarApiParams;
+import com.badoo.meetingroom.data.repository.CalendarApiRepoImpl;
 import com.badoo.meetingroom.data.repository.LocalPersonRepoImpl;
-import com.badoo.meetingroom.data.repository.CalendarListRepoImpl;
 import com.badoo.meetingroom.data.repository.GoogleAccountRepoImpl;
-import com.badoo.meetingroom.data.repository.LocalEventRepoImpl;
 import com.badoo.meetingroom.data.repository.RemoteImageRepoImpl;
 import com.badoo.meetingroom.di.AndroidApplication;
+import com.badoo.meetingroom.domain.repository.CalendarApiRepo;
 import com.badoo.meetingroom.domain.repository.LocalPersonRepo;
-import com.badoo.meetingroom.domain.repository.CalendarListRepo;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
-import com.badoo.meetingroom.domain.repository.LocalEventRepo;
 import com.badoo.meetingroom.domain.repository.RemoteImageRepo;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -76,12 +74,6 @@ public class ApplicationModule {
     }
 
     @Provides
-    @Named("currentRoomCalendar")
-    CalendarApiParams provideCalendarApiParams() {
-        return new CalendarApiParams(Badoo.getCurrentRoom().getId());
-    }
-
-    @Provides
     @Singleton
     GoogleAccountCredential provideGoogleAccountCredential() {
         return mCredential;
@@ -101,7 +93,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    LocalEventRepo provideRoomEventRepository(LocalEventRepoImpl roomEventDataRepository) {
+    CalendarApiRepo provideRoomEventRepository(CalendarApiRepoImpl roomEventDataRepository) {
         return roomEventDataRepository;
     }
 
@@ -121,11 +113,5 @@ public class ApplicationModule {
     @Singleton
     RemoteImageRepo provideRemoteImageRepository(RemoteImageRepoImpl remoteImageRepository) {
         return remoteImageRepository;
-    }
-
-    @Provides
-    @Singleton
-    CalendarListRepo provideCalendarListRepository(CalendarListRepoImpl calendarListRepository) {
-        return calendarListRepository;
     }
 }

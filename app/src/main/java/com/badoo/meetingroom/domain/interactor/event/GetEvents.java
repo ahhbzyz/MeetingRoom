@@ -1,8 +1,8 @@
 package com.badoo.meetingroom.domain.interactor.event;
 
-import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
+import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.UseCase;
-import com.badoo.meetingroom.domain.repository.LocalEventRepo;
+import com.badoo.meetingroom.domain.repository.CalendarApiRepo;
 import com.badoo.meetingroom.presentation.mapper.EventModelMapper;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 
@@ -19,13 +19,13 @@ import rx.Observable;
 public class GetEvents extends UseCase<List<EventModel>> {
     public static final String NAME = "getEvents";
 
-    private final LocalEventRepo mLocalEventRepository;
+    private final CalendarApiRepo mCalendarApiRepository;
     private final EventModelMapper mEventModelMapper;
     private CalendarApiParams mParams;
 
     @Inject
-    GetEvents(LocalEventRepo roomEventRepository, EventModelMapper eventModelMapper) {
-        mLocalEventRepository = roomEventRepository;
+    GetEvents(CalendarApiRepo calendarApiRepo, EventModelMapper eventModelMapper) {
+        mCalendarApiRepository = calendarApiRepo;
         mEventModelMapper = eventModelMapper;
     }
 
@@ -42,7 +42,7 @@ public class GetEvents extends UseCase<List<EventModel>> {
         if (mParams == null) {
             throw new IllegalArgumentException("init(CalendarApiParams) not called, or called with null argument");
         }
-        return mLocalEventRepository.getRoomEventList(mParams).map(mEventModelMapper::map);
+        return mCalendarApiRepository.getRoomEventList(mParams).map(mEventModelMapper::map);
     }
 
 }

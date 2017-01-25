@@ -1,8 +1,8 @@
 package com.badoo.meetingroom.domain.interactor.event;
 
-import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
+import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.UseCase;
-import com.badoo.meetingroom.domain.repository.LocalEventRepo;
+import com.badoo.meetingroom.domain.repository.CalendarApiRepo;
 import com.google.api.services.calendar.model.Event;
 
 import javax.inject.Inject;
@@ -17,12 +17,12 @@ public class UpdateEvent extends UseCase<Event> {
 
     public static final String NAME = "updateEvent";
 
-    private final LocalEventRepo mRoomEventRepository;
+    private final CalendarApiRepo mCalendarApiRepo;
     private CalendarApiParams mParams;
 
     @Inject
-    UpdateEvent(LocalEventRepo mRoomEventRepository) {
-        this.mRoomEventRepository = mRoomEventRepository;
+    UpdateEvent(CalendarApiRepo calendarApiRepo) {
+        mCalendarApiRepo = calendarApiRepo;
     }
 
     public UpdateEvent init(CalendarApiParams params) {
@@ -35,6 +35,6 @@ public class UpdateEvent extends UseCase<Event> {
         if (mParams == null) {
             throw new IllegalArgumentException("init(CalendarApiParams) not called, or called with null argument");
         }
-        return mRoomEventRepository.updateEvent(mParams);
+        return mCalendarApiRepo.updateEvent(mParams);
     }
 }

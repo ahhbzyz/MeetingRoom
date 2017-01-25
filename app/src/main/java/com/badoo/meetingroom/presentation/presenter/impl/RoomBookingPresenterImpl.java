@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
+import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by zhangyaozhong on 30/12/2016.

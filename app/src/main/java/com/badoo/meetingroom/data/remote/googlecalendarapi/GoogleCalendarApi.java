@@ -1,5 +1,6 @@
 package com.badoo.meetingroom.data.remote.googlecalendarapi;
 
+import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
 
@@ -18,4 +19,5 @@ public interface GoogleCalendarApi {
     Observable<Void> deleteEvent(CalendarApiParams params);
     Observable<Event> updateEvent(CalendarApiParams params);
     Observable<List<CalendarListEntry>> getCalendarList();
+    Observable<Void> bindPushNotifications(CalendarApiParams params);
 }

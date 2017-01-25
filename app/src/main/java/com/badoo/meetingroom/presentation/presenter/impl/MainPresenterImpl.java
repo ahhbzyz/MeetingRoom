@@ -1,20 +1,19 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
 import android.support.annotation.NonNull;
-import android.util.SparseArray;
 
 import com.badoo.meetingroom.data.exception.GooglePlayServicesAvailabilityException;
 import com.badoo.meetingroom.data.exception.NoAccountNameFoundInCacheException;
 import com.badoo.meetingroom.data.exception.NoPermissionToAccessContactsException;
-import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
+import com.badoo.meetingroom.data.remote.CalendarApiParams;
+import com.badoo.meetingroom.domain.interactor.BindPushNotifications;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetRoomList;
-import com.badoo.meetingroom.domain.interactor.GetGoogleAccount;
-import com.badoo.meetingroom.domain.interactor.PutGoogleAccount;
-import com.badoo.meetingroom.presentation.mapper.GoogleAccountModelMapper;
+import com.badoo.meetingroom.domain.interactor.googleaccount.GetGoogleAccount;
+import com.badoo.meetingroom.domain.interactor.googleaccount.PutGoogleAccount;
 import com.badoo.meetingroom.presentation.model.impl.GoogleAccountModel;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
-import com.badoo.meetingroom.presentation.presenter.intf.MainPresenter;
+import com.badoo.meetingroom.presentation.presenter.intf.ConfigurationPresenter;
 import com.badoo.meetingroom.presentation.view.view.MainView;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
@@ -29,22 +28,24 @@ import javax.inject.Inject;
  * Created by zhangyaozhong on 23/12/2016.
  */
 
-public class MainPresenterImpl implements MainPresenter {
+public class MainPresenterImpl implements ConfigurationPresenter {
 
     private MainView mMainView;
 
     private final GetGoogleAccount mGetGoogleAccountUseCase;
     private final PutGoogleAccount mPutGoogleAccountUseCase;
     private final GetRoomList mGetRoomListUseCase;
+    private final BindPushNotifications mBindPushNotificationsUseCase;
 
     @Inject
     MainPresenterImpl(GetGoogleAccount getGoogleAccountUseCase,
                       PutGoogleAccount putGoogleAccountUseCase,
-                      GetRoomList getRoomListUseCase) {
+                      GetRoomList getRoomListUseCase, BindPushNotifications bindPushNotificationsUseCase) {
 
         mGetGoogleAccountUseCase = getGoogleAccountUseCase;
         mPutGoogleAccountUseCase = putGoogleAccountUseCase;
         mGetRoomListUseCase = getRoomListUseCase;
+        mBindPushNotificationsUseCase = bindPushNotificationsUseCase;
     }
 
     @Override
@@ -93,6 +94,12 @@ public class MainPresenterImpl implements MainPresenter {
     @Override
     public void storeGoogleAccountName(String accountName) {
         mPutGoogleAccountUseCase.init(accountName).execute(new PutGoogleAccountSubscriber());
+    }
+
+    @Override
+    public void bindPushNotificationsWithRoom(String id) {
+        CalendarApiParams params = new CalendarApiParams(id);
+        mBindPushNotificationsUseCase.init(params).execute(new BindPushNotificationsSubscriber());
     }
 
     private final class GetGoogleAccountSubscriber extends DefaultSubscriber<GoogleAccountModel> {
@@ -206,6 +213,29 @@ public class MainPresenterImpl implements MainPresenter {
             catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
+        }
+    }
+
+    private final class BindPushNotificationsSubscriber extends DefaultSubscriber<Void> {
+
+        @Override
+        public void onStart() {
+            super.onStart();
+        }
+
+        @Override
+        public void onNext(Void aVoid) {
+            super.onNext(aVoid);
+        }
+
+        @Override
+        public void onCompleted() {
+            super.onCompleted();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            super.onError(e);
         }
     }
 

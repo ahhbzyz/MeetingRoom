@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.badoo.meetingroom.data.exception.NetworkConnectionException;
+import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
@@ -37,7 +38,7 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
             return Observable.error(new NetworkConnectionException());
         }
 
-        return Observable.fromCallable(EventsGetApiCall.create(mServices, params));
+        return Observable.fromCallable(GetEventsApiCall.create(mServices, params));
     }
 
     @Override
@@ -47,7 +48,7 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
             return Observable.error(new NetworkConnectionException());
         }
 
-        return Observable.fromCallable(EventInsertApiCall.create(mServices, params));
+        return Observable.fromCallable(InsertEventApiCall.create(mServices, params));
     }
 
     @Override
@@ -55,7 +56,7 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
         if (!hasInternetConnection()) {
             return Observable.error(new NetworkConnectionException());
         }
-        return Observable.fromCallable(EventDeleteApiCall.create(mServices, params));
+        return Observable.fromCallable(DeleteEventApiCall.create(mServices, params));
     }
 
     @Override
@@ -63,7 +64,7 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
         if (!hasInternetConnection()) {
             return Observable.error(new NetworkConnectionException());
         }
-        return Observable.fromCallable(EventUpdateApiCall.create(mServices, params));
+        return Observable.fromCallable(UpdateEventApiCall.create(mServices, params));
     }
 
     @Override
@@ -72,6 +73,14 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
             return Observable.error(new NetworkConnectionException());
         }
         return Observable.fromCallable(GetCalendarListApiCall.create(mServices));
+    }
+
+    @Override
+    public Observable<Void> bindPushNotifications(CalendarApiParams params) {
+        if (!hasInternetConnection()) {
+            return Observable.error(new NetworkConnectionException());
+        }
+        return Observable.fromCallable(BindPushNotificationsApiCall.bind(mServices, params));
     }
 
 

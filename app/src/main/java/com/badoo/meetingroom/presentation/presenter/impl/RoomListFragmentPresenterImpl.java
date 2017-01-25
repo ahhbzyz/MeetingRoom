@@ -1,7 +1,7 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
 
-import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
+import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;

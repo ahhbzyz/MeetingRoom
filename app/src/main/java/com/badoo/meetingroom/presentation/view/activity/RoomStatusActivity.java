@@ -29,6 +29,7 @@ import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
 import com.badoo.meetingroom.presentation.view.component.circletimerview.CircleView;
 import com.badoo.meetingroom.presentation.view.viewutils.ThemeHelper;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +122,8 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         setUpHorizontalTimelineView();
 
         mPresenter.getEvents();
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+
     }
 
     private void initViews() {
@@ -393,5 +396,13 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     protected void onSystemTimeRefresh() {
         mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
         mPresenter.onSystemTimeRefresh();
+    }
+
+    @Override
+    protected void onCalendarUpdate() {
+        super.onCalendarUpdate();
+        if(mPresenter != null) {
+            mPresenter.getEvents();
+        }
     }
 }

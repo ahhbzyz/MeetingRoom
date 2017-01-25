@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,7 +15,7 @@ import com.badoo.meetingroom.di.components.ApplicationComponent;
 import com.badoo.meetingroom.di.components.DaggerMeetingRoomBookingComponent;
 import com.badoo.meetingroom.di.components.MeetingRoomBookingComponent;
 import com.badoo.meetingroom.di.modules.ActivityModule;
-import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
+import com.badoo.meetingroom.presentation.CalendarUpdateService;
 
 /**
  * Created by zhangyaozhong on 22/12/2016.
@@ -81,19 +82,32 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     };
 
+    private BroadcastReceiver mCalendarUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            onCalendarUpdate();
+        }
+    };
+
     @Override
     protected void onResume() {
         super.onResume();
         registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            mCalendarUpdateReceiver, new IntentFilter(CalendarUpdateService.TAG));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mTimeRefreshReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mCalendarUpdateReceiver);
     }
 
 
     protected abstract void onSystemTimeRefresh();
 
+    protected void onCalendarUpdate() {
+
+    }
 }
