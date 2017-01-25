@@ -128,7 +128,6 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
         bundle.putParcelableArrayList(RoomBookingActivity.ARG_ROOM_LIST, eventModelList);
         bundle.putString(RoomBookingActivity.ARG_ROOM_ID, roomId);
         intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivityForResult(intent, REQUEST_BOOK_ROOM);
     }
 

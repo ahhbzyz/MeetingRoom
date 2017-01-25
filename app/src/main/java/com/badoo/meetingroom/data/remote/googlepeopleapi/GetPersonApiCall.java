@@ -19,7 +19,7 @@ class GetPersonApiCall implements Callable<Person> {
         this.mPersonId = personId;
     }
 
-    static GetPersonApiCall createGET(People services, String personId) {
+    static GetPersonApiCall create(People services, String personId) {
         return new GetPersonApiCall(services, personId);
     }
 

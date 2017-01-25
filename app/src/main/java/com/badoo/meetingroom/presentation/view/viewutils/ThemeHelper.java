@@ -23,7 +23,8 @@ public class ThemeHelper {
     {
         mTheme = theme;
         activity.finish();
-        activity.startActivity(new Intent(activity, activity.getClass()));
+        activity.overridePendingTransition(0, 0);
+        activity.startActivity(new Intent(activity, activity.getClass()).setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
     }
 
     /** Set the theme of the activity, according to the configuration. */

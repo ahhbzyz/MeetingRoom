@@ -12,6 +12,7 @@ import android.view.WindowManager;
 
 public abstract class ImmersiveDialogFragment extends BaseDialogFragment{
 
+    @SuppressLint("CommitTransaction")
     public void show(Activity activity) {
 
         // Show the dialog.

@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by zhangyaozhong on 23/12/2016.
@@ -37,18 +36,15 @@ public class MainPresenterImpl implements MainPresenter {
     private final GetGoogleAccount mGetGoogleAccountUseCase;
     private final PutGoogleAccount mPutGoogleAccountUseCase;
     private final GetRoomList mGetRoomListUseCase;
-    private final GoogleAccountModelMapper mGoogleAccountMapper;
 
     @Inject
-    MainPresenterImpl(@Named(GetGoogleAccount.NAME) GetGoogleAccount getGoogleAccountUseCase,
-                      @Named(PutGoogleAccount.NAME) PutGoogleAccount putGoogleAccountUseCase,
-                      GetRoomList getRoomListUseCase,
-                      GoogleAccountModelMapper googleAccountModelMapper) {
+    MainPresenterImpl(GetGoogleAccount getGoogleAccountUseCase,
+                      PutGoogleAccount putGoogleAccountUseCase,
+                      GetRoomList getRoomListUseCase) {
 
-        this.mGetGoogleAccountUseCase = getGoogleAccountUseCase;
-        this.mPutGoogleAccountUseCase = putGoogleAccountUseCase;
-        this.mGetRoomListUseCase = getRoomListUseCase;
-        this.mGoogleAccountMapper = googleAccountModelMapper;
+        mGetGoogleAccountUseCase = getGoogleAccountUseCase;
+        mPutGoogleAccountUseCase = putGoogleAccountUseCase;
+        mGetRoomListUseCase = getRoomListUseCase;
     }
 
     @Override
@@ -68,8 +64,7 @@ public class MainPresenterImpl implements MainPresenter {
         this.mMainView.dismissLoadingData();
     }
 
-    private void showAccountNameOnSnackBar(GoogleAccount account) {
-        GoogleAccountModel googleAccountModel = this.mGoogleAccountMapper.map(account);
+    private void showAccountNameOnSnackBar(GoogleAccountModel googleAccountModel) {
         mMainView.showAccountNameOnSnackBar(googleAccountModel.getAccountName());
     }
 
@@ -100,7 +95,7 @@ public class MainPresenterImpl implements MainPresenter {
         mPutGoogleAccountUseCase.init(accountName).execute(new PutGoogleAccountSubscriber());
     }
 
-    private final class GetGoogleAccountSubscriber extends DefaultSubscriber<GoogleAccount> {
+    private final class GetGoogleAccountSubscriber extends DefaultSubscriber<GoogleAccountModel> {
 
         @Override
         public void onStart() {
@@ -109,9 +104,9 @@ public class MainPresenterImpl implements MainPresenter {
         }
 
         @Override
-        public void onNext(GoogleAccount googleAccount) {
-            super.onNext(googleAccount);
-            showAccountNameOnSnackBar(googleAccount);
+        public void onNext(GoogleAccountModel googleAccountModel) {
+            super.onNext(googleAccountModel);
+            showAccountNameOnSnackBar(googleAccountModel);
             mGetRoomListUseCase.execute(new GetRoomListSubscriber());
         }
 
@@ -129,30 +124,17 @@ public class MainPresenterImpl implements MainPresenter {
                 throw e;
 
             } catch (GooglePlayServicesAvailabilityException e1) {
-
                 showGooglePlayServicesAvailabilityErrorDialog(e1.getConnectionStatusCode());
-
             } catch (NoPermissionToAccessContactsException e2) {
-
                 showRequestPermissionsDialog();
-
             } catch (NoAccountNameFoundInCacheException e3) {
-
                 showChooseAccountDialog();
-
             } catch (GoogleJsonResponseException googleJsonResponseException) {
-
                 mMainView.showError(googleJsonResponseException.getDetails().getMessage());
-
             } catch (Exception exception) {
-
-                exception.printStackTrace();
                 mMainView.showError(exception.getMessage());
-
             } catch (Throwable throwable) {
-
                 throwable.printStackTrace();
-
             }
         }
     }
@@ -212,6 +194,18 @@ public class MainPresenterImpl implements MainPresenter {
         @Override
         public void onError(Throwable e) {
             super.onError(e);
+            try {
+                throw e;
+            }
+            catch (GoogleJsonResponseException googleJsonResponseException) {
+                mMainView.showError(googleJsonResponseException.getDetails().getMessage());
+            }
+            catch (Exception exception) {
+                mMainView.showError(exception.getMessage());
+            }
+            catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 

@@ -2,6 +2,8 @@ package com.badoo.meetingroom.domain.interactor;
 
 import com.badoo.meetingroom.domain.entity.intf.GoogleAccount;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
+import com.badoo.meetingroom.presentation.mapper.GoogleAccountModelMapper;
+import com.badoo.meetingroom.presentation.model.impl.GoogleAccountModel;
 
 
 import javax.inject.Inject;
@@ -14,27 +16,21 @@ import rx.subscriptions.Subscriptions;
  * Created by zhangyaozhong on 21/12/2016.
  */
 
-public class GetGoogleAccount extends UseCase<GoogleAccount> {
+public class GetGoogleAccount extends UseCase<GoogleAccountModel> {
 
     public static final String NAME = "getGoogleAccount";
 
-    private final GoogleAccountRepo googleAccountRepository;
-    private Subscription subscription = Subscriptions.empty();
+    private final GoogleAccountRepo mGoogleAccountRepository;
+    private final GoogleAccountModelMapper mGoogleAccountModelMapper;
 
     @Inject
-    GetGoogleAccount(GoogleAccountRepo googleAccountRepository) {
-        this.googleAccountRepository = googleAccountRepository;
+    GetGoogleAccount(GoogleAccountRepo googleAccountRepository, GoogleAccountModelMapper googleAccountModelMapper) {
+        mGoogleAccountRepository = googleAccountRepository;
+        mGoogleAccountModelMapper = googleAccountModelMapper;
     }
 
     @Override
-    public Observable <GoogleAccount> buildUseCaseObservable() {
-        return googleAccountRepository.getAccountName();
-    }
-
-    @Override
-    public void unSubscribe() {
-        if (!subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
+    public Observable <GoogleAccountModel> buildUseCaseObservable() {
+        return mGoogleAccountRepository.getAccountName().map(mGoogleAccountModelMapper::map);
     }
 }

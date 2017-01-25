@@ -3,13 +3,13 @@ package com.badoo.meetingroom.di.modules;
 import android.content.Context;
 
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
-import com.badoo.meetingroom.data.repository.BadooPersonRepoImpl;
+import com.badoo.meetingroom.data.repository.LocalPersonRepoImpl;
 import com.badoo.meetingroom.data.repository.CalendarListRepoImpl;
 import com.badoo.meetingroom.data.repository.GoogleAccountRepoImpl;
 import com.badoo.meetingroom.data.repository.LocalEventRepoImpl;
 import com.badoo.meetingroom.data.repository.RemoteImageRepoImpl;
 import com.badoo.meetingroom.di.AndroidApplication;
-import com.badoo.meetingroom.domain.repository.BadooPersonRepo;
+import com.badoo.meetingroom.domain.repository.LocalPersonRepo;
 import com.badoo.meetingroom.domain.repository.CalendarListRepo;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
 import com.badoo.meetingroom.domain.repository.LocalEventRepo;
@@ -113,7 +113,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    BadooPersonRepo provideBadooPersonDataRepository(BadooPersonRepoImpl badooPersonDataRepository) {
+    LocalPersonRepo provideBadooPersonDataRepository(LocalPersonRepoImpl badooPersonDataRepository) {
         return badooPersonDataRepository;
     }
 

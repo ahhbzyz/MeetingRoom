@@ -57,7 +57,7 @@
     </android.support.v7.widget.Toolbar>
 
     <TextView
-        android:text="@string/checking"
+        android:text="@string/today"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_booking_date"
@@ -82,11 +82,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
-        <com.badoo.meetingroom.presentation.view.component.ballpulseloadingview.BallPulseLoadingView
-            android:layout_width="wrap_content"
-            android:id="@+id/bp_loading_view"
-            android:layout_centerInParent="true"
-            android:layout_height="@dimen/bp_loading_view_height" />
     </RelativeLayout>
 
 
@@ -98,15 +93,6 @@
             android:layout_marginTop="32dp">
         </android.support.v7.widget.RecyclerView>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_tip"
-        android:layout_marginTop="32dp"
-        android:gravity="center_vertical|center_horizontal"
-        android:textSize="16sp"
-        android:textColor="@color/textLightGray"
-        android:text="@string/enter_your_name" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -115,9 +101,12 @@
         android:paddingStart="@dimen/room_booking_view_margin"
         android:paddingEnd="@dimen/room_booking_view_margin">
 
-        <RelativeLayout
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/auto_complete_text_view_margin_top">
+
 
             <com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView
                 android:enabled="false"
@@ -128,8 +117,11 @@
                 android:layout_height="wrap_content"
                 android:privateImeOptions="nm"
                 android:imeOptions="actionDone"
-                android:hint="@string/search_for_people" />
-        </RelativeLayout>
+                android:hint="@string/enter_your_name" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
 
 
         <Button

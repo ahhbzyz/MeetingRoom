@@ -15,8 +15,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,17 +22,15 @@ import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.domain.interactor.GetAvatar;
-import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.intf.PersonModel;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.EmailAutoCompleteAdapter;
 import com.badoo.meetingroom.presentation.view.adapter.TimeSlotsAdapter;
 import com.badoo.meetingroom.presentation.view.component.autocompletetextview.MyAutoCompleteTextView;
-import com.badoo.meetingroom.presentation.view.component.ballpulseloadingview.BallPulseLoadingView;
 import com.badoo.meetingroom.presentation.view.component.layoutmanager.LinearLayoutManagerWithSmoothScroller;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +53,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Inject
     @Named("stolzl_medium")
     Typeface mStolzlMediumTypeface;
-    @Inject
-    @Named(GetAvatar.NAME)
-    GetAvatar mGetAvatarUseCase;
 
     @BindView(R.id.tv_current_date_time)
     TextView mCurrentDateTimeTv;
@@ -76,8 +69,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     RecyclerView mTimeSlotsRv;
     @BindView(R.id.btn_book)
     Button mBookBtn;
-    @BindView(R.id.bp_loading_view)
-    BallPulseLoadingView mLoadingContactsPb;
 
     private boolean hasSlots;
     private String mSelectedEmail;
@@ -138,17 +129,9 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     @Override
-    public void showBookingInformation(String date) {
-        mBookingDateTv.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
-        mBookingDateTv.setText(date);
-        mBookingPeriodTv.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in));
-        mBookingPeriodTv.setVisibility(View.VISIBLE);
-    }
+    public void setUpAutoCompleteTextView(List<PersonModel> personModelList) {
 
-    @Override
-    public void setUpAutoCompleteTextView(List<BadooPersonModel> badooPersonModelList) {
-
-        EmailAutoCompleteAdapter adapter = new EmailAutoCompleteAdapter(this, R.layout.item_badoo_person, badooPersonModelList);
+        EmailAutoCompleteAdapter adapter = new EmailAutoCompleteAdapter(this, R.layout.item_badoo_person, personModelList);
         mAutoCompleteTv.setEnabled(true);
         mAutoCompleteTv.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         mAutoCompleteTv.setAdapter(adapter);
@@ -170,20 +153,18 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
             }
         });
 
-        mAutoCompleteTv.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    if (mSelectedEmail != null) {
-                        mPresenter.bookRoom(mSelectedEmail, mRoomId);
-                    }
+        mAutoCompleteTv.setOnEditorActionListener((v, actionId, event) -> {
+
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                if (mSelectedEmail != null) {
+                    mPresenter.bookRoom(mSelectedEmail, mRoomId);
                 }
-                return false;
             }
+            return false;
         });
 
         mAutoCompleteTv.setOnItemClickListener((parent, view, position, id) -> {
-            mSelectedEmail = badooPersonModelList.get(position).getEmailAddress();
+            mSelectedEmail = personModelList.get(position).getEmailAddress();
             validateBookingParameters();
         });
 
@@ -195,7 +176,9 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     }
 
     @Override
-    public void renderTimeSlotsInView(int position, List<EventModel> availableEventList) {
+    public void renderTimeSlotsInView(int position, List<EventModel> availableEventList, String date) {
+
+        mBookingDateTv.setText(date);
 
         // Set left padding
         mAdapter.setEventModelList(availableEventList);
@@ -204,9 +187,7 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
             int width = Resources.getSystem().getDisplayMetrics().widthPixels;
 
-            //LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mTimeSlotsRv.getLayoutParams();
             float leftPadding = (width) / 2 - getResources().getDimension(R.dimen.room_booking_time_slot_width) / 2f;
-            //params.setMargins((int) leftPadding, 0, 0, 0);
             mTimeSlotsRv.setPadding((int) leftPadding, 0, 0, 0);
         }
 
@@ -217,7 +198,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     public void updateTimePeriodTextView(long startTime, long endTime) {
-        System.out.println(startTime);
         if (startTime != -1 && endTime != -1) {
             if (TimeHelper.isMidNight(endTime)) {
                 mBookingPeriodTv.setText(TimeHelper.formatTime(startTime) + " - " + "24:00");
@@ -249,7 +229,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     @Override
     public void showBookingSuccessful(long value) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("startTime", value);
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(0, 0);
@@ -259,7 +238,6 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-            overridePendingTransition(0, 0);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -267,14 +245,11 @@ public class RoomBookingActivity extends BaseActivity implements RoomBookingView
 
     @Override
     public void showLoadingData(String message) {
-        mBookingPeriodTv.setVisibility(View.INVISIBLE);
-        mBookingDateTv.setText(getResources().getString(R.string.checking));
-        mLoadingContactsPb.show();
+
     }
 
     @Override
     public void dismissLoadingData() {
-        mLoadingContactsPb.hide();
     }
 
     @Override

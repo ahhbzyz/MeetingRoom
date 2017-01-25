@@ -42,7 +42,7 @@
 
     <dimen name="events_calendar_tab_min_width">100dp</dimen>
 
-    <dimen name="room_list_tab_min_width">160dp</dimen>
+    <dimen name="room_list_tab_min_width">180dp</dimen>
 
     <dimen name="room_booking_time_slot_height">42dp</dimen>
     <dimen name="room_booking_time_slot_width">100dp</dimen>
@@ -50,7 +50,7 @@
 
     <dimen name="room_booking_time_slot_divider_width">1.5dp</dimen>
 
-    <dimen name="room_list_tab_height">3dp</dimen>
+    <dimen name="room_list_tab_height">4dp</dimen>
 
     <dimen name="circle_time_view_btn_busy_img_width">6dp</dimen>
     <dimen name="circle_time_view_btn_busy_img_height">24dp</dimen>
@@ -131,5 +131,9 @@
     <dimen name="fast_booking_text_size">30sp</dimen>
     <dimen name="item_horizontal_event_current_time_text_size">16sp</dimen>
     <dimen name="item_horizontal_event_timeline_bar_height">12dp</dimen>
+
+    <dimen name="tab_layout_elevation">8dp</dimen>
+    <dimen name="tab_layout_padding_bottom">8dp</dimen>
+    <dimen name="auto_complete_text_view_margin_top">32dp</dimen>
 
 </resources>

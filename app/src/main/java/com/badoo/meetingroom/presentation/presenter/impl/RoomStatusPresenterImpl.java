@@ -49,10 +49,10 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
     private HashSet<String> mConfirmedIds;
 
     @Inject
-    RoomStatusPresenterImpl(@Named(GetEvents.NAME) GetEvents getEventsUseCase,
-                            @Named(InsertEvent.NAME) InsertEvent insertEventUseCase,
-                            @Named(DeleteEvent.NAME) DeleteEvent deleteEventUseCase,
-                            @Named(UpdateEvent.NAME) UpdateEvent updateEventUseCase) {
+    RoomStatusPresenterImpl(GetEvents getEventsUseCase,
+                            InsertEvent insertEventUseCase,
+                            DeleteEvent deleteEventUseCase,
+                            UpdateEvent updateEventUseCase) {
         mGetEventsUseCase = getEventsUseCase;
         mInsertEventUseCase = insertEventUseCase;
         mDeleteEventUseCase = deleteEventUseCase;
@@ -163,7 +163,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
         }
     }
 
-    // Todo check all the buttons availabilities
     private void checkEventExtendable() {
         if (mCurrentEvent != null &&
             mCurrentEvent.isBusy() &&
@@ -233,7 +232,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
             event.setEnd(end);
 
             event.setDescription(EventModel.FAST_BOOKING_DESCRIPTION);
-
             CalendarApiParams params = new CalendarApiParams(Badoo.getCurrentRoom().getId());
             params.setEventParams(event);
             mInsertEventUseCase.init(params).execute(new InsertEventSubscriber());
@@ -307,7 +305,6 @@ public class RoomStatusPresenterImpl implements RoomStatusPresenter {
                 mRoomEventsView.showError(googleJsonResponseException.getDetails().getMessage());
             }
             catch (Exception exception) {
-                exception.printStackTrace();
                 mRoomEventsView.showError(exception.getMessage());
             }
             catch (Throwable throwable) {

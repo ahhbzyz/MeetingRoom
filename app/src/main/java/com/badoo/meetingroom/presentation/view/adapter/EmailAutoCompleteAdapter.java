@@ -11,7 +11,7 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.intf.PersonModel;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -19,15 +19,15 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
+public class EmailAutoCompleteAdapter extends ArrayAdapter<PersonModel> {
 
-    private List<BadooPersonModel> items;
-    private List<BadooPersonModel> itemsAll;
-    private List<BadooPersonModel> suggestions;
+    private List<PersonModel> items;
+    private List<PersonModel> itemsAll;
+    private List<PersonModel> suggestions;
     private int viewResourceId;
     private Context mContext;
 
-    public EmailAutoCompleteAdapter(Context context, int viewResourceId, List<BadooPersonModel> items) {
+    public EmailAutoCompleteAdapter(Context context, int viewResourceId, List<PersonModel> items) {
         super(context, viewResourceId, items);
         this.mContext = context;
         this.viewResourceId = viewResourceId;
@@ -45,13 +45,13 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
             v = layoutInflater.inflate(viewResourceId, null);
         }
 
-        BadooPersonModel badooPersonModel = items.get(position);
+        PersonModel personModel = items.get(position);
 
-        if (badooPersonModel != null) {
+        if (personModel != null) {
 
             // Image view
             CircleImageView mAvatarImgView = (CircleImageView) v.findViewById(R.id.img_avatar);
-            String mAvatarUrl = badooPersonModel.getAvatarUrl();
+            String mAvatarUrl = personModel.getAvatarUrl();
             if (mAvatarUrl != null) {
                 Glide.with(mContext)
                     .load(mAvatarUrl).asBitmap().centerCrop()
@@ -62,16 +62,16 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
 
             // Name
             TextView nameTv = (TextView) v.findViewById(R.id.tv_name);
-            if (badooPersonModel.getDisplayName() != null) {
+            if (personModel.getDisplayName() != null) {
                 nameTv.setTypeface(typeface);
-                nameTv.setText(badooPersonModel.getDisplayName());
+                nameTv.setText(personModel.getDisplayName());
             }
 
             // Email address
             TextView emailTv = (TextView) v.findViewById(R.id.tv_email_address);
-            if (badooPersonModel.getEmailAddress() != null) {
+            if (personModel.getEmailAddress() != null) {
                 emailTv.setTypeface(typeface);
-                emailTv.setText(badooPersonModel.getEmailAddress());
+                emailTv.setText(personModel.getEmailAddress());
             }
         }
         return v;
@@ -86,7 +86,7 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
 
         @Override
         public String convertResultToString(Object resultValue) {
-            return ((BadooPersonModel)(resultValue)).getDisplayName();
+            return ((PersonModel)(resultValue)).getDisplayName();
         }
 
         @Override
@@ -99,14 +99,14 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
                 }
 
 
-                for (BadooPersonModel badooPersonModel : itemsAll) {
-                    String displayName = badooPersonModel.getDisplayName();
-                    String givenName = badooPersonModel.getGivenName();
-                    String middleName = badooPersonModel.getMiddleName();
-                    String familyName = badooPersonModel.getFamilyName();
+                for (PersonModel personModel : itemsAll) {
+                    String displayName = personModel.getDisplayName();
+                    String givenName = personModel.getGivenName();
+                    String middleName = personModel.getMiddleName();
+                    String familyName = personModel.getFamilyName();
 
                     if(displayName != null && displayName.toLowerCase().contains(constraint.toString().toLowerCase())){
-                        suggestions.add(badooPersonModel);
+                        suggestions.add(personModel);
                     }
 
                     if (constraint.length() == 2) {
@@ -114,7 +114,7 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
                             Character.toLowerCase(constraint.charAt(0)) == Character.toLowerCase(givenName.charAt(0)) &&
                             familyName != null && familyName.length() >= 0 &&
                             Character.toLowerCase(constraint.charAt(1)) == Character.toLowerCase(familyName.charAt(0))) {
-                            suggestions.add(badooPersonModel);
+                            suggestions.add(personModel);
                         }
                     }
 
@@ -123,7 +123,7 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
                             Character.toLowerCase(constraint.charAt(0)) == Character.toLowerCase(givenName.charAt(0)) &&
                             middleName!= null && middleName.length() >= 0 &&
                             Character.toLowerCase(constraint.charAt(1)) == Character.toLowerCase(middleName.charAt(0))) {
-                            suggestions.add(badooPersonModel);
+                            suggestions.add(personModel);
                         }
                     }
 
@@ -134,7 +134,7 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
                             Character.toLowerCase(constraint.charAt(1)) == Character.toLowerCase(middleName.charAt(0)) &&
                             familyName != null && familyName.length() >= 0 &&
                             Character.toLowerCase(constraint.charAt(2)) == Character.toLowerCase(familyName.charAt(0))) {
-                            suggestions.add(badooPersonModel);
+                            suggestions.add(personModel);
                         }
                     }
                 }
@@ -148,7 +148,7 @@ public class EmailAutoCompleteAdapter extends ArrayAdapter<BadooPersonModel> {
         }
         @Override @SuppressWarnings("unchecked")
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            ArrayList<BadooPersonModel> filteredList = (ArrayList<BadooPersonModel>) results.values;
+            ArrayList<PersonModel> filteredList = (ArrayList<PersonModel>) results.values;
             clear();
             if(results.count > 0) {
                 addAll(filteredList);

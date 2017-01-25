@@ -19,13 +19,13 @@ import rx.Observable;
 public class GetEvents extends UseCase<List<EventModel>> {
     public static final String NAME = "getEvents";
 
-    private final LocalEventRepo mRoomEventRepository;
+    private final LocalEventRepo mLocalEventRepository;
     private final EventModelMapper mEventModelMapper;
     private CalendarApiParams mParams;
 
     @Inject
     GetEvents(LocalEventRepo roomEventRepository, EventModelMapper eventModelMapper) {
-        mRoomEventRepository = roomEventRepository;
+        mLocalEventRepository = roomEventRepository;
         mEventModelMapper = eventModelMapper;
     }
 
@@ -42,7 +42,7 @@ public class GetEvents extends UseCase<List<EventModel>> {
         if (mParams == null) {
             throw new IllegalArgumentException("init(CalendarApiParams) not called, or called with null argument");
         }
-        return mRoomEventRepository.getRoomEventList(mParams).map(mEventModelMapper::map);
+        return mLocalEventRepository.getRoomEventList(mParams).map(mEventModelMapper::map);
     }
 
 }

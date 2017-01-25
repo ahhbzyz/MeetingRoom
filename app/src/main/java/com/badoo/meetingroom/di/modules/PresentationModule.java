@@ -2,6 +2,7 @@ package com.badoo.meetingroom.di.modules;
 
 import com.badoo.meetingroom.di.PerActivity;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
+import com.badoo.meetingroom.presentation.presenter.impl.EventCreatorDialogPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.EventsCalendarPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.MainPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
@@ -9,6 +10,7 @@ import com.badoo.meetingroom.presentation.presenter.impl.RoomListFragmentPresent
 import com.badoo.meetingroom.presentation.presenter.impl.RoomStatusPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomListPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.intf.DailyEventsPresenter;
+import com.badoo.meetingroom.presentation.presenter.intf.EventCreatorDialogPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.EventsCalendarPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.MainPresenter;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
@@ -68,5 +70,11 @@ public class PresentationModule {
     @PerActivity
     RoomListPresenter provideRoomListPresenterImpl(RoomListFragmentPresenterImpl roomListFragmentPresenterImpl) {
         return roomListFragmentPresenterImpl;
+    }
+
+    @Provides
+    @PerActivity
+    EventCreatorDialogPresenter provideEventCreatorDialogPresenterImpl(EventCreatorDialogPresenterImpl eventCreatorDialogPresenterImpl) {
+        return eventCreatorDialogPresenterImpl;
     }
 }

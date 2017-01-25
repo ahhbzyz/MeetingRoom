@@ -80,7 +80,6 @@ public class RoomListActivity extends BaseActivity implements RoomListView {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-            overridePendingTransition(0, 0);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -89,7 +88,7 @@ public class RoomListActivity extends BaseActivity implements RoomListView {
     @Override
     protected void onSystemTimeRefresh() {
         mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
-        if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
+        if (mAdapter != null && mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
             mAdapter.getRegisteredFragment(mViewPager.getCurrentItem()).notifyListChange();
         }
     }

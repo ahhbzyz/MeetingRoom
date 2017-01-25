@@ -2,6 +2,7 @@ package com.badoo.meetingroom.presentation.view.fragment;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,19 +15,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.domain.entity.intf.BadooPerson;
-import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
-import com.badoo.meetingroom.domain.interactor.GetAvatar;
-import com.badoo.meetingroom.domain.interactor.GetPersons;
-import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
-import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
+import com.badoo.meetingroom.presentation.model.intf.PersonModel;
+import com.badoo.meetingroom.presentation.presenter.intf.EventCreatorDialogPresenter;
+import com.badoo.meetingroom.presentation.view.view.EventCreatorDialogView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -39,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by zhangyaozhong on 14/01/2017.
  */
 
-public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
+public class EventCreatorDialogFragment extends ImmersiveDialogFragment implements EventCreatorDialogView{
 
     private EventModel mEvent;
 
@@ -49,16 +44,15 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
     @BindView(R.id.tv_creator_email) TextView mCreatorEmailTv;
     @BindView(R.id.tv_creator_name) TextView mCreatorNameTv;
 
+    @Inject EventCreatorDialogPresenter mPresenter;
 
-    @Inject @Named(GetPersons.NAME) GetPersons getPersonsUseCase;
-    @Inject @Named(GetAvatar.NAME) GetAvatar getAvatarUseCase;
-    @Inject BadooPersonModelMapper mMapper;
-
+    @Inject @Named("stolzl_regular") Typeface mStolzlRegularTypeface;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getComponent().inject(this);
+
     }
 
     public static EventCreatorDialogFragment newInstance() {
@@ -68,14 +62,17 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        mPresenter.setView(this);
+
+
         View view = View.inflate(getActivity().getApplicationContext(),R.layout.dialog_event_creator, null);
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyEventOrganizerDialog);
         builder.setView(view);
         ButterKnife.bind(this, view);
-        Typeface stolzlRegularTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/stolzl_regular.otf");
-        mEventPeriodTv.setTypeface(stolzlRegularTypeface);
-        mCreatorNameTv.setTypeface(stolzlRegularTypeface);
+        mEventPeriodTv.setTypeface(mStolzlRegularTypeface);
+        mCreatorNameTv.setTypeface(mStolzlRegularTypeface);
 
         if (mEvent != null) {
 
@@ -92,7 +89,7 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
             }
 
             if (mEvent.getCreatorEmailAddress() != null) {
-                getPersonsUseCase.execute(new GetPersonsSubscriber());
+                mPresenter.getPerson(mEvent.getCreatorEmailAddress());
             }
         }
 
@@ -113,55 +110,43 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment {
         }
     }
 
-    private final class GetPersonsSubscriber extends DefaultSubscriber<List<BadooPerson>> {
-
-        @Override
-        public void onStart() {
-            super.onStart();
-            mImgLoadingPb.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onNext(List<BadooPerson> badooPersonList) {
-
-            // TODO rx java hash map
-            List<BadooPersonModel> badooPersonModelList = mMapper.map(badooPersonList);
-            for (BadooPersonModel badooPersonModel : badooPersonModelList) {
-                if (mEvent.getCreatorEmailAddress().equals(badooPersonModel.getEmailAddress())) {
-                    String mAvatarUrl = badooPersonModel.getAvatarUrl();
-                    Glide.with(getActivity())
-                        .load(mAvatarUrl).asBitmap().centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(mAvatarImg);
-                    mCreatorNameTv.setText(badooPersonModel.getDisplayName());
-                    break;
-                }
-            }
-        }
-
-        @Override
-        public void onCompleted() {
-            super.onCompleted();
-            mImgLoadingPb.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            super.onError(e);
-            try {
-                throw e;
-            }
-            catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
+    @Override
+    public void loadAvatar(PersonModel personModel) {
+        Glide.with(getActivity())
+            .load(personModel.getAvatarUrl()).asBitmap().centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(mAvatarImg);
+        if (personModel.getDisplayName() != null) {
+            mCreatorNameTv.setText(personModel.getDisplayName());
         }
     }
+
+    @Override
+    public void showLoadingData(String message) {
+        mImgLoadingPb.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void dismissLoadingData() {
+        mImgLoadingPb.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public Context context() {
+        return getActivity().getApplicationContext();
+    }
+
+
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getPersonsUseCase.unSubscribe();
-        getAvatarUseCase.unSubscribe();
+        mPresenter.destroy();
     }
 }

@@ -205,8 +205,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
                     notifyItemChanged(position);
 
                     // Remove previous selected slots
-                    while (mItemViewList.get(temp).isSelected() == itemView.isSelected() &&
-                        mEventModelList.get(temp).isAvailable() && temp < getItemCount() - 1) {
+                    while (temp < getItemCount() && mItemViewList.get(temp).isSelected() == itemView.isSelected() && mEventModelList.get(temp).isAvailable()) {
                         mItemViewList.get(temp).setSelected(!itemView.isSelected());
                         notifyItemChanged(temp);
                         temp++;

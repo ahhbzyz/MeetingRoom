@@ -1,6 +1,5 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -24,7 +23,7 @@ import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomStatusPresenter;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalEventItemDecoration;
 import com.badoo.meetingroom.presentation.view.fragment.EventCreatorDialogFragment;
-import com.badoo.meetingroom.presentation.view.fragment.ImmersiveProgressDialogFragment;
+import com.badoo.meetingroom.presentation.view.fragment.ProgressDialogFragment;
 import com.badoo.meetingroom.presentation.view.adapter.HorizontalTimelineAdapter;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
@@ -96,7 +95,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     @BindView(R.id.layout_bottom_content) RelativeLayout mBottomContentLayout;
 
     // Dialogs
-    private ImmersiveProgressDialogFragment mProgressDialog;
+    private ProgressDialogFragment mProgressDialog;
     private EventCreatorDialogFragment mEventOrganizerDialog;
     private Handler mLoadingDataDialogHandler;
 
@@ -139,7 +138,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         mNightModeImg.setOnClickListener(this);
 
         // Dialog
-        mProgressDialog = ImmersiveProgressDialogFragment.newInstance();
+        mProgressDialog = ProgressDialogFragment.newInstance();
         mEventOrganizerDialog = EventCreatorDialogFragment.newInstance();
         mLoadingDataDialogHandler = new Handler();
 
@@ -165,7 +164,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
         mAdapter.setOnEventClickListener(this);
 
-        mAdapter.setOnEventRenderFinishListener(() -> updateHorizontalTimeline());
+        mAdapter.setOnEventRenderFinishListener(this::updateHorizontalTimeline);
 
         mHorizontalTimelineRv.addItemDecoration(new HorizontalEventItemDecoration(this, R.drawable.divider_horizontal_event));
         mHorizontalTimelineRv.setAdapter(mAdapter);

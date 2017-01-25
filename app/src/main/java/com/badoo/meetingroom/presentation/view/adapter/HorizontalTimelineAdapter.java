@@ -181,18 +181,6 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
             barDrawable.setCornerRadius(0, 0, 0, 1);
         }
 
-//        if (!eventModel.isComing()) {
-//
-//
-//        } else {
-//            if (position == 0) {
-//                barDrawable.setCornerRadius(0, 0, 1, 0);
-//            }
-//
-//            if (position == getItemCount() - 1) {
-//                barDrawable.setCornerRadius(0, 0, 0, 1);
-//            }
-//        }
 
         if (eventModel.isBusy() && viewWidth > MAX_BUSY_SLOT_WIDTH) {
             barDrawable.setHasDashes(true, mContext.getResources().getDimension(R.dimen.item_horizontal_event_divider_width));

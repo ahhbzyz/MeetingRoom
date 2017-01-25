@@ -1,93 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:id="@+id/activity_events_calendar"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.badoo.meetingroom.presentation.view.activity.EventsCalendarActivity"
-    android:orientation="vertical"
     android:background="@color/backgroundColor"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    tools:context="com.badoo.meetingroom.presentation.view.activity.EventsCalendarActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:id="@+id/layout_status_bar"
-        android:layout_height="@dimen/status_bar_height">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/img_badoo_logo"
-            android:adjustViewBounds="true"
-            android:layout_marginStart="@dimen/status_bar_badoo_logo_margin_left"
-            android:paddingTop="@dimen/status_bar_badoo_logo_padding_top"
-            android:paddingBottom="@dimen/status_bar_badoo_logo_padding_bottom"
-            android:src="@drawable/ic_badoo_logo" />
-
-        <TextView
-            android:text="@string/fake_room_name"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/tv_current_date_time"
-            android:textColor="@color/status_bar_time_text_color"
-            android:layout_marginEnd="@dimen/status_bar_time_margin_right"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_alignParentEnd="true" />
-
-    </RelativeLayout>
-
-    <android.support.v7.widget.Toolbar
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:elevation="5dp"
-        android:id="@+id/toolbar">
-
-        <TextView
-            android:text="@string/rooms"
-            android:transitionName="roomName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_all_rooms"
-            android:textSize="@dimen/tool_bar_title_text_size"
-            android:layout_marginStart="@dimen/tool_bar_title_margin_left"
-            android:gravity="center_vertical|center_horizontal"
-            android:textColor="@color/tool_bar_title_text_color"
-            android:layout_gravity="center"/>
-
-
-    </android.support.v7.widget.Toolbar>
-
-
-    <android.support.design.widget.TabLayout
-        android:clipChildren="false"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabTextAppearance="@style/MyRoomListTabTextAppearance"
-        app:tabGravity="center"
-        app:tabIndicatorHeight="@dimen/room_list_tab_height"
-        app:tabMinWidth="@dimen/room_list_tab_min_width"
-        android:id="@+id/tab_layout_floors"
         android:background="@color/backgroundColor"
-        android:elevation="5dp" />
+        android:elevation="@dimen/tab_layout_elevation"
+        android:orientation="vertical">
+
+        <include layout="@layout/status_bar"/>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme">
+
+            <TextView
+                android:id="@+id/tv_all_rooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/tool_bar_title_margin_left"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/rooms"
+                android:textColor="@color/tool_bar_title_text_color"
+                android:textSize="@dimen/tool_bar_title_text_size"
+                android:transitionName="roomName" />
+        </android.support.v7.widget.Toolbar>
+
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout_floors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="@dimen/room_list_tab_height"
+            app:tabMinWidth="@dimen/room_list_tab_min_width"
+            app:tabIndicatorColor="@color/room_list_tab_indicator_color"
+            app:tabTextAppearance="@style/MyRoomListTabTextAppearance" />
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ProgressBar
+            android:id="@+id/pb_loading_room_list_events"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pb_loading_room_list_events"
-            android:layout_centerVertical="false"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="false" />
 
         <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/view_pager">
+            android:layout_height="match_parent">
 
         </android.support.v4.view.ViewPager>
     </RelativeLayout>

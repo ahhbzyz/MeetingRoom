@@ -2,19 +2,15 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
-import com.badoo.meetingroom.domain.entity.intf.BadooPerson;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
-import com.badoo.meetingroom.presentation.Badoo;
-import com.badoo.meetingroom.presentation.mapper.BadooPersonModelMapper;
 import com.badoo.meetingroom.presentation.model.impl.EventModelImpl;
-import com.badoo.meetingroom.presentation.model.intf.BadooPersonModel;
+import com.badoo.meetingroom.presentation.model.intf.PersonModel;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 import com.badoo.meetingroom.presentation.view.view.RoomBookingView;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
@@ -38,16 +34,13 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     private long mSelectedEndTime;
     private final InsertEvent mInsertEventUseCase;
     private final GetPersons mGetPersonsUseCase;
-    private final BadooPersonModelMapper mMapper;
     private List<EventModel> mAvailableEventList;
 
     @Inject
-    RoomBookingPresenterImpl(@Named(InsertEvent.NAME) InsertEvent insertEvent,
-                             @Named(GetPersons.NAME) GetPersons getPersons,
-                             BadooPersonModelMapper mapper) {
-        this.mInsertEventUseCase = insertEvent;
-        this.mGetPersonsUseCase = getPersons;
-        this.mMapper = mapper;
+    RoomBookingPresenterImpl(InsertEvent insertEvent,
+                             GetPersons getPersons) {
+        mInsertEventUseCase = insertEvent;
+        mGetPersonsUseCase = getPersons;
         mAvailableEventList = new ArrayList<>();
     }
 
@@ -116,7 +109,20 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
             //mAvailableEventList.add(0, eventModel);
         }
 
-        mRoomBookingView.renderTimeSlotsInView(position - tempPos, mAvailableEventList);
+        if (mAvailableEventList == null && mAvailableEventList.isEmpty()) {
+            return;
+        }
+
+        String date;
+
+        if (mAvailableEventList.get(0).getStartTime() >= TimeHelper.getMidNightTimeOfDay(1)) {
+
+            date = TimeHelper.formatDate(mAvailableEventList.get(0).getStartTime());
+        } else {
+            date = mRoomBookingView.context().getString(R.string.today);
+        }
+
+        mRoomBookingView.renderTimeSlotsInView(position - tempPos, mAvailableEventList, date);
     }
 
     @Override
@@ -173,7 +179,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     }
 
 
-    private final class GetPersonsSubscriber extends DefaultSubscriber<List<BadooPerson>> {
+    private final class GetPersonsSubscriber extends DefaultSubscriber<List<PersonModel>> {
         @Override
         public void onStart() {
             super.onStart();
@@ -181,10 +187,9 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
         }
 
         @Override
-        public void onNext(List<BadooPerson> badooPersonList) {
-            super.onNext(badooPersonList);
-            List<BadooPersonModel> mBadooPersonModelList = mMapper.map(badooPersonList);
-            mRoomBookingView.setUpAutoCompleteTextView(mBadooPersonModelList);
+        public void onNext(List<PersonModel> localPersonList) {
+            super.onNext(localPersonList);
+            mRoomBookingView.setUpAutoCompleteTextView(localPersonList);
         }
 
         @Override
@@ -210,15 +215,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
     }
 
     private void dismissViewLoading() {
-        this.mRoomBookingView.dismissLoadingData();
-        if (mAvailableEventList != null && !mAvailableEventList.isEmpty()) {
-            if (mAvailableEventList.get(0).getStartTime() >= TimeHelper.getMidNightTimeOfDay(1)) {
-                mRoomBookingView.showBookingInformation(TimeHelper.formatDate(mAvailableEventList.get(0).getStartTime()));
-            } else {
-                mRoomBookingView.showBookingInformation(mRoomBookingView.context().getString(R.string.today));
-            }
-
-        }
+        mRoomBookingView.dismissLoadingData();
     }
 
     @Override

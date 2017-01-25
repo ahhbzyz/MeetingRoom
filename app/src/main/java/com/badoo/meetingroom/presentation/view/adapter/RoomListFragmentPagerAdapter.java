@@ -35,30 +35,25 @@ public class RoomListFragmentPagerAdapter extends FragmentPagerAdapter {
         mContext = context;
         mTabTitles = new SparseArray<>();
         mTabTitles.put(-1, mContext.getString(R.string.all_rooms));
-
+        mTabTitles.put(0, mContext.getString(R.string.ground_floor));
         mTabTitles.put(1, mContext.getString(R.string.first_floor));
         mTabTitles.put(4, mContext.getString(R.string.fourth_floor));
-
         mRoomModelListMap = roomModelListMap;
     }
 
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-
             List<RoomModel> roomModelList = new ArrayList<>();
-
             for(Map.Entry<Integer,List<RoomModel>> entry : mRoomModelListMap.entrySet()) {
                 int key = entry.getKey();
                 List<RoomModel> list = mRoomModelListMap.get(key);
                 roomModelList.addAll(list);
             }
-
             return RoomListFragment.newInstance(position, (ArrayList<RoomModel>) roomModelList);
 
         } else {
             int key = (int) mRoomModelListMap.keySet().toArray()[position - 1];
-
             return RoomListFragment.newInstance(position, (ArrayList<RoomModel>) mRoomModelListMap.get(key));
         }
     }

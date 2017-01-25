@@ -74,7 +74,6 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
         mRoomImg.setOnClickListener(v -> {
             Intent intent = new Intent(EventsCalendarActivity.this, RoomListActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         });
 
@@ -94,7 +93,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finishAfterTransition();
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -103,7 +102,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     @Override
     protected void onSystemTimeRefresh() {
         mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
-        if (mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
+        if (mAdapter != null && mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
             mAdapter.getRegisteredFragment(0).getPresenter().onSystemTimeUpdate();
         }
     }

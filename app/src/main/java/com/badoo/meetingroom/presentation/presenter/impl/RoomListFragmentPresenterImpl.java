@@ -4,7 +4,6 @@ package com.badoo.meetingroom.presentation.presenter.impl;
 import com.badoo.meetingroom.data.remote.googlecalendarapi.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.event.GetEvents;
-import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
@@ -19,7 +18,6 @@ import com.google.api.services.calendar.model.EventDateTime;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import rx.Observable;
 
@@ -30,13 +28,12 @@ import rx.Observable;
 public class RoomListFragmentPresenterImpl implements RoomListPresenter {
 
     private RoomListFragmentView mRoomListFragmentView;
-    private int mPage;
     private final GetEvents mGetEventsUseCase;
     private List<RoomModel> mRoomModelList;
     private int useCaseFinishCount;
 
     @Inject
-    RoomListFragmentPresenterImpl(@Named(GetEvents.NAME) GetEvents getEventsUseCase) {
+    RoomListFragmentPresenterImpl(GetEvents getEventsUseCase) {
         mGetEventsUseCase = getEventsUseCase;
     }
 
@@ -74,7 +71,6 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
 
     @Override
     public void setPage(int page) {
-        mPage = page;
     }
 
     @Override
@@ -125,9 +121,11 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
             }
         }
 
+        
         @Override
         public void onCompleted() {
             super.onCompleted();
+            mRoomListFragmentView.dismissLoadingData();
         }
 
         @Override

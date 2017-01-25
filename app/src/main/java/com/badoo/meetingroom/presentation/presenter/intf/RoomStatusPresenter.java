@@ -8,7 +8,8 @@ import com.badoo.meetingroom.presentation.view.view.RoomStatusView;
  * Created by zhangyaozhong on 23/12/2016.
  */
 public interface RoomStatusPresenter extends Presenter {
-    void setView(@NonNull RoomStatusView roomEventsView);
+
+    void setView(RoomStatusView roomEventsView);
 
     void onCountDownTicking();
     void onCountDownFinished();

@@ -33,7 +33,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
     private int mPage = 0;
 
     @Inject
-    DailyEventsPresenterImpl(@Named(GetEvents.NAME)GetEvents getCalendarEventsUseCase) {
+    DailyEventsPresenterImpl(GetEvents getCalendarEventsUseCase) {
         mGetCalendarEventsUseCase = getCalendarEventsUseCase;
         mEventList = new ArrayList<>();
     }

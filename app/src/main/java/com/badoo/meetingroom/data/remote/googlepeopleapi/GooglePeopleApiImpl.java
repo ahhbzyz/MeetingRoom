@@ -32,54 +32,18 @@ public class GooglePeopleApiImpl implements GooglePeopleApi {
 
     @Override
     public Observable<List<Person>> getPersonList() {
-        return Observable.create(subscriber -> {
-            if(hasInternetConnection()) {
-                try {
-                    List<Person> result = getPersonListFromApi(mServices);
-                    if (result != null) {
-                        subscriber.onNext(result);
-                        subscriber.onCompleted();
-                    } else {
-                        subscriber.onError(new NetworkConnectionException());
-                    }
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                }
-
-            } else {
-                subscriber.onError(new NetworkConnectionException());
-            }
-        });
+        if (!hasInternetConnection()) {
+            return Observable.error(new NetworkConnectionException());
+        }
+        return Observable.fromCallable(GetPeopleApiCall.create(mServices));
     }
 
     @Override
     public Observable<Person> getPerson(String personId) {
-        return Observable.create(subscriber -> {
-            if(hasInternetConnection()) {
-                try {
-                    Person result = getPersonFromApi(mServices, personId);
-                    if (result != null) {
-                        subscriber.onNext(result);
-                        subscriber.onCompleted();
-                    } else {
-                        subscriber.onError(new NetworkConnectionException());
-                    }
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                }
-
-            } else {
-                subscriber.onError(new NetworkConnectionException());
-            }
-        });
-    }
-
-    private List<Person> getPersonListFromApi(People services) throws Exception {
-        return GetPeopleApiCall.create(services).requestSyncCall();
-    }
-
-    private Person getPersonFromApi(People services, String personId) throws Exception {
-        return GetPersonApiCall.createGET(services, personId).requestSyncCall();
+        if (!hasInternetConnection()) {
+            return Observable.error(new NetworkConnectionException());
+        }
+        return Observable.fromCallable(GetPersonApiCall.create(mServices, personId));
     }
 
     private boolean hasInternetConnection() {

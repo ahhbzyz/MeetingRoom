@@ -3,7 +3,7 @@ package com.badoo.meetingroom.di.components;
 import android.content.Context;
 
 import com.badoo.meetingroom.di.modules.ApplicationModule;
-import com.badoo.meetingroom.domain.repository.BadooPersonRepo;
+import com.badoo.meetingroom.domain.repository.LocalPersonRepo;
 import com.badoo.meetingroom.domain.repository.CalendarListRepo;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
 import com.badoo.meetingroom.domain.repository.LocalEventRepo;
@@ -27,7 +27,7 @@ public interface ApplicationComponent {
   GoogleAccountCredential googleAccountCredential();
   Calendar services();
   LocalEventRepo roomEventRepository();
-  BadooPersonRepo badooPersonRepository();
+  LocalPersonRepo badooPersonRepository();
   GoogleAccountRepo googleAccountRepository();
   RemoteImageRepo remoteImageRepository();
   CalendarListRepo calendarListRepository();

@@ -10,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-
 import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomListPresenter;
@@ -146,17 +144,12 @@ public class RoomListFragment extends BaseFragment implements RoomListFragmentVi
 
     @Override
     public void showLoadingData(String message) {
-        mLayoutRefreshRoomList.post(new Runnable() {
-            @Override
-            public void run() {
-                mLayoutRefreshRoomList.setRefreshing(true);
-            }
-        });
+        mLayoutRefreshRoomList.post(() -> mLayoutRefreshRoomList.setRefreshing(true));
     }
 
     @Override
     public void dismissLoadingData() {
-        mLayoutRefreshRoomList.setRefreshing(false);
+        mLayoutRefreshRoomList.post(() -> mLayoutRefreshRoomList.setRefreshing(false));
     }
 
     @Override

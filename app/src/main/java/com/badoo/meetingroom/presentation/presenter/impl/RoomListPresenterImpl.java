@@ -26,7 +26,7 @@ public class RoomListPresenterImpl implements RoomsPresenter {
     private final GetRoomList mGetRoomListUseCase;
 
     @Inject
-    RoomListPresenterImpl(@Named(GetRoomList.NAME) GetRoomList getRoomListUseCase) {
+    RoomListPresenterImpl(GetRoomList getRoomListUseCase) {
         mGetRoomListUseCase = getRoomListUseCase;
     }
 
@@ -56,7 +56,6 @@ public class RoomListPresenterImpl implements RoomsPresenter {
             if (roomModelListMap == null) {
                 return;
             }
-
             mRoomListView.setUpViewPager(roomModelListMap);
         }
 

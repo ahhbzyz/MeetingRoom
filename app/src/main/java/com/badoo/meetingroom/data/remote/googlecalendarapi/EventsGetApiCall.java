@@ -31,12 +31,11 @@ class EventsGetApiCall implements Callable<List<Event>>{
     }
 
     public List<Event> requestSyncCall() throws Exception {
-        connectToApi();
-        return mResponse;
+        return connectToApi();
 
     }
 
-    private void connectToApi() throws Exception {
+    private List<Event> connectToApi() throws Exception {
         Events events;
         events = mServices.events().list(mParams.getCalendarId())
             .setTimeMin(mParams.getEventParams().getStart().getDateTime())
@@ -47,6 +46,7 @@ class EventsGetApiCall implements Callable<List<Event>>{
             .setMaxResults(mParams.getNumOfResult())
             .execute();
 
+        return events.getItems();
 
 //        Map<String, String> params = new HashMap<>();
 //        Channel request = new Channel()
@@ -56,12 +56,6 @@ class EventsGetApiCall implements Callable<List<Event>>{
 //        mServices.events().watch(Badoo.getCurrentRoom().getId(), request).execute();
 
         //Events changes = mServices.events().list("zhang.yaozhong@corp.badoo.com").execute();
-
-        mResponse = events.getItems();
-
-        for (int i = 0; i < mResponse.size(); i++) {
-            //System.out.println(mResponse.get(i).toString());
-        }
     }
 
     @Override
