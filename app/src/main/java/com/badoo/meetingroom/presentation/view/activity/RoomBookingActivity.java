@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.badoo.meetingroom.R;
-import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.presentation.model.intf.PersonModel;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomBookingPresenter;

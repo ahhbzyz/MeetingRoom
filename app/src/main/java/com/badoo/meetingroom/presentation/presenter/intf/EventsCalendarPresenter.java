@@ -9,5 +9,10 @@ import com.badoo.meetingroom.presentation.view.view.EventsCalendarView;
  */
 
 public interface EventsCalendarPresenter extends Presenter {
-    void setView(@NonNull EventsCalendarView eventsCalendarView);
+
+    void setView(EventsCalendarView eventsCalendarView);
+
+    void getNumOfAvailableRooms();
+
+    void updateNumOfAvailableRooms();
 }

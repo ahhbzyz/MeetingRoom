@@ -1,40 +1,41 @@
 package com.badoo.meetingroom.domain.interactor.googleaccount;
 
-import android.support.annotation.NonNull;
-
 import com.badoo.meetingroom.domain.interactor.UseCase;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
 
 import javax.inject.Inject;
 
 import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by zhangyaozhong on 21/12/2016.
  */
 
-public class PutGoogleAccount extends UseCase<Void> {
+public class PutGoogleAccount extends UseCase {
 
     public static final String NAME = "putGoogleAccount";
 
-    private final GoogleAccountRepo googleAccountRepository;
-    private String accountName;
+    private final GoogleAccountRepo mGoogleAccountRepo;
 
     @Inject
-    PutGoogleAccount(GoogleAccountRepo googleAccountRepository) {
-        this.googleAccountRepository = googleAccountRepository;
+    PutGoogleAccount(GoogleAccountRepo googleAccountRepo) {
+        mGoogleAccountRepo = googleAccountRepo;
     }
 
-    public PutGoogleAccount init(@NonNull String accountName) {
-        this.accountName = accountName;
-        return this;
-    }
-
-    @Override
-    public Observable<Void> buildUseCaseObservable() {
-        if (this.accountName == null) {
+    private Observable<Void> buildUseCaseObservable(String accountName) {
+        if (accountName == null) {
             throw new IllegalArgumentException("init(accountName) not called, or called with null argument");
         }
-        return googleAccountRepository.putAccountName(accountName);
+        return mGoogleAccountRepo.putAccountName(accountName);
+    }
+
+    public void execute(Subscriber<Void> useCaseSubscriber, String accountName) {
+        mSubscription = buildUseCaseObservable(accountName)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(useCaseSubscriber);
     }
 }

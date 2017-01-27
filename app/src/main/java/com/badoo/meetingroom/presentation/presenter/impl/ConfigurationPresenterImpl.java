@@ -9,6 +9,7 @@ import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.BindPushNotifications;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetRoomList;
+import com.badoo.meetingroom.domain.interactor.GetRoomMap;
 import com.badoo.meetingroom.domain.interactor.googleaccount.GetGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.googleaccount.PutGoogleAccount;
 import com.badoo.meetingroom.presentation.Badoo;
@@ -18,7 +19,6 @@ import com.badoo.meetingroom.presentation.presenter.intf.ConfigurationPresenter;
 import com.badoo.meetingroom.presentation.view.view.ConfigurationView;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.calendar.model.Channel;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,8 @@ public class ConfigurationPresenterImpl implements ConfigurationPresenter {
     @Inject
     ConfigurationPresenterImpl(GetGoogleAccount getGoogleAccountUseCase,
                                PutGoogleAccount putGoogleAccountUseCase,
-                               GetRoomList getRoomListUseCase, BindPushNotifications bindPushNotificationsUseCase) {
+                               GetRoomList getRoomListUseCase,
+                               BindPushNotifications bindPushNotificationsUseCase) {
 
         mGetGoogleAccountUseCase = getGoogleAccountUseCase;
         mPutGoogleAccountUseCase = putGoogleAccountUseCase;
@@ -96,14 +97,14 @@ public class ConfigurationPresenterImpl implements ConfigurationPresenter {
 
     @Override
     public void storeGoogleAccountName(String accountName) {
-        mPutGoogleAccountUseCase.init(accountName).execute(new PutGoogleAccountSubscriber());
+        mPutGoogleAccountUseCase.execute(new PutGoogleAccountSubscriber(), accountName);
     }
 
     @Override
     public void bindPushNotificationsWithRoom(String id) {
         CalendarApiParams params = new CalendarApiParams(id);
         params.setRoomName(Badoo.getCurrentRoom().getName());
-        mBindPushNotificationsUseCase.init(params).execute(new BindPushNotificationsSubscriber());
+        mBindPushNotificationsUseCase.execute(new BindPushNotificationsSubscriber(), params);
     }
 
     @Override
@@ -125,7 +126,7 @@ public class ConfigurationPresenterImpl implements ConfigurationPresenter {
         public void onNext(GoogleAccountModel googleAccountModel) {
             super.onNext(googleAccountModel);
             showAccountNameOnSnackBar(googleAccountModel);
-            mGetRoomListUseCase.execute(new GetRoomListSubscriber());
+            mGetRoomListUseCase.execute(new GetRoomListSubscriber(), false);
         }
 
         @Override
@@ -183,24 +184,15 @@ public class ConfigurationPresenterImpl implements ConfigurationPresenter {
         }
     }
 
-    private final class GetRoomListSubscriber extends DefaultSubscriber<TreeMap<Integer, List<RoomModel>>> {
+    private final class GetRoomListSubscriber extends DefaultSubscriber<List<RoomModel>> {
         @Override
         public void onStart() {
             super.onStart();
         }
 
         @Override
-        public void onNext(TreeMap<Integer, List<RoomModel>> roomModelListMap) {
-            super.onNext(roomModelListMap);
-
-            List<RoomModel> roomModelList = new ArrayList<>();
-
-            for(Map.Entry<Integer,List<RoomModel>> entry : roomModelListMap.entrySet()) {
-                int key = entry.getKey();
-                List<RoomModel> list = roomModelListMap.get(key);
-                roomModelList.addAll(list);
-            }
-
+        public void onNext(List<RoomModel> roomModelList) {
+            super.onNext(roomModelList);
             mView.setUpRoomListSpinner(roomModelList);
         }
 

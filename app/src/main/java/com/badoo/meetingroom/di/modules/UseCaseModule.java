@@ -2,11 +2,10 @@ package com.badoo.meetingroom.di.modules;
 
 import com.badoo.meetingroom.domain.interactor.BindPushNotifications;
 import com.badoo.meetingroom.domain.interactor.GetRoomList;
+import com.badoo.meetingroom.domain.interactor.GetRoomMap;
 import com.badoo.meetingroom.domain.interactor.event.DeleteEvent;
-import com.badoo.meetingroom.domain.interactor.GetAvatar;
 import com.badoo.meetingroom.domain.interactor.event.GetEvents;
 import com.badoo.meetingroom.domain.interactor.googleaccount.GetGoogleAccount;
-import com.badoo.meetingroom.domain.interactor.GetPerson;
 import com.badoo.meetingroom.domain.interactor.GetPersons;
 import com.badoo.meetingroom.domain.interactor.event.InsertEvent;
 import com.badoo.meetingroom.domain.interactor.googleaccount.PutGoogleAccount;
@@ -69,20 +68,14 @@ public class UseCaseModule {
     }
 
     @Provides
-    @Named(GetPerson.NAME)
-    GetPerson provideGetPersonUseCase(GetPerson getPerson) {
-        return getPerson;
-    }
-
-    @Provides
-    @Named(GetAvatar.NAME)
-    GetAvatar provideGetAvatarUseCase(GetAvatar getAvatar) {
-        return getAvatar;
+    @Named(GetRoomMap.NAME)
+    GetRoomMap provideGetRoomMapUseCase(GetRoomMap getRoomMap) {
+        return getRoomMap;
     }
 
     @Provides
     @Named(GetRoomList.NAME)
-    GetRoomList provideGetCalendarListUseCase(GetRoomList getRoomList) {
+    GetRoomList provideGetRoomListUseCase(GetRoomList getRoomList) {
         return getRoomList;
     }
 

@@ -3,6 +3,7 @@ package com.badoo.meetingroom.domain.mapper;
 import com.badoo.meetingroom.domain.entity.intf.LocalEvent;
 import com.badoo.meetingroom.domain.entity.impl.LocalEventImpl;
 import com.badoo.meetingroom.presentation.Badoo;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventAttendee;
 
@@ -16,6 +17,9 @@ import javax.inject.Inject;
  */
 
 public class LocalEventMapper {
+
+    @Inject
+    GoogleAccountCredential mCredential;
 
     @Inject
     LocalEventMapper() {}
@@ -32,7 +36,7 @@ public class LocalEventMapper {
             String creatorName = null;
 
             if (event.getCreator() != null ) {
-                if (event.getCreator().getEmail().equals(Badoo.getCurrentRoom().getId())) {
+                if (event.getCreator().getEmail().equals(mCredential.getSelectedAccountName())) {
                     if (event.getAttendees() != null && !event.getAttendees().isEmpty()) {
                         creatorId = event.getAttendees().get(0).getId();
                         creatorEmailAddress = event.getAttendees().get(0).getEmail();
@@ -61,7 +65,7 @@ public class LocalEventMapper {
 
             if (event.getAttendees() != null) {
                 for (EventAttendee eventAttendee : event.getAttendees()) {
-                    if (eventAttendee.getEmail().equals(Badoo.getCurrentRoom().getId()) &&
+                    if (eventAttendee.getEmail().equals(mCredential.getSelectedAccountName()) &&
                         eventAttendee.getResponseStatus().equals("declined")) {
                         return null;
                     }

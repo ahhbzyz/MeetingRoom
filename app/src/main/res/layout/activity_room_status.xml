@@ -45,10 +45,9 @@
                 android:layout_gravity="end"/>
 
             <TextView
-                android:text="2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_room"
+                android:id="@+id/tv_available_rooms"
                 android:layout_toStartOf="@+id/img_room"
                 android:gravity="center_vertical|center_horizontal"
                 android:textSize="@dimen/tool_bar_available_room_number_text_size"

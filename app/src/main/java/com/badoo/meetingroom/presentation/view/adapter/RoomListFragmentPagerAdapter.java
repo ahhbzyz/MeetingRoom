@@ -27,17 +27,15 @@ public class RoomListFragmentPagerAdapter extends FragmentPagerAdapter {
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
     private TreeMap<Integer, List<RoomModel>> mRoomModelListMap;
     private SparseArray<String> mTabTitles;
-    private Context mContext;
 
     @Inject
     public RoomListFragmentPagerAdapter(Context context, FragmentManager fm, TreeMap<Integer, List<RoomModel>> roomModelListMap) {
         super(fm);
-        mContext = context;
         mTabTitles = new SparseArray<>();
-        mTabTitles.put(-1, mContext.getString(R.string.all_rooms));
-        mTabTitles.put(0, mContext.getString(R.string.ground_floor));
-        mTabTitles.put(1, mContext.getString(R.string.first_floor));
-        mTabTitles.put(4, mContext.getString(R.string.fourth_floor));
+        mTabTitles.put(-1, context.getString(R.string.all_rooms));
+        mTabTitles.put(0, context.getString(R.string.ground_floor));
+        mTabTitles.put(1, context.getString(R.string.first_floor));
+        mTabTitles.put(4, context.getString(R.string.fourth_floor));
         mRoomModelListMap = roomModelListMap;
     }
 

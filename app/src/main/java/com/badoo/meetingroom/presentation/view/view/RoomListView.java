@@ -1,7 +1,5 @@
 package com.badoo.meetingroom.presentation.view.view;
 
-import android.util.SparseArray;
-
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 
 import java.util.List;
@@ -12,5 +10,7 @@ import java.util.TreeMap;
  */
 
 public interface RoomListView extends LoadDataView {
+
     void setUpViewPager(TreeMap<Integer, List<RoomModel>> roomModelListMap);
+
 }

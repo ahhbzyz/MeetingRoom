@@ -36,4 +36,5 @@ public interface RoomStatusView extends LoadDataView {
 
     void updateRoomStatusTextView(EventModel mCurrentEvent);
 
+    void updateNumOfAvailableRooms(int numOfAvailableRooms);
 }

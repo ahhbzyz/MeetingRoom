@@ -74,7 +74,7 @@ public class RoomBookingPresenterImpl implements RoomBookingPresenter {
 
         CalendarApiParams params = new CalendarApiParams(roomId);
         params.setEventParams(event);
-        mInsertEventUseCase.init(params).execute(new InsertEventSubscriber());
+        mInsertEventUseCase.execute(new InsertEventSubscriber(), params);
     }
 
     @Override

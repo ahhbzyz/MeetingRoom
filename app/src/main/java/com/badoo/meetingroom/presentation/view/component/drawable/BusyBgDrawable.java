@@ -29,7 +29,6 @@ public class BusyBgDrawable extends Drawable {
     private final Paint mBgPaint;
     private final Paint mDividerPaint;
     private final float gap = 40f;
-    private List<Line> mLines;
 
     public BusyBgDrawable(int mBgColor, int dividerColor) {
         this(mBgColor, dividerColor, 1);
@@ -42,25 +41,8 @@ public class BusyBgDrawable extends Drawable {
         mRemainingProgress = remainingProgress;
         mDividerPaint = new Paint();
         mDividerPaint.setStyle(Paint.Style.STROKE);
-        mDividerPaint.setColor(Color.WHITE);
+        mDividerPaint.setColor(dividerColor);
         mDividerPaint.setStrokeWidth(2);
-
-        mLines = new ArrayList<>();
-    }
-
-    @Override
-    protected void onBoundsChange(Rect bounds) {
-        super.onBoundsChange(bounds);
-//
-//        float width = bounds.right - bounds.left;
-//        float height = bounds.bottom - bounds.top;
-//
-//        float bottomRectHeight = mRemainingProgress * height;
-//        float topRectHeight = height - bottomRectHeight;
-//
-//        for (float i = - bottomRectHeight; i < width - CORNER_RADIUS; i += gap) {
-//            mLines.add(new Line(i, topRectHeight, i + bottomRectHeight, height));
-//        }
     }
 
     @Override
@@ -79,15 +61,6 @@ public class BusyBgDrawable extends Drawable {
         mBgPaint.setColor(mBgColor);
         canvas.drawRoundRect(new RectF(-CORNER_RADIUS, topRectHeight, width, height), CORNER_RADIUS, CORNER_RADIUS, mBgPaint);
 
-
-//        for(Line l : mLines) {
-//            canvas.drawLine(l.startX, l.startY, l.stopX, l.stopY, mDividerPaint);
-//        }
-
-//        Path path = new Path();
-//
-//        //canvas.drawLine(0, 0, width, height, mDividerPaint);
-//
         float i = 0;
         for (; i < width - bottomRectHeight; i += gap) {
             canvas.drawLine(i, topRectHeight, i + bottomRectHeight, height, mDividerPaint);
@@ -98,11 +71,10 @@ public class BusyBgDrawable extends Drawable {
         }
 
         for (float k = bottomRectHeight - gap; k >= 0; k -= gap) {
-            canvas.drawLine(k, height, 0, bottomRectHeight - k, mDividerPaint);
+            canvas.drawLine(k, height, 0, topRectHeight + bottomRectHeight - k, mDividerPaint);
         }
 
     }
-
 
 
     @Override
@@ -118,18 +90,5 @@ public class BusyBgDrawable extends Drawable {
     @Override
     public int getOpacity() {
         return PixelFormat.OPAQUE;
-    }
-
-
-    class Line {
-
-        float startX, startY, stopX, stopY;
-
-        Line(float startX, float startY, float stopX, float stopY) {
-            this.startX = startX;
-            this.startY = startY;
-            this.stopX = stopX;
-            this.stopY = stopY;
-        }
     }
 }

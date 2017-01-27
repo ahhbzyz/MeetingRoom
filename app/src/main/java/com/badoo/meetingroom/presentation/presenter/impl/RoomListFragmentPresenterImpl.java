@@ -65,7 +65,7 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
             params.setEventParams(event);
             GetEventsSubscriber subscriber = new GetEventsSubscriber();
             subscriber.setPosition(i);
-            mGetEventsUseCase.init(params, TimeHelper.getMidNightTimeOfDay(0), TimeHelper.getMidNightTimeOfDay(1)).execute(subscriber);
+            mGetEventsUseCase.execute(subscriber, roomModelList.get(i).getId(), 0);
         }
     }
 
@@ -110,7 +110,7 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
                     } else if (o1.getCurrentEvent().isAvailable() && o2.getCurrentEvent().isAvailable()){
                         return Long.compare(o2.getCurrentEvent().getNextBusyEventStartTime(), o1.getCurrentEvent().getNextBusyEventStartTime());
                     } else {
-                        return (int) (o1.getCurrentEvent().getNextBusyEventStartTime() - o2.getCurrentEvent().getNextBusyEventStartTime());
+                        return Long.compare(o1.getCurrentEvent().getNextBusyEventStartTime(), o2.getCurrentEvent().getNextBusyEventStartTime());
                     }
 
                 }).subscribe(roomModelList -> {
@@ -121,11 +121,10 @@ public class RoomListFragmentPresenterImpl implements RoomListPresenter {
             }
         }
 
-        
+
         @Override
         public void onCompleted() {
             super.onCompleted();
-            mRoomListFragmentView.dismissLoadingData();
         }
 
         @Override

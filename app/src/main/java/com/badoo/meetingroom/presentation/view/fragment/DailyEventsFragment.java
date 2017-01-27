@@ -186,4 +186,10 @@ public class DailyEventsFragment extends BaseFragment implements DailyEventsView
     public int getCurrentPage() {
         return mPage;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.destroy();
+    }
 }

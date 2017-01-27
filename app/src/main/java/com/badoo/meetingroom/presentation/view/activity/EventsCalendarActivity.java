@@ -1,5 +1,6 @@
 package com.badoo.meetingroom.presentation.view.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
@@ -33,7 +34,7 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
     @BindView(R.id.tv_room_name) TextView mRoomNameTv;
     @BindView(R.id.img_room) ImageView mRoomImg;
-    @BindView(R.id.tv_ava_rooms) TextView mAvailableRoomsTv;
+    @BindView(R.id.tv_available_rooms) TextView mAvailableRoomsTv;
     @BindView(R.id.tv_current_date_time) TextView mCurrentDateTimeTv;
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) NonSwipeViewPager mViewPager;
@@ -52,6 +53,8 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
 
         initViews();
         setUpViewPager();
+
+        mPresenter.getNumOfAvailableRooms();
     }
 
     public void initViews() {
@@ -91,6 +94,11 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     }
 
     @Override
+    public void updateNumOfAvailableRooms(int numOfAvailableRooms) {
+        mAvailableRoomsTv.setText(String.valueOf(numOfAvailableRooms));
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
@@ -102,8 +110,29 @@ public class EventsCalendarActivity extends BaseActivity implements EventsCalend
     @Override
     protected void onSystemTimeRefresh() {
         mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
+        mPresenter.updateNumOfAvailableRooms();
         if (mAdapter != null && mViewPager.getChildCount() > 0  && mAdapter.getRegisteredFragment(0) != null) {
             mAdapter.getRegisteredFragment(0).getPresenter().onSystemTimeUpdate();
         }
+    }
+
+    @Override
+    public void showLoadingData(String message) {
+
+    }
+
+    @Override
+    public void dismissLoadingData() {
+
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public Context context() {
+        return getApplicationContext();
     }
 }

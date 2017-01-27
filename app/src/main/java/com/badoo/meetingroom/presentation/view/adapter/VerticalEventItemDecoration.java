@@ -39,13 +39,12 @@ public class VerticalEventItemDecoration extends RecyclerView.ItemDecoration {
      */
     public VerticalEventItemDecoration(Context context, int resId, List<EventModel> roomEventModelList) {
         mDivider = ContextCompat.getDrawable(context, resId);
-        List<EventModel> mRoomEventModelList = roomEventModelList;
         mDividerList = new ArrayList<>();
 
-        for (int i = 0; i < mRoomEventModelList.size() - 1; i++) {
+        for (int i = 0; i < roomEventModelList.size() - 1; i++) {
 
-            EventModel currentEvent = mRoomEventModelList.get(i);
-            EventModel nextEvent = mRoomEventModelList.get(i + 1);
+            EventModel currentEvent = roomEventModelList.get(i);
+            EventModel nextEvent = roomEventModelList.get(i + 1);
 
             if (currentEvent.getStatus() == nextEvent.getStatus() && currentEvent.isAvailable()) {
                 mDividerList.add(false);
@@ -55,26 +54,4 @@ public class VerticalEventItemDecoration extends RecyclerView.ItemDecoration {
         }
         mDividerList.add(false);
     }
-
-//    @Override
-//    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-//        int left = parent.getPaddingLeft();
-//        int right = parent.getWidth() - parent.getPaddingRight();
-//
-//        int childCount = parent.getChildCount();
-//
-//
-//        for (int i = 0; i < childCount; i++) {
-//
-//            View child = parent.getChildAt(i);
-//
-//            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-//
-//            int top = child.getBottom() + params.bottomMargin;
-//            int bottom = top + mDivider.getIntrinsicHeight();
-//
-//            mDivider.setBounds(left, top, right, bottom);
-//            mDivider.draw(c);
-//        }
-//    }
 }

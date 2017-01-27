@@ -19,6 +19,8 @@ public interface RoomStatusPresenter extends Presenter {
     void onRestart();
     void updateHorizontalTimeline();
 
+    void getNumOfAvailableRooms();
+
     void getEvents();
     void deleteEvent();
     void updateEvent();

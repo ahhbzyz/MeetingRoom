@@ -226,7 +226,8 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
                 TimelineBarDrawable barDrawable = new TimelineBarDrawable(eventModel.getExpiredEventColor(mContext), eventModel.getBusyEventColor(mContext));
                 barDrawable.setRemainingProgress(remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
-                BusyBgDrawable bg = new BusyBgDrawable(eventModel.getOnHoldEventColor(mContext), Color.WHITE, remainingProgress);
+
+                BusyBgDrawable bg = new BusyBgDrawable(eventModel.getBusyEventBgColor(mContext), Color.WHITE, remainingProgress);
                 holder.mEventTextViewsLayout.setBackground(bg);
                 holder.mEventPeriodTv.setText(eventModel.getDurationInText());
             }

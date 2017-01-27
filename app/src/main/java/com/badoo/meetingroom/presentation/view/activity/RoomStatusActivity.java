@@ -66,6 +66,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     @BindView(R.id.img_calendar) ImageView mCalendarImg;
     @BindView(R.id.img_room) ImageView mRoomImg;
     @BindView(R.id.img_night_mode) ImageView mNightModeImg;
+    @BindView(R.id.tv_available_rooms) TextView mAvailableRoomsTv;
 
     // Circle time view
     @BindView(R.id.circle_view) CircleView mCircleView;
@@ -122,6 +123,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         setUpHorizontalTimelineView();
 
         mPresenter.getEvents();
+        mPresenter.getNumOfAvailableRooms();
     }
 
     private void initViews() {
@@ -264,6 +266,11 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     }
 
     @Override
+    public void updateNumOfAvailableRooms(int numOfAvailableRooms) {
+        mAvailableRoomsTv.setText(String.valueOf(numOfAvailableRooms));
+    }
+
+    @Override
     public void updateExtendButtonState(boolean state) {
         mRoomStatusHandler.updateExtendButtonState(state);
     }
@@ -275,15 +282,15 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
 
     @Override
     public void updateHorizontalTimeline() {
-        if (mAdapter.getPastTimeWidth() == -1) {
-            return;
-        }
-        float leftMargin = -mAdapter.getPastTimeWidth()
-            + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
-        params.setMargins((int) leftMargin, 0 ,0 ,0);
-        mHorizontalTimelineRv.setLayoutParams(params);
-        mAdapter.notifyDataSetChanged();
+//        if (mAdapter.getPastTimeWidth() == -1) {
+//            return;
+//        }
+//        float leftMargin = -mAdapter.getPastTimeWidth()
+//            + getApplicationContext().getResources().getDimension(R.dimen.horizontal_timeline_current_time_mark_left_margin);
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHorizontalTimelineRv.getLayoutParams();
+//        params.setMargins((int) leftMargin, 0 ,0 ,0);
+//        mHorizontalTimelineRv.setLayoutParams(params);
+//        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -393,6 +400,7 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
     @Override
     protected void onSystemTimeRefresh() {
         mCurrentDateTimeTv.setText(TimeHelper.getCurrentDateTime(this));
+        updateHorizontalTimeline();
         mPresenter.onSystemTimeRefresh();
     }
 

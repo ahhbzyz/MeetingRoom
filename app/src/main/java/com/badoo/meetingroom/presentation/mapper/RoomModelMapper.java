@@ -1,18 +1,12 @@
 package com.badoo.meetingroom.presentation.mapper;
 
-import android.util.SparseArray;
 
 import com.badoo.meetingroom.domain.entity.intf.Room;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.model.impl.RoomModelImpl;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
@@ -46,7 +40,7 @@ public class RoomModelMapper {
     }
 
 
-    public TreeMap<Integer, List<RoomModel>> map(List<Room> roomList) {
+    public TreeMap<Integer, List<RoomModel>> mapToRoomMap(List<Room> roomList) {
 
         final TreeMap<Integer, List<RoomModel>> roomModelListMap = new TreeMap<>();
 
@@ -67,5 +61,23 @@ public class RoomModelMapper {
 
 
         return roomModelListMap;
+    }
+
+    public List<RoomModel> mapToRoomList(List<Room> roomList) {
+
+        final List<RoomModel> roomModelList = new ArrayList<>();
+
+        for (Room room : roomList) {
+
+            final RoomModel roomModel = map(room);
+
+            if (roomModel != null) {
+
+                roomModelList.add(roomModel);
+            }
+        }
+
+
+        return roomModelList;
     }
 }

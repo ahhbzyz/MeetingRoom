@@ -15,7 +15,7 @@ import rx.Observable;
  */
 
 public interface CalendarApiRepo {
-    Observable<List<LocalEvent>> getRoomEventList(CalendarApiParams params);
+    Observable<List<LocalEvent>> getEvents(CalendarApiParams params);
     Observable<Event> insertEvent(CalendarApiParams params);
     Observable<Void> deleteEvent(CalendarApiParams params);
     Observable<Event> updateEvent(CalendarApiParams params);

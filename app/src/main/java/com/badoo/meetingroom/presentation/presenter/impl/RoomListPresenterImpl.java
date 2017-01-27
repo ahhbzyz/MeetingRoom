@@ -1,9 +1,7 @@
 package com.badoo.meetingroom.presentation.presenter.impl;
 
-import android.util.SparseArray;
-
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
-import com.badoo.meetingroom.domain.interactor.GetRoomList;
+import com.badoo.meetingroom.domain.interactor.GetRoomMap;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.RoomsPresenter;
 import com.badoo.meetingroom.presentation.view.view.RoomListView;
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by zhangyaozhong on 22/01/2017.
@@ -23,17 +20,17 @@ public class RoomListPresenterImpl implements RoomsPresenter {
 
     private RoomListView mRoomListView;
 
-    private final GetRoomList mGetRoomListUseCase;
+    private final GetRoomMap mGetRoomMapUseCase;
 
     @Inject
-    RoomListPresenterImpl(GetRoomList getRoomListUseCase) {
-        mGetRoomListUseCase = getRoomListUseCase;
+    RoomListPresenterImpl(GetRoomMap getRoomMapUseCase) {
+        mGetRoomMapUseCase = getRoomMapUseCase;
     }
 
 
     @Override
     public void getRoomList() {
-        mGetRoomListUseCase.execute(new GetRoomListSubscriber());
+        mGetRoomMapUseCase.execute(new GetRoomListSubscriber());
     }
 
     @Override
@@ -96,6 +93,6 @@ public class RoomListPresenterImpl implements RoomsPresenter {
 
     @Override
     public void destroy() {
-        mGetRoomListUseCase.unSubscribe();
+        mGetRoomMapUseCase.unSubscribe();
     }
 }

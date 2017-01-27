@@ -54,23 +54,7 @@ public class DailyEventsPresenterImpl implements DailyEventsPresenter {
 
     @Override
     public void getEvents(String roomId) {
-        Event event = new Event();
-
-        DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage));
-        EventDateTime start = new EventDateTime()
-            .setDateTime(startDateTime);
-        event.setStart(start);
-
-        DateTime endDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(mPage + 1));
-        EventDateTime end = new EventDateTime()
-            .setDateTime(endDateTime);
-        event.setEnd(end);
-
-        CalendarApiParams params = new CalendarApiParams(roomId);
-        params.setEventParams(event);
-        long startTime = Badoo.getStartTimeOfDay(mPage);
-        long endTime = Badoo.getEndTimeOfDay(mPage);
-        mGetCalendarEventsUseCase.init(params, startTime, endTime).execute(new GetEventsSubscriber());
+        mGetCalendarEventsUseCase.execute(new GetEventsSubscriber(), roomId, mPage);
     }
 
     private final class GetEventsSubscriber extends DefaultSubscriber<List<EventModel>> {

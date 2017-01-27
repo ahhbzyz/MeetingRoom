@@ -40,7 +40,7 @@ public class CalendarApiRepoImpl implements CalendarApiRepo {
     }
 
     @Override
-    public Observable<List<LocalEvent>> getRoomEventList(CalendarApiParams params) {
+    public Observable<List<LocalEvent>> getEvents(CalendarApiParams params) {
         return mCalendarApiStore.getEventList(params).map(mLocalEventMapper::map);
     }
 
