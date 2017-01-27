@@ -2,6 +2,7 @@ package com.badoo.meetingroom.presentation;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -32,7 +33,7 @@ public class CalendarUpdateService extends FirebaseMessagingService {
 
         for (Map.Entry<String, String> entry : remoteMessage.getData().entrySet())
         {
-            System.out.println(entry.getKey() + " " + entry.getValue());
+            Log.d("CalendarUpdateService: ", entry.getKey() + " " + entry.getValue());
         }
 
         Intent intent = new Intent(TAG);

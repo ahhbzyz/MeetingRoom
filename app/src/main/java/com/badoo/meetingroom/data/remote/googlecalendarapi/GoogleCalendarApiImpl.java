@@ -5,12 +5,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.badoo.meetingroom.data.exception.NetworkConnectionException;
+import com.badoo.meetingroom.data.local.FileManager;
 import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.CalendarListEntry;
+import com.google.api.services.calendar.model.Channel;
 import com.google.api.services.calendar.model.Event;
 
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 
@@ -18,17 +23,21 @@ import rx.Observable;
  * Created by zhangyaozhong on 20/12/2016.
  */
 
+@Singleton
 public class GoogleCalendarApiImpl implements GoogleCalendarApi {
 
     private Context mContext;
     private Calendar mServices;
+    private FileManager mFileManager;
 
-    public GoogleCalendarApiImpl(Context context, Calendar services) {
+    @Inject
+    public GoogleCalendarApiImpl(Context context, Calendar services, FileManager fileManager) {
         if (context == null || services == null) {
             throw new IllegalArgumentException("The constructor parameters cannot be null");
         }
-        this.mContext = context;
-        this.mServices = services;
+        mContext = context;
+        mServices = services;
+        mFileManager = fileManager;
     }
 
     @Override
@@ -76,11 +85,11 @@ public class GoogleCalendarApiImpl implements GoogleCalendarApi {
     }
 
     @Override
-    public Observable<Void> bindPushNotifications(CalendarApiParams params) {
+    public Observable<Channel> bindPushNotifications(CalendarApiParams params) {
         if (!hasInternetConnection()) {
             return Observable.error(new NetworkConnectionException());
         }
-        return Observable.fromCallable(BindPushNotificationsApiCall.bind(mServices, params));
+        return Observable.fromCallable(BindPushNotificationsApiCall.bind(mContext, mServices, mFileManager, params));
     }
 
 

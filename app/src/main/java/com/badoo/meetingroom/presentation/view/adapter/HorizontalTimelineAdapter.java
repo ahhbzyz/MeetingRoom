@@ -169,7 +169,7 @@ public class HorizontalTimelineAdapter extends RecyclerView.Adapter<HorizontalTi
         }
 
         TimelineBarDrawable barDrawable
-            = new TimelineBarDrawable(eventModel.getEventExpiredColor(), eventModel.getEventColor());
+            = new TimelineBarDrawable(eventModel.getExpiredEventColor(mContext), eventModel.getEventColor(mContext));
         barDrawable.setRemainingProgress(remainingProgress);
         barDrawable.setCornerRadius(0, 0, 0, 0);
 

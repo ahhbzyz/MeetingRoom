@@ -1,10 +1,10 @@
 package com.badoo.meetingroom.di.modules;
 
 import com.badoo.meetingroom.di.PerActivity;
+import com.badoo.meetingroom.presentation.presenter.impl.ConfigurationPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.DailyEventsPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.EventCreatorDialogPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.EventsCalendarPresenterImpl;
-import com.badoo.meetingroom.presentation.presenter.impl.MainPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomBookingPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomListFragmentPresenterImpl;
 import com.badoo.meetingroom.presentation.presenter.impl.RoomStatusPresenterImpl;
@@ -32,7 +32,7 @@ public class PresentationModule {
 
     @Provides
     @PerActivity
-    ConfigurationPresenter provideGetCredentialPresenter(MainPresenterImpl getCredentialPresenterImpl) {
+    ConfigurationPresenter provideGetCredentialPresenter(ConfigurationPresenterImpl getCredentialPresenterImpl) {
         return getCredentialPresenterImpl;
     }
 

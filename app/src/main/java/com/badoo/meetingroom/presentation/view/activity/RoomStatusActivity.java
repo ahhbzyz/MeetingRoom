@@ -122,8 +122,6 @@ public class RoomStatusActivity extends BaseActivity implements RoomStatusView, 
         setUpHorizontalTimelineView();
 
         mPresenter.getEvents();
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
-
     }
 
     private void initViews() {

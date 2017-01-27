@@ -35,6 +35,7 @@ import dagger.Component;
 )
 
 public interface MeetingRoomBookingComponent extends ActivityComponent {
+
     // Activities
     void inject(ConfigurationActivity activity);
     void inject(RoomStatusActivity activity);

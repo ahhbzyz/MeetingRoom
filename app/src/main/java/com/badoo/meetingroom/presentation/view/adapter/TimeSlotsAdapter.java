@@ -157,7 +157,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
             changeTimeSlotBgColor(eventModel, position, timeSlotBg);
             holder.mTimeSlotImg.setBackground(timeSlotBg);
         } else {
-            TimeSlotWithDashesDrawable drawable = new TimeSlotWithDashesDrawable(mContext, eventModel.getEventColor(), mContext.getResources().getDimension(R.dimen.room_booking_time_slot_divider_width));
+            TimeSlotWithDashesDrawable drawable = new TimeSlotWithDashesDrawable(mContext, eventModel.getEventColor(mContext), mContext.getResources().getDimension(R.dimen.room_booking_time_slot_divider_width));
             holder.mTimeSlotImg.setBackground(drawable);
         }
 
@@ -338,7 +338,7 @@ public class TimeSlotsAdapter extends RecyclerView.Adapter<TimeSlotsAdapter.View
     private void changeTimeSlotBgColor(EventModel eventModel, int position, Drawable drawable) {
 
         if (!mItemViewList.isEmpty() && mItemViewList.get(position).isSelected()) {
-            drawable.setColorFilter(eventModel.getEventColor(), PorterDuff.Mode.SRC_IN);
+            drawable.setColorFilter(eventModel.getEventColor(mContext), PorterDuff.Mode.SRC_IN);
         }
         else {
             drawable.setColorFilter(ContextCompat.getColor(mContext, R.color.timeSlotExpired), PorterDuff.Mode.SRC_IN);

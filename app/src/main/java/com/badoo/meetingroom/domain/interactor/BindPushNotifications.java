@@ -2,6 +2,7 @@ package com.badoo.meetingroom.domain.interactor;
 
 import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.badoo.meetingroom.domain.repository.CalendarApiRepo;
+import com.google.api.services.calendar.model.Channel;
 
 import javax.inject.Inject;
 
@@ -11,7 +12,7 @@ import rx.Observable;
  * Created by zhangyaozhong on 25/01/2017.
  */
 
-public class BindPushNotifications extends UseCase<Void> {
+public class BindPushNotifications extends UseCase<Channel> {
 
     public static final String NAME = "bindPushNotifications";
 
@@ -29,7 +30,7 @@ public class BindPushNotifications extends UseCase<Void> {
     }
 
     @Override
-    protected Observable<Void> buildUseCaseObservable() {
+    protected Observable<Channel> buildUseCaseObservable() {
         if (mParams == null) {
             throw new IllegalArgumentException("init(PersonId) not called, or called with null argument");
         }

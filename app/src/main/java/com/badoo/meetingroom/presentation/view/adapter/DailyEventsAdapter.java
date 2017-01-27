@@ -44,7 +44,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
     private List<ItemView> mItemViewList;
     private OnEventRenderFinishListener mOnEventRenderFinishListener;
-
+    private BusyBgDrawable mComingBusyEventBg;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -84,6 +84,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
         mContext = context;
         mEventModelList = new ArrayList<>();
         mItemViewList = new ArrayList<>();
+        mComingBusyEventBg = new BusyBgDrawable(ContextCompat.getColor(mContext, R.color.roomStatusBusyBg), Color.WHITE);
     }
 
     public void setDailyEventList(List<EventModel> roomEventModelList) {
@@ -183,13 +184,16 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mEventPeriodTv.setText(eventModel.getDurationInText());
         }
 
+        holder.mEventTextViewsLayout.setBackground(null);
+
+
         // Event Expired
         if (eventModel.isExpired()) {
 
             if (eventModel.isBusy()) {
                 holder.mExpiredEventTopDivider.setVisibility(View.VISIBLE);
                 holder.mExpiredEventBottomDivider.setVisibility(View.VISIBLE);
-                holder.mTimelineBar.setBackgroundColor(eventModel.getEventExpiredColor());
+                holder.mTimelineBar.setBackgroundColor(eventModel.getExpiredEventColor(mContext));
             }
             else {
                 holder.mTimelineBar.setBackgroundColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_expired_time_line_bar));
@@ -213,16 +217,16 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
 
 
             if (eventModel.isAvailable()) {
-                TimelineBarDrawable barDrawable = new TimelineBarDrawable(ContextCompat.getColor(mContext, R.color.item_vertical_event_expired_time_line_bar), eventModel.getAvailableColor());
+                TimelineBarDrawable barDrawable = new TimelineBarDrawable(ContextCompat.getColor(mContext, R.color.item_vertical_event_expired_time_line_bar), eventModel.getAvailableEventColor(mContext));
                 barDrawable.setRemainingProgress(remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
                 holder.mEventTextViewsLayout.setBackground(null);
             }
             else {
-                TimelineBarDrawable barDrawable = new TimelineBarDrawable(eventModel.getEventExpiredColor(), eventModel.getBusyColor());
+                TimelineBarDrawable barDrawable = new TimelineBarDrawable(eventModel.getExpiredEventColor(mContext), eventModel.getBusyEventColor(mContext));
                 barDrawable.setRemainingProgress(remainingProgress);
                 holder.mTimelineBar.setBackground(barDrawable);
-                BusyBgDrawable bg = new BusyBgDrawable(eventModel.getBusyBgColor(), Color.WHITE, remainingProgress);
+                BusyBgDrawable bg = new BusyBgDrawable(eventModel.getOnHoldEventColor(mContext), Color.WHITE, remainingProgress);
                 holder.mEventTextViewsLayout.setBackground(bg);
                 holder.mEventPeriodTv.setText(eventModel.getDurationInText());
             }
@@ -239,13 +243,12 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             holder.mEventTitle.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_title_text));
             holder.mEventCreatorTv.setTextColor(ContextCompat.getColor(mContext, R.color.item_vertical_event_creator_text));
             if (eventModel.isAvailable()) {
-                holder.mTimelineBar.setBackgroundColor(eventModel.getAvailableColor());
+                holder.mTimelineBar.setBackgroundColor(eventModel.getAvailableEventColor(mContext));
                 holder.mEventTextViewsLayout.setBackground(null);
             }
             else {
-                holder.mTimelineBar.setBackgroundColor(eventModel.getBusyColor());
-                BusyBgDrawable bg = new BusyBgDrawable(eventModel.getBusyBgColor(), Color.WHITE);
-                holder.mEventTextViewsLayout.setBackground(bg);
+                holder.mTimelineBar.setBackgroundColor(eventModel.getBusyEventColor(mContext));
+                holder.mEventTextViewsLayout.setBackground(mComingBusyEventBg);
             }
         }
 

@@ -1,5 +1,6 @@
 package com.badoo.meetingroom.presentation.model.intf;
 
+import android.content.Context;
 import android.os.Parcelable;
 
 import java.util.List;
@@ -78,17 +79,21 @@ public interface EventModel extends Parcelable {
 
     void setFastBooking(boolean fastBooking);
 
-    int getEventColor();
+    int getEventColor(Context context);
 
-    int getEventBgColor();
+    int getEventBgColor(Context context);
 
-    int getAvailableColor();
+    int getAvailableEventColor(Context context);
 
-    int getBusyColor();
+    int getBusyEventColor(Context context);
 
-    int getBusyBgColor();
+    int getBusyEventBgColor(Context context);
 
-    int getEventExpiredColor();
+    int getOnHoldEventColor(Context context);
+
+    int getOnHoldEventBgColor(Context context);
+
+    int getExpiredEventColor(Context context);
 
     boolean isExpired();
 

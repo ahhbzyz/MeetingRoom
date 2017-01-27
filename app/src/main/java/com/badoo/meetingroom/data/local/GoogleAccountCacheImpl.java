@@ -50,7 +50,7 @@ public class GoogleAccountCacheImpl implements GoogleAccountCache {
                 }
             } else {
                 if (mConnector.hasPermissionToAccessContacts()) {
-                    String accountName = mFileManager.getAccountNameFromPreferences(
+                    String accountName = mFileManager.getFileNameFromPreferences(
                         mContext,
                         PREF_FILE_NAME,
                         PREF_ACCOUNT_NAME);
@@ -72,7 +72,7 @@ public class GoogleAccountCacheImpl implements GoogleAccountCache {
     public Observable<Void> put(String accountName) {
         return Observable.create(subscriber -> {
             if(accountName != null) {
-                mFileManager.putAccountNameToPreferences(
+                mFileManager.putFileNameToPreferences(
                     mContext,
                     PREF_FILE_NAME,
                     PREF_ACCOUNT_NAME,

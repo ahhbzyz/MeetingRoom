@@ -39,7 +39,6 @@ class GetEventsApiCall implements Callable<List<Event>>{
             .setOrderBy("startTime")
             .setShowDeleted(false)
             .setSingleEvents(true)
-            .setMaxResults(mParams.getNumOfResult())
             .execute();
 
         return events.getItems();

@@ -1,51 +1,85 @@
 package com.badoo.meetingroom.data.remote.googlecalendarapi;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.badoo.meetingroom.data.local.FileManager;
 import com.badoo.meetingroom.data.remote.CalendarApiParams;
-import com.badoo.meetingroom.presentation.Badoo;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Channel;
 
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 /**
  * Created by zhangyaozhong on 19/01/2017.
  */
 
-class BindPushNotificationsApiCall implements Callable<Void> {
+class BindPushNotificationsApiCall implements Callable<Channel> {
 
-    public static final String PUSH_NOTIFICATION_CHANNEL_ID = "51234567-89ab-cdef-0123456789ab";
 
     private Calendar mServices = null;
     private final CalendarApiParams mParams;
+    private final FileManager mFileManager;
+    private final Context mContext;
+    private final String NOTIFICATIONS_CHANNEL_INFO = "notifications_channel_info";
 
-    private BindPushNotificationsApiCall(Calendar services, CalendarApiParams params) {
+    private BindPushNotificationsApiCall(Context mContext, FileManager fileManager, Calendar services, CalendarApiParams params) {
+        this.mContext = mContext;
         mServices = services;
         mParams = params;
+        mFileManager = fileManager;
     }
 
-    static BindPushNotificationsApiCall bind(Calendar services, CalendarApiParams params) {
-        return new BindPushNotificationsApiCall(services, params);
+    static BindPushNotificationsApiCall bind(Context context, Calendar services, FileManager fileManager, CalendarApiParams params) {
+        return new BindPushNotificationsApiCall(context, fileManager, services, params);
     }
 
-    public Void requestSyncCall() throws Exception {
+    public Channel requestSyncCall() throws Exception {
         return connectToApi();
     }
 
-    private Void connectToApi() throws Exception {
+    private Channel connectToApi() throws Exception {
+
+
+        // get previous channel info
+        String channelId = mFileManager.getFileNameFromPreferences(mContext, NOTIFICATIONS_CHANNEL_INFO, mParams.getRoomName()+ "_channelId");
+        String resourceId = mFileManager.getFileNameFromPreferences(mContext, NOTIFICATIONS_CHANNEL_INFO, mParams.getRoomName() + "_resourceId");
+
+        String uniqueID = UUID.randomUUID().toString();
+
+        while (uniqueID.equals(channelId)) {
+            uniqueID = UUID.randomUUID().toString();
+        }
 
         Channel request = new Channel()
-            .setId(PUSH_NOTIFICATION_CHANNEL_ID)
+            .setId(uniqueID)
             .setType("web_hook")
+            .setToken(mParams.getRoomName())
             .setAddress("https://badoomeetingroom.000webhostapp.com/notifications");
-        System.out.println(mParams.getCalendarId());
 
-        Channel change = mServices.events().watch("corp.badoo.com_2d333531333339353536@resource.calendar.google.com", request).execute();
-        return null;
+        Channel channel = mServices.events().watch(mParams.getCalendarId(), request).execute();
+
+        // If bind successfully
+        if (channel != null && channel.getId() != null && channel.getResourceId() != null) {
+
+            Log.d("Bind notifications", "Channel id: " + channel.getId() + " resourcesId: " + channel.getResourceId());
+
+            // Unbind previous channel
+            if (channelId != null && resourceId != null) {
+                UnbindPushNotificationsApiCall.unbind(mServices, channelId, resourceId).call();
+            }
+
+            // put current channel info
+            mFileManager.putFileNameToPreferences(mContext, NOTIFICATIONS_CHANNEL_INFO, channel.getToken() + "_channelId", channel.getId());
+            mFileManager.putFileNameToPreferences(mContext, NOTIFICATIONS_CHANNEL_INFO, channel.getToken() + "_resourceId", channel.getResourceId());
+        }
+
+        return channel;
     }
 
     @Override
-    public Void call() throws Exception {
+    public Channel call() throws Exception {
         return requestSyncCall();
     }
-
 }

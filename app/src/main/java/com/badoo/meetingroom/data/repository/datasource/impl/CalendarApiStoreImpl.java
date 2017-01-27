@@ -4,6 +4,7 @@ import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.badoo.meetingroom.data.remote.googlecalendarapi.GoogleCalendarApi;
 import com.badoo.meetingroom.data.repository.datasource.intf.CalendarApiStore;
 import com.google.api.services.calendar.model.CalendarListEntry;
+import com.google.api.services.calendar.model.Channel;
 import com.google.api.services.calendar.model.Event;
 
 import java.util.List;
@@ -47,7 +48,7 @@ class CalendarApiStoreImpl implements CalendarApiStore {
     }
 
     @Override
-    public Observable<Void> bindPushNotifications(CalendarApiParams params) {
+    public Observable<Channel> bindPushNotifications(CalendarApiParams params) {
         return mGoogleCalendarApi.bindPushNotifications(params);
     }
 }

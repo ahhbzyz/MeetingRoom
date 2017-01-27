@@ -1,14 +1,18 @@
 package com.badoo.meetingroom.presentation.model.impl;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 
+import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.model.intf.EventModel;
 import com.badoo.meetingroom.presentation.view.timeutils.TimeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Created by zhangyaozhong on 17/12/2016.
@@ -31,7 +35,8 @@ public class EventModelImpl implements EventModel, Parcelable {
     private List<Long> timeStamps;
     private final long ON_HOLD_TIME = TimeHelper.min2Millis(5);
 
-    public EventModelImpl() {}
+    public EventModelImpl() {
+    }
 
     @Override
     public String getId() {
@@ -141,7 +146,6 @@ public class EventModelImpl implements EventModel, Parcelable {
         this.nextBusyEventStartTime = nextBusyEventStartTime;
     }
 
-
     @Override
     public boolean isBusy() {
         return status == BUSY;
@@ -203,47 +207,57 @@ public class EventModelImpl implements EventModel, Parcelable {
     }
 
     @Override
-    public int getEventColor() {
+    public int getEventColor(Context context) {
         switch (status) {
             case AVAILABLE:
-                return RoomEventColor.AVAILABLE_COLOR;
+                return getAvailableEventColor(context);
             case BUSY:
-                return (isOnHold() && isProcessing())? RoomEventColor.ON_HOLD_COLOR : RoomEventColor.BUSY_COLOR;
+                return (isOnHold() && isProcessing())? getOnHoldEventColor(context) : getBusyEventColor(context);
             default:
-                return RoomEventColor.EXPIRED_COLOR;
+                return getExpiredEventColor(context);
         }
     }
 
     @Override
-    public int getEventBgColor() {
+    public int getEventBgColor(Context context) {
         switch (status) {
             case AVAILABLE:
-                return RoomEventColor.AVAILABLE_COLOR;
+                return getAvailableEventColor(context);
             case BUSY:
-                return (isOnHold() && isProcessing()) ? RoomEventColor.ON_HOLD_BG_COLOR : RoomEventColor.BUSY_BG_COLOR;
+                return (isOnHold() && isProcessing()) ? getOnHoldEventBgColor(context) : getBusyEventBgColor(context);
             default:
-                return RoomEventColor.EXPIRED_COLOR;
+                return getExpiredEventColor(context);
         }
     }
 
     @Override
-    public final int getAvailableColor() {
-        return RoomEventColor.AVAILABLE_COLOR;
+    public final int getAvailableEventColor(Context context) {
+        return ContextCompat.getColor(context, R.color.roomStatusAvailable);
     }
 
     @Override
-    public final int getBusyColor() {
-        return RoomEventColor.BUSY_COLOR;
+    public final int getBusyEventColor(Context context) {
+        return ContextCompat.getColor(context, R.color.roomStatusBusy);
     }
 
     @Override
-    public final int getBusyBgColor() {
-        return RoomEventColor.BUSY_BG_COLOR;
+    public final int getBusyEventBgColor(Context context) {
+        return ContextCompat.getColor(context, R.color.roomStatusBusyBg);
     }
 
     @Override
-    public final int getEventExpiredColor() {
-        return RoomEventColor.EXPIRED_COLOR;
+    public final int getOnHoldEventColor(Context context) {
+        return ContextCompat.getColor(context, R.color.roomStatusOnHold);
+    }
+
+    @Override
+    public final int getOnHoldEventBgColor(Context context) {
+        return ContextCompat.getColor(context, R.color.roomStatusOnHoldBg);
+    }
+
+    @Override
+    public final int getExpiredEventColor(Context context) {
+        return ContextCompat.getColor(context, R.color.roomStatusExpired);
     }
 
     @Override
@@ -326,7 +340,6 @@ public class EventModelImpl implements EventModel, Parcelable {
 
     }
 
-
     public static final Creator<EventModel> CREATOR = new Creator<EventModel>() {
         @Override
         public EventModelImpl createFromParcel(Parcel source) {
@@ -338,19 +351,4 @@ public class EventModelImpl implements EventModel, Parcelable {
             return new EventModelImpl[size];
         }
     };
-
-
-    private static class RoomEventColor {
-
-        private static final int AVAILABLE_COLOR = Color.parseColor("#69E27E");
-
-        private static final int BUSY_COLOR = Color.parseColor("#F5584F");
-        private static final int BUSY_BG_COLOR = Color.parseColor("#26F5584F");
-
-        private static final int ON_HOLD_COLOR = Color.parseColor("#FFB000");
-        private static final int ON_HOLD_BG_COLOR = Color.parseColor("#26FFB000");
-
-        private static final int EXPIRED_COLOR = Color.parseColor("#D4D4D4");
-
-    }
 }

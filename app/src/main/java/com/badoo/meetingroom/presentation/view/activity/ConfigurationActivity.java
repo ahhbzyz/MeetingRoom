@@ -20,7 +20,7 @@ import com.badoo.meetingroom.R;
 import com.badoo.meetingroom.presentation.Badoo;
 import com.badoo.meetingroom.presentation.model.intf.RoomModel;
 import com.badoo.meetingroom.presentation.presenter.intf.ConfigurationPresenter;
-import com.badoo.meetingroom.presentation.view.view.MainView;
+import com.badoo.meetingroom.presentation.view.view.ConfigurationView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
@@ -33,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class ConfigurationActivity extends BaseActivity implements MainView, EasyPermissions.PermissionCallbacks {
+public class ConfigurationActivity extends BaseActivity implements ConfigurationView, EasyPermissions.PermissionCallbacks {
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -61,8 +61,12 @@ public class ConfigurationActivity extends BaseActivity implements MainView, Eas
         mPresenter.init();
         findViewById(R.id.btn_status).setEnabled(false);
         findViewById(R.id.btn_status).setOnClickListener(view -> {
-            Intent intent = new Intent(ConfigurationActivity.this, RoomStatusActivity.class);
-            startActivity(intent);
+            if (Badoo.getCurrentRoom() == null) {
+                // Toast
+                return;
+            }
+            mPresenter.finishConfigurations();
+
         });
     }
 
@@ -80,7 +84,6 @@ public class ConfigurationActivity extends BaseActivity implements MainView, Eas
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Badoo.setCurrentRoom(roomModelList.get(position));
-                mPresenter.bindPushNotificationsWithRoom(Badoo.getCurrentRoom().getId());
             }
 
             @Override
@@ -89,6 +92,12 @@ public class ConfigurationActivity extends BaseActivity implements MainView, Eas
             }
         });
         findViewById(R.id.btn_status).setEnabled(true);
+    }
+
+    @Override
+    public void showRoomStatusView() {
+        Intent intent = new Intent(this, RoomStatusActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -215,5 +224,11 @@ public class ConfigurationActivity extends BaseActivity implements MainView, Eas
     protected void onCalendarUpdate() {
         super.onCalendarUpdate();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.destroy();
     }
 }

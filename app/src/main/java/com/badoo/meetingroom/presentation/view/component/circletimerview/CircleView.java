@@ -36,7 +36,7 @@ public class CircleView extends View {
      */
     // Circle attributes
     final float DEFAULT_CIRCLE_RADIUS = dp2px(180);
-    final float DEFAULT_CIRCLE_STROKE_WIDTH = dp2px(42);
+    final float DEFAULT_CIRCLE_STROKE_WIDTH = dp2px(64);
 
     final int DEFAULT_CIRCLE_BACKGROUND_COLOR = Color.parseColor("#69E27E");
     final int DEFAULT_CIRCLE_COLOR = Color.parseColor("#69E27E");

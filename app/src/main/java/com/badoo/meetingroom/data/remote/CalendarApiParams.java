@@ -11,8 +11,8 @@ import javax.inject.Inject;
 public class CalendarApiParams {
 
     private String calendarId;
+    private String roomName;
     private Event eventParams;
-    private int numOfResult = 250;
 
     @Inject
     public CalendarApiParams(String calendarId) {
@@ -32,13 +32,11 @@ public class CalendarApiParams {
         return this;
     }
 
-    public int getNumOfResult() {
-        return numOfResult;
+    public String getRoomName() {
+        return roomName;
     }
 
-    // todo check
-    public CalendarApiParams setNumOfResult(int numOfResult) {
-        this.numOfResult = numOfResult;
-        return this;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 }

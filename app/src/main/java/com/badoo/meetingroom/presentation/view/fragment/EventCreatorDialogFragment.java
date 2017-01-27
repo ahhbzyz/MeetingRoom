@@ -86,10 +86,10 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment implemen
                 mCreatorEmailTv.setText(getActivity().getString(R.string.no_name_available));
                 mAvatarImg.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.ic_fast_booking));
 
-            }
-
-            if (mEvent.getCreatorEmailAddress() != null) {
-                mPresenter.getPerson(mEvent.getCreatorEmailAddress());
+            } else {
+                if (mEvent.getCreatorEmailAddress() != null) {
+                    mPresenter.getPerson(mEvent.getCreatorEmailAddress());
+                }
             }
         }
 

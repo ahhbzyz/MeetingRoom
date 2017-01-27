@@ -17,14 +17,14 @@ public class FileManager {
     @Inject
     FileManager () {}
 
-    void putAccountNameToPreferences(Context context, String fileName, String key, String accountName) {
+    public void putFileNameToPreferences(Context context, String fileName, String key, String value) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, accountName);
+        editor.putString(key, value);
         editor.apply();
     }
 
-    String getAccountNameFromPreferences(Context context, String fileName, String key) {
+    public String getFileNameFromPreferences(Context context, String fileName, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, null);
     }

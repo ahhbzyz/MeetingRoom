@@ -2,7 +2,6 @@ package com.badoo.meetingroom.presentation.view.activity;
 
 import android.graphics.Paint;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -39,8 +38,8 @@ class RoomStatusHandler {
         }
 
         activity.mCircleView.setColorTheme(
-            event.getEventColor(),
-            event.getEventBgColor()
+            event.getEventColor(activity),
+            event.getEventBgColor(activity)
         );
 
         // Reset circle background paint style
@@ -219,7 +218,7 @@ class RoomStatusHandler {
 
     void showDoNotDisturbView(EventModel currentEvent) {
 
-        activity.mCircleView.setColorTheme(currentEvent.getEventColor(), currentEvent.getEventColor());
+        activity.mCircleView.setColorTheme(currentEvent.getEventColor(activity), currentEvent.getEventColor(activity));
         activity.mCircleView.setCircleBackgroundPaintStyle(Paint.Style.FILL_AND_STROKE);
 
         // Visibilities

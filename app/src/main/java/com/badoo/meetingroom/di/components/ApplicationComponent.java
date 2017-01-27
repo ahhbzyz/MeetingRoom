@@ -6,7 +6,6 @@ import com.badoo.meetingroom.di.modules.ApplicationModule;
 import com.badoo.meetingroom.domain.repository.LocalPersonRepo;
 import com.badoo.meetingroom.domain.repository.GoogleAccountRepo;
 import com.badoo.meetingroom.domain.repository.CalendarApiRepo;
-import com.badoo.meetingroom.domain.repository.RemoteImageRepo;
 import com.badoo.meetingroom.presentation.view.activity.BaseActivity;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.services.calendar.Calendar;
@@ -28,5 +27,4 @@ public interface ApplicationComponent {
   CalendarApiRepo roomEventRepository();
   LocalPersonRepo badooPersonRepository();
   GoogleAccountRepo googleAccountRepository();
-  RemoteImageRepo remoteImageRepository();
 }

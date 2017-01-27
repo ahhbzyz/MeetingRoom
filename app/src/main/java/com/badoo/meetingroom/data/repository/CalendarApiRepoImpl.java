@@ -8,6 +8,7 @@ import com.badoo.meetingroom.data.repository.datasource.intf.CalendarApiStore;
 import com.badoo.meetingroom.domain.entity.intf.LocalEvent;
 import com.badoo.meetingroom.domain.mapper.RoomMapper;
 import com.badoo.meetingroom.domain.repository.CalendarApiRepo;
+import com.google.api.services.calendar.model.Channel;
 import com.google.api.services.calendar.model.Event;
 
 import java.util.List;
@@ -64,7 +65,7 @@ public class CalendarApiRepoImpl implements CalendarApiRepo {
     }
 
     @Override
-    public Observable<Void> bindPushNotifications(CalendarApiParams params) {
+    public Observable<Channel> bindPushNotifications(CalendarApiParams params) {
         return mCalendarApiStore.bindPushNotifications(params);
     }
 
