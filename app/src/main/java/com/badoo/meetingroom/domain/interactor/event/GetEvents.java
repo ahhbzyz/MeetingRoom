@@ -44,6 +44,7 @@ public class GetEvents extends UseCase {
             throw new IllegalArgumentException("execute(params) not called, or called with null argument");
         }
 
+        // Injection
         Event event = new Event();
         DateTime startDateTime = new DateTime(TimeHelper.getMidNightTimeOfDay(day));
         EventDateTime start = new EventDateTime()
@@ -66,7 +67,7 @@ public class GetEvents extends UseCase {
 
     public void execute(Subscriber<List<EventModel>> useCaseSubscriber, String roomId, int day) {
         mSubscription = buildUseCaseObservable(roomId, day)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
     }

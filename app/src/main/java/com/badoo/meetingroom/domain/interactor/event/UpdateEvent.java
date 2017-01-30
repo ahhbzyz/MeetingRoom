@@ -39,7 +39,7 @@ public class UpdateEvent extends UseCase {
 
     public void execute(Subscriber<Event> useCaseSubscriber, CalendarApiParams params) {
         mSubscription = buildUseCaseObservable(params)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
     }

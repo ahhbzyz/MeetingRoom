@@ -42,15 +42,19 @@ public class RoomListFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
+
             List<RoomModel> roomModelList = new ArrayList<>();
+
             for(Map.Entry<Integer,List<RoomModel>> entry : mRoomModelListMap.entrySet()) {
                 int key = entry.getKey();
                 List<RoomModel> list = mRoomModelListMap.get(key);
                 roomModelList.addAll(list);
             }
+
             return RoomListFragment.newInstance(position, (ArrayList<RoomModel>) roomModelList);
 
         } else {
+
             int key = (int) mRoomModelListMap.keySet().toArray()[position - 1];
             return RoomListFragment.newInstance(position, (ArrayList<RoomModel>) mRoomModelListMap.get(key));
         }

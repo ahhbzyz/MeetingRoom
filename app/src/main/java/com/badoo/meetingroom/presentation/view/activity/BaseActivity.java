@@ -90,24 +90,23 @@ public abstract class BaseActivity extends AppCompatActivity {
     };
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         registerReceiver(mTimeRefreshReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         LocalBroadcastManager.getInstance(this).registerReceiver(
             mCalendarUpdateReceiver, new IntentFilter(CalendarUpdateService.TAG));
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         unregisterReceiver(mTimeRefreshReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mCalendarUpdateReceiver);
     }
 
-
     protected abstract void onSystemTimeRefresh();
 
     protected void onCalendarUpdate() {
-
     }
+
 }

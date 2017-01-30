@@ -39,7 +39,7 @@ public class BindPushNotifications extends UseCase {
 
     public void execute(Subscriber<Channel> useCaseSubscriber, CalendarApiParams params) {
         mSubscription = buildUseCaseObservable(params)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
     }

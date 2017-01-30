@@ -1,5 +1,6 @@
 package com.badoo.meetingroom.presentation.view.adapter;
 
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -25,8 +26,8 @@ public class DailyEventsFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    private final int numOfDays = 7;
-    private List<String> mTabTitles = new ArrayList<>(numOfDays);
+    private final int NUM_OF_DAYS = 7;
+    private List<String> mTabTitles = new ArrayList<>(NUM_OF_DAYS);
     private final String roomId;
 
     @Inject
@@ -41,7 +42,7 @@ public class DailyEventsFragmentPagerAdapter extends FragmentStatePagerAdapter {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM", Locale.getDefault());
         Date date = new Date();
         Calendar c = Calendar.getInstance();
-        for (int i = 1; i < numOfDays; i ++) {
+        for (int i = 1; i < NUM_OF_DAYS; i ++) {
             c.setTime(date);
             c.add(Calendar.DATE, 1);
             date = c.getTime();

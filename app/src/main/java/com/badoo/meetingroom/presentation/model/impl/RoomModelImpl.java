@@ -59,7 +59,7 @@ public class RoomModelImpl implements RoomModel {
                 return eventModel;
             }
         }
-        return null;
+        return getEventModelList().get(getEventModelList().size() - 1);
     }
 
     @Override

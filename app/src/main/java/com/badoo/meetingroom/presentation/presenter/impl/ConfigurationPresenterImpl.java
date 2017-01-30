@@ -9,7 +9,6 @@ import com.badoo.meetingroom.data.remote.CalendarApiParams;
 import com.badoo.meetingroom.domain.interactor.BindPushNotifications;
 import com.badoo.meetingroom.domain.interactor.DefaultSubscriber;
 import com.badoo.meetingroom.domain.interactor.GetRoomList;
-import com.badoo.meetingroom.domain.interactor.GetRoomMap;
 import com.badoo.meetingroom.domain.interactor.googleaccount.GetGoogleAccount;
 import com.badoo.meetingroom.domain.interactor.googleaccount.PutGoogleAccount;
 import com.badoo.meetingroom.presentation.Badoo;
@@ -20,10 +19,7 @@ import com.badoo.meetingroom.presentation.view.view.ConfigurationView;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.calendar.model.Channel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 

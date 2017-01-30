@@ -32,7 +32,6 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
 
     private List<RoomModel> mRoomList;
     private Context mContext;
-    private int lastPosition = -1;
     private final float IMG_DISABLE_ALPHA = .3f;
     private OnItemClickListener mOnItemClickListener;
 
@@ -44,21 +43,20 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.tv_remaining_time) TextView mRemainingTimeTv;
+
         @BindView(R.id.tv_room_name) TextView mRoomNameTv;
+
         @BindView(R.id.tv_room_info) TextView mRoomInfo;
+
         @BindView(R.id.tv_room_capacity) TextView mRoomCapacityTv;
 
-        @BindView(R.id.img_tv)
-        ImageView mTvImg;
+        @BindView(R.id.img_tv) ImageView mTvImg;
 
-        @BindView(R.id.img_video)
-        ImageView mVideoImg;
+        @BindView(R.id.img_video) ImageView mVideoImg;
 
-        @BindView(R.id.img_beverage)
-        ImageView mBeverageImg;
+        @BindView(R.id.img_beverage) ImageView mBeverageImg;
 
-        @BindView(R.id.img_stationery)
-        ImageView mStationeryImg;
+        @BindView(R.id.img_stationery) ImageView mStationeryImg;
 
 
         ViewHolder(View itemView) {
@@ -121,6 +119,11 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         EventModel currentEvent = roomModel.getCurrentEvent();
 
         long remainingTime = currentEvent.getRemainingTimeUntilNextBusyEvent();
+
+        if(position == 0) {
+            System.out.println(TimeHelper.formatTime(currentEvent.getNextBusyEventStartTime()));
+
+        }
 
         long remainingHours = TimeUnit.MILLISECONDS.toHours(remainingTime);
 

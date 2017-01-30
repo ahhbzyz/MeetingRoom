@@ -36,7 +36,7 @@ public class GetGoogleAccount extends UseCase {
 
     public void execute(Subscriber<GoogleAccountModel> useCaseSubscriber) {
         mSubscription = buildUseCaseObservable()
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
     }

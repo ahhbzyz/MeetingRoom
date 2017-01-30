@@ -80,10 +80,12 @@ public class RoomImpl implements Room {
         isVideoConferenceSupported = videoConferenceSupported;
     }
 
+    @Override
     public boolean isBeverageAllowed() {
         return isBeverageAllowed;
     }
 
+    @Override
     public void setBeverageAllowed(boolean beverageAllowed) {
         isBeverageAllowed = beverageAllowed;
     }

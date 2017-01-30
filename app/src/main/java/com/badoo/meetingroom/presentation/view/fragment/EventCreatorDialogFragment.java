@@ -64,9 +64,7 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment implemen
 
         mPresenter.setView(this);
 
-
         View view = View.inflate(getActivity().getApplicationContext(),R.layout.dialog_event_creator, null);
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyEventOrganizerDialog);
         builder.setView(view);
@@ -140,9 +138,6 @@ public class EventCreatorDialogFragment extends ImmersiveDialogFragment implemen
     public Context context() {
         return getActivity().getApplicationContext();
     }
-
-
-
 
     @Override
     public void onDestroy() {

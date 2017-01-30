@@ -38,7 +38,7 @@ public class GetRoomMap extends UseCase {
 
     public void execute(Subscriber<TreeMap<Integer, List<RoomModel>>> useCaseSubscriber) {
         mSubscription = buildUseCaseObservable()
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
     }

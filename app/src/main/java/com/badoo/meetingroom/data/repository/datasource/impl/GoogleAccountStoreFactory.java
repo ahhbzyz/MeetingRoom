@@ -22,13 +22,13 @@ public class GoogleAccountStoreFactory {
 
     @Inject
     GoogleAccountStoreFactory(Context context, FileManager fileManager, GoogleServicesConnector connector) {
-        this.mContext = context.getApplicationContext();
-        this.mFileManager = fileManager;
-        this.mConnector = connector;
+        mContext = context.getApplicationContext();
+        mFileManager = fileManager;
+        mConnector = connector;
     }
 
     public GoogleAccountStore createGoogleAccountNameStore() {
-        GoogleAccountCache googleAccountCache = new GoogleAccountCacheImpl(this.mContext, mFileManager, mConnector);
+        GoogleAccountCache googleAccountCache = new GoogleAccountCacheImpl(mContext, mFileManager, mConnector);
         return new GoogleAccountStoreImpl(googleAccountCache);
     }
 }

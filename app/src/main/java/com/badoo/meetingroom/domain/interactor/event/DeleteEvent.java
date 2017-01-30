@@ -39,7 +39,7 @@ public class DeleteEvent extends UseCase {
 
     public void execute(Subscriber<Void> useCaseSubscriber, CalendarApiParams params) {
         mSubscription = buildUseCaseObservable(params)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
     }

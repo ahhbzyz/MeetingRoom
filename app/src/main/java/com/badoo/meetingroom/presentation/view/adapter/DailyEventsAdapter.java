@@ -249,6 +249,7 @@ public class DailyEventsAdapter extends RecyclerView.Adapter<DailyEventsAdapter.
             }
             else {
                 holder.mTimelineBar.setBackgroundColor(eventModel.getBusyEventColor(mContext));
+                BusyBgDrawable mComingBusyEventBg = new BusyBgDrawable(ContextCompat.getColor(mContext, R.color.roomStatusBusyBg), Color.WHITE);
                 holder.mEventTextViewsLayout.setBackground(mComingBusyEventBg);
             }
         }

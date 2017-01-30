@@ -9,6 +9,7 @@ import rx.subscriptions.Subscriptions;
 
 public abstract class UseCase {
 
+    //
     protected Subscription mSubscription = Subscriptions.empty();
 
     public void unSubscribe() {

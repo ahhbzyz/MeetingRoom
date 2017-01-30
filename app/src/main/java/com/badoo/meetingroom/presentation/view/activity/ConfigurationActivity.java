@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -55,7 +56,6 @@ public class ConfigurationActivity extends BaseActivity implements Configuration
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
         ButterKnife.bind(this);
-
         getComponent().inject(this);
         mPresenter.setView(this);
         mPresenter.init();

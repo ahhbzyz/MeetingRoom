@@ -38,8 +38,13 @@ public class GetPersons extends UseCase {
 
     public void execute(Subscriber<List<PersonModel>> useCaseSubscriber) {
         mSubscription = buildUseCaseObservable()
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
+    }
+
+    @Override
+    public void unSubscribe() {
+        super.unSubscribe();
     }
 }

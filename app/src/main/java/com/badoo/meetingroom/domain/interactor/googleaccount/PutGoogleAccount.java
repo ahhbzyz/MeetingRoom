@@ -34,7 +34,7 @@ public class PutGoogleAccount extends UseCase {
 
     public void execute(Subscriber<Void> useCaseSubscriber, String accountName) {
         mSubscription = buildUseCaseObservable(accountName)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
     }

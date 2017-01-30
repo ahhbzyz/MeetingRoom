@@ -80,7 +80,7 @@ public class GetRoomList extends UseCase {
 
     public void execute(Subscriber<List<RoomModel>> useCaseSubscriber, Boolean loadRoomEvents) {
         mSubscription = buildUseCaseObservable(loadRoomEvents)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(useCaseSubscriber);
     }
